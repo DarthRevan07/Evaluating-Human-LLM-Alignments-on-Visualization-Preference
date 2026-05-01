@@ -2,6 +2,13 @@
 
 This repository houses the supplementary material for the submission **"Evaluating Human–LLM Alignments on Visualization Preference"** at **IEEE VIS 2026 (Short Papers Track)**.
 
+## User Study
+1. User Annotation UI can be found at : https://darthrevan07.github.io/chart-evaluation-new/
+2. Pre-study and Post-study questionnaires were hosted at : (i) https://forms.office.com/r/6SgGDC2mDS and (ii) https://forms.office.com/r/k4bPxvZZYZ (PDFs are available in `userStudy`)
+
+## Evaluation Results 
+1. A qualitative overview of human and model preference distributions has been shown in : 
+
 ## Acknowledgements & Data Source
 
 Parts of the dataset used in this work are derived from the dataset released with the paper **“$C^2$: Scalable Auto-Feedback for LLM-based Chart Generation”** (Koh et al., 2025) and its accompanying repository. We gratefully acknowledge the authors for making their data and resources publicly available.
