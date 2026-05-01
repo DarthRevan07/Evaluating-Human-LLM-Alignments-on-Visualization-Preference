@@ -1,0 +1,41 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the distribution of Numerical Aptitude scores differ across various Career groupings?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot (with swarm overlay)",
+      "design_rationale": "The violin plot offers a dense-yet-highly-informative way to visualize the full distribution, modality, and spread of Numerical Aptitude scores across several career clusters. Since most careers are unique, this design will group individual careers into broader clusters (e.g., by first word of Career, or by curriculum domain such as 'Engineering', 'Business', 'Medical', etc.). The addition of a swarm overlay shows the actual data points for each group, highlighting sample size, jitter, and potential outliers, preserving as much individual distributional detail as possible.",
+      "target_insight": "Shows both the overall density/distribution and the individual data points of Numerical Aptitude scores for several broad vocational groupings, allowing visual detection of patterns, outliers, and multimodality.",
+      "output_fields": [
+        "Numerical Aptitude",
+        "Career"
+      ],
+      "chart_encodings": {
+        "x": "Career cluster (derived from first word of 'Career', e.g., 'Engineer', 'Manager')",
+        "y": "Numerical Aptitude",
+        "color": "Career cluster (assigned different color for each cluster)",
+        "size": "Swarm dots uniform, no size encoding",
+        "other_aesthetics": "Violin width for score distribution density, jittered dots for individuals"
+      }
+    },
+    "transformations": [
+      "Extract the first word from 'Career' to serve as a cluster label (e.g., 'Engineer', 'Doctor', 'Manager', etc.).",
+      "Group careers by this cluster label and keep clusters with at least 3 instances for meaningful density depiction.",
+      "Map Numerical Aptitude to y within each cluster."
+    ],
+    "data_preparation_steps": [
+      "df['CareerCluster'] = df['Career'].str.split().str[0]",
+      "clusters = df['CareerCluster'].value_counts()",
+      "clusters_keep = clusters[clusters >= 3].index.tolist()",
+      "df_plot = df[df['CareerCluster'].isin(clusters_keep)]",
+      "df_plot['CareerCluster'] = pd.Categorical(df_plot['CareerCluster'], categories=clusters_keep, ordered=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom matplotlib import cm\nfrom matplotlib.colors import ListedColormap\nfrom matplotlib.collections import PolyCollection\n\n# Data\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\ndf['CareerCluster'] = df['Career'].str.split().str[0]\nclusters = df['CareerCluster'].value_counts()\nclusters_keep = clusters[clusters >= 3].index.tolist()\ndf_plot = df[df['CareerCluster'].isin(clusters_keep)].copy()\ndf_plot['CareerCluster'] = pd.Categorical(df_plot['CareerCluster'], categories=clusters_keep, ordered=True)\nimport matplotlib as mpl\ncmap = mpl.colormaps['tab20']\ncolors = [cmap(i) for i in range(len(clusters_keep))]\n\nfig, ax = plt.subplots(figsize=(11, 6))\nparts = ax.violinplot(\n    [df_plot[df_plot['CareerCluster'] == grp]['Numerical Aptitude'].values for grp in clusters_keep],\n    positions=np.arange(len(clusters_keep)),\n    showmeans=False,\n    showmedians=True,\n    showextrema=True,\n    widths=0.85\n)\nfor i, vp in enumerate(parts['bodies']):\n    vp.set_facecolor(colors[i])\n    vp.set_edgecolor('black')\n    vp.set_alpha(0.65)\nfor partname in ['cbars', 'cmins', 'cmaxes', 'cmedians']:\n    vp_part = parts.get(partname)\n    if vp_part is not None:\n        vp_part.set_edgecolor('black')\n        vp_part.set_linewidth(1.2)\n# Swarm overlay\nfor i, grp in enumerate(clusters_keep):\n    vals = df_plot[df_plot['CareerCluster'] == grp]['Numerical Aptitude'].values\n    x = np.random.normal(i, 0.07, size=len(vals))\n    ax.scatter(x, vals, color=colors[i], edgecolor='black', linewidth=0.7, alpha=0.88, zorder=3, s=36)\nax.set_xticks(np.arange(len(clusters_keep)))\nax.set_xticklabels(clusters_keep, rotation=35, ha='right')\nax.set_xlabel('Career Cluster (First Word)')\nax.set_ylabel('Numerical Aptitude')\nax.set_title('Violin Plot of Numerical Aptitude Scores\\nAcross Broad Career Clusters (with Swarm Overlay)')\nax.grid(axis='y', linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

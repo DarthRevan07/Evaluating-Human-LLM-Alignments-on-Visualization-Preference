@@ -1,0 +1,39 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How does time spent on the website correlate with purchase status?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot displays the distributional characteristics of 'TimeSpentOnWebsite' by 'PurchaseStatus'. This approach highlights differences in engagement between customers who purchased versus those who did not, making it easy to see if purchasers tend to spend more time.",
+      "target_insight": "Are customers who complete purchases spending more time on the website compared to those who do not? This visualization reveals disparities in browsing behavior.",
+      "output_fields": [
+        "TimeSpentOnWebsite",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "PurchaseStatus",
+        "y": "TimeSpentOnWebsite",
+        "color": "PurchaseStatus (grouped/set color)",
+        "size": null,
+        "other_aesthetics": "Box face color for each group; outlier markers; grid; axis ticks labeled with purchase meaning"
+      }
+    },
+    "transformations": [
+      "Group the data by 'PurchaseStatus' (0: not purchased, 1: purchased)",
+      "For each group, extract the distribution of 'TimeSpentOnWebsite'",
+      "Map PurchaseStatus values to labeled axis ticks: 0='Did Not Purchase', 1='Purchased'"
+    ],
+    "data_preparation_steps": [
+      "Load the CSV file into df",
+      "Prepare a list of 'TimeSpentOnWebsite' values for both PurchaseStatus categories: [[times for 0], [times for 1]]",
+      "Set boxplot colors for each group"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\n# Prepare boxplot data\nbox_data = [df.loc[df['PurchaseStatus'] == 0, 'TimeSpentOnWebsite'], df.loc[df['PurchaseStatus'] == 1, 'TimeSpentOnWebsite']]\nlabels = ['Did Not Purchase', 'Purchased']\nbox_colors = [mpl.colormaps['Set2'].resampled(2)(0), mpl.colormaps['Set2'].resampled(2)(1)]\nfig, ax = plt.subplots(figsize=(8, 5))\nbox = ax.boxplot(box_data, patch_artist=True, labels=labels, notch=True, showfliers=True)\nfor patch, color in zip(box['boxes'], box_colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.7)\nfor median in box['medians']:\n    median.set_color('black')\nfor whisker in box['whiskers']:\n    whisker.set_color('#555555')\nfor cap in box['caps']:\n    cap.set_color('#555555')\nax.set_xlabel(\"Purchase Status\")\nax.set_ylabel(\"TimeSpentOnWebsite (minutes)\")\nax.set_title(\"Distribution of Time Spent on Website\\nby Purchase Completion\")\nax.grid(axis='y', linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

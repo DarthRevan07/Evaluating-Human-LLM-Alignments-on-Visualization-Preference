@@ -1,0 +1,40 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do monthly highest temperatures in Amherst change over the years covered in the dataset?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart with Faceted Multi-Line by Year",
+      "design_rationale": "A line chart faceted by year, with each line representing monthly highest temperatures for one year, directly visualizes both intra-year seasonality and inter-year variations. Since 'Date' encodes the month within each year, displaying each year's monthly pattern in one plot allows viewers to spot year-over-year shifts and unusual weather patterns. This format leverages the chronological nature of the data and provides an intuitive overview.",
+      "target_insight": "This visualization reveals how the monthly highest temperatures fluctuate seasonally, comparing each year's pattern to highlight anomalies, trend shifts, and the effects of climate change or weather variability.",
+      "output_fields": [
+        "Date",
+        "Temperature",
+        "Year"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Temperature",
+        "color": "Year",
+        "size": "null",
+        "other_aesthetics": "Distinct line colors for each Year, clear legend, rotated x-axis labels for clarity, gridlines for easier tracking across months, moderate alpha for lines to emphasize overlaps"
+      }
+    },
+    "transformations": [
+      "Sort df by 'Date' within each 'Year' to maintain chronological order",
+      "For each unique value in 'Year', group data and plot monthly (by 'Date') highest temperature"
+    ],
+    "data_preparation_steps": [
+      "Load data as df",
+      "Convert df['Date'] to ordered categorical dtype to maintain month-year sequence",
+      "Sort df by ['Year', 'Date']",
+      "Ensure 'Year' is treated as categorical for color encoding"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\461.csv\")\ndf['Date_order'] = pd.to_datetime(df['Date'], format='%b-%Y')\ndf = df.sort_values(['Year', 'Date_order'])\nyears = sorted(df['Year'].unique())\ncmap = mpl.colormaps['tab10'].resampled(len(years))\nplt.figure(figsize=(14, 7))\nfor i, year in enumerate(years):\n    df_plot = df[df['Year'] == year]\n    plt.plot(df_plot['Date'], df_plot['Temperature'], label=str(year), color=cmap(i), linewidth=2, alpha=0.85)\nplt.xticks(rotation=45)\nplt.xlabel(\"Date (Month-Year)\")\nplt.ylabel(\"Temperature (°F)\")\nplt.title(\"Monthly Highest Temperatures in Amherst by Year\\nHow Do Seasonal Peaks Shift from 2004–2015?\")\nplt.legend(title=\"Year\", bbox_to_anchor=(1.01, 1), loc='upper left')\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

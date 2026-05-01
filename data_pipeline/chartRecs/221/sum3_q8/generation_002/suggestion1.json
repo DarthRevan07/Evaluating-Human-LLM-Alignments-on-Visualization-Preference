@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Are there any destinations that predominantly attract travelers of a specific nationality?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Bar Chart",
+      "design_rationale": "A stacked bar chart allows a clear comparison of the nationality distribution for each destination. By aggregating traveler counts per nationality per destination, we can visually identify destinations dominated by a single nationality (i.e., taller single-color stacks). This format is effective given the moderate number of unique destinations (59) and nationalities (41), and directly addresses the question of predominance.",
+      "target_insight": "Destinations with a single nationality representing the majority of travelers are easily spotted by dominant segment colors in their bars.",
+      "output_fields": [
+        "Destination",
+        "Traveler nationality",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Count of 'Trip ID'",
+        "color": "Traveler nationality",
+        "size": null,
+        "other_aesthetics": "Stacked bars, legend displayed"
+      }
+    },
+    "transformations": [
+      "Drop rows with null values in 'Destination' or 'Traveler nationality' to ensure analysis is valid",
+      "Group by 'Destination' and 'Traveler nationality', then count the number of trips ('Trip ID')",
+      "Pivot the grouped data so each destination is a bar, and each nationality stacks as a segment"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Destination', 'Traveler nationality'])",
+      "df_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()",
+      "df_pivot = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)",
+      "Select top 10 destinations with greatest overall trip counts for visual clarity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Traveler nationality'])\ndf_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()\ndf_pivot = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)\ndest_totals = df_pivot.sum(axis=1)\ndest_top10 = dest_totals.nlargest(10).index\ndf_plot = df_pivot.loc[dest_top10]\ncolor_list = plt.cm.tab20.colors\nn_nationalities = df_plot.shape[1]\ncolors = color_list * (n_nationalities // len(color_list) + 1)\nfig, ax = plt.subplots(figsize=(16,8))\nbar_bottom = np.zeros(len(df_plot))\nfor i, nationality in enumerate(df_plot.columns):\n    ax.bar(\n        df_plot.index,\n        df_plot[nationality],\n        bottom=bar_bottom,\n        label=nationality,\n        color=colors[i]\n    )\n    bar_bottom += df_plot[nationality].values\nax.set_xlabel('Destination')\nax.set_ylabel('Number of Travelers')\nax.set_title('Nationality Distribution for Top 10 Destinations\\n(Travelers per Destination)')\nax.legend(title='Traveler nationality', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

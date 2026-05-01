@@ -1,0 +1,20 @@
+{
+        "chart_A_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var2.png",
+        "chart_B_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var4.png",
+        "chart_A_analysis": "Chart A displays a clear comparison between 30-day and 365-day percentage changes for the stocks. Positive changes are shown in green and negative in red, making it easy to spot the largest changes. However, the chart is crowded, and the range of values makes it difficult to pinpoint exact figures.",
+        "chart_A_readability_rating": 3,
+        "chart_A_readability_rationale": "The chart is somewhat easy to understand because of the color-coding, but the crowdedness makes it less readable for precise values.",
+        "chart_A_precision_rating": 2,
+        "chart_A_precision_rationale": "While the general trends are visible, the precision of the percentage values is compromised due to the crowded chart.",
+        "chart_A_appeal_rating": 2,
+        "chart_A_appeal_rationale": "The use of color helps with visual appeal, but the cluttered presentation detracts somewhat from the visual experience.",
+        "chart_B_analysis": "Chart B presents a cleaner, more organized comparison, with a clear axis label and a legend explaining the color-coding. However, it lacks the detail found in Chart A, such as exact percentage changes, which might be necessary for precise analysis.",
+        "chart_B_readability_rating": 4,
+        "chart_B_readability_rationale": "The organized layout and color-coding in Chart B make it easier to read and understand general trends compared to Chart A.",
+        "chart_B_precision_rating": 3,
+        "chart_B_precision_rationale": "Chart B provides a more accurate answer to the question at a glance, but like Chart A, it lacks precise values for exact percentages.",
+        "chart_B_appeal_rating": 4,
+        "chart_B_appeal_rationale": "The clear and organized presentation of Chart B is more visually appealing than the crowded Chart A.",
+        "overall_preference": "Chart B",
+        "preference_rationale": "Chart B is preferred for its better readability and visual appeal, despite being less precise than Chart A due to the lack of exact percentage values."
+    }

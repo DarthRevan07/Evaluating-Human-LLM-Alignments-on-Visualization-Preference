@@ -1,0 +1,42 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do monthly highest temperatures in Amherst change over the years covered in the dataset?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Year-Month Temperature Heatmap",
+      "design_rationale": "A heatmap with years as rows and months as columns offers an unconventional yet powerful way to summarize long-term temperature patterns. By encoding monthly highest temperatures as color, we reveal not only intra-year seasonality but also subtle shifts over multiple years. This compact matrix makes outlier months or year-over-year warming/cooling visually pop and highlights which months have hottest spikes or changing trends.",
+      "target_insight": "This visualization allows the user to spot monthly and yearly temperature anomalies, visualize seasonality, and see whether certain months are getting warmer or colder over the years, making it easy to compare patterns side-by-side.",
+      "output_fields": [
+        "Year",
+        "Date",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Month extracted from Date",
+        "y": "Year",
+        "color": "Temperature",
+        "size": "null",
+        "other_aesthetics": "Colorbar for Temperature, 'viridis' colormap for heat intensity, clear label formatting for months, grid border for cells, annotation of cell values (optional), control for missing months if any"
+      }
+    },
+    "transformations": [
+      "Extract month name from df['Date'] and create ordered categorical month axis",
+      "Pivot the data to have years as rows, months as columns, values as monthly highest temperature",
+      "Sort months chronologically (Jan–Dec), and sort years ascending"
+    ],
+    "data_preparation_steps": [
+      "Load data as df",
+      "Extract month name from df['Date'] and store in df['Month']",
+      "Define ordered list of months: ['Jan', 'Feb', ..., 'Dec']",
+      "Pivot df: rows=Year, columns=Month, values=Temperature",
+      "Sort months and years for proper heatmap axis order"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\461.csv\")\ndf['Month'] = df['Date'].str.split('-').str[0]\nmonths_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']\ndf['Month'] = pd.Categorical(df['Month'], categories=months_order, ordered=True)\npivot_table = df.pivot(index='Year', columns='Month', values='Temperature').reindex(columns=months_order).sort_index()\nplt.figure(figsize=(10, 6))\ncmap = mpl.colormaps['viridis']\nim = plt.imshow(pivot_table.values, aspect='auto', cmap=cmap, vmin=41, vmax=98)\nplt.xlabel(\"Month\")\nplt.ylabel(\"Year\")\nplt.title(\"Heatmap of Monthly Highest Temperatures in Amherst\\n2004–2015 (Rows: Years, Columns: Months)\")\nplt.xticks(np.arange(len(months_order)), months_order)\nplt.yticks(np.arange(len(pivot_table.index)), pivot_table.index)\ncbar = plt.colorbar(im, pad=0.05)\ncbar.set_label(\"Temperature (°F)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

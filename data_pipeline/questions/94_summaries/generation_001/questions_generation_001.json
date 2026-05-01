@@ -1,0 +1,87 @@
+{
+  "table_name": "From 1955 to 2024:A Century of Global Population",
+  "generation_dir": "secondIter\\summaries\\94_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: From_1955_to_2024_A_Century_of_Global_Population (18 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 94.csv (Dataset: From 1955 to 2024:A Century of Global Population)\n\n### Schema (7 fields)\n  - Year -- type: int64, values: 1955, 1960, 1965, 1970, 1975, ..., 2020, 2021, 2022, 2023, 2024\n  - Population -- type: object, values: \"2,746,072,141\", \"3,019,233,434\", \"3,337,111,983\", \"3,695,390,336\", \"4,069,437,231\", ..., \"7,840,952,880\", \"7,909,295,151\", \"7,975,105,156\", \"8,045,311,447\", \"8,118,835,999\"\n  - Yearly % Change -- type: object, values: 0.83 %, 0.87 %, 0.88 %, 0.91 %, 0.98 %, ..., 1.90 %, 1.91 %, 1.95 %, 2.02 %, 2.06 %\n  - Yearly Change -- type: object, values: \"49,349,997\", \"54,632,259\", \"63,575,710\", \"65,810,005\", \"68,342,271\", ..., \"83,544,581\", \"85,408,718\", \"85,485,397\", \"88,198,886\", \"90,889,050\"\n  - Median Age -- type: float64, values: 20.0, 21.0, 22.0, 23.0, 24.0, ..., 29.7, 30.0, 30.2, 30.5, 30.7\n  - Fertility Rate -- type: float64, values: 2.31, 2.32, 2.35, 2.52, 2.59, ..., 4.08, 4.7, 4.83, 5.01, 5.08\n  - Density (P/Km²) -- type: int64, values: 18, 20, 22, 25, 27, ..., 47, 50, 53, 54, 55\n\n### Sample Data (first 5 rows)\n```\n   Year     Population Yearly % Change Yearly Change  Median Age  Fertility Rate  Density (P/Km²)\n0  2024  8,118,835,999          0.91 %    73,524,552        30.7            2.31               55\n1  2023  8,045,311,447          0.88 %    70,206,291        30.5            2.31               54\n2  2022  7,975,105,156          0.83 %    65,810,005        30.2            2.31               54\n3  2021  7,909,295,151          0.87 %    68,342,271        30.0            2.32               53\n4  2020  7,840,952,880          0.98 %    76,001,848        29.7            2.35               53\n```\n",
+  "table_metadata": {
+    "total_rows": 18,
+    "total_columns": 7,
+    "source_file": "csv_c2_sec\\94.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "From_1955_to_2024_A_Century_of_Global_Population",
+      "summary_idx": 1,
+      "column_combination": [
+        "Year",
+        "Population",
+        "Yearly % Change",
+        "Yearly Change",
+        "Median Age",
+        "Fertility Rate",
+        "Density (P/Km²)"
+      ],
+      "questions": [
+        "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+        "What is the trend in median age over the years, and how does it relate to changes in fertility rate?",
+        "How do spikes or drops in yearly population change correspond to changes in fertility rate?",
+        "Is there a visible relationship between median age and yearly percentage change in population over time?",
+        "During which years did the fertility rate experience its most significant decline, and what was the impact on population growth?",
+        "How does the increase in population density over time correlate with global population growth?",
+        "Do periods of higher yearly percentage change in population coincide with lower or higher median ages?",
+        "Are there any noticeable anomalies in yearly population change that might signal demographic shifts?",
+        "How has the distribution of fertility rate shifted as the median age increased over the time span of the dataset?",
+        "What can be inferred about the onset of demographic transition by comparing trends in median age and fertility rate across the decades?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 18,
+          "total_columns": 7,
+          "source_file": "csv_c2_sec\\94.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "From 1955 to 2024:A Century of Global Population",
+      "summary_idx": 2,
+      "column_combination": [
+        "Year",
+        "Population",
+        "Yearly % Change",
+        "Yearly Change",
+        "Median Age",
+        "Fertility Rate",
+        "Density (P/Km²)"
+      ],
+      "questions": [
+        "How do periods of higher yearly population change correlate with increases in density per square kilometer over time?",
+        "During which years did the yearly percent change in population reach its peak, and how did density respond in those years?",
+        "How does the trend in population growth compare to the trend in density across the decades?",
+        "Are there points in time where the density growth rate accelerates or slows in comparison to median age changes?",
+        "How have changes in fertility rate corresponded with changes in population size during different periods?",
+        "What is the relationship between median age and fertility rate over the years in the dataset?",
+        "Can you identify years where significant increases in yearly change led to visible jumps in density?",
+        "How does median age fluctuate over time, and does this have any apparent impact on population growth?",
+        "Are there any years where the population growth (yearly % change) deviates from the overall trend, and what was the density in those years?",
+        "What patterns emerge when comparing yearly change in population with median age across different time points?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 18,
+          "total_columns": 7,
+          "source_file": "csv_c2_sec\\94.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

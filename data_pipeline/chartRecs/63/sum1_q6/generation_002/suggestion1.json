@@ -1,0 +1,36 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Do customers who avail more discounts tend to have higher purchase rates?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart (Purchase Rate by Discounts Availed)",
+      "design_rationale": "A bar chart provides a clear, direct comparison of purchase rates across customer segments defined by the number of discounts availed. By grouping customers by 'DiscountsAvailed' (0 to 5) and computing the average 'PurchaseStatus' (which is binary: 0=no purchase, 1=purchase), we reveal the trend of purchase probability as discount usage increases. This approach is effective as it aggregates over a large sample (n=1500), making trends apparent, and prevents overplotting that would occur if individual points were shown.",
+      "target_insight": "Are higher numbers of discounts availed associated with increased likelihood of making a purchase?",
+      "output_fields": [
+        "DiscountsAvailed",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "DiscountsAvailed",
+        "y": "Mean of PurchaseStatus (i.e. Purchase Rate)",
+        "color": "Distinct bar color for each 'DiscountsAvailed' group (cmap)",
+        "size": null,
+        "other_aesthetics": "Display purchase rate labels above bars; add gridlines for clarity"
+      }
+    },
+    "transformations": [
+      "Group df by 'DiscountsAvailed'",
+      "Aggregate mean of 'PurchaseStatus' as purchase rate for each group"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('DiscountsAvailed', as_index=False)['PurchaseStatus'].mean()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_grouped = df.groupby('DiscountsAvailed', as_index=False)['PurchaseStatus'].mean()\ncmap = mpl.colormaps['viridis'].resampled(df_grouped.shape[0])\ncolors = cmap(np.linspace(0, 1, df_grouped.shape[0]))\nfig, ax = plt.subplots(figsize=(8, 5))\nbars = ax.bar(df_grouped['DiscountsAvailed'], df_grouped['PurchaseStatus'], color=colors, edgecolor='black')\nax.set_xlabel('DiscountsAvailed', fontsize=12)\nax.set_ylabel('Purchase Rate (Mean of PurchaseStatus)', fontsize=12)\nax.set_title('Purchase Rate by Number of Discounts Availed', fontsize=14)\nax.set_xticks(df_grouped['DiscountsAvailed'])\nax.grid(axis='y', linestyle='--', alpha=0.6)\nfor i, bar in enumerate(bars):\n    val = df_grouped['PurchaseStatus'].iloc[i]\n    ax.text(bar.get_x() + bar.get_width()/2, val + 0.02, f'{val:.2f}', ha='center', va='bottom', fontsize=11)\nsm = mpl.cm.ScalarMappable(cmap=cmap)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, pad=0.01)\ncbar.set_ticks(np.linspace(0,1,df_grouped.shape[0]))\ncbar.set_ticklabels([str(int(v)) for v in df_grouped['DiscountsAvailed']])\ncbar.set_label('DiscountsAvailed', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

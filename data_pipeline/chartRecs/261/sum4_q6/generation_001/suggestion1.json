@@ -1,0 +1,43 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Compare the frequency and timing of astronaut fatalities (Death Date) with their mission involvement (Death Mission).",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Timeline Plot with Color-coded Mission Fatalities",
+      "design_rationale": "A timeline plot will highlight when astronaut fatalities occurred, allowing viewers to see clusters or gaps over the years. Color-coding the points by whether the death was associated with a space mission (Death Mission) versus other causes makes the connection between mission involvement and timing immediately clear. By plotting 'Death Date' along a time axis and distinguishing points by mission involvement, this visualization directly addresses the analytical question while providing a clear overview of historical patterns.",
+      "target_insight": "Identifies periods of increased astronaut fatalities and visually correlates those fatalities with mission-related incidents.",
+      "output_fields": [
+        "Death Date",
+        "Death Mission",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Death Date",
+        "y": "index of fatalities (ordered by date)",
+        "color": "Mission involvement encoded by 'Death Mission' existence",
+        "size": "null",
+        "other_aesthetics": "point transparency (alpha), name label for mission deaths"
+      }
+    },
+    "transformations": [
+      "Filter rows where 'Death Date' is not null",
+      "Create a boolean column 'Mission Death' that is True if 'Death Mission' is not null",
+      "Sort by 'Death Date' ascending",
+      "Assign a running index for y-axis position (since y is not meaningful, this allows clean stacking and avoids vertical overlap)"
+    ],
+    "data_preparation_steps": [
+      "df_fatal = df[df['Death Date'].notnull()]",
+      "df_fatal['Mission Death'] = df_fatal['Death Mission'].notnull()",
+      "df_fatal['Death Date pd'] = pd.to_datetime(df_fatal['Death Date'])",
+      "df_fatal = df_fatal.sort_values('Death Date pd')",
+      "df_fatal['Fatal Index'] = np.arange(len(df_fatal))"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf_fatal = df[df['Death Date'].notnull()].copy()\ndf_fatal['Mission Death'] = df_fatal['Death Mission'].notnull()\ndf_fatal['Death Date pd'] = pd.to_datetime(df_fatal['Death Date'])\ndf_fatal = df_fatal.sort_values('Death Date pd')\ndf_fatal['Fatal Index'] = np.arange(len(df_fatal))\ncolors = {True: '#D62728', False: '#1F77B4'}\nalpha = 0.85\nfig, ax = plt.subplots(figsize=(10,6))\nfor mission_death in [False, True]:\n    subset = df_fatal[df_fatal['Mission Death']==mission_death]\n    ax.scatter(subset['Death Date pd'], subset['Fatal Index'], color=colors[mission_death], alpha=alpha, label='Mission Death' if mission_death else 'Non-Mission Death', s=60, edgecolors='black')\nfor idx, row in df_fatal.iterrows():\n    if row['Mission Death']:\n        ax.text(row['Death Date pd'], row['Fatal Index']+0.3, row['Name'], fontsize=8, color=colors[True])\nax.set_xlabel('Death Date')\nax.set_ylabel('Fatality Sequence')\nax.set_title('Timeline of Astronaut Fatalities\\nColor-coded by Mission Involvement')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

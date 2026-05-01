@@ -1,0 +1,41 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable difference in Perceptual Aptitude between Careers with strong analytical requirements and those that are more people-oriented?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot with scatter overlay",
+      "design_rationale": "Violin plots visualize the full distribution shape of Perceptual Aptitude in both groups, revealing nuances such as bimodality or density differences. Overlaying scatter (jittered points) offers detailed transparency to individual data points, emphasizing the sample count and nuances often lost in summary plots. Unconventional but engaging, this approach offers both aggregate and granular perspectives, using color for group distinction and spread along x-axis for clarity.",
+      "target_insight": "Depth of distribution (including density, outliers) and overlap of Perceptual Aptitude scores between groups, illustrating not just central tendency but variability and sample richness.",
+      "output_fields": [
+        "Career",
+        "Perceptual Aptitude"
+      ],
+      "chart_encodings": {
+        "x": "Career Type Group (analytical vs people-oriented, derived from Career)",
+        "y": "Perceptual Aptitude",
+        "color": "Career Type Group",
+        "size": null,
+        "other_aesthetics": "scatter overlay, violin body, alpha=0.6"
+      }
+    },
+    "transformations": [
+      "Reuse 'Career Type Group' from previous mapping",
+      "Drop rows with null 'Career Type Group'",
+      "Build arrays for 'Perceptual Aptitude' scores per group",
+      "Use scatter overlay with violin for distribution + individual visibility"
+    ],
+    "data_preparation_steps": [
+      "Ensure 'Career Type Group' column exists and correct",
+      "Drop rows where 'Career Type Group' is null",
+      "Prepare arrays: Perceptual Aptitude for analytical, people-oriented",
+      "Combine group values for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\n# Use same mapping as above\nanalytical_keywords = [\"Engineer\", \"Analyst\", \"Scientist\", \"Developer\", \"Accountant\", \"Mathematician\", \"Programmer\", \"Research\", \"Technician\"]\npeople_keywords = [\"Teacher\", \"Counselor\", \"Nurse\", \"Social Worker\", \"Manager\", \"HR\", \"Sales\", \"Therapist\", \"Consultant\", \"Coach\"]\n\ndef categorize_career(careers):\n    analytical = set()\n    people = set()\n    for c in careers:\n        for a_k in analytical_keywords:\n            if a_k.lower() in c.lower():\n                analytical.add(c)\n        for p_k in people_keywords:\n            if p_k.lower() in c.lower():\n                people.add(c)\n    return analytical, people\n\nanalytical, people = categorize_career(df[\"Career\"].unique())\n\ndef map_career_type(career):\n    if career in analytical:\n        return \"Analytical\"\n    if career in people:\n        return \"People-Oriented\"\n    return np.nan\n\ndf[\"Career Type Group\"] = df[\"Career\"].apply(map_career_type)\ndf_filtered = df.dropna(subset=[\"Career Type Group\"])\n\nanalytical_pa = df_filtered[df_filtered[\"Career Type Group\"] == \"Analytical\"][\"Perceptual Aptitude\"].values\npeople_pa = df_filtered[df_filtered[\"Career Type Group\"] == \"People-Oriented\"][\"Perceptual Aptitude\"].values\n\nfig, ax = plt.subplots(figsize=(7, 5))\nparts = ax.violinplot([analytical_pa, people_pa], positions=[0, 1], widths=0.7, showmeans=False, showextrema=True, showmedians=True)\ncolors = [\"#3887be\", \"#e05d5d\"]\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.6)\n    pc.set_edgecolor(\"black\")\n    pc.set_linewidth(0.5)\n\n# Overlay scatter points\nrng = np.random.default_rng(42)\nax.scatter(rng.normal(0, 0.05, len(analytical_pa)), analytical_pa, color=colors[0], alpha=0.4, s=32, label=\"Analytical\")\nax.scatter(rng.normal(1, 0.05, len(people_pa)), people_pa, color=colors[1], alpha=0.4, s=32, label=\"People-Oriented\")\n\nax.set_xticks([0, 1])\nax.set_xticklabels([\"Analytical\", \"People-Oriented\"])\nax.set_ylabel(\"Perceptual Aptitude\")\nax.set_title(\"Perceptual Aptitude Distribution\\nCareer Type Group: Analytical vs People-Oriented\", fontsize=13)\nax.grid(True, axis='y', alpha=0.3)\nplt.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

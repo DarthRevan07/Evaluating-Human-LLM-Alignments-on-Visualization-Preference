@@ -1,0 +1,38 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does Temperature vary across different Spectral Classes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot facilitates comparison of the distribution and spread of Temperature (K) for each Spectral Class, revealing the typical temperature range, variability, and potential outliers within each class. Given the strong association between spectral class and temperature in astronomy, a boxplot provides a clear, accessible overview of how temperature segregates among the classes. It leverages the categorical nature of 'Spectral Class' and the continuous nature of 'Temperature (K)' to answer the question directly, utilizing all rows for maximal representativeness.",
+      "target_insight": "Shows how the typical temperatures, spread, and extremes differ across spectral classes, indicating which classes are hotter/cooler and the variability within each class.",
+      "output_fields": [
+        "Spectral Class",
+        "Temperature (K)"
+      ],
+      "chart_encodings": {
+        "x": "Spectral Class",
+        "y": "Temperature (K)",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "box color, whiskers, and outlier markers; custom ordering of spectral classes O-B-A-F-G-K-M"
+      }
+    },
+    "transformations": [
+      "Order 'Spectral Class' categories according to standard astronomical sequence: O, B, A, F, G, K, M",
+      "Group stars by 'Spectral Class'",
+      "Extract 'Temperature (K)' values for each group"
+    ],
+    "data_preparation_steps": [
+      "Define ordered spectral classes: ordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']",
+      "Create data list: [df[df['Spectral Class']==c]['Temperature (K)'] for c in ordered_classes]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\192.csv')\nordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']\ndata = [df[df['Spectral Class']==c]['Temperature (K)'] for c in ordered_classes]\nplt.figure(figsize=(9,5))\nbp = plt.boxplot(data, patch_artist=True, labels=ordered_classes, boxprops={'facecolor':'skyblue','edgecolor':'navy'}, medianprops={'color':'red','linewidth':2}, whiskerprops={'color':'black'}, capprops={'color':'black'}, flierprops={'marker':'o','markerfacecolor':'orange','markersize':6,'markeredgecolor':'gray'})\nplt.xlabel('Spectral Class')\nplt.ylabel('Temperature (K)')\nplt.title('Temperature Distribution Across Spectral Classes\\nBoxplot Summary by Ordered Astronomical Types')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

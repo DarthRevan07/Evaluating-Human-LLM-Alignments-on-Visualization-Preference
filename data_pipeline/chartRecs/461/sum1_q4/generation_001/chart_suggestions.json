@@ -1,0 +1,205 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\461\\sum1_q4\\generation_001",
+  "schema_context": "Table: Monthly highest temperature in Amherst\nRows: 140\nColumns: 3\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 12\n  - Semantic Meaning: This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015.\n  - Value Range: 2004.0 to 2015.0\n  - Mean: 2009.34\n\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 140\n  - Semantic Meaning: This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset.\n\nField: Temperature\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring.\n  - Value Range: 41.0 to 98.0\n  - Mean: 76.48\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Date\"\n  3. \"Temperature\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Date']",
+  "table_metadata": {
+    "table_name": "Monthly highest temperature in Amherst",
+    "file_path": "csv_c_squared\\461.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)",
+    "original_filename": "461.csv",
+    "dataset_name": "Monthly highest temperature in Amherst",
+    "row_count": 140,
+    "column_count": 3,
+    "table_hash": 556358794757910485,
+    "fields": [
+      {
+        "name": "Year",
+        "clean_name": "Year",
+        "camel_case_name": "year",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 12,
+        "min_value": 2004.0,
+        "max_value": 2015.0,
+        "mean_value": 2009.3428571428572,
+        "median_value": 2009.0,
+        "sample_values": "2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015",
+        "inferred_semantic_summary": "This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015."
+      },
+      {
+        "name": "Date",
+        "clean_name": "Date",
+        "camel_case_name": "date",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 140,
+        "sample_values": "2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1",
+        "inferred_semantic_summary": "This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset."
+      },
+      {
+        "name": "Temperature",
+        "clean_name": "Temperature",
+        "camel_case_name": "temperature",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 50,
+        "min_value": 41.0,
+        "max_value": 98.0,
+        "mean_value": 76.47857142857143,
+        "median_value": 80.0,
+        "sample_values": "41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98",
+        "inferred_semantic_summary": "This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring."
+      }
+    ],
+    "formatted_summary": "## Table 1: Monthly_highest_temperature_in_Amherst (140 rows × 3 columns)\n\n### Description\nData loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)\n\n### Schema (3 fields)\n  - Year -- type: int64, values: 2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015\n  - Date -- type: object, values: 2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1\n  - Temperature -- type: int64, values: 41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98\n\n### Sample Data (first 5 rows)\n```\n   Year      Date  Temperature\n0  2004  2004/1/1           49\n1  2004  2004/2/1           54\n2  2004  2004/3/1           89\n3  2004  2004/4/1           88\n4  2004  2004/5/1           92\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 4,
+      "question": "How do the highest temperatures in the winter months (e.g., January, February) compare to those in the summer months (e.g., July, August) for each year?",
+      "column_combination": [
+        "Year",
+        "Date",
+        "Temperature"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Grouped Bar Chart",
+            "design_rationale": "A grouped bar chart allows for direct side-by-side comparison of winter and summer highest temperatures for each year, making it easy to spot differences and trends across years. With only 12 unique years but multiple values per season, this aggregation produces a clear, readable result.",
+            "target_insight": "This visualization reveals the magnitude of difference between winter and summer maximum temperatures for each year and makes it simple to see any narrowing or widening gaps between seasons over time.",
+            "output_fields": [
+              "Year",
+              "Temperature"
+            ],
+            "chart_encodings": {
+              "x": "Year",
+              "y": "Temperature",
+              "color": "Season ('Winter' or 'Summer')",
+              "size": null,
+              "other_aesthetics": "Bar grouping by year, categorical color mapping for seasons, gridlines"
+            }
+          },
+          "transformations": [
+            "Create a new column 'Season' categorizing df['Date'] into 'Winter' for 'January', 'February' and 'Summer' for 'July', 'August'",
+            "Group by df['Year'] and df['Season'], aggregate mean Temperature for each group"
+          ],
+          "data_preparation_steps": [
+            "Extract month from df['Date'] to determine season",
+            "Assign 'Winter' if month in ['January','February'], 'Summer' if month in ['July','August'], else np.nan",
+            "Filter out rows where 'Season' is nan to limit to relevant months",
+            "Group by df['Year'] and 'Season', compute mean Temperature as representative for each year-season combination"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\n# Extract month from Date\nmonth_map = {'January':'Winter','February':'Winter','July':'Summer','August':'Summer'}\ndf['Month'] = df['Date'].str.split(' ').str[0]\ndf['Season'] = df['Month'].map(month_map)\ndf_season = df.dropna(subset=['Season'])\ngrp = df_season.groupby(['Year','Season'])['Temperature'].mean().unstack()\nyears = grp.index.astype(int)\nwinter_temps = grp['Winter'].values\nsummer_temps = grp['Summer'].values\nbar_width = 0.35\nx = np.arange(len(years))\nfig, ax = plt.subplots(figsize=(10,6))\nax.bar(x - bar_width/2, winter_temps, bar_width, label='Winter (Jan/Feb)', color='#1f77b4')\nax.bar(x + bar_width/2, summer_temps, bar_width, label='Summer (Jul/Aug)', color='#ff7f0e')\nax.set_xticks(x)\nax.set_xticklabels(years)\nax.set_xlabel('Year')\nax.set_ylabel('Mean Highest Temperature (°F)')\nax.set_title('Comparison of Highest Winter vs Summer Temperatures in Amherst by Year')\nax.grid(axis='y', linestyle='--', alpha=0.4)\nax.legend()\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Diverging Dot Plot",
+            "design_rationale": "A diverging dot plot visually emphasizes the difference between highest summer and winter temperatures for each year as a deviation from a centerline. The difference is encoded as position, making the comparison visually striking. This approach is less conventional, but highly effective for highlighting season-to-season contrasts.",
+            "target_insight": "This visualization quantifies and visually showcases the temperature gap between summer and winter for each year, including whether the gap is increasing or decreasing, drawing attention to year-over-year changes.",
+            "output_fields": [
+              "Year",
+              "Temperature"
+            ],
+            "chart_encodings": {
+              "x": "Difference between Summer and Winter mean Temperature",
+              "y": "Year",
+              "color": "Magnitude and sign of difference (diverging colormap)",
+              "size": null,
+              "other_aesthetics": "Vertical reference line at zero, color gradient, annotation of extreme values"
+            }
+          },
+          "transformations": [
+            "Create 'Season' column as above ('Winter' for 'January', 'February'; 'Summer' for 'July', 'August')",
+            "Group by df['Year'] and Season, aggregate mean Temperature for each segment",
+            "Calculate 'Difference' = Summer mean - Winter mean for each year"
+          ],
+          "data_preparation_steps": [
+            "Extract month from df['Date'], map to 'Season', drop nulls",
+            "Group by ['Year','Season'], mean aggregation on Temperature",
+            "Pivot so each year has 'Winter' and 'Summer' mean Temperature",
+            "Compute difference, assign to dataframe for plotting"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\nmonth_map = {'January':'Winter','February':'Winter','July':'Summer','August':'Summer'}\ndf['Month'] = df['Date'].str.split(' ').str[0]\ndf['Season'] = df['Month'].map(month_map)\ndf_season = df.dropna(subset=['Season'])\ngrouped = df_season.groupby(['Year','Season'])['Temperature'].mean().unstack()\nyears = grouped.index.astype(int)\ndiff = grouped['Summer'] - grouped['Winter']\ndiff_vals = diff.values\ndiff_min = diff.min()\ndiff_max = diff.max()\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.Normalize(vmin=diff_min, vmax=diff_max)\nscat = ax.scatter(diff_vals, years, c=diff_vals, cmap=cmap, norm=norm, s=120, edgecolor='black')\nax.axvline(0, color='grey', linestyle='--', linewidth=1)\nfor i, (d, y) in enumerate(zip(diff_vals, years)):\n    if d == diff_max:\n        ax.text(d+0.5, y, 'Max Gap', va='center', ha='left', fontsize=9, color='black')\n    elif d == diff_min:\n        ax.text(d-0.5, y, 'Min Gap', va='center', ha='right', fontsize=9, color='black')\nax.set_xlabel('Difference: Summer mean - Winter mean (°F)')\nax.set_ylabel('Year')\nax.set_yticks(years)\nax.set_title('Yearly Difference between Highest Summer and Winter Temperatures\\nAmherst')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', label='Temperature Gap (°F)')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:45:51.332720",
+      "schema_context": "Table: Monthly highest temperature in Amherst\nRows: 140\nColumns: 3\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 12\n  - Semantic Meaning: This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015.\n  - Value Range: 2004.0 to 2015.0\n  - Mean: 2009.34\n\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 140\n  - Semantic Meaning: This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset.\n\nField: Temperature\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring.\n  - Value Range: 41.0 to 98.0\n  - Mean: 76.48\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Date\"\n  3. \"Temperature\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Date']",
+      "table_metadata": {
+        "table_name": "Monthly highest temperature in Amherst",
+        "file_path": "csv_c_squared\\461.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)",
+        "original_filename": "461.csv",
+        "dataset_name": "Monthly highest temperature in Amherst",
+        "row_count": 140,
+        "column_count": 3,
+        "table_hash": 556358794757910485,
+        "fields": [
+          {
+            "name": "Year",
+            "clean_name": "Year",
+            "camel_case_name": "year",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 12,
+            "min_value": 2004.0,
+            "max_value": 2015.0,
+            "mean_value": 2009.3428571428572,
+            "median_value": 2009.0,
+            "sample_values": "2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015",
+            "inferred_semantic_summary": "This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015."
+          },
+          {
+            "name": "Date",
+            "clean_name": "Date",
+            "camel_case_name": "date",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 140,
+            "sample_values": "2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1",
+            "inferred_semantic_summary": "This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset."
+          },
+          {
+            "name": "Temperature",
+            "clean_name": "Temperature",
+            "camel_case_name": "temperature",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 50,
+            "min_value": 41.0,
+            "max_value": 98.0,
+            "mean_value": 76.47857142857143,
+            "median_value": 80.0,
+            "sample_values": "41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98",
+            "inferred_semantic_summary": "This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring."
+          }
+        ],
+        "formatted_summary": "## Table 1: Monthly_highest_temperature_in_Amherst (140 rows × 3 columns)\n\n### Description\nData loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)\n\n### Schema (3 fields)\n  - Year -- type: int64, values: 2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015\n  - Date -- type: object, values: 2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1\n  - Temperature -- type: int64, values: 41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98\n\n### Sample Data (first 5 rows)\n```\n   Year      Date  Temperature\n0  2004  2004/1/1           49\n1  2004  2004/2/1           54\n2  2004  2004/3/1           89\n3  2004  2004/4/1           88\n4  2004  2004/5/1           92\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

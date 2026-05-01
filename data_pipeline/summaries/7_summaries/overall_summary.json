@@ -1,0 +1,28 @@
+{
+  "table_name": "Meat and Dairy Production",
+  "file_index": "7",
+  "original_filename": "7.csv",
+  "total_rows": 14382,
+  "total_columns": 4,
+  "column_names": [
+    "Country",
+    "Code",
+    "Year",
+    "Meat, total | 00001765 || Production | 005510 || tonnes"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\7_summaries",
+  "source_file": "csv_c2_sec\\7.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\7_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

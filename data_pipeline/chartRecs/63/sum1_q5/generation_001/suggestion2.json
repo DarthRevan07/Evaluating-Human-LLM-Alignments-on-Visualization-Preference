@@ -1,0 +1,41 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How does time spent on the website correlate with purchase status?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot with jitter and density shading",
+      "design_rationale": "A scatter plot visualizes the direct relationship between 'TimeSpentOnWebsite' and 'PurchaseStatus', plotting individual customers. Adding jitter and density shading helps overcome overplotting due to the binary nature of 'PurchaseStatus'.",
+      "target_insight": "Is there a threshold or a continuum where increased time on website is associated with actual purchases? Visualizes the correlation and offers insight into behavioral patterns.",
+      "output_fields": [
+        "TimeSpentOnWebsite",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "TimeSpentOnWebsite",
+        "y": "PurchaseStatus",
+        "color": "Density shading based on point count (using alpha); optional color per PurchaseStatus",
+        "size": null,
+        "other_aesthetics": "Jitter on y-axis; alpha transparency; marginal histogram for 'TimeSpentOnWebsite'"
+      }
+    },
+    "transformations": [
+      "Apply vertical jitter to 'PurchaseStatus' to prevent overplotting",
+      "Assign color (optional) per PurchaseStatus for distinction",
+      "Adjust marker alpha based on density for visual clarity",
+      "Add histogram as marginal plot for 'TimeSpentOnWebsite'"
+    ],
+    "data_preparation_steps": [
+      "Load CSV into df",
+      "Add random vertical jitter to each 'PurchaseStatus' (±0.1) for scatter",
+      "Optionally assign colors for 'Purchased'/'Did Not Purchase'",
+      "Create histogram for 'TimeSpentOnWebsite'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\nnp.random.seed(6)\njitter = np.random.uniform(-0.1, 0.1, size=len(df))\npurchase_status_jittered = df['PurchaseStatus'] + jitter\ncolors = df['PurchaseStatus'].map({0: mpl.colormaps['Set1'].resampled(2)(0), 1: mpl.colormaps['Set1'].resampled(2)(1)})\nfig = plt.figure(figsize=(9, 6))\ngs = fig.add_gridspec(2, 1, height_ratios=[4, 1], hspace=0.15)\nax_scatter = fig.add_subplot(gs[0])\nax_hist = fig.add_subplot(gs[1], sharex=ax_scatter)\nax_scatter.scatter(df['TimeSpentOnWebsite'], purchase_status_jittered, c=colors, alpha=0.3, s=18, edgecolor='none')\nax_scatter.set_xlabel(\"TimeSpentOnWebsite (minutes)\")\nax_scatter.set_ylabel(\"Purchase Status (jittered)\")\nax_scatter.set_yticks([0,1])\nax_scatter.set_yticklabels(['Did Not Purchase', 'Purchased'])\nax_scatter.set_title(\"Time Spent on Website vs Purchase Completion\\n(Customer-level Scatter with Jitter & Density\")\nax_scatter.grid(axis='x', linestyle='--', alpha=0.4)\n# Histogram below\nhist_vals, bins, patches = ax_hist.hist(df['TimeSpentOnWebsite'], bins=28, color='#617C6A', alpha=0.6, edgecolor='#444444')\nax_hist.set_ylabel(\"Count\")\nax_hist.set_xlabel(\"TimeSpentOnWebsite (minutes)\")\nax_hist.set_yticks([0, np.max(hist_vals)])\nplt.setp(ax_hist.get_xticklabels(), visible=True)\nplt.setp(ax_scatter.get_xticklabels(), visible=False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

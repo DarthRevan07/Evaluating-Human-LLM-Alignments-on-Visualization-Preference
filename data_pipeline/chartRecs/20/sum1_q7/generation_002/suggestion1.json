@@ -1,0 +1,40 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do certain genres cluster within specific nationalities or spread across multiple countries?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bipartite Genre-Nationality Network Graph",
+      "design_rationale": "To directly visualize the relationships and overlaps between genres and nationalities, a bipartite network graph reveals which genres are shared by multiple nationalities or concentrated within one. Each genre and nationality are represented as nodes; edges connect artworks linking them. Node size and color reveal clustering intensity. This approach, unconventional for tabular data, transforms the genre-nationality combinations into a visual map of artistic spread.",
+      "target_insight": "Whether genres cluster within specific nationalities or are spread across several countries, highlighting the bridges and unique concentrations.",
+      "output_fields": [
+        "genre",
+        "nationality"
+      ],
+      "chart_encodings": {
+        "x": "positions of genre and nationality nodes (network layout)",
+        "y": "positions of genre and nationality nodes (network layout)",
+        "color": "node type (genre vs nationality)",
+        "size": "node degree (number of connections/artworks)",
+        "other_aesthetics": "edge width proportional to connection count; transparency for clarity"
+      }
+    },
+    "transformations": [
+      "Split any multi-genre values in df['genre'] by commas to create genre-artwork mapping",
+      "Identify unique genre-nationality pairs per artwork",
+      "Count connections (number of artworks) per genre-nationality pair",
+      "Calculate node degree for each genre and nationality (number of artworks connected)"
+    ],
+    "data_preparation_steps": [
+      "Explode df['genre'] so that each row has a single genre",
+      "Group genre-nationality by counting artwork ids for edge weights",
+      "Create lists of unique genres and nationalities for node construction"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport networkx as nx\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndf_exploded = df.copy()\ndf_exploded['genre'] = df_exploded['genre'].str.split(',')\ndf_exploded = df_exploded.explode('genre')\ndf_exploded['genre'] = df_exploded['genre'].str.strip()\nbipartite_edges = df_exploded[['genre', 'nationality', 'id']].groupby(['genre', 'nationality']).size().reset_index(name='count')\nG = nx.Graph()\ngenres = bipartite_edges['genre'].unique()\nnationalities = bipartite_edges['nationality'].unique()\nfor genre in genres:\n    G.add_node(genre, bipartite=0)\nfor nation in nationalities:\n    G.add_node(nation, bipartite=1)\nfor _, row in bipartite_edges.iterrows():\n    G.add_edge(row['genre'], row['nationality'], weight=row['count'])\nfrom networkx.algorithms import bipartite\npos = bipartite.layout.bipartite_layout(G, genres)\nnode_sizes = [G.degree(n)*180 for n in G.nodes()]\nnode_colors = ['#3498db' if n in genres else '#e67e22' for n in G.nodes()]\nplt.figure(figsize=(12,8))\nnx.draw_networkx_nodes(G, pos, node_size=node_sizes, node_color=node_colors, alpha=0.9)\nnx.draw_networkx_edges(G, pos, width=[G[e[0]][e[1]]['weight']*0.6 for e in G.edges()], alpha=0.4)\nnx.draw_networkx_labels(G, pos, font_size=9)\nplt.title('Genre-Nationality Bipartite Network:\\nClusters and Spread of Artistic Genres')\nplt.axis('off')\nlegend_elements = [plt.Line2D([0],[0],marker='o',color='w',label='Genre',markerfacecolor='#3498db',markersize=10),\n                   plt.Line2D([0],[0],marker='o',color='w',label='Nationality',markerfacecolor='#e67e22',markersize=10)]\nplt.legend(handles=legend_elements,loc='best')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

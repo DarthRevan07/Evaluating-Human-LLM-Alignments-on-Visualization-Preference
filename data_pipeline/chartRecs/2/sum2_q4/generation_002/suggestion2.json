@@ -1,0 +1,71 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there any anomalies or outliers in the time series of methane emissions for the Waste sector in any country?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Time series boxplot (yearly emission distribution with outlier points highlighted) plus scatter overlay",
+      "design_rationale": "A boxplot by year (with emission values for all Waste-sector country entries per year) shows the changing statistical distribution and skew in emissions, making multi-country, multi-year outliers apparent. Overlaying country-level emission data as scatter points (colored for country, with prominent outliers in red) reveals not just which years but also which countries contributed to outliers, highlighting both aggregate (distribution-wide) and country-level detail for waste emissions outlier identification.",
+      "target_insight": "Outliers (both high and low) in annual distributions of Waste sector emissions; identification of which years saw extreme anomalies globally and which countries were responsible.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (categorical, 1990-2018)",
+        "y": "Methane Emission (all countries, Waste sector)",
+        "color": "Regular scatter: country color (low alpha points), outlier points: red",
+        "other_aesthetics": "Boxplot fill for main distribution, overlay country emission points, highlight outliers (beyond whiskers) in red; annotate country names for highest outliers"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Sector'] == 'Waste'",
+      "Reshape DataFrame from wide (columns 1990-2018) to long, giving columns 'Country', 'Year', 'Emission'",
+      "For each year, compute IQR (interquartile range) across countries' emissions; flag outliers beyond 1.5*IQR from Q1/Q3",
+      "For each year, annotate country on highest positive outlier"
+    ],
+    "data_preparation_steps": [
+      "waste_df = df[df['Sector']=='Waste'].copy()",
+      "years = [str(y) for y in range(1990,2019)]",
+      "waste_long = waste_df.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emission')",
+      "Remove NaNs from 'Emission'",
+      "For each year, compute Q1, Q3, IQR; mark emission as outlier if <Q1-1.5*IQR or >Q3+1.5*IQR",
+      "Create columns: 'is_outlier' and for plotting, 'label' (country/year for top outlier per year)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nwaste_df = df[df['Sector']=='Waste'].copy()\nyears = [str(y) for y in range(1990,2019)]\nwaste_long = waste_df.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emission')\nwaste_long = waste_long.dropna(subset=['Emission'])\nwaste_long['Year'] = waste_long['Year'].astype(int)\n# Identify outliers by year (IQR method)\ndef assign_outlier(dfgr):\n    q1 = dfgr['Emission'].quantile(0.25)\n    q3 = dfgr['Emission'].quantile(0.75)\n    iqr = q3 - q1\n    lower = q1 - 1.5*iqr\n    upper = q3 + 1.5*iqr\n    mask = (dfgr['Emission'] < lower) | (dfgr['Emission'] > upper)\n    dfgr['is_outlier'] = mask\n    return dfgr\nwaste_long = waste_long.groupby('Year', group_keys=False).apply(assign_outlier)\n# Annotate top outlier per year\ntopout_label = waste_long[waste_long['is_outlier']].sort_values('Emission', ascending=False).groupby('Year').head(1)\n# Plot\nfig, ax = plt.subplots(figsize=(18,7))\n# Box plot: emission distribution per year\nboxdata = [waste_long[waste_long['Year']==y]['Emission'].values for y in range(1990,2019)]\nbp = ax.boxplot(boxdata, positions=range(1990,2019), widths=0.7, patch_artist=True,\n                medianprops={'color':'midnightblue'}, boxprops={'facecolor':'lightgray', 'alpha':0.7})\n# Overlay all points: use alpha for country separation\nnp.random.seed(1)\ncolors = mpl.colormaps['tab20'].colors\ncountry_to_col = {c:colors[i%20] for i,c in enumerate(waste_long['Country'].unique())}\nfor _, row in waste_long.iterrows():\n    col = country_to_col[row['Country']] if not row['is_outlier'] else 'red'\n    alpha = 0.14 if not row['is_outlier'] else 1.0\n    s = 14 if not row['is_outlier'] else 60\n    lw = 0 if not row['is_outlier'] else 1.5\n    ax.scatter(row['Year'], row['Emission'], color=col, alpha=alpha, s=s, edgecolor='black' if row['is_outlier'] else None, lw=lw, zorder=3)\n# Annotate highest outliers\nymax = waste_long['Emission'].max()\nfor _, row in topout_label.iterrows():\n    ax.text(row['Year'], row['Emission']+ymax*0.01, row['Country'], fontsize=9, color='darkred', rotation=30, ha='left', va='bottom')\nax.set_xlabel('Year', fontsize=13)\nax.set_ylabel('Methane Emissions (MTCO2e)', fontsize=13)\nax.set_title('Waste Sector: Yearly Distribution of Country Methane Emissions\\n Outliers (red) and Top-Country Labels Highlighted (1990-2018)', fontsize=16)\nax.set_xticks(np.arange(1990,2019,2))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,48 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "What are the highest and lowest price outliers by manufacturer and model?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "heatmap of max/min outlier prices by manufacturer vs. model",
+      "design_rationale": "A heatmap efficiently visualizes complex relationships across two categorical dimensions—manufacturer and model—to identify exactly which pairings harbor the greatest and lowest price outliers. Rather than plotting all points, aggregate to the maximum outlier and minimum outlier price within each pairing, displaying these as separate heatmaps (or one with diverging colors). This approach scales gracefully across the large schema, allowing a global scan for the 'most extreme' price outlier origins.",
+      "target_insight": "Which manufacturer-model pairings have the single highest and lowest price outliers; reveals concentration of market anomalies.",
+      "output_fields": [
+        "Manufacturer",
+        "Model",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Model (top 15 overall by count)",
+        "y": "Manufacturer (top 10 overall by count)",
+        "color": "Outlier Price (max or min per pairing)",
+        "size": "null",
+        "other_aesthetics": "Separate heatmaps for max and min; labels for most extreme outlier cells"
+      }
+    },
+    "transformations": [
+      "Identify all price outliers via IQR for each Manufacturer-Model group as before",
+      "For all outlier rows, count frequency for each Manufacturer and Model, retain top 10 Manufacturers, top 15 Models by outlier frequency",
+      "For each remaining Manufacturer-Model group, compute the highest and lowest price outlier",
+      "Pivot data to Manufacturer (y) vs Model (x), values are max/min outlier Price"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\28.csv')",
+      "grouped = df.groupby(['Manufacturer', 'Model'])",
+      "def outlier_tag(subdf):\n    q1 = subdf['Price'].quantile(0.25)\n    q3 = subdf['Price'].quantile(0.75)\n    iqr = q3 - q1\n    return ((subdf['Price'] < q1 - 1.5*iqr) | (subdf['Price'] > q3 + 1.5*iqr))",
+      "df['outlier'] = grouped['Price'].apply(outlier_tag).reset_index(drop=True)",
+      "outliers = df[df['outlier']]",
+      "manu_counts = outliers['Manufacturer'].value_counts().nlargest(10).index",
+      "model_counts = outliers['Model'].value_counts().nlargest(15).index",
+      "outliers_top = outliers[(outliers['Manufacturer'].isin(manu_counts)) & (outliers['Model'].isin(model_counts))]",
+      "max_price_outlier = outliers_top.groupby(['Manufacturer','Model'])['Price'].max().unstack('Model')",
+      "min_price_outlier = outliers_top.groupby(['Manufacturer','Model'])['Price'].min().unstack('Model')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ngrouped = df.groupby(['Manufacturer', 'Model'])\ndef outlier_tag(subdf):\n    q1 = subdf['Price'].quantile(0.25)\n    q3 = subdf['Price'].quantile(0.75)\n    iqr = q3 - q1\n    return ((subdf['Price'] < q1 - 1.5*iqr) | (subdf['Price'] > q3 + 1.5*iqr))\ndf['outlier'] = grouped['Price'].apply(outlier_tag).reset_index(drop=True)\noutliers = df[df['outlier']]\nmanu_counts = outliers['Manufacturer'].value_counts().nlargest(10).index\nmodel_counts = outliers['Model'].value_counts().nlargest(15).index\noutliers_top = outliers[(outliers['Manufacturer'].isin(manu_counts)) & (outliers['Model'].isin(model_counts))]\nmax_price_outlier = outliers_top.groupby(['Manufacturer','Model'])['Price'].max().unstack('Model')\nmin_price_outlier = outliers_top.groupby(['Manufacturer','Model'])['Price'].min().unstack('Model')\nfig, axes = plt.subplots(1,2,figsize=(20,8))\ncmap = mpl.colormaps['YlOrRd']\nmask_max = ~max_price_outlier.isna()\nim0 = axes[0].imshow(max_price_outlier, aspect='auto', cmap=cmap, interpolation='nearest')\naxes[0].set_xticks(np.arange(max_price_outlier.shape[1]))\naxes[0].set_yticks(np.arange(max_price_outlier.shape[0]))\naxes[0].set_xticklabels(max_price_outlier.columns, rotation=90, fontsize=11)\naxes[0].set_yticklabels(max_price_outlier.index, fontsize=11)\naxes[0].set_title('Highest Price Outlier by Manufacturer and Model')\nfor i in range(max_price_outlier.shape[0]):\n    for j in range(max_price_outlier.shape[1]):\n        val = max_price_outlier.iloc[i,j]\n        if mask_max.iloc[i,j]:\n            axes[0].text(j, i, f'{val:.0f}', color='black', ha='center', va='center', fontsize=9)\nfig.colorbar(im0, ax=axes[0], orientation='vertical')\ncmap2 = mpl.colormaps['Blues']\nmask_min = ~min_price_outlier.isna()\nim1 = axes[1].imshow(min_price_outlier, aspect='auto', cmap=cmap2, interpolation='nearest')\naxes[1].set_xticks(np.arange(min_price_outlier.shape[1]))\naxes[1].set_yticks(np.arange(min_price_outlier.shape[0]))\naxes[1].set_xticklabels(min_price_outlier.columns, rotation=90, fontsize=11)\naxes[1].set_yticklabels(min_price_outlier.index, fontsize=11)\naxes[1].set_title('Lowest Price Outlier by Manufacturer and Model')\nfor i in range(min_price_outlier.shape[0]):\n    for j in range(min_price_outlier.shape[1]):\n        val = min_price_outlier.iloc[i,j]\n        if mask_min.iloc[i,j]:\n            axes[1].text(j, i, f'{val:.0f}', color='black', ha='center', va='center', fontsize=9)\nfig.colorbar(im1, ax=axes[1], orientation='vertical')\nfig.suptitle('Matrix of Price Outlier Extremes by Manufacturer and Model\\nLeft: Highest Outlier Prices\\nRight: Lowest Outlier Prices', fontsize=20)\nplt.tight_layout(rect=[0, 0, 1, 0.96])\nplt.show()"
+  },
+  "schema_based": true
+}

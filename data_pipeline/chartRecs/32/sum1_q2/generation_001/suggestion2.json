@@ -1,0 +1,40 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What trends can be observed in medical charges as age increases, and do these trends differ by smoking status?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot by Age Group and Smoking Status",
+      "design_rationale": "Boxplots for each age group and smoking status allow us to show the distribution, spread, outliers, and medians of medical charges in a compact format. By binning age into defined groups, we preserve interpretability and reveal how charge variability changes across age and between smokers/non-smokers. This approach uncovers not only mean differences but also variance and skew patterns in charge distributions.",
+      "target_insight": "We can see how the magnitude and variability of medical charges shift as people move to higher age brackets, and distinguish these trends for smokers versus non-smokers, giving a deep view of risk factors.",
+      "output_fields": [
+        "age",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age_group (categorical bins)",
+        "y": "charges (distribution per age group per smoker)",
+        "color": "smoker (side-by-side or color-coded boxplots)",
+        "size": null,
+        "other_aesthetics": "Boxplot pairs per age group; alpha and fill color for easier comparison"
+      }
+    },
+    "transformations": [
+      "Bin df['age'] into categorical age groups (e.g., 18-24, 25-34, ..., 55-64)",
+      "Create pairs of boxplots for each age group by df['smoker']"
+    ],
+    "data_preparation_steps": [
+      "age_bins = np.arange(18, 65, 7)",
+      "age_labels = [f'{b}-{b+6}' for b in age_bins[:-1]]",
+      "df['age_group'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, include_lowest=True, right=False)",
+      "Prepare charge lists per age_group/smoker for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\32.csv')\nage_bins = np.arange(18, 65, 7)\nage_labels = [f'{b}-{b+6}' for b in age_bins[:-1]\ndf['age_group'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, include_lowest=True, right=False)\nsmoker_vals = ['no', 'yes']\ndata = []\nfor grp in age_labels:\n    box_data = []\n    for smoker in smoker_vals:\n        subset = df[(df['age_group']==grp) & (df['smoker']==smoker)]\n        box_data.append(subset['charges'].values)\n    data.append(box_data)\ndata = np.array(data)\ndata_no = [box[0] for box in data]\ndata_yes = [box[1] for box in data]\nwidth = 0.4\nind = np.arange(len(age_labels))\nfig, ax = plt.subplots(figsize=(12,7))\nbox1 = ax.boxplot(data_no, positions=ind-width/2, widths=width, patch_artist=True, boxprops=dict(facecolor='royalblue', alpha=0.5), medianprops=dict(color='navy'), notch=True)\nbox2 = ax.boxplot(data_yes, positions=ind+width/2, widths=width, patch_artist=True, boxprops=dict(facecolor='darkorange', alpha=0.5), medianprops=dict(color='chocolate'), notch=True)\nax.set_xticks(ind)\nax.set_xticklabels(age_labels)\nax.set_xlabel('Age Group')\nax.set_ylabel('Medical Charges')\nax.set_title('Distribution of Medical Charges by Age Group and Smoking Status')\nax.legend([box1['boxes'][0], box2['boxes'][0]], ['Non-Smoker', 'Smoker'], loc='upper left', fancybox=True)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

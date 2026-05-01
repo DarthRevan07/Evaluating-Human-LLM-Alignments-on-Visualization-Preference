@@ -1,0 +1,45 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which sectors contribute the most to total methane emissions in a specific country, and how has this changed from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Diverging Bar Chart (Horizontal)",
+      "design_rationale": "A diverging horizontal bar chart is used to highlight the changes in sector-level methane emissions between 1990 and 2018 for a selected country. By displaying the absolute change (2018 - 1990) for each sector using horizontal bars, positive and negative changes are immediately apparent, making it easy to identify which sectors have increased or reduced their emissions over this period. Color encoding of bars (e.g., blue for decrease, orange for increase) intuitively communicates the trend direction.",
+      "target_insight": "Shows which sectors have contributed most to the increase or decrease in methane emissions in the selected country from 1990 to 2018, emphasizing recent change magnitude and direction.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Change in methane emissions (2018 - 1990)",
+        "y": "Sector",
+        "color": "Sign of change (increase or decrease)",
+        "size": null,
+        "other_aesthetics": "Horizontal bars, annotated values, sorted by absolute change"
+      }
+    },
+    "transformations": [
+      "Filter df to rows with selected 'Country' (e.g., 'United States')",
+      "Keep only ['Sector', '2018', '1990']",
+      "Drop any rows where values are missing for 1990 or 2018",
+      "Calculate new column 'change' = '2018' - '1990'",
+      "Sort sectors by absolute value of 'change' descending"
+    ],
+    "data_preparation_steps": [
+      "Select df_plot = df[df['Country'] == 'United States'][['Sector', '2018', '1990']]",
+      "Drop rows with NA in either '2018' or '1990'",
+      "df_plot['change'] = df_plot['2018'] - df_plot['1990']",
+      "df_plot = df_plot.sort_values('change', key=abs, ascending=False)",
+      "Set sector as index"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\2.csv')\ncountry = 'United States'\ndf_plot = df[df['Country'] == country][['Sector', '2018', '1990']].dropna()\ndf_plot['change'] = df_plot['2018'] - df_plot['1990']\ndf_plot = df_plot.set_index('Sector')\ndf_plot = df_plot.sort_values('change', key=abs, ascending=False)\ncolors = df_plot['change'].apply(lambda x: '#e66101' if x > 0 else '#5e3c99')\nplt.figure(figsize=(9,6))\nax = df_plot['change'].plot(kind='barh', color=colors)\nfor i, (v, name) in enumerate(zip(df_plot['change'], df_plot.index)):\n    ax.text(v + np.sign(v)*0.5, i, f'{v:.2f}', va='center', fontsize=10, color='#222222')\nplt.title(country + ' Sectoral Methane Emissions Change (2018 vs 1990)')\nplt.xlabel('Change in Methane Emissions (MTCO2e)')\nplt.ylabel('Sector')\nplt.grid(axis='x', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

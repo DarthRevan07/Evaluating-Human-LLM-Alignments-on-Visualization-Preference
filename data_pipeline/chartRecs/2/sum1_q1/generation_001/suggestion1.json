@@ -1,0 +1,47 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which countries had the highest total methane emissions in 2018, and how does this compare to their values in 1990?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Diverging Bar Chart",
+      "design_rationale": "A horizontal diverging bar chart displays both the absolute values and change between the two years for the highest-emitting countries. 2018 totals are plotted rightward, 1990 values leftward. This emphasizes both the scale and trend for each top emitter, providing clear comparative insight. The bar direction and color enable quick visual identification of growth versus shrinkage and rank order.",
+      "target_insight": "This visualization highlights which countries had the highest methane emissions in 2018, their historic values in 1990, and magnitude/direction of change over time, ranked by current emissions.",
+      "output_fields": [
+        "Country",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Methane emissions (MTCO2e) in 2018 and 1990 (bars diverging from center)",
+        "y": "Country (sorted by 2018 emissions, descending)",
+        "color": "Color indicates period (2018 vs 1990)",
+        "size": null,
+        "other_aesthetics": "Annotations for emission values; gridlines for scale context"
+      }
+    },
+    "transformations": [
+      "Filter to rows where Sector is 'Total' or includes all emissions sources (assuming such row exists per country, otherwise aggregate by Country summing '2018' and '1990')",
+      "Drop rows where 'Country' is not a real country or a global/region summary",
+      "Drop rows where '1990' is null",
+      "For each country, compute total '2018' and '1990' emission",
+      "Select top 10 countries by '2018' emission (after aggregation)",
+      "Sort results by '2018' in descending order"
+    ],
+    "data_preparation_steps": [
+      "df_total = df.copy()",
+      "If 'Sector' contains a category for country totals (e.g., 'Total'), filter: df_total = df_total[df_total['Sector'].str.lower() == 'total']",
+      "If no such 'Sector', then: df_total = df_total.groupby('Country', as_index=False)[['2018','1990']].sum()",
+      "Drop countries in 'Country' containing 'World' or known region aggregates",
+      "df_total = df_total[df_total['1990'].notnull()]",
+      "df_top10 = df_total.sort_values('2018', ascending=False).head(10)",
+      "df_top10_sort = df_top10.sort_values('2018', ascending=True)  # for barh, to stack top emitter at top"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\n# Step 1: Aggregate to country-level totals\nif 'Total' in [x.lower() for x in df['Sector'].unique()]:\n    df_total = df[df['Sector'].str.lower() == 'total'].copy()\nelse:\n    df_total = df.groupby('Country', as_index=False)[['2018','1990']].sum()\n# Remove regions and non-country aggregates\nglob_region_keywords = ['world', 'europe', 'asia', 'africa', 'america', 'oceania', 'income', 'union', 'caribbean', 'pacific']\ncountry_mask = df_total['Country'].apply(lambda x: all(k not in x.lower() for k in glob_region_keywords))\ndf_total = df_total[country_mask]\ndf_total = df_total[df_total['1990'].notnull()]\n# Top 10 by 2018\ndf_top10 = df_total.sort_values('2018', ascending=False).head(10)\ndf_top10_sort = df_top10.sort_values('2018', ascending=True)\ncountries = df_top10_sort['Country']\ny = np.arange(len(countries))\nwidth = 0.4\nmpl.rcParams['axes.spines.right'] = False\nmpl.rcParams['axes.spines.top'] = False\ncmap = mpl.colormaps['tab20']\nfig, ax = plt.subplots(figsize=(10,7))\n# Bars left: 1990, right: 2018\nax.barh(y - width/2, df_top10_sort['1990'], height=width, color=cmap(0), label='1990', alpha=0.8)\nax.barh(y + width/2, df_top10_sort['2018'], height=width, color=cmap(2), label='2018', alpha=0.8)\n# Annotate bars\nfor i, (v1990, v2018) in enumerate(zip(df_top10_sort['1990'], df_top10_sort['2018'])):\n    ax.text(v1990 + max(df_top10_sort['2018']) * 0.01, y[i] - width/2, f\"{v1990:.1f}\", va='center', ha='left', color='black', fontsize=9)\n    ax.text(v2018 + max(df_top10_sort['2018']) * 0.01, y[i] + width/2, f\"{v2018:.1f}\", va='center', ha='left', color='black', fontsize=9)\n    # Connect lines\n    ax.plot([v1990, v2018], [y[i] - width/2, y[i] + width/2], color='grey', linestyle='--', linewidth=1, alpha=0.7)\n# Y-ticks\nax.set_yticks(y)\nax.set_yticklabels(countries)\nax.set_xlabel('Methane emissions (MTCO2e)')\nax.set_title('Top 10 Countries by Methane Emissions in 2018 vs 1990\\n(Values are in MTCO2e)', fontsize=14)\nax.legend()\nax.grid(axis='x', linestyle='--', alpha=0.5)\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

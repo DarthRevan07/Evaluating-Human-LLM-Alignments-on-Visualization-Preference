@@ -1,0 +1,43 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are certain transportation types more common among specific traveler nationalities?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap visualizes the joint distribution of transportation types and traveler nationalities, representing the frequency of each pairing as color intensity. This approach lets the viewer quickly spot clusters where a nationality is strongly associated with one or more transport modes. Additionally, it scales well even with 41 nationalities and 9 transport types. Color gradients provide intuitive 'hot spots'; it is particularly effective for revealing concentrated usage patterns and atypical associations.",
+      "target_insight": "Highlights concentration patterns and outliers by showing which nationality-transportation combinations are notably frequent or rare.",
+      "output_fields": [
+        "Traveler nationality",
+        "Transportation type",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Transportation type",
+        "y": "Traveler nationality",
+        "color": "Trip count (heatmap color intensity)",
+        "size": null,
+        "other_aesthetics": "Colormap (viridis), colorbar for frequencies, sorted axes for clarity"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Traveler nationality' and 'Transportation type'",
+      "Group dataset by 'Traveler nationality' and 'Transportation type' to count the number of trips",
+      "Pivot to create matrix with nationalities as rows, transportation types as columns, values are frequency counts, fill missing values with zero",
+      "Sort nationalities by total count descending for readability"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=[\"Traveler nationality\", \"Transportation type\"])",
+      "df_grouped = df_clean.groupby([\"Traveler nationality\", \"Transportation type\"]).size().reset_index(name=\"Trip Count\")",
+      "df_pivot = df_grouped.pivot(index=\"Traveler nationality\", columns=\"Transportation type\", values=\"Trip Count\").fillna(0)",
+      "nationality_order = df_pivot.sum(axis=1).sort_values(ascending=False).index",
+      "df_pivot = df_pivot.loc[nationality_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf_clean = df.dropna(subset=[\"Traveler nationality\", \"Transportation type\"])\ndf_grouped = df_clean.groupby([\"Traveler nationality\", \"Transportation type\"]).size().reset_index(name=\"Trip Count\")\ndf_pivot = df_grouped.pivot(index=\"Traveler nationality\", columns=\"Transportation type\", values=\"Trip Count\").fillna(0)\nnationality_order = df_pivot.sum(axis=1).sort_values(ascending=False).index\ndf_pivot = df_pivot.loc[nationality_order]\ncmap = mpl.colormaps[\"viridis\"]\nfig, ax = plt.subplots(figsize=(min(12,1.1*len(df_pivot.columns)), max(7,0.18*len(df_pivot.index))))\nim = ax.imshow(df_pivot.values, cmap=cmap, aspect=\"auto\")\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_xticklabels(df_pivot.columns, rotation=40, ha=\"left\", fontsize=9)\nax.set_yticklabels(df_pivot.index, fontsize=9)\nax.set_xlabel(\"Transportation type\")\nax.set_ylabel(\"Traveler nationality\")\nax.set_title(\"Heatmap of trip counts\\nby nationality and transportation type\")\ncbar = fig.colorbar(im, ax=ax, shrink=0.65, pad=0.04)\ncbar.set_label(\"Number of Trips\", fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

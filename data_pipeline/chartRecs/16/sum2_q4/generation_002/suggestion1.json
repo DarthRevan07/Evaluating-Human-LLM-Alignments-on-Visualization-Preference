@@ -1,0 +1,38 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How does the Total stat differ between Pokémon with and without a secondary type (Type 2)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot offers a clear, concise visualization of the distribution of the Total stat for Pokémon grouped by the presence (or absence) of a secondary type. Boxplots highlight medians, quartiles, and outliers, enabling viewers to compare overall stat variability and central tendencies between single- and dual-type Pokémon. This approach fits the numeric-stat vs categorical-group structure in the schema and directly answers the question by showing the vertical distribution of Total for both categories.",
+      "target_insight": "The visualization reveals whether dual-type Pokémon generally have higher, lower, or similar Total stats, as well as any differences in spread or presence of exceptional outliers.",
+      "output_fields": [
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "\"Has Secondary Type\" (derived from \"Type 2\")",
+        "y": "\"Total\"",
+        "color": "\"Has Secondary Type\" (categorical, distinct colors for each group)",
+        "size": null,
+        "other_aesthetics": "Box width, whiskers, outlier markers"
+      }
+    },
+    "transformations": [
+      "Create a new column 'Has Secondary Type' where value is 'Yes' if df['Type 2'] is not null, otherwise 'No'",
+      "Group df by 'Has Secondary Type' and extract df['Total'] values for each group"
+    ],
+    "data_preparation_steps": [
+      "Load dataframe from provided file",
+      "Create 'Has Secondary Type' column: df['Has Secondary Type'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')",
+      "Prepare data for boxplot: [df[df['Has Secondary Type']=='No']['Total'], df[df['Has Secondary Type']=='Yes']['Total']]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf['Has Secondary Type'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')\ndata_to_plot = [df[df['Has Secondary Type']=='No']['Total'], df[df['Has Secondary Type']=='Yes']['Total']]\nfig, ax = plt.subplots(figsize=(7,6))\nbox = ax.boxplot(data_to_plot, patch_artist=True, widths=0.6)\ncolors = ['#1f77b4', '#ff7f0e']\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xticklabels(['No Secondary Type','Has Secondary Type'])\nax.set_ylabel('Total')\nax.set_xlabel('Has Secondary Type')\nax.set_title('Distribution of Total Stat by \\nPresence of Secondary Type')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

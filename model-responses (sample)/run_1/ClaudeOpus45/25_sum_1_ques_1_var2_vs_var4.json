@@ -1,0 +1,20 @@
+{
+    "chart_A_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var2.png",
+    "chart_B_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var4.png",
+    "chart_A_analysis": "Chart A is a horizontal bar chart showing the top 10 positive and negative 30-day percentage changes for NIFTY-50 stocks, with an overlay of 365-day changes. The chart uses color coding (green for positive 30-day, red for negative 30-day, light blue for annual) to distinguish between metrics. Stocks are clearly labeled on the y-axis, and the percentage scale is easy to read. The chart directly addresses which stocks have the largest changes and allows comparison between short-term and long-term performance.",
+    "chart_A_readability_rating": 4,
+    "chart_A_readability_rationale": "The chart is well-organized with clear labels, color coding, and a logical layout. The horizontal bars make it easy to compare values across stocks, though the overlapping bars can be slightly confusing at times.",
+    "chart_A_precision_rating": 5,
+    "chart_A_precision_rationale": "The chart directly answers the question by showing the largest positive and negative 30-day changes and comparing them to 365-day changes. It filters to top 10 in each category, making it highly relevant.",
+    "chart_A_appeal_rating": 4,
+    "chart_A_appeal_rationale": "The color scheme is pleasant and professional. The use of green/red for positive/negative is intuitive. The layout is clean, though the chart is dense with information.",
+    "chart_B_analysis": "Chart B is a scatter plot showing the relationship between 30-day and 365-day percentage changes for all NIFTY-50 stocks. It includes a trend line and labels for notable stocks. While it shows the relationship between the two time periods, it requires more effort to identify which stocks have the largest changes, as the viewer must scan the entire plot.",
+    "chart_B_readability_rating": 3,
+    "chart_B_readability_rationale": "The scatter plot is cluttered with overlapping labels and many data points. While outliers are visible, identifying specific stocks with largest changes requires careful examination. The trend line adds analytical value but doesn't directly answer the question.",
+    "chart_B_precision_rating": 3,
+    "chart_B_precision_rationale": "While the chart shows the comparison between 30-day and 365-day changes, it doesn't clearly highlight which stocks have the largest changes. The viewer must infer this from extreme positions on the plot.",
+    "chart_B_appeal_rating": 3,
+    "chart_B_appeal_rationale": "The scatter plot is visually acceptable but the overlapping labels reduce its appeal. The color scheme is simple and the trend line adds interest, but overall it appears cluttered.",
+    "overall_preference": "Chart A",
+    "preference_rationale": "Chart A directly answers the question by clearly showing the stocks with largest positive and negative 30-day changes and comparing them to 365-day changes in an organized, easy-to-read format. Chart B requires more effort to extract the same information and has readability issues due to label clutter."
+}

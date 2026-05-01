@@ -1,0 +1,38 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "Which genres appear most often during periods of stylistic transition, as indicated by overlapping or mixed genre entries?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Plot",
+      "design_rationale": "A bar plot offers a clear aggregation of genre frequencies, ideal for categorical counts. By focusing on artworks with overlapping or mixed genre entries (genre fields containing commas or multiple genre names), the chart directly quantifies which genres are most frequently associated with stylistic transition. This visualization gives an intuitive ranking of genres involved in transitions and helps identify stylistically versatile genres.",
+      "target_insight": "The top genres most involved in transitional periods, shown by their frequency in mixed-genre artworks.",
+      "output_fields": [
+        "genre"
+      ],
+      "chart_encodings": {
+        "x": "Genre names (extracted from mixed genre entries in df['genre'])",
+        "y": "Count of occurrences in mixed-genre entries",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Rotate x labels for readability"
+      }
+    },
+    "transformations": [
+      "Filter df to artworks where df['genre'] contains commas or multiple genre names, indicating stylistic transition.",
+      "Split each entry in df['genre'] (from mixed artworks) into individual genre names and count occurrences across the dataset."
+    ],
+    "data_preparation_steps": [
+      "mask = df['genre'].str.contains(',')",
+      "df_mixed = df[mask]",
+      "genres_mixed = df_mixed['genre'].str.split(',').explode().str.strip()",
+      "genre_counts = genres_mixed.value_counts()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nmask = df['genre'].str.contains(',')\ndf_mixed = df[mask]\ngenres_mixed = df_mixed['genre'].str.split(',').explode().str.strip()\ngenre_counts = genres_mixed.value_counts()\nfig, ax = plt.subplots(figsize=(9,5))\nax.bar(genre_counts.index, genre_counts.values, color='skyblue')\nax.set_xlabel('Genre')\nax.set_ylabel('Count in Transition Artworks')\ntitle = 'Genres Appearing Most Frequently During Stylistic Transition\\n(Mixed Genre Entries)' \nax.set_title(title)\nplt.xticks(rotation=45, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

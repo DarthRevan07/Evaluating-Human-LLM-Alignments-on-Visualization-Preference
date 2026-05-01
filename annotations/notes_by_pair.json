@@ -1,0 +1,1138 @@
+{
+  "112_sum_2_ques_1_var5_vs_var6": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Missing key information - caffine per quantity (vol) or caffine per serving (bottle or cup)",
+          "Outliers make the chart cluttered, no overall meaning"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "A line scatter is quite difficult to understand in comparison to stratified bar"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "The caffiene range should be on yaxis",
+          "We dont care about the distribution of in-class, can be condensed into a singular point.",
+          "Chart A might confuse users."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question about how caffeine levels vary among drink types because it shows actual caffeine values rather than counts within ranges. It reveals the true distribution, spread, and outliers (especially notable in Coffee), providing more precise and complete information about caffeine variation across drink types."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly answers the question by showing actual caffeine level variations within each drink type. The scatter plot format makes it immediately clear that coffee has the highest and most variable caffeine content, energy drinks and shots have moderate-to-high levels, soft drinks and tea have lower levels, and water has minimal caffeine. This is more precise and intuitive than Chart A's grouped ranges approach."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question by showing the full distribution and variability of caffeine levels across drink types, enabling a deeper and more accurate understanding of how they differ beyond simple category counts."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "For the general question of how caffeine levels vary among drink types, Chart A more clearly communicates high-level differences and distributions at a glance, making it more suitable for quick understanding despite Chart B's greater precision."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Despite Chart B's interactive appeal, Chart A's stacked bar chart allows for a quicker, more at-a-glance comparison of caffeine levels across drink types, which is essential for answering the question posed."
+      }
+    }
+  },
+  "122_sum_1_ques_5_var1_vs_var5": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Doesn't clearly show relative shift in demands but explains increase quite well",
+          "No. Too much work"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "Having a boundary line between categories would be great",
+          "Need the legend to make sense of the second chart, not the case with the first chart"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Difficult to read and compare",
+          "Readibility"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B (heatmap) better answers the specific question about genre dominance in specific years. It allows for direct comparison of genres within each year and makes shifts in market demand clearly visible. While Chart A shows overall market trends effectively, the stacked format makes it harder to identify which genres dominated in specific years. The heatmap's cell-based structure directly addresses the question of temporal shifts in genre dominance."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B (heatmap) is superior for answering this specific question. It allows for precise identification of which genres dominated in specific years and clearly reveals shifts in market demand over time. Each genre can be independently tracked without the visual interference present in the stacked area chart. While Chart A shows overall market trends well, Chart B's format directly addresses the question about genre dominance in specific years with greater precision and clarity."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and clearly answers the question by making genre dominance in specific years immediately visible, which is central to identifying shifts in market demand or player preferences."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more clearly and directly highlights genre dominance and shifts over time, making it better suited to answering the question efficiently and accurately."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred for its higher readability, precision in conveying shifts in market demand, and overall visual appeal. Its clear color gradients and layout make it easier to identify which genres dominate in specific years."
+      }
+    }
+  },
+  "122_sum_1_ques_5_var7_vs_var6": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Confusion over what sales were plotted for the year (top genre vs total)",
+          "blue area too small"
+        ]
+      },
+      "H4": {
+        "preference": "Both similar",
+        "notes": [
+          "Radar charts can be difficult to understand when variance between categories is this high"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "It's not cleat if the global sales are per genre or overall.",
+          "Granularity, chart type.",
+          "A shows the trend more prominently and is easier to read."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A is significantly better for answering the question about genre dominance shifts over time. The bar chart format allows for precise year-by-year comparison, making it easy to identify when specific genres rose or fell in popularity. Chart B's radar format with decade aggregation loses crucial temporal granularity and is harder to interpret accurately. Chart A clearly shows Action's dominance emerging in the 2000s and the earlier prominence of Platform and other genres."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the specific question about genres dominating in specific years. It provides year-by-year granularity showing clear shifts in market demand (e.g., Platform in 1985, Role-Playing in late 1990s, Action dominance from 2002-2014). Chart B aggregates by decade, losing the temporal precision needed to identify specific year shifts. Despite Chart B's visual appeal, Chart A's superior readability and precision make it the better choice for answering this question."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and accurately answers the question by showing genre dominance at specific years, which is essential for identifying concrete shifts in market demand or player preferences, despite being less visually elegant."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Although less visually appealing, Chart A more directly and precisely answers the question by clearly showing which genres dominate global sales in specific years, which is central to identifying shifts in market demand."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "I would prefer Chart B as it provides a clearer and more aesthetically pleasing representation of the data, making it easier to understand and thus answer the question more effectively."
+      }
+    }
+  },
+  "122_sum_2_ques_3_var5_vs_var6": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "JP sales appear cluttered in first glance",
+          "Heatmap looks better when gradients are smoother"
+        ]
+      },
+      "H4": {
+        "preference": "Both similar",
+        "notes": [
+          "Difficult to read numbers, aspect ratio is also awkard",
+          "Neither chart is easy visually"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Slightly more visual"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is significantly better at answering the question about publishers performing well in particular regions. It displays more publishers (17 vs 6), provides exact numerical values, and the heatmap format makes regional strengths immediately apparent (e.g., Enix Corporation's JP dominance at 1.08, Nintendo's NA strength at 1.16). The radar chart, while visually appealing, suffers from overlapping data that obscures precise comparisons."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B (heatmap) is significantly superior for answering the question. It clearly shows which publishers perform well in which regions through both color intensity and numerical values. The format allows for easy comparison across both publishers and regions simultaneously, making patterns immediately obvious (e.g., Nintendo's NA dominance, Enix/SquareSoft's JP strength). Chart A's overlapping radar lines create visual confusion that obscures rather than clarifies the regional performance patterns."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more clearly and precisely answers the question by making regional performance differences across publishers immediately visible and quantifiable."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and accurately answers the question by clearly showing which publishers consistently perform well in specific regions, supported by precise values and broader coverage, while maintaining good readability and visual quality."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A's heatmap, despite its subtle color variations, is generally more approachable and allows for easier comparison of performance between publishers across regions, which is essential for the question asked."
+      }
+    }
+  },
+  "122_sum_2_ques_5_var5_vs_var6": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Answers the question only for popular genres"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Different information being presented, one has a time dimension and another has a game dimension. B looks better"
+        ]
+      },
+      "H5": {
+        "preference": "Both similar",
+        "notes": [
+          "Answers sales over time",
+          "sales over top games",
+          "Ambiguity in question"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the question about how sales compare between Japan and North America for the role-playing game genre as a whole. It provides a comprehensive view of total sales over time, showing that North America generally outperformed Japan from the mid-1990s onward. While Chart B provides interesting game-specific details, Chart A gives a better overall picture of the genre comparison between the two markets."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question by providing clear, direct comparisons between Japan and North America sales for role-playing games. It is significantly more readable and visually appealing, allowing viewers to instantly see that North America generally outperforms Japan in sales for most top RPG titles. Chart A, while showing temporal trends, makes it harder to derive a simple comparative answer to the question."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and completely answers the question by comparing overall role-playing game sales between Japan and North America, whereas Chart B only shows a subset of games rather than the genre as a whole."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and completely answers the question by comparing overall role-playing game sales between Japan and North America, making regional differences clearer at the genre level rather than just for individual titles."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it is more readable, precise, and visually appealing, making it easier to answer the question about the comparison of sales in Japan and North America for role-playing games."
+      }
+    }
+  },
+  "16_sum_2_ques_8_var5_vs_var2": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Radar isn't best for finding difference in the same category"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "Difference between types are much clearer with a radar than a line scatter"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Extra dimension, harder to look at the aggregate.",
+          "Chart B doesnt show aggregate value of attack."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is superior for answering whether there are significant differences in Attack between types because it shows the full distribution of values, not just means. The violin plot reveals variance, range, and overlap between type distributions, which are essential for assessing statistical significance. Chart A only shows averages, which can be misleading without understanding the underlying spread of data."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is significantly better for answering the question about differences in Attack between types. It provides complete distributional information including variability, outliers, and individual observations, which are essential for assessing 'significant differences.' The violin plot format is more readable for direct comparisons, and it provides both statistical precision and visual clarity that the radar chart lacks."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it more completely answers whether there are significant differences in Attack across types by showing full distributions and variability, whereas Chart A only shows averages and may oversimplify the comparison."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more effectively answers the question by showing the full distribution and variability of Attack across types, which is essential for assessing whether differences are significant, even if Chart A is simpler and more immediately striking."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "While both charts are good, Chart A is preferred for its higher readability and precision, which are critical for interpreting the significant differences in Attack between Pokémon of different primary types."
+      }
+    }
+  },
+  "192_sum_1_ques_4_var1_vs_var2": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Inconsistency in color makes the median line difficult to identify, the drastic difference in the width/distribution of values across classes makes the plot look weird"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "Easier to understand variances"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "The colors could be pleasing, but the plot overall seems apt.",
+          "This plot is not needed for this distribution",
+          "More apt plot type for this setting, violin seems not needed and is overall lesser recognisable than box."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides more comprehensive information about the distribution through the combination of violin plots (showing density shape) and individual data points. This dual representation better answers the question about how star type distributions relate to luminosity levels by showing both the overall distribution shape and the actual data density. While Chart A is effective, Chart B offers richer insights into the data structure."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides more complete information by showing both distribution density and individual data points, making it more precise in answering how star types relate to luminosity levels. It reveals data patterns, sample sizes, and exact values while maintaining good readability and superior visual appeal through the violin plot design. The transparency of showing individual observations is particularly valuable for understanding the actual data structure."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides a more complete and informative view of how star type distributions relate to luminosity levels, combining precision with greater visual richness while remaining reasonably readable."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides a more comprehensive view of how luminosity distributions differ by star type, revealing both overall trends and detailed structure, which better answers the question despite being slightly less immediately readable."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B's scatter plot directly correlates star types to their luminosity, providing both readability and precision, and is visually appealing with its clear color-coding."
+      }
+    }
+  },
+  "1_sum_2_ques_4_var2_vs_var3": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Too much red",
+          "Clutter in labels, chart looks too small. Is lower right the correct place for labelling?"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Bad colour scheme",
+          "Easier to read"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "not enough context"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by showing exactly which countries have significantly better Agriculture Sector GDP Rank than overall rank, with precise divergence values. While Chart B provides more context and is more visually appealing, the simplicity and directness of Chart A makes it easier to quickly identify and compare the countries that answer the question. The sorted bar format with labeled values allows immediate comprehension without needing to interpret axis relationships."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the specific question by directly calculating and displaying the divergence for all countries in a sorted, easy-to-read format. While Chart B provides valuable context about the overall relationship between rankings, Chart A's straightforward presentation makes it immediately clear which countries have significantly better agriculture rankings and by how much, without requiring interpretation of scatter plot positioning or relying on selective labeling."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the specific question by explicitly listing and quantifying countries where agriculture GDP rank is significantly better, making it the most effective choice for this task."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and unambiguously answers the question by explicitly ranking countries based on how much better their agriculture GDP rank is compared to their overall rank, requiring less interpretation than the scatter plot."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A provides a more direct comparison between the two GDP ranks for each country, which is essential for answering the question at a glance. Although Chart B offers insight into the relationship between the two ranks, the question specifically asks for countries where Agriculture Sector GDP Rank is significantly better, which Chart A addresses more clearly."
+      }
+    }
+  },
+  "206_sum_1_ques_3_var4_vs_var3": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Congested labels. scatter plot too cluttered to provide good information about the distribution, overfit line",
+          "Cluttered label"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Scales are easier to parse with a box plot compared to a single line scatterplot"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "too high variance. unappealing. small font and number clash.",
+          "small font and clashes with graph. monotonic color scheme. No trend line so seems less relevant.",
+          "Chart A: more relevant, chart B: more appealing."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the question because it includes a trendline that explicitly shows the positive relationship between bedrooms and price, making the trend immediately quantifiable. While both charts show the upward trend in central tendency, Chart A's combination of individual data points, means, and trendline provides a more complete and direct answer to whether more bedrooms correlate with higher prices."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it provides a cleaner, more readable visualization that effectively answers the question while showing important distributional information. The box plot clearly demonstrates the tendency for prices to increase with more bedrooms (from 1-5) through labeled median values, while also revealing the variation and outliers in each category. It's easier to interpret at a glance and has superior visual appeal compared to the cluttered scatter plot in Chart A."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and intuitively answers the question by explicitly showing the positive relationship with mean markers and a trendline, making it easier to see that properties with more bedrooms tend to have higher prices."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and explicitly answers the question by showing both the overall trend and average prices, making it easier to conclude that properties with more bedrooms tend to have higher prices."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A's scatter plot with trendline provides a more direct and engaging visualization of the relationship between the number of bedrooms and price, making it easier to understand at a glance and more precise in conveying the correlation."
+      }
+    }
+  },
+  "206_sum_1_ques_6_var1_vs_var4": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart B",
+        "notes": [
+          "chart B is more informative and shows actual distribution, which i prefer. A is faster to digest"
+        ]
+      },
+      "H2": {
+        "preference": "Both similar",
+        "notes": [
+          "Slight issue with the color of median lines, too many outliers in the 2 stories class makes me a bit skeptical at first"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "It should focus on trend, no need to show in-class distribution",
+          "Duplicate dimension.",
+          "Shows trend."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly answers the question about trends by including an explicit mean trend line that clearly shows the upward relationship between stories and price. While Chart A shows distributions well, Chart B makes the trend immediately obvious with the red line connecting group means, which is more effective for identifying trends at a glance."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the specific question about whether there is a noticeable trend. The red mean trend line makes the upward progression unmistakably clear and quantifiable, rising steadily from 1 to 4 stories. While Chart A shows distributions well, Chart B's explicit trend line and the ability to see both individual data points and the overall pattern makes the trend more immediately obvious and compelling for answering this specific question."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and clearly answers the question by explicitly showing the upward trend in average property prices as the number of stories increases, making the insight immediately apparent to the viewer."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly answers the question by explicitly highlighting the upward trend in mean property prices across story counts, making the trend easier to notice and interpret overall."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A is preferred due to its higher readability and precision, which allow for a clearer understanding of the trend between the number of stories and property prices."
+      }
+    }
+  },
+  "22_sum_1_ques_4_var1_vs_var3": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Bright yellow, redundant info"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "The colour scheme is jarring",
+          "Colour scheme is better and the text is easier to read."
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "color scheme can be better",
+          "No reason of adding duplicate dimension.",
+          "Chart B adds extra dimension (duplicate) for no reason"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "While both charts effectively answer the question with equal precision, Chart B's gradient color scheme provides a more cohesive visual experience where the color encoding reinforces the ranking pattern. The viridis-style color palette is both aesthetically pleasing and functionally meaningful, making the chart slightly more effective for quick comprehension of the price hierarchy."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is superior because it combines equal precision and readability with significantly better visual appeal. The gradient color scheme serves both aesthetic and functional purposes by reinforcing the price hierarchy, making it immediately clear which engine types have higher prices. This meaningful use of color makes the chart more intuitive and professional compared to Chart A's arbitrary color choices."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Although both charts answer the question accurately, Chart A is preferred because it delivers the key insight more immediately and with less visual complexity, making it ideal for quickly identifying which engine types are associated with higher average prices."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly answers the question with maximum clarity and minimal distraction, making it slightly better for quickly identifying which engine types are associated with higher average prices."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A is preferred due to its vertical orientation, which allows for easier comparison of bar heights, thereby providing both precision in interpreting the data and a better visual appeal."
+      }
+    }
+  },
+  "25_sum_1_ques_1_var2_vs_var4": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart A",
+        "notes": [
+          "the trend line is unnecessary here."
+        ]
+      },
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Why 2 labels for 30?",
+          "Cluttered"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Much more informative, not missing any data"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Confusing",
+          "Unreadable",
+          "Readibility"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly answers the question by clearly showing the stocks with largest positive and negative 30-day changes and comparing them to 365-day changes in an organized, easy-to-read format. Chart B requires more effort to extract the same information and has readability issues due to label clutter."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly and precisely answers the question by clearly identifying the stocks with the largest positive and negative 30-day changes and providing an easy visual comparison to their 365-day performance. It is more readable, more precise for this specific question, and more visually appealing than the scatter plot in Chart B, which requires more interpretation to extract the requested information."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by explicitly showing the largest positive and negative 30-day stock movements and their corresponding 365-day changes, whereas Chart B focuses more on overall correlation than on identifying extremes."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and precisely answers the question by clearly identifying the largest positive and negative 30-day stock changes and directly comparing them to their 365-day performance, even if it is less visually elegant than Chart B."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred for its better readability and visual appeal, despite being less precise than Chart A due to the lack of exact percentage values."
+      }
+    }
+  },
+  "25_sum_1_ques_4_var3_vs_var4": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Blue and red look mixed"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Easier to tell what the point is at a glance"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Duplicate dimension.",
+          "Easier to read"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the primary question about which stocks have highest turnover through its clear ranking and sorted presentation. While Chart B shows the exact relationship between turnover and % change, Chart A's readability and clean design make it easier to quickly identify top turnover stocks and understand their price movement direction. For a quick answer to the question, Chart A is more effective, though Chart B provides more detailed analytical insight."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the specific question by clearly presenting the stocks with highest turnover in ranked order with exact values, while simultaneously showing price movement through color coding. It's more direct, easier to read at a glance, and provides precise answers to both parts of the question. Chart B, while showing interesting relationships, requires more interpretation and doesn't as clearly identify the complete set of highest turnover stocks."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly answers the question by explicitly ranking stocks by turnover and clearly indicating their price movement, making it faster and easier to identify the highest turnover stocks and assess their % change at a glance."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by explicitly highlighting the highest-turnover stocks and their price movements, requiring less interpretation effort than Chart B."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred as it directly correlates turnover with price movement and uses marker size to highlight stocks with high turnover and significant price movement, making it more effective in answering the question at a glance."
+      }
+    }
+  },
+  "261_sum_1_ques_2_var4_vs_var1": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Negative axes",
+          "The shade of Magenta looks weird"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Scale is confusing, since it has negative numbers",
+          "Horizontally paired bars are much easier to understand, and the colour scheme is what you would expect"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Difficult to understand the overall population",
+          "Easier to understand overall distribution"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A's population pyramid style is slightly more effective for comparing gender distributions because it places male and female bars on opposite sides of a central axis, making the ratio comparison more intuitive. Both charts answer the question equally well, but Chart A's unique format better highlights the gender disparity pattern across majors while still showing the overall popularity ranking."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is superior for answering this question because it more clearly shows both the ranking of most common majors and the gender distribution within each major. The stacked bar format is more intuitive and allows for easier comparison of both total counts and gender proportions. While Chart A's population pyramid is visually interesting, it makes it harder to compare total frequencies across majors and requires more cognitive effort to interpret the split directional format."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "While Chart A is slightly more precise for direct gender comparison, Chart B offers superior readability and visual appeal, making it more effective overall for quickly understanding which majors are most common and how they differ by gender."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B is easier to read and visually cleaner while still clearly conveying which majors are most common and how male and female distributions compare, making it preferable for quickly answering the question."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "While Chart A is readable and precise, the use of a warmer color palette in Chart B makes it easier to distinguish between genders and more immediately visually engaging, making it the preferred chart for answering the question at a glance."
+      }
+    }
+  },
+  "261_sum_2_ques_4_var1_vs_var2": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Too unbalanced for box plots",
+          "Too cluttered around 0 (obviously). Would other scales be better"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Clearer representation of the data distribution"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "Too heavily tailed for box plot.",
+          "Box plot is not apt for such a tailed distribution."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides a more comprehensive view of the data by showing both the distribution shape and individual data points, making it easier to understand how Space Walks (hr) varies between genders. The color distinction between male and female groups improves interpretability, and the violin plot reveals the concentration of zero values more clearly than the compressed box in Chart A."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides superior information density by combining distribution shape, individual data points, and statistical summaries in a visually appealing format. It answers the question more completely by showing not just statistical measures but also the actual distribution density and individual observations, making it easier to understand both the central tendency and the spread of space walk hours between genders. The color coding and modern design enhance both readability and appeal."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B provides a more complete and detailed view of how space walk hours vary between male and female astronauts by showing both individual data points and distribution shapes, making it more informative overall despite being slightly more complex."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it provides a more complete and precise view of variation by showing both distribution and individual data points, which better answers the question despite slightly lower at-a-glance readability."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred for its combination of detailed distribution representation and visual appeal, making it easier to understand the differences between male and female astronauts' spacewalk durations at a glance."
+      }
+    }
+  },
+  "269_sum_4_ques_7_var1_vs_var4": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Looks unbalanced",
+          "What does the area of the circle mean?"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Circles could be made larger",
+          "B doesn't sacrifice visual clarity and is richer in information"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Sorting, color scheme, no one asked for continent as dimension.",
+          "Extra dimensions: continent, land area, size of the circle? (no legend added for that)",
+          "Chart B gives too much extra information."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly and precisely answers the question about comparing population densities with clear, labeled values for each country. While Chart B provides interesting additional context about land area relationships, it makes the primary comparison of densities more difficult due to the log scale and lack of direct labels. For the specific question asked, Chart A is more effective and efficient."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly and clearly answers the question about how population densities compare among top-ranked countries. Its straightforward bar chart format with exact values makes comparison immediate and intuitive. Chart B, while showing more dimensions of data, uses logarithmic scales that complicate the density comparison and doesn't directly address the core question as effectively."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by explicitly comparing population densities across countries, making it easier to interpret without additional mental effort."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by focusing solely on population density comparison, making it easier and faster to interpret than the more complex, multi-variable Chart B."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred for its readability, precision, and visual appeal, making it more effective at answering the question and allowing for an easy comparison among the top-ranked countries by 2023 population."
+      }
+    }
+  },
+  "28_sum_2_ques_5_var2_vs_var3": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart A",
+        "notes": [
+          "colors in chart B are off"
+        ]
+      },
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Looks glitchy",
+          "Yellow line is too bright"
+        ]
+      },
+      "H4": {
+        "preference": "Both similar",
+        "notes": [
+          "The data looks strange without truncating the missing values",
+          "Poor colour scheme, not having the points being joint is unpleasant to look at",
+          "Neither chart is pleasing to look at and both carry approximately the same information"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "hard to read colors.",
+          "better color scheme"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A is preferred because it provides specific airbag counts (8, 10, 12) which directly addresses the question about 'advanced safety features (more Airbags)'. While Chart B is more visually appealing and readable, the ambiguous binning (Low, Medium, High) makes it less precise for understanding which cars have truly advanced safety features. Chart A allows viewers to identify exact airbag levels and their corresponding price trends."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A is preferred because it provides more precise information by showing specific airbag levels (8, 10, 12) rather than vague bins. This allows for a clearer understanding of how cars with 'more airbags' (advanced safety features) are priced across years. The specific values make it easier to identify that higher airbag counts generally correspond to higher prices, and the trend shows increasing prices over time, particularly for the highest airbag level. Chart A is also slightly more readable and visually appealing."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "While Chart A is more precise, Chart B better balances clarity, readability, and visual appeal, making the overall trend of higher prices for cars with more airbags across production years easier to identify."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B better balances clarity and insight by simplifying airbag levels, making the overall price trend across production years for more advanced safety features easier to understand and visually more appealing."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A provides a clearer representation of the data with better readability and precision, despite being slightly less appealing than Chart B."
+      }
+    }
+  },
+  "2_sum_1_ques_1_var3_vs_var5": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "More info but clutter, 2018 should be the primary focus"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "The text is poorly placed for 2018 China, 2018 world and 2018 iran",
+          "Too much visual clutter",
+          "Less cluttered for the same information"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "The percentages are clashing",
+          "cleaner"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question by including percentage change calculations that explicitly show how 2018 values compare to 1990. This additional context (e.g., China +85%, Russia -7.4%) provides deeper insight into the comparison the question asks for. The cleaner title formatting and more appealing color scheme also contribute to the preference."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it provides all the information in Chart A plus the valuable addition of percentage changes, which directly addresses the 'how does this compare' aspect of the question. The overlapping bar design with percentage labels makes trends immediately apparent (increases vs. decreases) while maintaining excellent readability and visual appeal. The gold and blue color scheme is more distinctive and professional than the orange and blue in Chart A."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and completely answers the question by clearly identifying the highest emitters in 2018 while also explicitly quantifying how their emissions have changed since 1990, making it more informative and insightful overall."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly answers both parts of the question by clearly identifying the highest emitters in 2018 and explicitly showing how their emissions have changed since 1990, reducing cognitive effort for the viewer."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred for its better readability and visual appeal, which ultimately leads to a more effective communication of the comparison between methane emissions in 2018 and 1990."
+      }
+    }
+  },
+  "32_sum_1_ques_1_var4_vs_var1": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart B",
+        "notes": [
+          "shown on the map it would be cool. that way, can sense, directional trends also"
+        ]
+      },
+      "H2": {
+        "preference": "Both similar",
+        "notes": [
+          "Plot appears too small. Would prefer 2x2 plots. No has too many outliers.",
+          "Preference here depends on the context. Would use 1st for quantitative purposes, 2nd for qualitative"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Bars are easier to read than boxes"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "aggregates the information too much",
+          "B doesn't answers the question"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly answers the question about average medical charges by showing mean values in a grouped bar format that enables easy comparison across regions and smoking status. Chart A shows medians via box plots which, while informative about distribution, doesn't precisely answer the question about averages. Chart B's single-panel layout also makes cross-regional comparisons much easier than Chart A's faceted approach."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly and precisely answers the question about average medical charges by displaying mean values in an easily comparable format. The grouped bar chart allows immediate visual comparison both between smoker statuses and across regions in a single glance. Chart A, while informative about distributions, requires more interpretation and shows distributions rather than the requested averages."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly targets the question by clearly showing average medical charge differences between smokers and non-smokers across regions, making it both easier to read and more precise for this purpose."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it directly presents average medical charges by smoking status across regions in a clear and immediately interpretable way, which aligns closely with the question being asked."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "I prefer Chart A as it offers a clearer comparison between smoker statuses in each region, making it easier to discern the differences between smokers and non-smokers at a glance. The side-by-side format is more intuitive for this particular question."
+      }
+    }
+  },
+  "3_sum_2_ques_7_var1_vs_var4": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart A",
+        "notes": [
+          "'greatly' differs is subject to the baseline. this is absolute difference. % change or relative to mean difference would be better"
+        ]
+      },
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "I feel the axes should be in descending order (120-0) given that a lower rank is better. the rank metric seems flawed but the plot is def informative within the context",
+          "Outliers vs top rankers"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Chart B captures the essence of the question while being easier to look at"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "Hard to understand at a glance, but once you do it's fine",
+          "Slightly more appealing, but difference in rank, doesn't seem like a good metric.",
+          "Chart B doesn",
+          "t make sense semantically."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and clearly answers the question about outliers by explicitly showing the magnitude of rank differences for the most divergent countries. While Chart A provides more complete context, Chart B's focused presentation makes it easier to immediately identify and compare outliers. The clear labeling with numerical values and intuitive color coding make the answer to the question immediately apparent."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "While Chart A shows the complete dataset and provides better overall context, Chart B is superior for answering the specific question about outliers. It clearly identifies and quantifies the top diverging countries with exact numerical differences, making it immediately obvious which countries are the strongest outliers and by how much. The bar chart format is more intuitive for comparing magnitudes of differences, and the clean, uncluttered design makes the answer more accessible at a glance."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and clearly answers the question by explicitly highlighting and quantifying the largest rank discrepancies, with higher readability and visual clarity than Chart A."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly answers the question by clearly quantifying rank differences and highlighting the largest outliers, requiring less interpretation than Chart A."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A provides a clearer and more straightforward representation of the outliers with its color-coded bar chart, making it easier to read and understand at a glance."
+      }
+    }
+  },
+  "429_sum_1_ques_3_var1_vs_var3": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "Plot looks too small, volume of dogs?, can't understand what we're plotting",
+          "Plot looks too small, volume of dogs?, can't understand what we're plotting without looking at the dataset",
+          "still provides more information than the previous one (and hence appears more verifiable)"
+        ]
+      },
+      "H4": {
+        "preference": "Both similar",
+        "notes": [
+          "The second is slightly clearerer, but they are essentially the same chart shifted and flipped"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "More relevant to question, but either can work"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly visualizes the deviation from average, which is exactly what the question asks about. The centered zero line with bars extending in both directions makes it immediately clear which states are significantly above or below average and by how much. Chart B requires additional mental processing to assess deviation magnitude from the mean line."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly answers the question by explicitly showing deviations from average, making it immediately clear which states are significantly higher or lower than average. Chart B requires viewers to mentally calculate differences from the mean line, which is less efficient and precise for this specific question. Chart A's deviation-focused design perfectly matches the analytical need."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by focusing on deviations from the average, making significant highs and lows easier to identify at a glance."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers the question by explicitly plotting deviations from the average, making it easier to identify significantly higher or lower locations without additional visual estimation."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it provides a clearer and more precise representation of the data, allowing for easier identification of outliers, even though it is not ordered from highest to lowest."
+      }
+    }
+  },
+  "65_sum_1_ques_10_var1_vs_var4": {
+    "annotator_notes": {
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "seasonal term is repeating in legend.",
+          "Too simple, no idea of scale",
+          "More informative"
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly answers the question by showing the seasonal uplift (difference) for each product position, making it immediately clear that Front of Store is most effective during seasonal periods while Aisle is actually less effective. Chart A requires mental calculation to derive this insight. Although Chart A is more visually appealing, Chart B's precision in answering the specific question makes it the better choice."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B directly answers the question by showing the seasonal uplift (boost) for each product position, making it immediately clear that Front of Store is far more effective during seasonal periods. Chart A requires the viewer to manually compare bars and calculate differences, while Chart B presents the exact metric needed to answer the question. Chart B's superior readability and precision make it the clear choice."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly answers the question by explicitly showing seasonal uplift by position, making it easier to determine which product positions are most effective during seasonal periods."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Chart B more directly and clearly answers the question by isolating and highlighting the seasonal uplift by product position, making comparative effectiveness immediately apparent."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A provides a clearer and more precise visualization of the data, which is essential for answering the question about sales volume uplift during seasonal periods. While Chart B is more visually appealing, the added complexity of shapes and gradients might detract from the chart's primary purpose of conveying precise information."
+      }
+    }
+  },
+  "65_sum_1_ques_10_var1_vs_var5": {
+    "annotator_notes": {
+      "H2": {
+        "preference": "Chart A",
+        "notes": [
+          "Bars too large. Y lines unnecessary"
+        ]
+      },
+      "H4": {
+        "preference": "Chart B",
+        "notes": [
+          "Richer in information and visually clear"
+        ]
+      },
+      "H5": {
+        "preference": "Chart A",
+        "notes": [
+          "legend has seasonal repeating.",
+          "Not at all relevant to the question. It only talks about seasonal.",
+          "Plot B isn't answering the question."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart A",
+        "rationale": "Chart A directly answers the question by comparing seasonal vs. non-seasonal sales volumes across product positions, clearly showing that Front of Store provides the greatest boost for seasonal items. Chart B only shows seasonal data without the non-seasonal baseline needed to assess effectiveness of positions in 'boosting' seasonal sales."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart A",
+        "rationale": "Chart A better answers the specific question by directly comparing seasonal versus non-seasonal sales across product positions. While Chart B provides interesting category-level insights, it only shows seasonal data and lacks the non-seasonal comparison necessary to determine if positions are 'more effective during seasonal periods compared to others.' Chart A's side-by-side comparison makes the seasonal effectiveness immediately apparent, even though the differences are minimal."
+      },
+      "Gpt4v": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers whether certain product positions are more effective during seasonal periods by explicitly comparing seasonal and non-seasonal sales across positions."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart A",
+        "rationale": "Chart A more directly and clearly answers whether certain product positions are more effective at boosting sales during seasonal periods by explicitly comparing seasonal versus non-seasonal sales across positions."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A is preferred because of its cleaner visual appeal and sufficient readability, which aids in a quick and intuitive understanding of the data, even though it sacrifices some precision."
+      }
+    }
+  },
+  "94_sum_1_ques_1_var5_vs_var6": {
+    "annotator_notes": {
+      "H1": {
+        "preference": "Chart B",
+        "notes": [
+          "second chart while harder to grasp, has better revelations on the pattern"
+        ]
+      },
+      "H2": {
+        "preference": "Chart B",
+        "notes": [
+          "clean plot though information is not directly related to the time period.",
+          "more info, orange line gives more insight"
+        ]
+      },
+      "H4": {
+        "preference": "Chart A",
+        "notes": [
+          "Needs a legend instead of coloured labels",
+          "Information added in B, but A is visually clearer"
+        ]
+      },
+      "H5": {
+        "preference": "Chart B",
+        "notes": [
+          "No need for color gradient, unless there's a third dimension. Seems unnecessarily complicated.",
+          "No need for the second dashed plot, extra information, not that useful either.",
+          "More simpler, minus the dashed line."
+        ]
+      }
+    },
+    "model_notes": {
+      "ClaudeOpus45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question about patterns across decades by showing both population growth AND the declining growth rate trend. This dual perspective reveals that while population continues to increase, the rate of growth peaked around 1970 and has been declining steadily. This insight about changing patterns is crucial to fully answering the question, even though Chart A is more visually appealing and easier to read at a glance."
+      },
+      "ClaudeSonnet45": {
+        "preference": "Chart B",
+        "rationale": "Chart B better answers the question about patterns emerging across decades by revealing the critical insight that while population has grown consistently, the growth rate peaked in the 1970s and has been declining since. This dual perspective provides a more nuanced understanding of population dynamics than Chart A's simple aggregated decade averages. Chart B's year-by-year granularity also allows for better pattern identification within and across decades."
+      },
+      "Gpt4v": {
+        "preference": "Chart B",
+        "rationale": "Chart B is preferred because it not only shows how global population has increased, but also reveals important decade-level patterns in growth rates, offering a deeper and more complete explanation of population change over time."
+      },
+      "Gpt5Chat": {
+        "preference": "Chart B",
+        "rationale": "Although Chart A is easier to read quickly, Chart B more fully answers the question by revealing both population growth and shifting growth-rate patterns across decades, providing deeper insight into long-term demographic trends."
+      },
+      "Phi4Multimodal": {
+        "preference": "Chart A",
+        "rationale": "Chart A slightly edges out Chart B in terms of readability and visual appeal despite both being effective in conveying the data. Chart A's combination of color-blind friendly scheme and absence of clutter in the representation of population and growth rate lines provides it with a slight advantage in visual appeal and easier comprehension at a glance."
+      }
+    }
+  }
+}

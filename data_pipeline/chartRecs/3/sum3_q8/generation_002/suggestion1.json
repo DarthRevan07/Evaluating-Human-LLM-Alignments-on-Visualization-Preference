@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which countries have both high rice production (Tons) and high rice yield (Kg / Hectare)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatterplot",
+      "design_rationale": "A scatterplot mapping 'Rice Production (Tons)' against 'Rice Yield (Kg / Hectare)' shows the relationship between total output and agricultural efficiency—two distinct metrics for identifying leaders in rice production. By annotating countries that exhibit both high production and high yield, we visually highlight the nations meeting both criteria, giving context to their global leadership and allowing easy comparison across all 119 countries. This leverages the numeric nature of both axes and the categorical 'Country' label for outlier annotation.",
+      "target_insight": "Identifies countries which simultaneously have high rice production and high rice yield, allowing detection of those excelling in both total output and agricultural efficiency.",
+      "output_fields": [
+        "Country",
+        "Rice Production (Tons)",
+        "Rice Yield (Kg / Hectare)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production (Tons)",
+        "y": "Rice Yield (Kg / Hectare)",
+        "color": "Highlight countries meeting both high production and high yield (use a threshold, color those points differently)",
+        "size": null,
+        "other_aesthetics": "Annotate country labels for highlighted points; shape: all points as circles; alpha: 0.7 for default, 1.0 for highlighted"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Production (Tons)' from abbreviated string (e.g., '1.2M') to numeric value",
+      "Convert 'Rice Yield (Kg / Hectare)' from string to numeric value",
+      "Determine thresholds for 'high production' and 'high yield' (e.g., above 75th percentile for each)",
+      "Create a boolean indicator for countries above both thresholds"
+    ],
+    "data_preparation_steps": [
+      "Replace 'K' with '*1e3' and 'M' with '*1e6' in 'Rice Production (Tons)', then eval to numeric",
+      "Convert 'Rice Yield (Kg / Hectare)' to float",
+      "Calculate 75th percentile values for both metrics",
+      "Add column: 'highlight' = True if both production and yield above 75th percentiles",
+      "Extract x, y, color, and country-label arrays for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\nprod_str = df['Rice Production (Tons)'].str.replace('K', '*1e3').str.replace('M', '*1e6')\ndf['Rice Production (Tons)_num'] = prod_str.apply(lambda x: eval(x))\ndf['Rice Yield (Kg / Hectare)_num'] = df['Rice Yield (Kg / Hectare)'].astype(float)\np75_prod = np.percentile(df['Rice Production (Tons)_num'], 75)\np75_yield = np.percentile(df['Rice Yield (Kg / Hectare)_num'], 75)\ndf['highlight'] = (df['Rice Production (Tons)_num'] >= p75_prod) & (df['Rice Yield (Kg / Hectare)_num'] >= p75_yield)\nfig, ax = plt.subplots(figsize=(10, 7))\nax.scatter(\n    df.loc[~df['highlight'], 'Rice Production (Tons)_num'],\n    df.loc[~df['highlight'], 'Rice Yield (Kg / Hectare)_num'],\n    color='grey',\n    alpha=0.7,\n    s=40\n)\nhigh_countries = df[df['highlight']]\nax.scatter(\n    high_countries['Rice Production (Tons)_num'],\n    high_countries['Rice Yield (Kg / Hectare)_num'],\n    color='orange',\n    alpha=1.0,\n    s=70,\n    label='High Production & High Yield'\n)\nfor _, row in high_countries.iterrows():\n    ax.text(\n        row['Rice Production (Tons)_num'],\n        row['Rice Yield (Kg / Hectare)_num'],\n        row['Country'],\n        fontsize=9,\n        color='black',\n        va='bottom',\n        ha='right'\n    )\nax.set_xlabel(\"Rice Production (Tons)\")\nax.set_ylabel(\"Rice Yield (Kg / Hectare)\")\nax.set_title(\"Countries with Both High Rice Production & High Rice Yield\\n(Orange points = both above 75th percentile)\")\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

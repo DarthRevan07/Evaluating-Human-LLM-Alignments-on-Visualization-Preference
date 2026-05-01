@@ -1,0 +1,41 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which countries had the highest total methane emissions in 2018, and how does this compare to their values in 1990?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Top N with grouped bars for 2018 and 1990)",
+      "design_rationale": "A horizontal bar chart allows effective display of the top methane emitters in 2018, with paired bars for 2018 and 1990 for each country. This direct side-by-side comparison clearly shows not just who the top emitters are, but also how each country's emissions have changed over time. The horizontal format accommodates longer country names and makes ranking easy to read, while grouped bars highlight relative changes without crowding the axis.",
+      "target_insight": "Visualizes which countries had the highest methane emissions in 2018, and which of these saw the greatest increases or decreases since 1990.",
+      "output_fields": [
+        "Country",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Methane emissions ('2018' and '1990')",
+        "y": "Country",
+        "color": "Year (2018 vs 1990, with distinct colors)",
+        "size": null,
+        "other_aesthetics": "Group bars by country, use legend for years, annotate with exact values"
+      }
+    },
+    "transformations": [
+      "Filter where 'Sector' == 'Total' or aggregate by 'Country' summing '2018' and '1990' if multiple sectors exist",
+      "Select top 10 countries by total '2018' emissions",
+      "Extract 'Country', '2018', and '1990' columns for only these top 10"
+    ],
+    "data_preparation_steps": [
+      "df_total = df.groupby('Country')[['2018', '1990']].sum().reset_index()",
+      "df_top10 = df_total.sort_values('2018', ascending=False).head(10)",
+      "df_top10_melted = pd.melt(df_top10, id_vars=['Country'], value_vars=['2018', '1990'], var_name='Year', value_name='Emissions')",
+      "df_top10_melted['Year'] = df_top10_melted['Year'].astype(str)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_total = df.groupby('Country')[['2018', '1990']].sum().reset_index()\ndf_top10 = df_total.sort_values('2018', ascending=False).head(10)\ndf_top10_melted = pd.melt(df_top10, id_vars=['Country'], value_vars=['2018', '1990'], var_name='Year', value_name='Emissions')\ndf_top10_melted['Year'] = df_top10_melted['Year'].astype(str)\ny_labels = df_top10['Country']\ny = np.arange(len(y_labels))\nbar_width = 0.4\nfig, ax = plt.subplots(figsize=(10, 6))\ncolors = {'2018': '#1f77b4', '1990': '#ff7f0e'}\nfor i, year in enumerate(['2018', '1990']):\n    data = df_top10_melted[df_top10_melted['Year'] == year]\n    offsets = y - bar_width/2 + i*bar_width\n    ax.barh(offsets, data['Emissions'], height=bar_width, color=colors[year], label=year)\n    for (xi, val) in zip(offsets, data['Emissions']):\n        ax.text(val + 2, xi, f'{val:.1f}', va='center', fontsize=9)\nax.set_yticks(y)\nax.set_yticklabels(y_labels)\nax.invert_yaxis()\nax.set_xlabel('Methane Emissions (MTCO2e)')\nax.set_title('Top 10 Countries for Total Methane Emissions in 2018\\nCompared with 1990', fontsize=14, fontweight='bold')\nax.legend(title='Year')\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

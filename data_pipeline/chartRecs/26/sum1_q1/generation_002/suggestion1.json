@@ -1,0 +1,39 @@
+{
+  "table_name": "26",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How did Tesla's closing price change over the ten-year period, and were there any noticeable long-term upward or downward trends?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart with Rolling Average",
+      "design_rationale": "A line chart mapping daily closing prices provides high temporal resolution to see detailed fluctuations over ten years. Overlaying a rolling average (e.g., 90-day window) visually emphasizes long-term upward/downward trends while smoothing out daily volatility. This dual encoding supports both granular and trend-based analysis, directly answering how Tesla's closing price evolved and revealing sustained periods of increase or decrease. The explicit mapping of 'Date' (chronological order) to x-axis and 'Close' to y-axis is ideal for time-series trend detection.",
+      "target_insight": "Clear visualization of Tesla's closing price dynamics and identification of multiyear upward and downward trends, including periods of volatility or stability.",
+      "output_fields": [
+        "Date",
+        "Close"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Close",
+        "color": "Line color: daily Close in grey, 90-day rolling average in red",
+        "size": "Line width variation (rolling average thicker)",
+        "other_aesthetics": "Alpha for daily line (fainter, see-through); grid lines; rotated x-labels; annotated axes with units"
+      }
+    },
+    "transformations": [
+      "Convert df['Date'] to pandas datetime for accurate time ordering.",
+      "Sort the dataframe by df['Date'] ascending to ensure chronological plotting.",
+      "Compute 90-day rolling mean of df['Close'] for trend smoothing."
+    ],
+    "data_preparation_steps": [
+      "df['Date'] = pd.to_datetime(df['Date'])",
+      "df = df.sort_values('Date')",
+      "df['Close_rolling90'] = df['Close'].rolling(window=90, min_periods=1).mean()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\26.csv\")\ndf['Date'] = pd.to_datetime(df['Date'])\ndf = df.sort_values('Date')\ndf['Close_rolling90'] = df['Close'].rolling(window=90, min_periods=1).mean()\nplt.figure(figsize=(15,6))\nplt.plot(df['Date'], df['Close'], color='grey', alpha=0.5, linewidth=1, label='Daily Close')\nplt.plot(df['Date'], df['Close_rolling90'], color='red', linewidth=2.5, label='90-day Rolling Avg')\nplt.xlabel(\"Date\", fontsize=13)\nplt.ylabel(\"Close Price (USD)\", fontsize=13)\nplt.title(\"Tesla Closing Price (2010-2020) with Long-Term Trend\\n\", fontsize=15)\nplt.legend(fontsize=12)\nplt.grid(True, linestyle='--', alpha=0.35)\nplt.xticks(rotation=45, fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,36 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Which stocks have the highest turnover (crs.) and do they show significant price movement as indicated by % Chng?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot",
+      "design_rationale": "A scatterplot of Turnover (crs.) vs % Chng for all stocks displays the full bivariate landscape of trading value and daily price movement. This approach uncovers patterns/correlations between trading activity and price volatility, and visually highlights if outliers with the highest turnover are also those with the most extreme price changes in either direction. Labeling the outliers reveals which symbols are truly responsible for these extremes.",
+      "target_insight": "Uncovers any direct relationship or lack thereof between turnover and price movement; visualizes clusters, outliers, and highlights stocks with both high turnover and significant % Chng.",
+      "output_fields": [
+        "Symbol",
+        "Turnover (crs.)",
+        "% Chng"
+      ],
+      "chart_encodings": {
+        "x": "Turnover (crs.)",
+        "y": "% Chng",
+        "color": "365 d % chng",
+        "size": null,
+        "other_aesthetics": "Stocks with top 3 Turnover (crs.) and top/bottom 3 % Chng are annotated with their Symbol for identification; blue-to-red colormap for 365 d % chng; subtle transparency (alpha=0.8)"
+      }
+    },
+    "transformations": [
+      "Convert df['Turnover (crs.)'] from string to float after removing commas or formatting"
+    ],
+    "data_preparation_steps": [
+      "df[\"Turnover (crs.)\"] = df[\"Turnover (crs.)\"].str.replace(\",\", \"\").astype(float)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\ndf[\"Turnover (crs.)\"] = df[\"Turnover (crs.)\"].str.replace(\",\", \"\").astype(float)\nfig, ax = plt.subplots(figsize=(10,7))\ncmap = mpl.colormaps[\"coolwarm\"]\nnorm = mpl.colors.Normalize(vmin=df[\"365 d % chng\"].min(), vmax=df[\"365 d % chng\"].max())\nsc = ax.scatter(df[\"Turnover (crs.)\"], df[\"% Chng\"], c=df[\"365 d % chng\"], cmap=cmap, norm=norm, alpha=0.8, edgecolor=\"k\", s=70)\ncbar = plt.colorbar(sc, ax=ax, pad=0.01)\ncbar.set_label(\"365 d % chng\", fontsize=12)\nax.set_xlabel(\"Turnover (crs.)\", fontsize=12)\nax.set_ylabel(\"% Chng\", fontsize=12)\nax.set_title(\"Relationship between Turnover and % Change for NIFTY-50 Stocks\\nColor = 365 d % chng\", fontsize=14)\n# Highlight top 3 Turnover\ntop_turnover_idx = df[\"Turnover (crs.)\"].nlargest(3).index\n# Highlight top 3 and bottom 3 % Chng\ntop_pct_idx = df[\"% Chng\"].nlargest(3).index\nbottom_pct_idx = df[\"% Chng\"].nsmallest(3).index\nhighlight_idx = set(np.concatenate([top_turnover_idx, top_pct_idx, bottom_pct_idx]))\nfor i in highlight_idx:\n    ax.text(df.loc[i, \"Turnover (crs.)\"] + 2, df.loc[i, \"% Chng\"], df.loc[i, \"Symbol\"], fontsize=10, fontweight=\"bold\", va=\"center\", ha=\"left\", bbox=dict(facecolor=\"white\", alpha=0.7, boxstyle=\"round,pad=0.25\"))\nax.grid(True, linestyle=':', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

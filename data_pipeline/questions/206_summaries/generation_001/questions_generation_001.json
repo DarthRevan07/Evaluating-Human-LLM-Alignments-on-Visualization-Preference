@@ -1,0 +1,175 @@
+{
+  "table_name": "Housing Prices Dataset",
+  "generation_dir": "c2_summaries_run2\\206_summaries\\generation_001",
+  "total_summaries_processed": 4,
+  "questions_per_summary": 8,
+  "schema_context": "## Table 1: Housing_Prices_Dataset (545 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 206.csv (Dataset: Housing Prices Dataset)\n\n### Schema (13 fields)\n  - price -- type: int64, values: 1750000, 1767150, 1820000, 1855000, 1890000, ..., 10850000, 11410000, 12215000, 12250000, 13300000\n  - area -- type: int64, values: 1650, 1700, 1836, 1905, 1950, ..., 12900, 12944, 13200, 15600, 16200\n  - bedrooms -- type: int64, values: 1, 2, 3, 4, 5, 6\n  - bathrooms -- type: int64, values: 1, 2, 3, 4\n  - stories -- type: int64, values: 1, 2, 3, 4\n  - mainroad -- type: object, values: no, yes\n  - guestroom -- type: object, values: no, yes\n  - basement -- type: object, values: no, yes\n  - hotwaterheating -- type: object, values: no, yes\n  - airconditioning -- type: object, values: no, yes\n  - parking -- type: int64, values: 0, 1, 2, 3\n  - prefarea -- type: object, values: no, yes\n  - furnishingstatus -- type: object, values: furnished, semi-furnished, unfurnished\n\n### Sample Data (first 5 rows)\n```\n      price  area  bedrooms  bathrooms  stories mainroad guestroom basement hotwaterheating airconditioning  parking prefarea furnishingstatus\n0  13300000  7420         4          2        3      yes        no       no              no             yes        2      yes        furnished\n1  12250000  8960         4          4        4      yes        no       no              no             yes        3       no        furnished\n2  12250000  9960         3          2        2      yes        no      yes              no              no        2      yes   semi-furnished\n3  12215000  7500         4          2        2      yes        no      yes              no             yes        3      yes        furnished\n4  11410000  7420         4          1        2      yes       yes      yes              no             yes        2       no        furnished\n```\n",
+  "table_metadata": {
+    "total_rows": 545,
+    "total_columns": 13,
+    "source_file": "csv_c_squared\\206.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Housing_Prices_Dataset",
+      "summary_idx": 1,
+      "column_combination": [
+        "price",
+        "area",
+        "bedrooms",
+        "bathrooms",
+        "stories",
+        "mainroad",
+        "guestroom",
+        "basement",
+        "hotwaterheating",
+        "airconditioning",
+        "parking",
+        "prefarea",
+        "furnishingstatus"
+      ],
+      "questions": [
+        "How does the average property price vary by furnishing status across the dataset?",
+        "What is the relationship between area size and property price?",
+        "Do properties with more bedrooms tend to have higher prices compared to those with fewer bedrooms?",
+        "Are there notable price differences for houses located on the main road versus those that are not?",
+        "How does the presence of air conditioning affect property prices?",
+        "Is there a noticeable trend in property prices based on the number of stories?",
+        "How is the distribution of property prices affected by whether the house includes a guestroom?",
+        "Are there any outliers in price among properties with unusually large area or unusually high number of bedrooms?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 545,
+          "total_columns": 13,
+          "source_file": "csv_c_squared\\206.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Housing_Prices_Dataset",
+      "summary_idx": 2,
+      "column_combination": [
+        "price",
+        "area",
+        "bedrooms",
+        "bathrooms",
+        "stories",
+        "mainroad",
+        "guestroom",
+        "basement",
+        "hotwaterheating",
+        "airconditioning",
+        "parking",
+        "prefarea",
+        "furnishingstatus"
+      ],
+      "questions": [
+        "How does the price of a house vary based on its preferred area status?",
+        "What is the relationship between parking availability and price?",
+        "How does housing affordability (price) differ across furnishing statuses?",
+        "What are the differences in area size among houses with and without main road access?",
+        "Is there a noticeable trend between the number of bedrooms and price?",
+        "How does the distribution of houses with guestrooms compare between preferred and non-preferred areas?",
+        "Are houses with hot water heating typically priced higher than those without?",
+        "Does parking availability differ based on furnishing status?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 545,
+          "total_columns": 13,
+          "source_file": "csv_c_squared\\206.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Housing_Prices_Dataset",
+      "summary_idx": 3,
+      "column_combination": [
+        "price",
+        "area",
+        "bedrooms",
+        "bathrooms",
+        "stories",
+        "mainroad",
+        "guestroom",
+        "basement",
+        "hotwaterheating",
+        "airconditioning",
+        "parking",
+        "prefarea",
+        "furnishingstatus"
+      ],
+      "questions": [
+        "How does the price of a house vary with its area?",
+        "Is there a noticeable difference in average price between houses with and without air conditioning?",
+        "What is the relationship between the number of bedrooms and the presence of parking spaces?",
+        "How do prices differ across the three furnishing status categories: furnished, semi-furnished, and unfurnished?",
+        "Does the presence of a guestroom influence the price for homes with similar area?",
+        "How does the average number of stories compare between homes located on the main road and those not?",
+        "What trends can be observed in price based on the combination of prefarea status and basement availability?",
+        "Are there any outliers in area for houses with the highest number of bathrooms?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 545,
+          "total_columns": 13,
+          "source_file": "csv_c_squared\\206.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Housing_Prices_Dataset",
+      "summary_idx": 4,
+      "column_combination": [
+        "price",
+        "area",
+        "bedrooms",
+        "bathrooms",
+        "stories",
+        "mainroad",
+        "guestroom",
+        "basement",
+        "hotwaterheating",
+        "airconditioning",
+        "parking",
+        "prefarea",
+        "furnishingstatus"
+      ],
+      "questions": [
+        "How does the price of houses vary depending on the furnishing status (furnished, semi-furnished, unfurnished)?",
+        "What is the relationship between the number of bedrooms and house price?",
+        "How do homes with air conditioning compare in price and area to those without?",
+        "Does the presence of a basement affect the average house price across different numbers of stories?",
+        "Are there noticeable differences in price between houses with and without guest rooms?",
+        "How is the price distributed based on the number of bathrooms?",
+        "What effect does proximity to the main road (mainroad) have on house price and furnishing status?",
+        "Is there a trend in house price as parking spaces increase?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 545,
+          "total_columns": 13,
+          "source_file": "csv_c_squared\\206.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    }
+  ]
+}

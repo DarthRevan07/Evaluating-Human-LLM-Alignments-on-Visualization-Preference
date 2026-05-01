@@ -1,0 +1,39 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does Space Walks (hr) vary between male and female astronauts?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "strip plot with jitter overlay on violin plot",
+      "design_rationale": "Combining a violin plot (for density and distribution) with a strip plot (for showing individual astronaut values, with jitter) gives both a sense of bulk pattern AND reveals the individual astronauts' actual data points. With only two gender categories and 357 rows, this hybrid method exposes nuanced differences, rare outliers, and possible clustering. The violin plot shows the shape of the distribution and the strip plot shows if there are hidden patterns among individuals.",
+      "target_insight": "Comparison of density (distribution shape) and individual spacewalk hour values for each gender; highlights clustering, spread, and shows the number of astronauts per gender.",
+      "output_fields": [
+        "Gender",
+        "Space Walks (hr)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Space Walks (hr)",
+        "color": "Gender (distinct colors for Male/Female)",
+        "size": null,
+        "other_aesthetics": "jitter/strip alpha for visibility, violin body color, plot order"
+      }
+    },
+    "transformations": [
+      "Filter out rows where 'Space Walks (hr)' or 'Gender' are null",
+      "Sort by 'Gender'",
+      "Prepare individual astronaut values for overlay strip plot"
+    ],
+    "data_preparation_steps": [
+      "df_vio = df[df['Space Walks (hr)'].notnull() & df['Gender'].notnull()].copy()",
+      "Assign categorical codes to 'Gender' for plotting x positions: 0 for Male, 1 for Female",
+      "Add random jitter to x positions for strip plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom matplotlib import colormaps\n\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf_vio = df[df['Space Walks (hr)'].notnull() & df['Gender'].notnull()].copy()\ngender_order = ['Male', 'Female']\ndf_vio['GenderCode'] = df_vio['Gender'].map({'Male':0, 'Female':1})\ncmap = colormaps['tab10']\nfig, ax = plt.subplots(figsize=(8, 5))\n# Violin plot\nfor i, gender in enumerate(gender_order):\n    vals = df_vio[df_vio['Gender']==gender]['Space Walks (hr)']\n    parts = ax.violinplot(vals, positions=[i], widths=0.55, showmeans=False, showextrema=True, showmedians=True)\n    for pc in parts['bodies']:\n        pc.set_facecolor(cmap(i))\n        pc.set_alpha(0.28)\n    for key in ['cbars', 'cmaxes', 'cmins', 'cmedians']:\n        parts[key].set_color('black')\n        parts[key].set_linewidth(1.2)\n# Strip plot with jitter for each astronaut\nnp.random.seed(42)\njitter = np.random.normal(0, 0.04, len(df_vio))\nax.scatter(\n    df_vio['GenderCode']+jitter,\n    df_vio['Space Walks (hr)'],\n    c=df_vio['GenderCode'].map({0:cmap(0), 1:cmap(1)}),\n    alpha=0.65,\n    s=38,\n    edgecolor='black',\n    linewidth=0.5\n)\nax.set_xticks([0, 1])\nax.set_xticklabels(gender_order)\nax.set_xlabel('Gender')\nax.set_ylabel('Space Walks (hr)')\nax.set_title('Individual Space Walks (hr) and Distribution by Gender')\nax.grid(axis='y', linestyle=':', alpha=0.45)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

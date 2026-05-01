@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Which countries have the lowest rice production per person despite having large rice acreage?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Sorted by Rice Production Per Person within Large Acreage Countries)",
+      "design_rationale": "A horizontal bar chart sorted ascendingly by Rice Production Per Person (Kg) for only the top countries by Rice Acreage. This dives into exactly which of these farming giants fail to convert land into meaningful per-person output, immediately exposing the lowest outliers. Using color to differentiate the very lowest (e.g., bottom 5) focuses the viewer's attention in a compact, ranked display.",
+      "target_insight": "Rank-ordered clarity of which acreage-rich countries most underperform for per-person production.",
+      "output_fields": [
+        "Country",
+        "Rice Acreage (Hectare)",
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg)",
+        "y": "Country",
+        "color": "Highlight bottom 5 by red, rest by blue",
+        "size": null,
+        "other_aesthetics": "Barh, annotated values, figure sized for legibility, grid on x."
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Acreage (Hectare)' and 'Rice Production Per Person (Kg)' to numerics using 'K'/'M' parsing.",
+      "Select the top 15 countries by 'Rice Acreage (Hectare)'.",
+      "Sort these by 'Rice Production Per Person (Kg)' ascending.",
+      "Mark the lowest 5 entries for highlighting."
+    ],
+    "data_preparation_steps": [
+      "df['Rice Acreage (Hectare)_num'] : parse abreviation to float.",
+      "df['Rice Production Per Person (Kg)_num'] : convert to float.",
+      "df_top_acreage = top 15 by 'Rice Acreage (Hectare)_num'",
+      "df_bar = df_top_acreage sorted by 'Rice Production Per Person (Kg)_num' ascending.",
+      "Assign color column: 'red' for bottom 5, 'steelblue' for the rest."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef parse_abbr(val):\n    if pd.isnull(val):\n        return np.nan\n    val = str(val).replace(',', '').strip()\n    if val.endswith('M'):\n        return float(val[:-1]) * 1e6\n    if val.endswith('K'):\n        return float(val[:-1]) * 1e3\n    return float(val)\ndf['Rice Acreage (Hectare)_num'] = df['Rice Acreage (Hectare)'].apply(parse_abbr)\ndf['Rice Production Per Person (Kg)_num'] = pd.to_numeric(df['Rice Production Per Person (Kg)'].astype(str).str.replace(',', ''), errors='coerce')\ndf_top_acreage = df.sort_values('Rice Acreage (Hectare)_num', ascending=False).head(15).copy()\ndf_bar = df_top_acreage.sort_values('Rice Production Per Person (Kg)_num', ascending=True).reset_index(drop=True)\ncolors = ['red' if i < 5 else 'steelblue' for i in range(len(df_bar))]\nfig, ax = plt.subplots(figsize=(9,8))\nbars = ax.barh(df_bar['Country'], df_bar['Rice Production Per Person (Kg)_num'], color=colors, alpha=0.8, edgecolor='k')\nfor i, (v, ctry) in enumerate(zip(df_bar['Rice Production Per Person (Kg)_num'], df_bar['Country'])):\n    ax.text(v + max(df_bar['Rice Production Per Person (Kg)_num']) * 0.01, i, f'{int(v):,}', va='center', fontsize=9)\nax.set_xlabel('Rice Production Per Person (Kg)')\nax.set_ylabel('Country')\nax.set_title('Lowest Rice Production Per Person Among 15 Countries With Largest Rice Acreage', fontsize=13)\nax.grid(axis='x', alpha=0.3)\nax.invert_yaxis()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

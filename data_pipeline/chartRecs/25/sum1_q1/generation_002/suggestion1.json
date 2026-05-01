@@ -1,0 +1,42 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which stocks have demonstrated the largest positive or negative percentage changes over the past 30 days, and how do these changes compare to their 365-day percentage changes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar chart with dual bars per stock",
+      "design_rationale": "A horizontal bar chart with grouped bars for each stock makes comparison of short-term (30-day) and long-term (365-day) percentage change clear and intuitive. It allows users to rapidly identify which stocks have had the largest positive/negative changes recently and how these relate to their annual performance. Grouped bars are chosen because the dataset is small (50 rows), and all stocks are equally important as NIFTY-50 constituents. Sorting stocks by 30-day change improves the overview.",
+      "target_insight": "Reveal the stocks with highest positive and negative 30-day percentage changes, and directly compare their annual change to uncover momentum, reversals, or persistent trends.",
+      "output_fields": [
+        "Symbol",
+        "30 d % chng",
+        "365 d % chng"
+      ],
+      "chart_encodings": {
+        "x": "percentage change values: '30 d % chng' and '365 d % chng'",
+        "y": "stock Symbol",
+        "color": "separate colors for '30 d % chng' and '365 d % chng' bars; positive vs negative values color-coded",
+        "size": "null",
+        "other_aesthetics": "legend for bar types; sorted y-axis by descending '30 d % chng'; gridlines"
+      }
+    },
+    "transformations": [
+      "Sort df by '30 d % chng' descending to focus on stocks with highest recent percentage increase and decrease",
+      "Select top 10 positive and top 10 negative stocks based on '30 d % chng' (for clarity)",
+      "Extract corresponding '365 d % chng' for these stocks"
+    ],
+    "data_preparation_steps": [
+      "df_sorted = df.sort_values(by='30 d % chng', ascending=False)",
+      "top_positive = df_sorted.head(10)",
+      "top_negative = df_sorted.tail(10)",
+      "df_plot = pd.concat([top_positive, top_negative])",
+      "Ensure 'Symbol', '30 d % chng', and '365 d % chng' are in df_plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf_sorted = df.sort_values(by='30 d % chng', ascending=False)\ntop_positive = df_sorted.head(10)\ntop_negative = df_sorted.tail(10)\ndf_plot = pd.concat([top_positive, top_negative])\ndf_plot = df_plot.set_index('Symbol')\nbar_width = 0.4\nfig, ax = plt.subplots(figsize=(10, 8))\n# Bar positions\ny_pos = np.arange(len(df_plot))\n# Bar colors\npos_color = '#34a853'\nneg_color = '#ea4335'\nannual_color = '#4285f4'\ncolors_30d = [pos_color if v >= 0 else neg_color for v in df_plot['30 d % chng']]\n# 30-day bars\nbars1 = ax.barh(y_pos - bar_width/2, df_plot['30 d % chng'], height=bar_width, color=colors_30d, label='30 d % chng')\n# 365-day bars\nbars2 = ax.barh(y_pos + bar_width/2, df_plot['365 d % chng'], height=bar_width, color=annual_color, alpha=0.5, label='365 d % chng')\n# Y ticks and labels\nax.set_yticks(y_pos)\nax.set_yticklabels(df_plot.index)\nax.axvline(0, color='grey', lw=0.8, ls='--')\n# Legend\nlegend_handles = [plt.Rectangle((0, 0), 1, 1, color=pos_color, label='30 d % chng (positive)'),\n                  plt.Rectangle((0, 0), 1, 1, color=neg_color, label='30 d % chng (negative)'),\n                  plt.Rectangle((0, 0), 1, 1, color=annual_color, alpha=0.5, label='365 d % chng (annual)')]\nax.legend(handles=legend_handles, loc='lower right')\n# Axis labels and title\nax.set_xlabel('Percentage Change (%)')\nax.set_ylabel('Stock Symbol')\ntitle = 'Comparison of Largest Positive/Negative 30-Day and Annual (%) Changes\\nNIFTY-50 Stocks (Top 10 Positive & Negative)'\nax.set_title(title)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do monthly highest temperatures in Amherst change over the years covered in the dataset?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Years vs Months, values: highest temperature)",
+      "design_rationale": "A heatmap offers a dense, yet intuitive, overview of how monthly highest temperatures evolve year-to-year. By placing years on the y-axis and months on the x-axis, each cell shows the highest temperature for a given month and year, with color encoding enabling quick identification of hot/cool periods, annual patterns, and anomalies. This approach leverages the regular structure (12 years × 12 months) and helps answer the question both from an aggregate and granular lens.",
+      "target_insight": "The heatmap visually highlights periods of unusually high or low temperatures, exposes trends like warming/cooling in specific months, and allows for easy comparison across years and months.",
+      "output_fields": [
+        "Year",
+        "Date",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Month (extracted from Date)",
+        "y": "Year",
+        "color": "Temperature",
+        "size": null,
+        "other_aesthetics": "Viridis color map, colorbar for temperature, clearer labeling"
+      }
+    },
+    "transformations": [
+      "Convert 'Date' to datetime",
+      "Extract month name from 'Date' for x-axis",
+      "Pivot table: index='Year', columns='Month', values='Temperature'"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\461.csv')",
+      "df['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')",
+      "df['Month'] = df['Date'].dt.strftime('%b')",
+      "pivot = df.pivot(index='Year', columns='Month', values='Temperature')",
+      "Reorder columns so months are in calendar order"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')\ndf['Month'] = df['Date'].dt.strftime('%b')\nmonth_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']\npivot = df.pivot(index='Year', columns='Month', values='Temperature')\npivot = pivot[month_order]\nfig, ax = plt.subplots(figsize=(10,8))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap, vmin=pivot.min().min(), vmax=pivot.max().max())\nax.set_xticks(np.arange(len(month_order)))\nax.set_xticklabels(month_order, fontsize=10)\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_yticklabels([str(y) for y in pivot.index], fontsize=10)\nplt.setp(ax.get_xticklabels(), rotation=45, ha='right')\ncb = fig.colorbar(im, ax=ax)\ncb.set_label('Highest Monthly Temperature (°F)')\nax.set_xlabel('Month')\nax.set_ylabel('Year')\nax.set_title('Heatmap of Amherst Monthly Highest Temperatures: Year vs Month')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

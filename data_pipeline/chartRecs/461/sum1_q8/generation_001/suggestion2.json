@@ -1,0 +1,37 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "How variable are monthly temperature maxima from year to year in Amherst—do some years show more extreme fluctuations than others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line plot of annual temperature range with highlight",
+      "design_rationale": "Calculating the difference between the maximum and minimum monthly maxima for each year results in a single variability score per year. Plotting these as a line conveys volatility across years. By highlighting the most and least variable years, the user quickly identifies which years experienced the largest spread in extreme temperatures. Using markers, a strong color for extremes, and subtle annotation reinforces this insight perspective, focusing directly on inter-annual fluctuation magnitude.",
+      "target_insight": "How much did monthly maxima fluctuate within each year, and which years saw unusually stable or unstable temperatures.",
+      "output_fields": [
+        "Year",
+        "Temperature Range (Annual Max - Annual Min)"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Temperature Range (max - min, per year)",
+        "color": "Highlight for most/least variable years and a base color for others",
+        "size": "Largest marker for most/least variable years, smaller for the rest",
+        "other_aesthetics": "Line connecting points, text annotation for extremes, gridlines"
+      }
+    },
+    "transformations": [
+      "For each value in df['Year'], aggregate corresponding df['Temperature'] to compute annual max and min",
+      "Subtract annual min from max to get range of monthly maxima per year"
+    ],
+    "data_preparation_steps": [
+      "Group df by df['Year'] and compute: max, min, then calculate (max - min) as new column 'Range'",
+      "Identify year(s) with largest and smallest range for special marker and annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf_stats = df.groupby('Year')['Temperature'].agg(['max', 'min']).reset_index()\ndf_stats['Range'] = df_stats['max'] - df_stats['min']\nyears = df_stats['Year'].values\nranges = df_stats['Range'].values\nmax_idx = ranges.argmax()\nmin_idx = ranges.argmin()\nfig, ax = plt.subplots(figsize=(12, 6))\nax.plot(years, ranges, marker='o', color='steelblue', linewidth=2, label='Range (Annual Max - Min)')\nax.scatter(years[max_idx], ranges[max_idx], s=160, color='firebrick', zorder=4, label='Most variable year')\nax.scatter(years[min_idx], ranges[min_idx], s=160, color='seagreen', zorder=4, label='Least variable year')\nfor idx, color, desc in zip([max_idx, min_idx], ['firebrick', 'seagreen'], ['Most Variable', 'Least Variable']):\n    ax.text(years[idx], ranges[idx] + 1, str(int(years[idx])) + '\\n' + desc, ha='center', va='bottom', fontsize=11, color=color, fontweight='bold')\nax.set_xlabel('Year', fontsize=12)\nax.set_ylabel('Range of Monthly Maxima (°F)', fontsize=12)\nax.set_title('Yearly Spread in Amherst Monthly Max Temperatures\\n(largest minus smallest monthly max, by year)', fontsize=14)\nax.grid(True, alpha=0.4)\nax.legend(frameon=True, loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

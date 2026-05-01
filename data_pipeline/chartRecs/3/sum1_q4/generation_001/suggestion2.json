@@ -1,0 +1,41 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there countries that rank highly in rice production but have relatively low rice yield per hectare, and what might explain these discrepancies?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart (Top Producers: Yield vs Acreage vs Per Capita Production)",
+      "design_rationale": "A grouped bar chart provides a comparative deep-dive into the top rice producing countries, showing for each their yield per hectare, total acreage, and production per person. This chart breaks down the multifaceted factors behind 'high output, low yield' discrepancies and visualizes whether large acreage (extensive farming) or population size (low per capita) contributes to lower yield despite volume output. Bar grouping enables easy comparison across countries and metrics.",
+      "target_insight": "The chart exposes which top producers rely more on acreage than productivity and which countries have lower per capita production, helping explain why some countries with high output have relatively low yield.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rice Acreage (Hectare)",
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Country (top 10 by 'Rank of Rice Production')",
+        "y": "metric value ('Rice Yield (Kg / Hectare)', 'Rice Acreage (Hectare)', 'Rice Production Per Person (Kg)')",
+        "color": "Bar color by metric (Yield=green, Acreage=blue, Per Capita=orange)",
+        "size": null,
+        "other_aesthetics": "Bars grouped by country; labels; rotate xticks"
+      }
+    },
+    "transformations": [
+      "Filter to select top 10 countries by 'Rank of Rice Production'",
+      "Parse 'Rice Yield (Kg / Hectare)', 'Rice Acreage (Hectare)', 'Rice Production Per Person (Kg)' to numeric values (handling K/M notation)",
+      "Reshape data for grouped bar plotting (countries x metrics)"
+    ],
+    "data_preparation_steps": [
+      "Sort df by 'Rank of Rice Production' ascending, select top 10",
+      "Apply numeric parsing to all relevant columns ('Rice Yield (Kg / Hectare)', 'Rice Acreage (Hectare)', 'Rice Production Per Person (Kg)')",
+      "Create long-form DataFrame for plotting: columns=['Country', 'Metric', 'Value']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef parse_numeric(x):\n    x = str(x).replace(' ', '')\n    if x.endswith('M'):\n        return float(x[:-1]) * 1e6\n    elif x.endswith('K'):\n        return float(x[:-1]) * 1e3\n    else:\n        try:\n            return float(x)\n        except:\n            return np.nan\ntopn = 10\ndf_top = df.sort_values('Rank of Rice Production').head(topn).copy()\ndf_top['Rice Yield Numeric'] = df_top['Rice Yield (Kg / Hectare)'].apply(parse_numeric)\ndf_top['Rice Acreage Numeric'] = df_top['Rice Acreage (Hectare)'].apply(parse_numeric)\ndf_top['Rice Per Person Numeric'] = df_top['Rice Production Per Person (Kg)'].apply(parse_numeric)\ndata = []\nmetrics = [('Rice Yield Numeric', 'Yield (Kg/Ha)', 'green'), ('Rice Acreage Numeric', 'Acreage (Ha)', 'blue'), ('Rice Per Person Numeric', 'Per Person (Kg)', 'orange')]\nfor i, row in df_top.iterrows():\n    for col, label, color in metrics:\n        data.append({'Country': row['Country'], 'Metric': label, 'Value': row[col], 'Color': color})\ndf_plot = pd.DataFrame(data)\ncountries = df_top['Country'].values\nmetrics_labels = [m[1] for m in metrics]\nbar_width = 0.2\nfig, ax = plt.subplots(figsize=(12, 6))\nfor idx, metric in enumerate(metrics_labels):\n    subset = df_plot[df_plot['Metric'] == metric]\n    ax.bar(np.arange(topn) + idx*bar_width, subset['Value'], width=bar_width, color=subset['Color'].iloc[0], label=metric)\nax.set_xticks(np.arange(topn) + bar_width)\nax.set_xticklabels(countries, rotation=40, ha='right')\nax.set_ylabel('Value (see legend for units)')\nax.set_title('Yield, Acreage, and Per Capita Production\\nfor Top 10 Rice Producing Countries')\nax.legend(title='Metric')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

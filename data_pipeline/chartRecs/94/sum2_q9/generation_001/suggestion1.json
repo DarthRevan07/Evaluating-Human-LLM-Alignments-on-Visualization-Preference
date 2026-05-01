@@ -1,0 +1,44 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "Are there any years where the population growth (yearly % change) deviates from the overall trend, and what was the density in those years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Dual-axis line and scatter plot (trend with highlighted deviations)",
+      "design_rationale": "A dual-axis approach overlays the trend of population growth (yearly % change) with population density. Years where growth deviates from the trend are explicitly highlighted using scatter markers. This concise display allows viewers to see anomalies in context of the overall trend, and visually associate them with density values, answering both parts of the question. Line chart is ideal for trend analysis; scatter highlights outliers.",
+      "target_insight": "Pinpoint years where population growth deviates from historical trend, and directly observe density values in those years.",
+      "output_fields": [
+        "Year",
+        "Yearly % Change",
+        "Density (P/Km²)"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Yearly % Change",
+        "color": "Deviation points: contrasting color; Density: secondary line",
+        "size": "Scatter deviation size encodes magnitude of deviation",
+        "other_aesthetics": "Secondary y-axis for Density (P/Km²); alpha for deviation markers; annotation for largest deviation"
+      }
+    },
+    "transformations": [
+      "Convert df['Yearly % Change'] from string to float for numeric analysis",
+      "Calculate rolling mean (3-year window) of df['Yearly % Change'] to establish the trend",
+      "Identify years where absolute difference between actual and trend exceeds threshold (e.g., 0.2%)",
+      "Extract density values at identified deviation years"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "trend = df['Yearly % Change'].rolling(window=3, center=True, min_periods=1).mean()",
+      "deviation_mask = np.abs(df['Yearly % Change'] - trend) > 0.2",
+      "deviation_years = df['Year'][deviation_mask]",
+      "deviation_values = df['Yearly % Change'][deviation_mask]",
+      "deviation_density = df['Density (P/Km²)'][deviation_mask]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\ntrend = df['Yearly % Change'].rolling(window=3, center=True, min_periods=1).mean()\ndeviation_mask = np.abs(df['Yearly % Change'] - trend) > 0.2\ndeviation_years = df['Year'][deviation_mask]\ndeviation_values = df['Yearly % Change'][deviation_mask]\ndeviation_density = df['Density (P/Km²)'][deviation_mask]\nfig, ax1 = plt.subplots(figsize=(10,6))\nax1.plot(df['Year'], df['Yearly % Change'], color='navy', linewidth=2, label='Yearly % Change')\nax1.plot(df['Year'], trend, color='gray', linestyle='--', linewidth=2, label='Rolling Trend')\nax1.scatter(deviation_years, deviation_values, c='crimson', s=60 + np.abs(deviation_values-trend[deviation_mask])*300, alpha=0.8, label='Deviations', edgecolor='k')\nfor i, txt in enumerate(deviation_density):\n    ax1.text(deviation_years.iloc[i], deviation_values.iloc[i]+0.12, f'Density: {txt}', fontsize=9, color='crimson', ha='center')\nax2 = ax1.twinx()\nax2.plot(df['Year'], df['Density (P/Km²)'], color='forestgreen', linewidth=2, linestyle=':', label='Density (P/Km²)')\nax2.set_ylabel('Density (P/Km²)', color='forestgreen', fontsize=12)\nax2.tick_params(axis='y', colors='forestgreen')\nax1.set_xlabel('Year', fontsize=12)\nax1.set_ylabel('Yearly % Change', color='navy', fontsize=12)\nax1.tick_params(axis='y', colors='navy')\nax1.legend(loc='upper left')\nax2.legend(loc='upper right')\nplt.title('Deviations in Global Population Growth Trend and Associated Density (P/Km²)', fontsize=15)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

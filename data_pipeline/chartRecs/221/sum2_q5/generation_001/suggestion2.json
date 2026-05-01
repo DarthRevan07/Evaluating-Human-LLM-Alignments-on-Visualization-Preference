@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are certain transportation types more common among specific traveler nationalities?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides a matrix overview of the frequency of transportation types for each nationality. Color encoding highlights 'hot spots' where certain nationalities strongly prefer particular transportation modes, making it easy to identify correlation patterns and outliers across numerous categories. This is especially effective given the relatively small dataset and categorical variables.",
+      "target_insight": "The chart visualizes preferred transportation types by nationality; strong intensities indicate common usage, allowing identification of such trends at a glance.",
+      "output_fields": [
+        "Traveler nationality",
+        "Transportation type",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Transportation type",
+        "y": "Traveler nationality",
+        "color": "Count of Trip ID",
+        "size": null,
+        "other_aesthetics": "Colorbar for frequency; grid lines; y-axis limited to top 10 nationalities for clarity"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing 'Traveler nationality' or 'Transportation type'",
+      "Aggregate counts of 'Trip ID' for each combination of 'Traveler nationality' and 'Transportation type'",
+      "Select top 10 most common nationalities (to keep heatmap readable for 41 categories)"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Traveler nationality', 'Transportation type'])",
+      "df_nation_counts = df.groupby('Traveler nationality')['Trip ID'].count().sort_values(ascending=False).head(10)",
+      "df_top = df[df['Traveler nationality'].isin(df_nation_counts.index)]",
+      "heatmap_data = df_top.groupby(['Traveler nationality', 'Transportation type'])['Trip ID'].count().unstack(fill_value=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf = df.dropna(subset=['Traveler nationality', 'Transportation type'])\ndf_nation_counts = df.groupby('Traveler nationality')['Trip ID'].count().sort_values(ascending=False).head(10)\ndf_top = df[df['Traveler nationality'].isin(df_nation_counts.index)]\nheatmap_data = df_top.groupby(['Traveler nationality', 'Transportation type'])['Trip ID'].count().unstack(fill_value=0)\nfig, ax = plt.subplots(figsize=(9,7))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_data.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_xticklabels(heatmap_data.columns, rotation=45, ha='right')\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_yticklabels(heatmap_data.index)\nax.set_xlabel('Transportation type')\nax.set_ylabel('Traveler nationality')\nplt.title('Heatmap of Transportation Type Use Across Top 10 Traveler Nationalities')\ncbar = fig.colorbar(im, ax=ax, label='Number of Trips')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

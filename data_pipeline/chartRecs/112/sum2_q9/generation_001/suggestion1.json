@@ -1,0 +1,38 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "What brands or drink names dominate the top ranks for caffeine content and how does their calorie content compare?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar chart",
+      "design_rationale": "A horizontal bar chart ranks drinks by their caffeine content, allowing direct comparison of the top caffeinated brands. Annotating bars with calorie values answers how energy content relates to stimulant potency, condensing both variables for easy reading, especially useful given the large number of unique products.",
+      "target_insight": "Which drinks dominate the caffeine leaderboard, and how calorie values are distributed among these highest-caffeine contenders.",
+      "output_fields": [
+        "drink",
+        "Caffeine (mg)",
+        "Calories"
+      ],
+      "chart_encodings": {
+        "x": "Caffeine (mg)",
+        "y": "drink",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bar labels showing Calories; horizontal layout for readability; sorted descending by Caffeine (mg)"
+      }
+    },
+    "transformations": [
+      "Sort df descending by 'Caffeine (mg)'",
+      "Select top 15 rows for most caffeinated drinks"
+    ],
+    "data_preparation_steps": [
+      "df_sorted = df.sort_values('Caffeine (mg)', ascending=False)",
+      "df_top = df_sorted.head(15)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_sorted = df.sort_values('Caffeine (mg)', ascending=False)\ndf_top = df_sorted.head(15)\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(df_top['drink'], df_top['Caffeine (mg)'], color='skyblue')\nax.set_xlabel('Caffeine (mg)')\nax.set_ylabel('Drink (brand and variety)')\nax.set_title('Top 15 Drinks by Caffeine Content\\nCalorie Value Shown Beside Each Bar')\nfor i, (bar, cal) in enumerate(zip(bars, df_top['Calories'])):\n    ax.text(bar.get_width()+10, bar.get_y()+bar.get_height()/2, str(cal) + ' cal', va='center', fontsize=10)\nax.invert_yaxis()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

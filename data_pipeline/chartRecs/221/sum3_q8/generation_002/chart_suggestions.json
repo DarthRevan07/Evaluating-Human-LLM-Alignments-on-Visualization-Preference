@@ -1,0 +1,467 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\221\\sum3_q8\\generation_002",
+  "schema_context": "Table: Traveler Trip Dataset \nRows: 139\nColumns: 13\n\nFIELD INFORMATION:\nField: Trip ID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 139\n  - Semantic Meaning: Trip ID uniquely identifies each individual traveler's trip within the Traveler Trip Dataset, serving as a sequential numeric trip reference.\n  - Value Range: 1.0 to 139.0\n  - Mean: 70.00\n\nField: Destination\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 59\n  - Semantic Meaning: This field records the geographic endpoint or location (city, country, or region) that a traveler visited or intended to visit during their trip, representing popular international travel destinations.\n\nField: Start date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 111\n  - Semantic Meaning: This field records the calendar date on which a traveler's trip began, typically used to track the start of individual travel itineraries in a trip management or booking context.\n\nField: End date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 125\n  - Semantic Meaning: This field records the calendar date when a traveler's trip concluded, indicating the end point of each travel journey in the dataset.\n\nField: Duration (days)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 2\n  - Unique Values: 9\n  - Semantic Meaning: This field represents the total length, in days, of individual traveler trips recorded in the dataset, likely indicating how long each person spent traveling or on vacation.\n  - Value Range: 5.0 to 14.0\n  - Mean: 7.61\n\nField: Traveler name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 109\n  - Semantic Meaning: This field records the full names of individual travelers who made trips, serving as unique identifiers within the travel dataset.\n\nField: Traveler age\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 2\n  - Unique Values: 29\n  - Semantic Meaning: This field records the age in years of individual travelers participating in trips, likely used to analyze traveler demographics and trends within the travel industry.\n  - Value Range: 20.0 to 60.0\n  - Mean: 33.18\n\nField: Traveler gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified gender of travelers (male or female) in a travel-related context, likely used for demographic analysis or segmentation.\n\nField: Traveler nationality\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 41\n  - Semantic Meaning: This field records the country or national origin of each traveler in the trip dataset, indicating their citizenship or self-identified nationality for travel analysis or profiling purposes.\n\nField: Accommodation type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 8\n  - Semantic Meaning: This field indicates the category of lodging chosen by travelers during their trips, capturing various accommodation types such as hotels, villas, guesthouses, and vacation rentals within the travel and tourism industry.\n\nField: Accommodation cost\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 53\n  - Semantic Meaning: This field captures the reported monetary cost of accommodation incurred by travelers during their trips, expressed in various currency formats and sometimes without explicit currency labels.\n\nField: Transportation type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 3\n  - Unique Values: 9\n  - Semantic Meaning: This field captures the mode of transportation used by travelers during their trips, indicating the specific type of vehicle or service (e.g., car, bus, flight) chosen for travel segments in the context of trip or travel planning.\n\nField: Transportation cost\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 3\n  - Unique Values: 48\n  - Semantic Meaning: This field records the monetary amount paid by travelers for transportation during their trip, typically expressed in US dollars, reflecting travel expenses such as flights, trains, or other transit modes.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Trip ID\"\n  2. \"Destination\"\n  3. \"Start date\"\n  4. \"End date\"\n  5. \"Duration (days)\"\n  6. \"Traveler name\"\n  7. \"Traveler age\"\n  8. \"Traveler gender\"\n  9. \"Traveler nationality\"\n  10. \"Accommodation type\"\n  11. \"Accommodation cost\"\n  12. \"Transportation type\"\n  13. \"Transportation cost\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Trip ID'], df['Destination']",
+  "table_metadata": {
+    "table_name": "Traveler Trip Dataset ",
+    "file_path": "csv_c_squared\\221.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 221.csv (Dataset: Traveler Trip Dataset )",
+    "original_filename": "221.csv",
+    "dataset_name": "Traveler Trip Dataset ",
+    "row_count": 139,
+    "column_count": 13,
+    "table_hash": -739652793235412456,
+    "fields": [
+      {
+        "name": "Trip ID",
+        "clean_name": "Trip_ID",
+        "camel_case_name": "tripId",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 139,
+        "unique_values": 139,
+        "min_value": 1.0,
+        "max_value": 139.0,
+        "mean_value": 70.0,
+        "median_value": 70.0,
+        "sample_values": "1, 2, 3, 4, 5, ..., 135, 136, 137, 138, 139",
+        "inferred_semantic_summary": "Trip ID uniquely identifies each individual traveler's trip within the Traveler Trip Dataset, serving as a sequential numeric trip reference."
+      },
+      {
+        "name": "Destination",
+        "clean_name": "Destination",
+        "camel_case_name": "destination",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 59,
+        "sample_values": "\"Berlin, Germany\", Hawaii, Rio de Janeiro, Cape Town, \"Paris, France\", ..., \"Sydney, AUS\", Thailand, Greece, \"Phuket, Thailand\", Amsterdam",
+        "inferred_semantic_summary": "This field records the geographic endpoint or location (city, country, or region) that a traveler visited or intended to visit during their trip, representing popular international travel destinations."
+      },
+      {
+        "name": "Start date",
+        "clean_name": "Start_date",
+        "camel_case_name": "startDate",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 111,
+        "sample_values": "3/5/2023, 5/10/2022, 6/20/2023, 3/10/2024, 9/20/2022, ..., 10/5/2022, 2/5/2022, 7/12/2022, 10/20/2023, 9/1/2021",
+        "inferred_semantic_summary": "This field records the calendar date on which a traveler's trip began, typically used to track the start of individual travel itineraries in a trip management or booking context."
+      },
+      {
+        "name": "End date",
+        "clean_name": "End_date",
+        "camel_case_name": "endDate",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 125,
+        "sample_values": "3/20/2022, 9/8/2023, 5/10/2022, 4/22/2023, 2/19/2023, ..., 5/18/2022, 10/20/2023, 1/24/2024, 7/10/2021, 5/14/2023",
+        "inferred_semantic_summary": "This field records the calendar date when a traveler's trip concluded, indicating the end point of each travel journey in the dataset."
+      },
+      {
+        "name": "Duration (days)",
+        "clean_name": "Duration__days_",
+        "camel_case_name": "durationDays",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 9,
+        "min_value": 5.0,
+        "max_value": 14.0,
+        "mean_value": 7.605839416058394,
+        "median_value": 7.0,
+        "sample_values": "5.0, 6.0, 7.0, 8.0, 9.0, ..., 11.0, 13.0, 14.0, nan, nan",
+        "inferred_semantic_summary": "This field represents the total length, in days, of individual traveler trips recorded in the dataset, likely indicating how long each person spent traveling or on vacation."
+      },
+      {
+        "name": "Traveler name",
+        "clean_name": "Traveler_name",
+        "camel_case_name": "travelerName",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 109,
+        "sample_values": "Amanda Chen, Frank Li, Emily Johnson, Charlie Lee, Carlos Garcia, ..., Olivia Green, Olivia Kim, Michael Davis, Ana Hernandez, Lily Nguyen",
+        "inferred_semantic_summary": "This field records the full names of individual travelers who made trips, serving as unique identifiers within the travel dataset."
+      },
+      {
+        "name": "Traveler age",
+        "clean_name": "Traveler_age",
+        "camel_case_name": "travelerAge",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 29,
+        "min_value": 20.0,
+        "max_value": 60.0,
+        "mean_value": 33.175182481751825,
+        "median_value": 31.0,
+        "sample_values": "nan, 20.0, 23.0, 24.0, 25.0, ..., 47.0, 48.0, 50.0, 55.0, 60.0",
+        "inferred_semantic_summary": "This field records the age in years of individual travelers participating in trips, likely used to analyze traveler demographics and trends within the travel industry."
+      },
+      {
+        "name": "Traveler gender",
+        "clean_name": "Traveler_gender",
+        "camel_case_name": "travelerGender",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 2,
+        "sample_values": "Male, Female, nan",
+        "inferred_semantic_summary": "This field records the self-identified gender of travelers (male or female) in a travel-related context, likely used for demographic analysis or segmentation."
+      },
+      {
+        "name": "Traveler nationality",
+        "clean_name": "Traveler_nationality",
+        "camel_case_name": "travelerNationality",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 41,
+        "sample_values": "Taiwan, Germany, Cambodia, Moroccan, nan, ..., French, USA, Canadian, Scottish, South Korean",
+        "inferred_semantic_summary": "This field records the country or national origin of each traveler in the trip dataset, indicating their citizenship or self-identified nationality for travel analysis or profiling purposes."
+      },
+      {
+        "name": "Accommodation type",
+        "clean_name": "Accommodation_type",
+        "camel_case_name": "accommodationType",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 8,
+        "sample_values": "Villa, Resort, Airbnb, Vacation rental, nan, Hotel, Guesthouse, Hostel, Riad",
+        "inferred_semantic_summary": "This field indicates the category of lodging chosen by travelers during their trips, capturing various accommodation types such as hotels, villas, guesthouses, and vacation rentals within the travel and tourism industry."
+      },
+      {
+        "name": "Accommodation cost",
+        "clean_name": "Accommodation_cost",
+        "camel_case_name": "accommodationCost",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 2,
+        "non_null_count": 137,
+        "unique_values": 53,
+        "sample_values": "\"$1,400 \", $350 , $700 , 1500 USD, nan, ..., $150 , 600 USD, 100, 200 USD, 400",
+        "inferred_semantic_summary": "This field captures the reported monetary cost of accommodation incurred by travelers during their trips, expressed in various currency formats and sometimes without explicit currency labels."
+      },
+      {
+        "name": "Transportation type",
+        "clean_name": "Transportation_type",
+        "camel_case_name": "transportationType",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 3,
+        "non_null_count": 136,
+        "unique_values": 9,
+        "sample_values": "Car, Plane, Train, Ferry, Bus, Car rental, Airplane, nan, Flight, Subway",
+        "inferred_semantic_summary": "This field captures the mode of transportation used by travelers during their trips, indicating the specific type of vehicle or service (e.g., car, bus, flight) chosen for travel segments in the context of trip or travel planning."
+      },
+      {
+        "name": "Transportation cost",
+        "clean_name": "Transportation_cost",
+        "camel_case_name": "transportationCost",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 3,
+        "non_null_count": 136,
+        "unique_values": 48,
+        "sample_values": "$250 , $20 , $700 , nan, 3000, ..., $100 , 100, 600 USD, 200 USD, 400",
+        "inferred_semantic_summary": "This field records the monetary amount paid by travelers for transportation during their trip, typically expressed in US dollars, reflecting travel expenses such as flights, trains, or other transit modes."
+      }
+    ],
+    "formatted_summary": "## Table 1: Traveler_Trip_Dataset_ (139 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 221.csv (Dataset: Traveler Trip Dataset )\n\n### Schema (13 fields)\n  - Trip ID -- type: int64, values: 1, 2, 3, 4, 5, ..., 135, 136, 137, 138, 139\n  - Destination -- type: object, values: \"Berlin, Germany\", Hawaii, Rio de Janeiro, Cape Town, \"Paris, France\", ..., \"Sydney, AUS\", Thailand, Greece, \"Phuket, Thailand\", Amsterdam\n  - Start date -- type: object, values: 3/5/2023, 5/10/2022, 6/20/2023, 3/10/2024, 9/20/2022, ..., 10/5/2022, 2/5/2022, 7/12/2022, 10/20/2023, 9/1/2021\n  - End date -- type: object, values: 3/20/2022, 9/8/2023, 5/10/2022, 4/22/2023, 2/19/2023, ..., 5/18/2022, 10/20/2023, 1/24/2024, 7/10/2021, 5/14/2023\n  - Duration (days) -- type: float64, values: 5.0, 6.0, 7.0, 8.0, 9.0, ..., nan, 11.0, 13.0, 14.0, nan\n  - Traveler name -- type: object, values: Amanda Chen, Frank Li, Emily Johnson, Charlie Lee, Carlos Garcia, ..., Olivia Green, Olivia Kim, Michael Davis, Ana Hernandez, Lily Nguyen\n  - Traveler age -- type: float64, values: nan, 20.0, 23.0, 24.0, 25.0, ..., 48.0, 50.0, 55.0, 60.0, nan\n  - Traveler gender -- type: object, values: Male, Female, nan\n  - Traveler nationality -- type: object, values: Taiwan, Germany, Cambodia, Moroccan, nan, ..., French, USA, Canadian, Scottish, South Korean\n  - Accommodation type -- type: object, values: Villa, Resort, Airbnb, Vacation rental, nan, Hotel, Guesthouse, Hostel, Riad\n  - Accommodation cost -- type: object, values: \"$1,400 \", $350 , $700 , 1500 USD, nan, ..., $150 , 600 USD, 100, 200 USD, 400\n  - Transportation type -- type: object, values: Car, Plane, Train, Ferry, Bus, Car rental, Airplane, nan, Flight, Subway\n  - Transportation cost -- type: object, values: $250 , $20 , $700 , nan, 3000, ..., $100 , 100, 600 USD, 200 USD, 400\n\n### Sample Data (first 5 rows)\n```\n   Trip ID       Destination Start date   End date  Duration (days)  Traveler name  Traveler age Traveler gender Traveler nationality Accommodation type Accommodation cost Transportation type Transportation cost\n0        1        London, UK   5/1/2023   5/8/2023              7.0     John Smith          35.0            Male             American              Hotel               1200              Flight                 600\n1        2  Phuket, Thailand  6/15/2023  6/20/2023              5.0       Jane Doe          28.0          Female             Canadian             Resort                800              Flight                 500\n2        3   Bali, Indonesia   7/1/2023   7/8/2023              7.0      David Lee          45.0            Male               Korean              Villa               1000              Flight                 700\n3        4     New York, USA  8/15/2023  8/29/2023             14.0  Sarah Johnson          29.0          Female              British              Hotel               2000              Flight                1000\n4        5      Tokyo, Japan  9/10/2023  9/17/2023              7.0     Kim Nguyen          26.0          Female           Vietnamese             Airbnb                700               Train                 200\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "221",
+      "summary_idx": 3,
+      "question_idx": 8,
+      "question": "Are there any destinations that predominantly attract travelers of a specific nationality?",
+      "column_combination": [
+        "Trip ID",
+        "Destination",
+        "Start date",
+        "End date",
+        "Duration (days)",
+        "Traveler name",
+        "Traveler age",
+        "Traveler gender",
+        "Traveler nationality",
+        "Accommodation type",
+        "Accommodation cost",
+        "Transportation type",
+        "Transportation cost"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Stacked Bar Chart",
+            "design_rationale": "A stacked bar chart allows a clear comparison of the nationality distribution for each destination. By aggregating traveler counts per nationality per destination, we can visually identify destinations dominated by a single nationality (i.e., taller single-color stacks). This format is effective given the moderate number of unique destinations (59) and nationalities (41), and directly addresses the question of predominance.",
+            "target_insight": "Destinations with a single nationality representing the majority of travelers are easily spotted by dominant segment colors in their bars.",
+            "output_fields": [
+              "Destination",
+              "Traveler nationality",
+              "Trip ID"
+            ],
+            "chart_encodings": {
+              "x": "Destination",
+              "y": "Count of 'Trip ID'",
+              "color": "Traveler nationality",
+              "size": null,
+              "other_aesthetics": "Stacked bars, legend displayed"
+            }
+          },
+          "transformations": [
+            "Drop rows with null values in 'Destination' or 'Traveler nationality' to ensure analysis is valid",
+            "Group by 'Destination' and 'Traveler nationality', then count the number of trips ('Trip ID')",
+            "Pivot the grouped data so each destination is a bar, and each nationality stacks as a segment"
+          ],
+          "data_preparation_steps": [
+            "df_clean = df.dropna(subset=['Destination', 'Traveler nationality'])",
+            "df_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()",
+            "df_pivot = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)",
+            "Select top 10 destinations with greatest overall trip counts for visual clarity"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Traveler nationality'])\ndf_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()\ndf_pivot = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)\ndest_totals = df_pivot.sum(axis=1)\ndest_top10 = dest_totals.nlargest(10).index\ndf_plot = df_pivot.loc[dest_top10]\ncolor_list = plt.cm.tab20.colors\nn_nationalities = df_plot.shape[1]\ncolors = color_list * (n_nationalities // len(color_list) + 1)\nfig, ax = plt.subplots(figsize=(16,8))\nbar_bottom = np.zeros(len(df_plot))\nfor i, nationality in enumerate(df_plot.columns):\n    ax.bar(\n        df_plot.index,\n        df_plot[nationality],\n        bottom=bar_bottom,\n        label=nationality,\n        color=colors[i]\n    )\n    bar_bottom += df_plot[nationality].values\nax.set_xlabel('Destination')\nax.set_ylabel('Number of Travelers')\nax.set_title('Nationality Distribution for Top 10 Destinations\\n(Travelers per Destination)')\nax.legend(title='Traveler nationality', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Heatmap",
+            "design_rationale": "A heatmap provides a compact overview of all destinations and nationalities. It visually encodes the intensity of traveler counts for each nationality-destination pair, so destinations highly concentrated with one nationality appear as bright blocks along rows. This approach leverages the categorical and moderate cardinality structure, and enables spotting predominance patterns across the whole dataset.",
+            "target_insight": "Sharp, bright squares reveal destinations with overwhelming representation from a single nationality.",
+            "output_fields": [
+              "Destination",
+              "Traveler nationality",
+              "Trip ID"
+            ],
+            "chart_encodings": {
+              "x": "Traveler nationality",
+              "y": "Destination",
+              "color": "Count of 'Trip ID' (color intensity)",
+              "size": null,
+              "other_aesthetics": "Colormap (Sequential), colorbar for scale"
+            }
+          },
+          "transformations": [
+            "Drop rows with null values in 'Destination' or 'Traveler nationality'",
+            "Count trips grouped by both 'Destination' and 'Traveler nationality'",
+            "Pivot to create a matrix with destinations as rows and nationalities as columns (counts as values)"
+          ],
+          "data_preparation_steps": [
+            "df_clean = df.dropna(subset=['Destination', 'Traveler nationality'])",
+            "df_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()",
+            "df_matrix = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)",
+            "Select top 15 destinations by total number of travelers for clarity",
+            "df_heat = df_matrix.loc[df_matrix.sum(axis=1).nlargest(15).index]"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Traveler nationality'])\ndf_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()\ndf_matrix = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)\ndest_top15 = df_matrix.sum(axis=1).nlargest(15).index\ndf_heat = df_matrix.loc[dest_top15]\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(14, 9))\nheatmap = ax.imshow(df_heat.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(df_heat.columns)))\nax.set_yticks(np.arange(len(df_heat.index)))\nax.set_xticklabels(df_heat.columns, rotation=45, ha='right')\nax.set_yticklabels(df_heat.index)\nax.set_xlabel('Traveler nationality')\nax.set_ylabel('Destination')\nax.set_title('Traveler Nationality Heatmap Across Destinations\\n(Intensity = Number of Travelers)')\ncbar = fig.colorbar(heatmap, ax=ax, label='Number of Travelers')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:25:11.831269",
+      "schema_context": "Table: Traveler Trip Dataset \nRows: 139\nColumns: 13\n\nFIELD INFORMATION:\nField: Trip ID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 139\n  - Semantic Meaning: Trip ID uniquely identifies each individual traveler's trip within the Traveler Trip Dataset, serving as a sequential numeric trip reference.\n  - Value Range: 1.0 to 139.0\n  - Mean: 70.00\n\nField: Destination\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 59\n  - Semantic Meaning: This field records the geographic endpoint or location (city, country, or region) that a traveler visited or intended to visit during their trip, representing popular international travel destinations.\n\nField: Start date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 111\n  - Semantic Meaning: This field records the calendar date on which a traveler's trip began, typically used to track the start of individual travel itineraries in a trip management or booking context.\n\nField: End date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 125\n  - Semantic Meaning: This field records the calendar date when a traveler's trip concluded, indicating the end point of each travel journey in the dataset.\n\nField: Duration (days)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 2\n  - Unique Values: 9\n  - Semantic Meaning: This field represents the total length, in days, of individual traveler trips recorded in the dataset, likely indicating how long each person spent traveling or on vacation.\n  - Value Range: 5.0 to 14.0\n  - Mean: 7.61\n\nField: Traveler name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 109\n  - Semantic Meaning: This field records the full names of individual travelers who made trips, serving as unique identifiers within the travel dataset.\n\nField: Traveler age\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 2\n  - Unique Values: 29\n  - Semantic Meaning: This field records the age in years of individual travelers participating in trips, likely used to analyze traveler demographics and trends within the travel industry.\n  - Value Range: 20.0 to 60.0\n  - Mean: 33.18\n\nField: Traveler gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified gender of travelers (male or female) in a travel-related context, likely used for demographic analysis or segmentation.\n\nField: Traveler nationality\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 41\n  - Semantic Meaning: This field records the country or national origin of each traveler in the trip dataset, indicating their citizenship or self-identified nationality for travel analysis or profiling purposes.\n\nField: Accommodation type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 8\n  - Semantic Meaning: This field indicates the category of lodging chosen by travelers during their trips, capturing various accommodation types such as hotels, villas, guesthouses, and vacation rentals within the travel and tourism industry.\n\nField: Accommodation cost\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 2\n  - Unique Values: 53\n  - Semantic Meaning: This field captures the reported monetary cost of accommodation incurred by travelers during their trips, expressed in various currency formats and sometimes without explicit currency labels.\n\nField: Transportation type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 3\n  - Unique Values: 9\n  - Semantic Meaning: This field captures the mode of transportation used by travelers during their trips, indicating the specific type of vehicle or service (e.g., car, bus, flight) chosen for travel segments in the context of trip or travel planning.\n\nField: Transportation cost\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 3\n  - Unique Values: 48\n  - Semantic Meaning: This field records the monetary amount paid by travelers for transportation during their trip, typically expressed in US dollars, reflecting travel expenses such as flights, trains, or other transit modes.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Trip ID\"\n  2. \"Destination\"\n  3. \"Start date\"\n  4. \"End date\"\n  5. \"Duration (days)\"\n  6. \"Traveler name\"\n  7. \"Traveler age\"\n  8. \"Traveler gender\"\n  9. \"Traveler nationality\"\n  10. \"Accommodation type\"\n  11. \"Accommodation cost\"\n  12. \"Transportation type\"\n  13. \"Transportation cost\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Trip ID'], df['Destination']",
+      "table_metadata": {
+        "table_name": "Traveler Trip Dataset ",
+        "file_path": "csv_c_squared\\221.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 221.csv (Dataset: Traveler Trip Dataset )",
+        "original_filename": "221.csv",
+        "dataset_name": "Traveler Trip Dataset ",
+        "row_count": 139,
+        "column_count": 13,
+        "table_hash": -739652793235412456,
+        "fields": [
+          {
+            "name": "Trip ID",
+            "clean_name": "Trip_ID",
+            "camel_case_name": "tripId",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 139,
+            "unique_values": 139,
+            "min_value": 1.0,
+            "max_value": 139.0,
+            "mean_value": 70.0,
+            "median_value": 70.0,
+            "sample_values": "1, 2, 3, 4, 5, ..., 135, 136, 137, 138, 139",
+            "inferred_semantic_summary": "Trip ID uniquely identifies each individual traveler's trip within the Traveler Trip Dataset, serving as a sequential numeric trip reference."
+          },
+          {
+            "name": "Destination",
+            "clean_name": "Destination",
+            "camel_case_name": "destination",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 59,
+            "sample_values": "\"Berlin, Germany\", Hawaii, Rio de Janeiro, Cape Town, \"Paris, France\", ..., \"Sydney, AUS\", Thailand, Greece, \"Phuket, Thailand\", Amsterdam",
+            "inferred_semantic_summary": "This field records the geographic endpoint or location (city, country, or region) that a traveler visited or intended to visit during their trip, representing popular international travel destinations."
+          },
+          {
+            "name": "Start date",
+            "clean_name": "Start_date",
+            "camel_case_name": "startDate",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 111,
+            "sample_values": "3/5/2023, 5/10/2022, 6/20/2023, 3/10/2024, 9/20/2022, ..., 10/5/2022, 2/5/2022, 7/12/2022, 10/20/2023, 9/1/2021",
+            "inferred_semantic_summary": "This field records the calendar date on which a traveler's trip began, typically used to track the start of individual travel itineraries in a trip management or booking context."
+          },
+          {
+            "name": "End date",
+            "clean_name": "End_date",
+            "camel_case_name": "endDate",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 125,
+            "sample_values": "3/20/2022, 9/8/2023, 5/10/2022, 4/22/2023, 2/19/2023, ..., 5/18/2022, 10/20/2023, 1/24/2024, 7/10/2021, 5/14/2023",
+            "inferred_semantic_summary": "This field records the calendar date when a traveler's trip concluded, indicating the end point of each travel journey in the dataset."
+          },
+          {
+            "name": "Duration (days)",
+            "clean_name": "Duration__days_",
+            "camel_case_name": "durationDays",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 9,
+            "min_value": 5.0,
+            "max_value": 14.0,
+            "mean_value": 7.605839416058394,
+            "median_value": 7.0,
+            "sample_values": "5.0, 6.0, 7.0, 8.0, 9.0, ..., 11.0, 13.0, 14.0, nan, nan",
+            "inferred_semantic_summary": "This field represents the total length, in days, of individual traveler trips recorded in the dataset, likely indicating how long each person spent traveling or on vacation."
+          },
+          {
+            "name": "Traveler name",
+            "clean_name": "Traveler_name",
+            "camel_case_name": "travelerName",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 109,
+            "sample_values": "Amanda Chen, Frank Li, Emily Johnson, Charlie Lee, Carlos Garcia, ..., Olivia Green, Olivia Kim, Michael Davis, Ana Hernandez, Lily Nguyen",
+            "inferred_semantic_summary": "This field records the full names of individual travelers who made trips, serving as unique identifiers within the travel dataset."
+          },
+          {
+            "name": "Traveler age",
+            "clean_name": "Traveler_age",
+            "camel_case_name": "travelerAge",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 29,
+            "min_value": 20.0,
+            "max_value": 60.0,
+            "mean_value": 33.175182481751825,
+            "median_value": 31.0,
+            "sample_values": "nan, 20.0, 23.0, 24.0, 25.0, ..., 47.0, 48.0, 50.0, 55.0, 60.0",
+            "inferred_semantic_summary": "This field records the age in years of individual travelers participating in trips, likely used to analyze traveler demographics and trends within the travel industry."
+          },
+          {
+            "name": "Traveler gender",
+            "clean_name": "Traveler_gender",
+            "camel_case_name": "travelerGender",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 2,
+            "sample_values": "Male, Female, nan",
+            "inferred_semantic_summary": "This field records the self-identified gender of travelers (male or female) in a travel-related context, likely used for demographic analysis or segmentation."
+          },
+          {
+            "name": "Traveler nationality",
+            "clean_name": "Traveler_nationality",
+            "camel_case_name": "travelerNationality",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 41,
+            "sample_values": "Taiwan, Germany, Cambodia, Moroccan, nan, ..., French, USA, Canadian, Scottish, South Korean",
+            "inferred_semantic_summary": "This field records the country or national origin of each traveler in the trip dataset, indicating their citizenship or self-identified nationality for travel analysis or profiling purposes."
+          },
+          {
+            "name": "Accommodation type",
+            "clean_name": "Accommodation_type",
+            "camel_case_name": "accommodationType",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 8,
+            "sample_values": "Villa, Resort, Airbnb, Vacation rental, nan, Hotel, Guesthouse, Hostel, Riad",
+            "inferred_semantic_summary": "This field indicates the category of lodging chosen by travelers during their trips, capturing various accommodation types such as hotels, villas, guesthouses, and vacation rentals within the travel and tourism industry."
+          },
+          {
+            "name": "Accommodation cost",
+            "clean_name": "Accommodation_cost",
+            "camel_case_name": "accommodationCost",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 2,
+            "non_null_count": 137,
+            "unique_values": 53,
+            "sample_values": "\"$1,400 \", $350 , $700 , 1500 USD, nan, ..., $150 , 600 USD, 100, 200 USD, 400",
+            "inferred_semantic_summary": "This field captures the reported monetary cost of accommodation incurred by travelers during their trips, expressed in various currency formats and sometimes without explicit currency labels."
+          },
+          {
+            "name": "Transportation type",
+            "clean_name": "Transportation_type",
+            "camel_case_name": "transportationType",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 3,
+            "non_null_count": 136,
+            "unique_values": 9,
+            "sample_values": "Car, Plane, Train, Ferry, Bus, Car rental, Airplane, nan, Flight, Subway",
+            "inferred_semantic_summary": "This field captures the mode of transportation used by travelers during their trips, indicating the specific type of vehicle or service (e.g., car, bus, flight) chosen for travel segments in the context of trip or travel planning."
+          },
+          {
+            "name": "Transportation cost",
+            "clean_name": "Transportation_cost",
+            "camel_case_name": "transportationCost",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 3,
+            "non_null_count": 136,
+            "unique_values": 48,
+            "sample_values": "$250 , $20 , $700 , nan, 3000, ..., $100 , 100, 600 USD, 200 USD, 400",
+            "inferred_semantic_summary": "This field records the monetary amount paid by travelers for transportation during their trip, typically expressed in US dollars, reflecting travel expenses such as flights, trains, or other transit modes."
+          }
+        ],
+        "formatted_summary": "## Table 1: Traveler_Trip_Dataset_ (139 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 221.csv (Dataset: Traveler Trip Dataset )\n\n### Schema (13 fields)\n  - Trip ID -- type: int64, values: 1, 2, 3, 4, 5, ..., 135, 136, 137, 138, 139\n  - Destination -- type: object, values: \"Berlin, Germany\", Hawaii, Rio de Janeiro, Cape Town, \"Paris, France\", ..., \"Sydney, AUS\", Thailand, Greece, \"Phuket, Thailand\", Amsterdam\n  - Start date -- type: object, values: 3/5/2023, 5/10/2022, 6/20/2023, 3/10/2024, 9/20/2022, ..., 10/5/2022, 2/5/2022, 7/12/2022, 10/20/2023, 9/1/2021\n  - End date -- type: object, values: 3/20/2022, 9/8/2023, 5/10/2022, 4/22/2023, 2/19/2023, ..., 5/18/2022, 10/20/2023, 1/24/2024, 7/10/2021, 5/14/2023\n  - Duration (days) -- type: float64, values: 5.0, 6.0, 7.0, 8.0, 9.0, ..., nan, 11.0, 13.0, 14.0, nan\n  - Traveler name -- type: object, values: Amanda Chen, Frank Li, Emily Johnson, Charlie Lee, Carlos Garcia, ..., Olivia Green, Olivia Kim, Michael Davis, Ana Hernandez, Lily Nguyen\n  - Traveler age -- type: float64, values: nan, 20.0, 23.0, 24.0, 25.0, ..., 48.0, 50.0, 55.0, 60.0, nan\n  - Traveler gender -- type: object, values: Male, Female, nan\n  - Traveler nationality -- type: object, values: Taiwan, Germany, Cambodia, Moroccan, nan, ..., French, USA, Canadian, Scottish, South Korean\n  - Accommodation type -- type: object, values: Villa, Resort, Airbnb, Vacation rental, nan, Hotel, Guesthouse, Hostel, Riad\n  - Accommodation cost -- type: object, values: \"$1,400 \", $350 , $700 , 1500 USD, nan, ..., $150 , 600 USD, 100, 200 USD, 400\n  - Transportation type -- type: object, values: Car, Plane, Train, Ferry, Bus, Car rental, Airplane, nan, Flight, Subway\n  - Transportation cost -- type: object, values: $250 , $20 , $700 , nan, 3000, ..., $100 , 100, 600 USD, 200 USD, 400\n\n### Sample Data (first 5 rows)\n```\n   Trip ID       Destination Start date   End date  Duration (days)  Traveler name  Traveler age Traveler gender Traveler nationality Accommodation type Accommodation cost Transportation type Transportation cost\n0        1        London, UK   5/1/2023   5/8/2023              7.0     John Smith          35.0            Male             American              Hotel               1200              Flight                 600\n1        2  Phuket, Thailand  6/15/2023  6/20/2023              5.0       Jane Doe          28.0          Female             Canadian             Resort                800              Flight                 500\n2        3   Bali, Indonesia   7/1/2023   7/8/2023              7.0      David Lee          45.0            Male               Korean              Villa               1000              Flight                 700\n3        4     New York, USA  8/15/2023  8/29/2023             14.0  Sarah Johnson          29.0          Female              British              Hotel               2000              Flight                1000\n4        5      Tokyo, Japan  9/10/2023  9/17/2023              7.0     Kim Nguyen          26.0          Female           Vietnamese             Airbnb                700               Train                 200\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do certain genres cluster within specific nationalities or spread across multiple countries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Network graph (Bipartite: Genres and Nationalities)",
+      "design_rationale": "A network graph visually displays connections between genres and nationalities. Nodes represent genres (left) and nationalities (right), with edges linking genres to nationalities if any artwork combines them. The thickness or transparency of edges can encode the number of artworks for each pairing. This unconventionally highlights clusters (dense connections) versus genres that bridge multiple countries or nationalities that embrace diverse genres.",
+      "target_insight": "How strongly are genres and nationalities interconnected? Are some genres associated with multiple nationalities, or do they form tight clusters? Which nationalities have eclectic genre representation?",
+      "output_fields": [
+        "genre",
+        "nationality"
+      ],
+      "chart_encodings": {
+        "x": "Node arrangement (genres left, nationalities right)",
+        "y": "Node arrangement (vertical ordering)",
+        "color": "Edges colored or weighted to encode artwork count",
+        "size": "Node size proportional to total number of artworks per genre/nationality",
+        "other_aesthetics": "Edge thickness for count, nodes colored by type, text labels for readability"
+      }
+    },
+    "transformations": [
+      "Explode df['genre'] for artworks with multiple genres",
+      "For each (genre, nationality) pair, aggregate number of artworks",
+      "Calculate total artworks per genre and nationality for node sizes",
+      "Construct graph edges between genre and nationality pairs"
+    ],
+    "data_preparation_steps": [
+      "Prepare genre-nationality pairs from df",
+      "Aggregate counts for each edge (genre, nationality)",
+      "Compute node attributes (size per genre or nationality)",
+      "Arrange genre and nationality nodes for bipartite layout"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport networkx as nx\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndf_exploded = df.copy()\ndf_exploded['genre'] = df_exploded['genre'].str.split(',')\ndf_exploded = df_exploded.explode('genre')\ndf_exploded['genre'] = df_exploded['genre'].str.strip()\ngrouped = df_exploded.groupby(['genre', 'nationality']).size().reset_index(name='count')\nG = nx.Graph()\ngenres = grouped['genre'].unique()\nnationalities = grouped['nationality'].unique()\nfor g in genres:\n    G.add_node(g, bipartite=0)\nfor n in nationalities:\n    G.add_node(n, bipartite=1)\nfor _, row in grouped.iterrows():\n    G.add_edge(row['genre'], row['nationality'], weight=row['count'])\nfrom networkx.drawing.layout import bipartite_layout\npos = bipartite_layout(G, genres)\nfig, ax = plt.subplots(figsize=(14, 10))\nedges = G.edges(data=True)\nedge_widths = [d['weight'] for _, _, d in edges]\n# node sizes proportional to total grouped count per node\ngenre_counts = grouped.groupby('genre')['count'].sum()\nnationality_counts = grouped.groupby('nationality')['count'].sum()\nnode_sizes = []\nfor node in G.nodes:\n    if node in genre_counts.index:\n        node_sizes.append(250 + 15 * genre_counts[node])\n    elif node in nationality_counts.index:\n        node_sizes.append(250 + 15 * nationality_counts[node])\n    else:\n        node_sizes.append(250)\nnode_colors = ['#2b83ba' if n in genres else '#fdae61' for n in G.nodes]\nnx.draw(G, pos,\n        ax=ax,\n        with_labels=True,\n        node_size=node_sizes,\n        node_color=node_colors,\n        edge_color=edge_widths,\n        width=np.maximum(0.3, np.array(edge_widths)),\n        cmap=plt.cm.viridis,\n        font_size=10)\nax.set_title('Bipartite Network: Genre–Nationality Associations\\n(Node size = total artworks, edge width = pair count)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

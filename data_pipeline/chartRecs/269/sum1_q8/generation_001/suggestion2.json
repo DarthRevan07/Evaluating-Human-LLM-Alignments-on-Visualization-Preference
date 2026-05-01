@@ -1,0 +1,45 @@
+{
+  "table_name": "269",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries rank in the top 10 for 2023 population, and on which continents are they located?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "waffle chart (population share by country and continent)",
+      "design_rationale": "A waffle chart is an unconventional, visually engaging way to show both composition and grouping. Here, each block represents a proportional share of population among the top 10 countries, grouped by continent color. It makes clear not just rank but the dominance of particular continents within the set, as well as showing disparities between countries at a glance. Using color for continents and block size for population gives two layers of insight.",
+      "target_insight": "How much of the top 10’s total population is contributed by each country, and which continents do these major contributors belong to? Highlights clusterings within continents.",
+      "output_fields": [
+        "country",
+        "2023 population",
+        "continent"
+      ],
+      "chart_encodings": {
+        "x": "waffle grid columns: fixed (e.g., 10 columns)",
+        "y": "waffle grid rows: calculated (proportional to total blocks)",
+        "color": "continent (each square colored by continent grouping)",
+        "size": "number of squares per country (proportional to population)",
+        "other_aesthetics": "Overlay country codes/labels inside chunk of squares for clarity. Legend for continent colors. Percentage annotation for each country."
+      }
+    },
+    "transformations": [
+      "Filter: Select only df where df['rank'] <= 10 (top 10 countries).",
+      "Aggregate: For top 10 countries, calculate their sum of '2023 population'.",
+      "Calculate: For each country, percentage of total top 10 population to determine number of blocks in grid (e.g., 100 squares in total).",
+      "Map: Assign a unique color per continent to each country’s grid blocks."
+    ],
+    "data_preparation_steps": [
+      "df_top10 = df[df['rank'] <= 10].copy()",
+      "total_pop = df_top10['2023 population'].sum()",
+      "df_top10['block_count'] = np.round(df_top10['2023 population'] / total_pop * 100).astype(int)",
+      "continents = df_top10['continent'].unique()",
+      "cmap = mpl.colormaps['Set2'].resampled(len(continents))",
+      "continent_color_map = dict(zip(continents, cmap(np.arange(len(continents))))",
+      "Assign colors to blocks based on continent for each country in grid"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf_top10 = df[df['rank'] <= 10].copy()\ntotal_pop = df_top10['2023 population'].sum()\ndf_top10['block_count'] = np.round(df_top10['2023 population'] / total_pop * 100).astype(int)\ncontinents = df_top10['continent'].unique()\ncmap = mpl.colormaps['Set2'].resampled(len(continents))\ncontinent_color_map = dict(zip(continents, cmap(np.arange(len(continents)))))\ncountry_color_map = dict(zip(df_top10['country'], [continent_color_map[cont] for cont in df_top10['continent']]))\nwaffle_blocks = []\nfor idx, row in df_top10.iterrows():\n    waffle_blocks += [(row['country'], row['continent'])] * row['block_count']\nwaffle_blocks = waffle_blocks[:100]\ncols = 10\nrows = 10\nwaffle_grid = np.array(waffle_blocks).reshape((rows, cols))\nfig, ax = plt.subplots(figsize=(8, 8))\nfor r in range(rows):\n    for c in range(cols):\n        country, continent = waffle_grid[r, c]\n        rect = plt.Rectangle((c, rows-1-r), 1, 1, color=continent_color_map[continent], ec='white')\n        ax.add_patch(rect)\ncountry_to_pos = {}\ncurrent_idx = 0\nfor country in df_top10['country']:\n    positions = [(i//cols, i%cols) for i in range(current_idx, current_idx + df_top10[df_top10['country']==country]['block_count'].iloc[0])]\n    if positions:\n        avg_r = np.mean([p[0] for p in positions])\n        avg_c = np.mean([p[1] for p in positions])\n        ax.text(avg_c+0.5, rows-1-avg_r+0.5, country, color='black', fontsize=9, ha='center', va='center', fontweight='bold')\n    current_idx += df_top10[df_top10['country']==country]['block_count'].iloc[0]\nax.set_xticks([])\nax.set_yticks([])\nlegend_handles = [mpl.patches.Patch(color=continent_color_map[cont], label=cont) for cont in continents]\nax.legend(handles=legend_handles, title='Continent', bbox_to_anchor=(1.05, 1), loc='upper left')\nax.set_title('Top 10 World Population, 2023\\nWaffle Chart by Country and Continent\\nEach square ~1% of Top 10 sum')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,45 @@
+{
+  "table_name": "269",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Which countries have experienced a decrease in population between 2020 and 2023, and how do their growth rates compare to the global average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart directly displays countries with population decline, making it easy to compare both their absolute difference in population and their annual 'growth rate' side-by-side. Using color encoding for 'growth rate' allows quick visual distinction between those declining rapidly and those declining slowly. This approach effectively leverages the categorical nature of 'country' and numeric values for population difference and growth rate, while scaling to ~20-30 bars without clutter.",
+      "target_insight": "Shows which countries saw a net population decrease from 2020 to 2023, ranks them by magnitude, and visually compares their annual growth rates to the global average for context.",
+      "output_fields": [
+        "country",
+        "2020 population",
+        "2023 population",
+        "growth rate"
+      ],
+      "chart_encodings": {
+        "x": "2020 population - 2023 population",
+        "y": "country",
+        "color": "growth rate (as diverging colormap, red=negative, gray=zero, blue=positive)",
+        "size": null,
+        "other_aesthetics": "Highlight countries below global average with visual marker (vertical line at global avg growth rate); sort bars by absolute population decline"
+      }
+    },
+    "transformations": [
+      "Calculate population change: df['pop_change'] = df['2023 population'] - df['2020 population']",
+      "Filter: Only countries where df['pop_change'] < 0",
+      "Convert df['growth rate'] (object) to float, handling percentage sign and possible locale issues",
+      "Calculate global average growth rate: weighted by 2020 population for accuracy"
+    ],
+    "data_preparation_steps": [
+      "df['pop_change'] = df['2023 population'] - df['2020 population']",
+      "neg_pop_df = df[df['pop_change'] < 0].copy()",
+      "neg_pop_df['growth_rate_val'] = neg_pop_df['growth rate'].str.replace('%','').str.replace(',','.').astype(float)",
+      "df['growth_rate_val'] = df['growth rate'].str.replace('%','').str.replace(',','.').astype(float)",
+      "global_growth_avg = np.average(df['growth_rate_val'], weights=df['2020 population'])",
+      "Sort neg_pop_df by 'pop_change' (most negative first)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf['pop_change'] = df['2023 population'] - df['2020 population']\nneg_pop_df = df[df['pop_change'] < 0].copy()\nneg_pop_df['growth_rate_val'] = neg_pop_df['growth rate'].str.replace('%','').str.replace(',','.').astype(float)\ndf['growth_rate_val'] = df['growth rate'].str.replace('%','').str.replace(',','.').astype(float)\nglobal_growth_avg = np.average(df['growth_rate_val'], weights=df['2020 population'])\nneg_pop_df = neg_pop_df.sort_values('pop_change')\nfig, ax = plt.subplots(figsize=(10, max(6, len(neg_pop_df)*0.35)))\ncmap = mpl.colormaps['coolwarm']\ncolors = cmap((neg_pop_df['growth_rate_val'] - neg_pop_df['growth_rate_val'].min()) / (neg_pop_df['growth_rate_val'].max()-neg_pop_df['growth_rate_val'].min()))\nbars = ax.barh(neg_pop_df['country'], neg_pop_df['pop_change'], color=colors, edgecolor='black')\nax.axvline(global_growth_avg, color='gray', linestyle='--', linewidth=2, label='Global Avg Growth Rate')\nnorm = mpl.colors.Normalize(vmin=neg_pop_df['growth_rate_val'].min(), vmax=neg_pop_df['growth_rate_val'].max())\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\ncbar = fig.colorbar(sm, ax=ax, orientation='vertical', label='Growth Rate (%)')\nax.set_xlabel('Population Change (2023 minus 2020)')\nax.set_ylabel('Country')\nax.set_title('Countries with Population Decline (2020-2023)\\nBar Length = Decrease, Color = Annual Growth Rate')\nplt.tight_layout()\nplt.legend()\nplt.show()"
+  },
+  "schema_based": true
+}

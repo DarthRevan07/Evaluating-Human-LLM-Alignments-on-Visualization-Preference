@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How does time spent on the website correlate with purchase status?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with marginal histograms",
+      "design_rationale": "A scatterplot with 'TimeSpentOnWebsite' on the x axis and 'PurchaseStatus' (binary) on the y axis provides a direct visual of correlation and clustering. Overlaying transparent points prevents overplotting in the large sample. Adding marginal histograms to the top and right sides shows the distribution of time spent for both purchase outcomes, highlighting if longer website time is associated with purchases.",
+      "target_insight": "Is there a positive correlation between time spent and likelihood of purchase? Are purchases concentrated above a certain time threshold, and does non-purchase dominate at low engagement?",
+      "output_fields": [
+        "TimeSpentOnWebsite",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "TimeSpentOnWebsite",
+        "y": "PurchaseStatus",
+        "color": "PurchaseStatus (distinct color for 0 and 1)",
+        "size": null,
+        "other_aesthetics": "Marginal histograms top and right; point transparency; axis grid"
+      }
+    },
+    "transformations": [
+      "Filter out invalid 'TimeSpentOnWebsite' values if any exist",
+      "Map 'PurchaseStatus' to color for points"
+    ],
+    "data_preparation_steps": [
+      "Select required columns ('TimeSpentOnWebsite', 'PurchaseStatus')",
+      "Assign color arrays (e.g., blue for 0, orange for 1)",
+      "Compute histogram bins for marginal plots"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\ncolors = np.where(df[\"PurchaseStatus\"]==1, \"#FFC107\", \"#4B8BBE\")\nfig = plt.figure(figsize=(9,6))\ngs = fig.add_gridspec(2,2, width_ratios=[4,1], height_ratios=[1,4], hspace=0.05, wspace=0.05)\nax_scatter = fig.add_subplot(gs[1,0])\nax_histx = fig.add_subplot(gs[0,0], sharex=ax_scatter)\nax_histy = fig.add_subplot(gs[1,1], sharey=ax_scatter)\nax_histx.tick_params(axis=\"x\", labelbottom=False)\nax_histy.tick_params(axis=\"y\", labelleft=False)\nax_scatter.scatter(df[\"TimeSpentOnWebsite\"], df[\"PurchaseStatus\"], c=colors, alpha=0.3, s=32, edgecolor=\"#222\")\nax_scatter.set_xlabel(\"TimeSpentOnWebsite (minutes)\")\nax_scatter.set_ylabel(\"PurchaseStatus\")\nax_scatter.set_yticks([0,1])\nax_scatter.set_yticklabels([\"Not Purchased\", \"Purchased\"])\nax_scatter.grid(True, linestyle=\"--\", alpha=0.1)\nfor status, color in zip([0,1],[\"#4B8BBE\", \"#FFC107\"]):\n    subset = df[df[\"PurchaseStatus\"]==status][\"TimeSpentOnWebsite\"]\n    ax_histx.hist(subset, bins=30, color=color, alpha=0.45, label=\"Purchased\" if status==1 else \"Not Purchased\", histtype=\"stepfilled\")\n    ax_histy.hist(df[df[\"PurchaseStatus\"]==status][\"PurchaseStatus\"], bins=2, orientation=\"horizontal\", color=color, alpha=0.45, histtype=\"stepfilled\")\nax_histx.legend()\nplt.suptitle(\"Correlation of Time Spent on Website and Purchase Status\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

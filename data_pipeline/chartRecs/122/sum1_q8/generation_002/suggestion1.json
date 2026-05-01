@@ -1,0 +1,39 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "How do the sales distributions of a single genre differ among platforms, indicating platform-genre strengths or gaps?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot allows direct comparison of the sales distributions of a single genre across all platforms, showcasing outliers, median, quartiles and range. Given the large number of platforms (31) and the quantitative sales data, this visualization helps highlight platform-genre strengths (platforms with consistently high sales) and gaps (platforms with low or skewed distributions) for the genre. Boxplots are excellent for summarizing distributional statistics and can easily handle many categories side by side.",
+      "target_insight": "Identifies which platforms excel or lag in selling games of the selected genre by visualizing sales spread, medians, and extremes.",
+      "output_fields": [
+        "Platform",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Platform",
+        "y": "Global_Sales",
+        "color": "Each box (Platform) optionally colored by median sales (for clarity)",
+        "size": "null",
+        "other_aesthetics": "rotated x-tick labels for readability; optional highlighting of top platforms; distinct color for the highest median"
+      }
+    },
+    "transformations": [
+      "Filter df to only include rows where Genre equals the chosen genre (e.g., 'Action')",
+      "Group by Platform and aggregate Global_Sales for each platform in the selected genre"
+    ],
+    "data_preparation_steps": [
+      "Set chosen_genre = 'Action' (example; could be parameterized)",
+      "df_genre = df[df['Genre'] == chosen_genre]",
+      "Extract 'Platform' and 'Global_Sales' columns for df_genre",
+      "Order platforms by median Global_Sales for better readability"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\122.csv\")\nchosen_genre = \"Action\"\ndf_genre = df[df['Genre'] == chosen_genre]\nplatforms = df_genre['Platform'].unique()\ndata = [df_genre[df_genre['Platform'] == p]['Global_Sales'] for p in platforms]\nmedians = [np.median(d) if len(d) > 0 else 0 for d in data]\norder = np.argsort(medians)[::-1]\nordered_platforms = platforms[order]\nordered_data = [data[i] for i in order]\ncmap = mpl.colormaps['viridis'].resampled(len(data))\ncolors = [cmap(i) for i in range(len(data))]\nfig, ax = plt.subplots(figsize=(14, 6))\nbp = ax.boxplot(ordered_data, patch_artist=True, labels=ordered_platforms)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_title(\"Global Sales Distribution of 'Action' Genre by Platform\\n(Boxplots show platform-genre strengths and gaps)\")\nax.set_xlabel(\"Platform\")\nax.set_ylabel(\"Global_Sales (Millions)\")\nax.tick_params(axis='x', rotation=60)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which product categories have the highest proportion of successful purchases?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Horizontal Bar Chart (Success vs. Failure for each ProductCategory)",
+      "design_rationale": "A stacked horizontal bar chart compares the successful and unsuccessful purchase proportions for each product category side-by-side, exposing not only which categories have high success but also their failure rates. This approach provides granularity, showing the split within each category and how dominance in success varies across the five groups. Using horizontal bars facilitates category labels and supports direct proportion comparisons.",
+      "target_insight": "Relative proportions of purchase successes and failures for each product category, highlighting categories with the highest success dominance.",
+      "output_fields": [
+        "ProductCategory",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "Proportions (Success, Failure)",
+        "y": "ProductCategory",
+        "color": "'#47b39c' for Success, '#e45050' for Failure",
+        "size": "null",
+        "other_aesthetics": "Horizontal layout; category labels; bar annotation showing percent"
+      }
+    },
+    "transformations": [
+      "Group df by 'ProductCategory' and 'PurchaseStatus', count rows per outcome and category",
+      "Pivot to get counts of 0 (failure) and 1 (success) per category",
+      "Divide each by total for normalized proportions"
+    ],
+    "data_preparation_steps": [
+      "df_counts = df.groupby(['ProductCategory', 'PurchaseStatus']).size().unstack(fill_value=0)",
+      "df_props = df_counts.div(df_counts.sum(axis=1), axis=0)",
+      "df_props = df_props.reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_counts = df.groupby(['ProductCategory', 'PurchaseStatus']).size().unstack(fill_value=0)\ndf_props = df_counts.div(df_counts.sum(axis=1), axis=0)\ndf_props = df_props.reset_index()\n\nfig, ax = plt.subplots(figsize=(8, 6))\ncategory_labels = df_props['ProductCategory'].astype(str)\n\nax.barh(category_labels, df_props[1], color='#47b39c', label='Success', edgecolor='white')\nax.barh(category_labels, df_props[0], left=df_props[1], color='#e45050', label='Failure', edgecolor='white')\n\nfor i in range(len(df_props)):\n    ax.text(df_props[1][i]/2, i, f'{df_props[1][i]*100:.1f}%', ha='center', va='center', color='white', fontsize=10)\n    ax.text(df_props[1][i] + df_props[0][i]/2, i, f'{df_props[0][i]*100:.1f}%', ha='center', va='center', color='white', fontsize=10)\n\nax.set_xlabel('Proportion of Purchases')\nax.set_ylabel('ProductCategory')\nax.set_title('Success vs. Failure Proportion by ProductCategory')\nax.legend(loc='upper right')\nax.set_xlim(0, 1)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

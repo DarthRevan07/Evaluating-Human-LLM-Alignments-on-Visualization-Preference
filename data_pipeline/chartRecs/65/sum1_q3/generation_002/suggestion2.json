@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there observable differences in Sales Volume across various Product Categories (Clothing, Electronics, Food) when Promotion is applied?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Facet by Promotion)",
+      "design_rationale": "A boxplot breaks down the full distribution of Sales Volume for each Product Category, separately for Promotion=Yes and Promotion=No using faceting. This enables examination of not only means but also variance, medians, and outliers. By displaying two horizontal boxplot axes (one for each Promotion status), it provides a more nuanced view than bar charts: viewers see whether Promotion changes not just overall averages but also distribution spread, skew, and extreme values.",
+      "target_insight": "This visualization reveals whether Promotion acts to shift the entire distribution of Sales Volume upwards or simply affects a subset of products. It also shows if some categories are more volatile or have more high-selling products under Promotion.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category",
+        "y": "Sales Volume (distribution per group)",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "Horizontal boxplots; facet grid with rows for 'Promotion'; tight axis labeling for clarity"
+      }
+    },
+    "transformations": [
+      "Filter df for each Promotion status ('Yes' and 'No')",
+      "For each Promotion subset, extract 'Sales Volume' by 'Product Category'"
+    ],
+    "data_preparation_steps": [
+      "df_promo_yes = df[df['Promotion'] == 'Yes']",
+      "df_promo_no = df[df['Promotion'] == 'No']",
+      "Create lists of Sales Volume values per Product Category for both Promotion subsets"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ncategories = ['Clothing','Electronics','Food']\ndata_yes = [df[df['Promotion'] == 'Yes'][df['Product Category'] == cat]['Sales Volume'].values for cat in categories]\ndata_no = [df[df['Promotion'] == 'No'][df['Product Category'] == cat]['Sales Volume'].values for cat in categories]\nfig, axes = plt.subplots(2, 1, figsize=(8,8), sharex=True)\naxes[0].boxplot(data_no, labels=categories, patch_artist=True, boxprops=dict(facecolor='#a3c1ad', alpha=0.7))\naxes[0].set_title('Sales Volume Distribution by Product Category\\n(No Promotion)')\naxes[0].set_ylabel('Sales Volume')\naxes[1].boxplot(data_yes, labels=categories, patch_artist=True, boxprops=dict(facecolor='#ffdf91', alpha=0.7))\naxes[1].set_title('Sales Volume Distribution by Product Category\\n(Promotion Applied)')\naxes[1].set_ylabel('Sales Volume')\naxes[1].set_xlabel('Product Category')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

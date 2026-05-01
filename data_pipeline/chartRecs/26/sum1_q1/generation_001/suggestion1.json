@@ -1,0 +1,40 @@
+{
+  "table_name": "26",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How did Tesla's closing price change over the ten-year period, and were there any noticeable long-term upward or downward trends?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart (Time Series) with Annual Linear Trend Overlay",
+      "design_rationale": "A line chart illustrates the daily closing price dynamics over time, highlighting both short-term volatility and long-term movement. Overlaying annual trend lines makes it easy to spot periods of sustained upward or downward momentum, effectively revealing structural changes. The 'Close' price is mapped to the y-axis and 'Date' (as datetime) to the x-axis, providing clear insight into price evolution.",
+      "target_insight": "This visualization reveals Tesla's decade-long closing price history, pinpointing when major shifts occurred (e.g., rapid growth years), and quantifies long-term trends by overlaying annual regression lines.",
+      "output_fields": [
+        "Date",
+        "Close"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Close",
+        "color": "Annual segments (each year overlaid as trend line, different colors)",
+        "size": "null",
+        "other_aesthetics": "alpha for daily series, distinct line styles for annual trends, grid for time orientation"
+      }
+    },
+    "transformations": [
+      "Convert df['Date'] to pandas datetime and sort ascending",
+      "Extract year component from df['Date'] and group by year for annual trend line overlay",
+      "For each year, fit a linear regression to df['Close'] versus time for that year"
+    ],
+    "data_preparation_steps": [
+      "df['Date'] = pd.to_datetime(df['Date'])",
+      "df = df.sort_values('Date')",
+      "df['Year'] = df['Date'].dt.year",
+      "Store unique years in years = df['Year'].unique()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom matplotlib import cm\nfrom sklearn.linear_model import LinearRegression\n\ndf = pd.read_csv('csv_c2_sec\\26.csv')\ndf['Date'] = pd.to_datetime(df['Date'])\ndf = df.sort_values('Date')\ndf['Year'] = df['Date'].dt.year\nyears = np.sort(df['Year'].unique())\ncmap = cm.get_cmap('tab10', len(years))\nfig, ax = plt.subplots(figsize=(14,6))\nax.plot(df['Date'], df['Close'], color='gray', alpha=0.4, label='Daily Close Price')\nfor idx, year in enumerate(years):\n    df_year = df[df['Year'] == year]\n    x = (df_year['Date'] - df_year['Date'].min()).dt.days.values.reshape(-1,1)\n    y = df_year['Close'].values\n    if len(x) > 5:\n        lr = LinearRegression()\n        lr.fit(x, y)\n        x_pred = np.linspace(0, x.max(), 100).reshape(-1,1)\n        y_pred = lr.predict(x_pred)\n        dates_pred = df_year['Date'].min() + pd.to_timedelta(x_pred.flatten(), unit='D')\n        ax.plot(dates_pred, y_pred, color=cmap(idx), linewidth=2, label=f'Trend {year}')\nax.set_title('Tesla Daily Closing Price (2010-2020) with Annual Trend Lines\\nRevealing Long-term Upward/Downward Patterns')\nax.set_xlabel('Date')\nax.set_ylabel('Close')\nax.grid(True, alpha=0.3)\nax.legend(ncol=3, fontsize=8, loc='upper left', bbox_to_anchor=(0.01,1.02))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "26",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How did Tesla's closing price change over the ten-year period, and were there any noticeable long-term upward or downward trends?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Annual Boxplot of Closing Price",
+      "design_rationale": "Boxplots grouped by year ('Date' extraction) summarize distributional changes in 'Close' price for each calendar year, spotlighting not only median and spread but also extremes and outliers. This design succinctly reveals year-over-year shifts, periods of high volatility, and whether long-term trends are reflected by rising medians or wider spreads. Unconventional for time-series, but highly effective for multi-period trend synthesis and comparative volatility analysis as per the schema.",
+      "target_insight": "Insight into both the distribution and volatility of closing prices by year, with visual cues to sustained upward or downward movement, and identification of years with exceptional price swings.",
+      "output_fields": [
+        "Date",
+        "Close"
+      ],
+      "chart_encodings": {
+        "x": "Year (extracted from Date)",
+        "y": "Close",
+        "color": "Box color (single or palette); outlier marker",
+        "size": "Box width uniform or by year sample size",
+        "other_aesthetics": "Grid; annotated median lines; subtle notches for significance"
+      }
+    },
+    "transformations": [
+      "Convert df['Date'] to pandas datetime.",
+      "Extract year from df['Date'] as a new column 'Year'.",
+      "Group df['Close'] by each 'Year' for boxplotting."
+    ],
+    "data_preparation_steps": [
+      "df['Date'] = pd.to_datetime(df['Date'])",
+      "df['Year'] = df['Date'].dt.year",
+      "For boxplot: create a list of df['Close'] per unique 'Year', ordered by year"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\26.csv\")\ndf['Date'] = pd.to_datetime(df['Date'])\ndf['Year'] = df['Date'].dt.year\nyears = sorted(df['Year'].unique())\ndata_per_year = [df[df['Year']==year]['Close'].values for year in years]\nplt.figure(figsize=(13,7))\nbox = plt.boxplot(data_per_year, patch_artist=True, notch=False, widths=0.5)\ncmap = plt.get_cmap('YlOrRd')\nfor patch, i in zip(box['boxes'], range(len(years))):\n    patch.set_facecolor(cmap(i/len(years)))\nplt.xlabel(\"Year\", fontsize=13)\nplt.ylabel(\"Close Price (USD)\", fontsize=13)\nplt.title(\"Tesla Closing Price Distribution by Year (2010-2020)\\n\", fontsize=15)\nplt.xticks(range(1, len(years)+1), years, fontsize=11)\nplt.grid(True, axis='y', linestyle='--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

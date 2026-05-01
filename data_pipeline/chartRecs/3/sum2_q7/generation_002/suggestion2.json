@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Are there outliers where a country’s rank in rice production per person differs greatly from its rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Divergence Bar Plot (Horizontal Bar Chart)",
+      "design_rationale": "This chart directly visualizes the difference (signed) between rice production rank and per person rank for every country. Countries are sorted by magnitude of difference—both positive (national rank higher than per capita) and negative (opposite). The bar plot surfaces both types of outliers, and labeling the largest divergences guides the viewer to the most anomalous cases. This approach exploits the power of bar charts for sorted, numeric divergence data and gives an easily scannable list of countries with greatest ranking discrepancies.",
+      "target_insight": "The chart provides a detailed ranking of countries based on divergence between the two ranks, answering the question by showing which countries are most out-of-sync in their production and per-person rankings, including which direction the divergence occurs.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Production Per Person",
+        "rank_diff"
+      ],
+      "chart_encodings": {
+        "x": "Difference (Rank of Rice Production Per Person - Rank of Rice Production)",
+        "y": "Country (sorted by absolute difference)",
+        "color": "Bars color-coded: red for negative difference, blue for positive",
+        "size": "null",
+        "other_aesthetics": "Alpha=0.8; Bold labels for top divergences"
+      }
+    },
+    "transformations": [
+      "Compute signed difference: df['rank_diff'] = df['Rank of Rice Production Per Person'] - df['Rank of Rice Production']",
+      "Sort dataframe by absolute value of rank_diff descending",
+      "Select top 15 countries with largest absolute differences for clarity",
+      "Create color encoding: red for negative, blue for positive differences"
+    ],
+    "data_preparation_steps": [
+      "df['rank_diff'] = df['Rank of Rice Production Per Person'] - df['Rank of Rice Production']",
+      "df_sorted = df.reindex(df['rank_diff'].abs().sort_values(ascending=False).index)",
+      "df_top15 = df_sorted.head(15)",
+      "df_top15['bar_color'] = np.where(df_top15['rank_diff'] < 0, 'red', 'steelblue')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf['rank_diff'] = df['Rank of Rice Production Per Person'] - df['Rank of Rice Production']\ndf_sorted = df.reindex(df['rank_diff'].abs().sort_values(ascending=False).index)\ndf_top15 = df_sorted.head(15)\ndf_top15['bar_color'] = np.where(df_top15['rank_diff'] < 0, 'red', 'steelblue')\nfig, ax = plt.subplots(figsize=(10,7))\ny_pos = np.arange(len(df_top15))\nax.barh(y_pos, df_top15['rank_diff'], color=df_top15['bar_color'], alpha=0.8)\nax.set_yticks(y_pos)\nax.set_yticklabels(df_top15['Country'])\nax.set_xlabel('Difference: Per Person Rank - Production Rank')\nax.set_title('Top Diverging Countries:\\nRice Production Rank vs Per Person Rank')\n# Bold labels for greatest divergences\nfor i, row in enumerate(df_top15.itertuples()):\n    ax.text(row.rank_diff, i, f'{row.rank_diff:.0f}', va='center', ha='right' if row.rank_diff<0 else 'left', color=row.bar_color, fontsize=9, fontweight='bold')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How is the distribution of medical charges affected by the number of children in the household?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot by Children Count",
+      "design_rationale": "A grouped boxplot gives a clear statistical view of the distribution (median, interquartile range, outliers) of medical costs ('charges') for each distinct number of children ('children'). This allows comparison of central tendency, spread, and outlier behavior across household types, leveraging the categorical nature of 'children' (0–5) and continuous 'charges' (wide range/value distribution). This directly addresses the question by contrasting medical charges distributions per child count.",
+      "target_insight": "Reveals how typical and extreme medical costs change with number of children—if costs rise/fall, spread widens/narrows, and outlier prevalence as household size increases.",
+      "output_fields": [
+        "children",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "children",
+        "y": "charges",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "box width, outlier markers, grid"
+      }
+    },
+    "transformations": [
+      "Sort df['children'] ascending for clear axis order",
+      "Group df by df['children'] and extract corresponding df['charges'] for boxplot",
+      "No aggregation: preserve full distribution per group"
+    ],
+    "data_preparation_steps": [
+      "Sort df by df['children']",
+      "For each unique value in df['children'], collect df['charges'] into group lists"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\32.csv')\nchildren_order = sorted(df['children'].unique())\ncharge_groups = [df[df['children'] == c]['charges'].values for c in children_order]\nfig, ax = plt.subplots(figsize=(9, 5))\nbp = ax.boxplot(charge_groups, patch_artist=True, widths=0.6, showfliers=True)\ncolors = ['#7ea9e1', '#72c396', '#efd34f', '#ea7878', '#b381d1', '#e0a444']\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xticks(np.arange(1, len(children_order)+1))\nax.set_xticklabels([str(c) for c in children_order])\nax.set_xlabel('children')\nax.set_ylabel('charges')\nax.set_title('Distribution of Medical Charges\\nby Number of Children in Household')\nax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

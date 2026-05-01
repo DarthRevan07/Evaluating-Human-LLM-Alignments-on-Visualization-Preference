@@ -1,0 +1,42 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries show emerging opportunities in the global rice trade based on low production rank but high yield per hectare?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Yield vs Production Rank Overview with Highlight)",
+      "design_rationale": "A horizontal bar chart listing countries by 'Rice Yield (Kg / Hectare)' (numeric, sorted descending), visually separates high-yielding countries. Countries with low production rank are highlighted with a different color. This approach offers an easily scannable summary and spotlights emerging countries among global rice yield leaders.",
+      "target_insight": "Shows at-a-glance which countries combine low production with high agricultural productivity, as bars of high yield colored to emphasize those countries with below-average production.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rank of Rice Production"
+      ],
+      "chart_encodings": {
+        "x": "Rice Yield (Kg / Hectare) (numeric)",
+        "y": "Country",
+        "color": "Highlight: countries with 'Rank of Rice Production' > median",
+        "size": "null",
+        "other_aesthetics": "horizontal layout; color legend for highlight; title with line breaks"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Yield (Kg / Hectare)' to numeric values (handling 'K', 'M' abbreviations)",
+      "Sort dataframe by 'Rice Yield (Kg / Hectare)' descending",
+      "Compute median of 'Rank of Rice Production'; flag countries where 'Rank of Rice Production' > median"
+    ],
+    "data_preparation_steps": [
+      "Convert 'Rice Yield (Kg / Hectare)' to float using helper",
+      "Compute median production rank from df",
+      "Create a boolean column 'Emerging' for countries with production rank above median",
+      "Sort df by 'Rice Yield Num' descending",
+      "Select top 20 countries for clear visualization"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef str_to_num(s):\n    if pd.isnull(s): return np.nan\n    s = str(s).strip()\n    if s.endswith('K'): return float(s[:-1]) * 1e3\n    if s.endswith('M'): return float(s[:-1]) * 1e6\n    try: return float(s)\n    except: return np.nan\ndf['Rice Yield Num'] = df['Rice Yield (Kg / Hectare)'].apply(str_to_num)\nmedian_prod = df['Rank of Rice Production'].median()\ndf['Emerging'] = df['Rank of Rice Production'] > median_prod\ndf_sorted = df.sort_values('Rice Yield Num', ascending=False).head(20)\ny = df_sorted['Country']\nx = df_sorted['Rice Yield Num']\nhighlight = df_sorted['Emerging']\ncolors = ['#e24a33' if flag else '#348ABD' for flag in highlight]\nfig, ax = plt.subplots(figsize=(12,8))\nbars = ax.barh(y, x, color=colors, edgecolor='black', alpha=0.8)\nax.set_xlabel('Rice Yield (Kg / Hectare)', fontsize=12)\nax.set_ylabel('Country', fontsize=12)\nax.set_title('Top Countries in Rice Yield (Kg/Ha)\\nHighlight: Low Production Rank = Emerging Opportunities', fontsize=15)\nax.invert_yaxis()\nfrom matplotlib.patches import Patch\nlegend_handles = [Patch(facecolor='#348ABD', edgecolor='black', label='High Production Rank'), Patch(facecolor='#e24a33', edgecolor='black', label='Emerging Opportunity (Low Production Rank)')]\nax.legend(handles=legend_handles, loc='lower right', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

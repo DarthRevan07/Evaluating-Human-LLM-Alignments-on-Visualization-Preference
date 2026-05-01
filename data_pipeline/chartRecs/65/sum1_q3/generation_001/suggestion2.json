@@ -1,0 +1,40 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there observable differences in Sales Volume across various Product Categories (Clothing, Electronics, Food) when Promotion is applied?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot with facet grid (subplot per Promotion)",
+      "design_rationale": "Boxplots for each Product Category reveal distributional differences in Sales Volume (not just average) between promoted and non-promoted products. Splitting into subplots (one for 'Yes', one for 'No') enables both a deep-dive and a global overview: outliers, median shift, and spread within each category and Promotion condition. Given Sales Volume's range and uniqueness, boxplots are ideal for uncovering variance and skew.",
+      "target_insight": "Detects whether promotions merely boost the mean or fundamentally alter the distribution (variance, outliers, median) of Sales Volume within each product category.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category",
+        "y": "Sales Volume",
+        "color": "Product Category (distinct fill color per box)",
+        "size": null,
+        "other_aesthetics": "subplot columns by Promotion, box width normalization, shared y axis, labeled outliers"
+      }
+    },
+    "transformations": [
+      "Filter df into two groups: Promotion == 'Yes' and Promotion == 'No'.",
+      "For each group, extract Sales Volume distribution per Product Category.",
+      "Prepare subplot axes with shared y limits for fair comparison."
+    ],
+    "data_preparation_steps": [
+      "promotion_yes = df[df['Promotion']=='Yes']",
+      "promotion_no = df[df['Promotion']=='No']",
+      "categories = sorted(df['Product Category'].unique())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\65.csv')\npromotion_yes = df[df['Promotion']=='Yes']\npromotion_no = df[df['Promotion']=='No']\ncategories = sorted(df['Product Category'].unique())\nfig, axes = plt.subplots(1,2, figsize=(11,7), sharey=True)\ncolors = mpl.colormaps['viridis'].resampled(len(categories)).colors\nfor ax, promo_df, title in zip(axes, [promotion_yes, promotion_no], ['Promotion: Yes','Promotion: No']):\n    data = [promo_df[promo_df['Product Category']==cat]['Sales Volume'] for cat in categories]\n    box = ax.boxplot(data, patch_artist=True, labels=categories)\n    for patch, color in zip(box['boxes'], colors):\n        patch.set_facecolor(color)\n        patch.set_alpha(0.7)\n    ax.set_title(title)\n    ax.set_xlabel('Product Category')\naxes[0].set_ylabel('Sales Volume')\nfig.suptitle('Sales Volume Distribution by Product Category\\nSplit by Promotion Status', fontsize=14)\nplt.tight_layout()\nplt.subplots_adjust(top=0.88)\nplt.show()"
+  },
+  "schema_based": true
+}

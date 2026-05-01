@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the purchase conversion rate vary across different age groups?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line plot (Conversion Rate vs Age as a continuous variable)",
+      "design_rationale": "Instead of binning, visualization as a moving-average line enables the detection of subtle nonlinear, trend, or local effects across the continuous age spectrum. This is powerful for identifying inflection points and detailed demographic behavior. Smoothing allows for both noise reduction and trend discovery on the conversion rate, supporting the discovery of peak or trough ages and gaps not visible in large bins.",
+      "target_insight": "How conversion rate changes smoothly across the age continuum; detection of peak/troughs.",
+      "output_fields": [
+        "Age",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "Age (continuous)",
+        "y": "Smoothed conversion rate (moving average of PurchaseStatus)",
+        "color": "Gradient (single line in 'teal')",
+        "size": "null",
+        "other_aesthetics": "Smoothing window, marker at local maxima/minima"
+      }
+    },
+    "transformations": [
+      "Sort df by 'Age'",
+      "Apply rolling mean to PurchaseStatus using Age as index with window=10 for smoothing"
+    ],
+    "data_preparation_steps": [
+      "Sort df by 'Age' ascending",
+      "Compute rolling average of 'PurchaseStatus' with window size 10 (centered)",
+      "Identify local maxima/minima on smoothed curve for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_sorted = df.sort_values('Age')\nwindow = 10\nsmoothed = df_sorted['PurchaseStatus'].rolling(window=window, center=True).mean()\nfig, ax = plt.subplots(figsize=(8, 6))\nax.plot(df_sorted['Age'], smoothed, color='teal', linewidth=2)\nax.set_xlabel('Age (years)')\nax.set_ylabel('Purchase Conversion Rate (moving avg)')\nax.set_title('Continuous Purchase Conversion Rate By Age')\nax.set_ylim(0, 1)\nax.grid(True, linestyle='--', alpha=0.35)\n# Mark local maxima/minima on smoothed line\nfrom scipy.signal import argrelextrema\narr = smoothed.values\nmax_idx = argrelextrema(arr, np.greater)[0]\nmin_idx = argrelextrema(arr, np.less)[0]\nax.scatter(df_sorted['Age'].iloc[max_idx], smoothed.iloc[max_idx], marker='^', color='darkorange', label='Local Max', zorder=5)\nax.scatter(df_sorted['Age'].iloc[min_idx], smoothed.iloc[min_idx], marker='v', color='royalblue', label='Local Min', zorder=5)\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

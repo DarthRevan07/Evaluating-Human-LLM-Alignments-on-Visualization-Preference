@@ -1,0 +1,40 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How do sales in Japan for role-playing games compare to sales in North America for the same genre?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Side-by-Side Bar Chart",
+      "design_rationale": "A comparative bar chart is ideal for showing aggregated sales figures side-by-side. Using 'Year' as the x-axis, and comparing summed sales ('JP_Sales' and 'NA_Sales') for Role-Playing games allows viewers to see trends over time and market differences. This approach highlights both historical changes and relative sales strengths between Japan and North America for this genre.",
+      "target_insight": "Yearly aggregate sales for role-playing games in Japan and North America; allows direct temporal and regional comparison.",
+      "output_fields": [
+        "Year",
+        "JP_Sales",
+        "NA_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Summed JP_Sales and NA_Sales by Year",
+        "color": "Region ('Japan' vs 'North America')",
+        "size": null,
+        "other_aesthetics": "Side-by-side bars, clear legend, distinct colors for regions"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where df['Genre'] == 'Role-Playing'",
+      "Group filtered df by df['Year'], summing df['JP_Sales'] and df['NA_Sales']",
+      "Drop rows with null values for df['Year']"
+    ],
+    "data_preparation_steps": [
+      "df_role = df[df['Genre'] == 'Role-Playing']",
+      "df_role_year = df_role.groupby('Year')[['JP_Sales', 'NA_Sales']].sum().reset_index()",
+      "df_role_year = df_role_year.dropna(subset=['Year'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_role = df[df['Genre'] == 'Role-Playing']\ndf_role_year = df_role.groupby('Year')[['JP_Sales', 'NA_Sales']].sum().reset_index()\ndf_role_year = df_role_year.dropna(subset=['Year'])\ndf_role_year = df_role_year.sort_values('Year')\nwidth = 0.4\nx = np.arange(len(df_role_year['Year']))\nfig, ax = plt.subplots(figsize=(12,6))\nbar1 = ax.bar(x - width/2, df_role_year['JP_Sales'], width, label='Japan', color='tab:red')\nbar2 = ax.bar(x + width/2, df_role_year['NA_Sales'], width, label='North America', color='tab:blue')\nax.set_xticks(x)\nax.set_xticklabels([str(int(year)) for year in df_role_year['Year']])\nax.set_xlabel('Year')\nax.set_ylabel('Total Sales (Millions)')\nax.set_title('Yearly Role-Playing Game Sales: Japan vs North America')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

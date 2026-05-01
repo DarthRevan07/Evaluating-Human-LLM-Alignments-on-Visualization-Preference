@@ -1,0 +1,47 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there countries where the Agriculture Sector GDP Rank is significantly better than their overall Rank?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "scatter plot (difference vs overall)",
+      "design_rationale": "A scatter plot visualizes the difference between Agriculture Sector GDP Rank and overall Rank for each country, making it easy to visually spot outliers where agriculture is ranked significantly higher than the country's general economic standing. Using horizontal orientation gives a clear view of countries with high positive differences. Each point is colored by 'Agriculture Sector GDP of % Contribution' to add context on how significant agriculture is within the country's GDP.",
+      "target_insight": "Quickly spot countries where agricultural performance stands out relative to their economic rank, and gauge whether higher difference correlates with agriculture's share in GDP.",
+      "output_fields": [
+        "Country/Economy",
+        "Rank",
+        "Agriculture Sector GDP Rank",
+        "Agriculture Sector GDP of % Contribution"
+      ],
+      "chart_encodings": {
+        "x": "Country/Economy",
+        "y": "rank_diff (Agriculture Sector GDP Rank - Rank)",
+        "color": "Agriculture Sector GDP of % Contribution",
+        "size": null,
+        "other_aesthetics": "horizontal orientation, annotated for top outliers"
+      }
+    },
+    "transformations": [
+      "Filter rows where both df['Rank'] and df['Agriculture Sector GDP Rank'] are valid numeric ranks (exclude '-').",
+      "Convert df['Rank'] and df['Agriculture Sector GDP Rank'] to int.",
+      "Calculate new column 'rank_diff' = df['Rank'] - df['Agriculture Sector GDP Rank'].",
+      "Keep only countries where 'rank_diff' > 0 (i.e., Agriculture sector ranks better).",
+      "Select top 15 countries with largest 'rank_diff'."
+    ],
+    "data_preparation_steps": [
+      "df_filtered = df[df['Rank'].str.isnumeric() & df['Agriculture Sector GDP Rank'].str.isnumeric()].copy()",
+      "df_filtered['Rank'] = df_filtered['Rank'].astype(int)",
+      "df_filtered['Agriculture Sector GDP Rank'] = df_filtered['Agriculture Sector GDP Rank'].astype(int)",
+      "df_filtered['rank_diff'] = df_filtered['Rank'] - df_filtered['Agriculture Sector GDP Rank']",
+      "df_filtered = df_filtered[df_filtered['rank_diff'] > 0]",
+      "df_filtered['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df_filtered['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df_plot = df_filtered.nlargest(15, 'rank_diff')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf_filtered = df[df['Rank'].str.isnumeric() & df['Agriculture Sector GDP Rank'].str.isnumeric()].copy()\ndf_filtered['Rank'] = df_filtered['Rank'].astype(int)\ndf_filtered['Agriculture Sector GDP Rank'] = df_filtered['Agriculture Sector GDP Rank'].astype(int)\ndf_filtered['rank_diff'] = df_filtered['Rank'] - df_filtered['Agriculture Sector GDP Rank']\ndf_filtered = df_filtered[df_filtered['rank_diff'] > 0]\ndf_filtered['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df_filtered['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf_plot = df_filtered.nlargest(15, 'rank_diff')\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(12,7))\nsc = ax.scatter(\n    df_plot['rank_diff'],\n    df_plot['Country/Economy'],\n    c=df_plot['Agriculture Sector GDP of % Contribution'],\n    cmap=cmap,\n    s=100,\n    edgecolor='black',\n    alpha=0.85\n)\nax.set_xlabel('Difference (Overall Rank minus Agriculture Rank)')\nax.set_ylabel('Country/Economy')\ncb = plt.colorbar(sc, ax=ax)\ncb.set_label('Agriculture Sector GDP of % Contribution')\nax.set_title('Countries where Agriculture Sector GDP Rank is much better than Overall Rank\\nTop 15 by difference')\nfor i, row in df_plot.iterrows():\n    ax.text(row['rank_diff']+0.3, row['Country/Economy'], f'{row['rank_diff']}', va='center', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Are there any epochs or periods that feature an unusually high diversity of genres?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Genre vs. Period)",
+      "design_rationale": "A heatmap showing which genres appeared in which epochs reveals not only diversity but also the distribution and overlap of genres across time. It helps surface periods with unusually high genre variety—a period with multiple genres will show many colored cells in that row. This unconventional approach maps 'century' (rows) versus individual 'genre' (columns), with cell brightness representing genre presence.",
+      "target_insight": "Visualizes both the spread and concentration of genres across epochs, identifying periods with notably broad genre representation and epochs with dominant genres.",
+      "output_fields": [
+        "years",
+        "genre"
+      ],
+      "chart_encodings": {
+        "x": "genre",
+        "y": "century",
+        "color": "genre presence (binary: 1 if present, 0 if not)",
+        "size": "null",
+        "other_aesthetics": "Color intensity, readable tick labels, gridlines"
+      }
+    },
+    "transformations": [
+      "Extract year from df['years'] and assign to century as in previous step",
+      "Expand df['genre'] to individual genre values",
+      "Build a binary matrix: rows=centuries, columns=genres, value=1 if genre present in century"
+    ],
+    "data_preparation_steps": [
+      "Extract creation_year and assign 'century' (same as previous suggestion)",
+      "Split df['genre'] into genre_list and explode rows for genre mapping",
+      "Pivot the data for a century x genre matrix, fill with 1 if genre present, 0 otherwise"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport re\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndef extract_year(s):\n    years = re.findall(r'[0-9]{4}', str(s))\n    return int(years[0]) if len(years) > 0 else np.nan\n\ndef assign_century(year):\n    if pd.isnull(year):\n        return 'Unknown'\n    century = (year // 100) * 100\n    return f'{century}s'\ndf['creation_year'] = df['years'].apply(extract_year)\ndf['century'] = df['creation_year'].apply(assign_century)\ndf['genre_list'] = df['genre'].str.split(',')\ndf_exploded = df.explode('genre_list')\ndf_exploded['genre_list'] = df_exploded['genre_list'].str.strip()\ncenturies_order = df_exploded['century'].drop_duplicates().sort_values()\ngenres_order = df_exploded['genre_list'].drop_duplicates().sort_values()\npivot = pd.pivot_table(df_exploded, values='id', index='century', columns='genre_list', aggfunc='count', fill_value=0)\npivot = pivot.applymap(lambda x: 1 if x > 0 else 0)\npivot = pivot.reindex(index=centuries_order, columns=genres_order)\nfig, ax = plt.subplots(figsize=(14,8))\ncmap = mpl.colormaps['viridis'].resampled(2)\nm = ax.imshow(pivot.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(genres_order)))\nax.set_yticks(np.arange(len(centuries_order)))\nax.set_xticklabels(genres_order, rotation=90, fontsize=9)\nax.set_yticklabels(centuries_order, fontsize=10)\nax.set_xlabel('Genre')\nax.set_ylabel('Century')\nax.set_title('Heatmap of Genre Presence per Epoch\\nBest Artworks of All Time')\nplt.colorbar(m, ax=ax, label='Genre Presence')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

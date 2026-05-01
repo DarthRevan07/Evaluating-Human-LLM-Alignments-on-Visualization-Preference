@@ -1,0 +1,41 @@
+{
+  "table_name": "268",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which districts in each division experienced the highest population growth rates from 1991 to 2022?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Division-wise Ranked Heatmap of District Growth Rates",
+      "design_rationale": "A heatmap visualizes all districts' growth rates, offering both ranking and regional context. Rows represent divisions (grouped), columns represent districts within those divisions (sorted by growth rate); cell color encodes the actual growth rate. This format highlights not only top performers but also the relative standing of all districts within each division, delivering a richer comparative view and surfacing potential regional development patterns. It leverages the categorical and numerical structure effectively and is unconventional for such demographic ranking analysis.",
+      "target_insight": "Relative and absolute growth rates of all districts per division—with the highest districts easily visible, but context for all others provided for nuanced insight.",
+      "output_fields": [
+        "Division",
+        "Name",
+        "Population Growth Rate 1991-2022"
+      ],
+      "chart_encodings": {
+        "x": "Name (sorted by growth rate within Division)",
+        "y": "Division",
+        "color": "Population Growth Rate 1991-2022",
+        "size": null,
+        "other_aesthetics": "Heatmap cell color gradient ('viridis'), growth rate value overlay on cells, colorbar"
+      }
+    },
+    "transformations": [
+      "Calculate population growth rate for each district: (df['Population_2022'] - df['Population_1991']) / df['Population_1991']",
+      "For each division, sort districts by growth rate descending",
+      "Reshape data so rows = divisions, columns = district names, values = growth rates"
+    ],
+    "data_preparation_steps": [
+      "Create 'GrowthRate_1991_2022' in df: (df['Population_2022'] - df['Population_1991']) / df['Population_1991']",
+      "For each division, sort districts descending by 'GrowthRate_1991_2022'",
+      "Create a pivot table with index='Division', columns='Name', values='GrowthRate_1991_2022', fill NaN with np.nan (for missing values)",
+      "Order columns so within each row (division), districts are left-to-right in decreasing growth rate"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['GrowthRate_1991_2022'] = (df['Population_2022'] - df['Population_1991']) / df['Population_1991']\ndivisions_sorted = df['Division'].unique()\ndistrict_order = []\nfor div in divisions_sorted:\n    districts = df[df['Division'] == div].sort_values('GrowthRate_1991_2022', ascending=False)['Name'].tolist()\n    district_order.extend(districts)\ndistrict_order_unique = []\n[district_order_unique.append(d) for d in district_order if d not in district_order_unique]\npivot = df.pivot(index='Division', columns='Name', values='GrowthRate_1991_2022')\npivot = pivot[district_order_unique]\nfig, ax = plt.subplots(figsize=(18,6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap, interpolation='none')\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels(pivot.columns, rotation=45, ha='right', fontsize=9)\nax.set_yticklabels(pivot.index, fontsize=11)\nfor i in range(len(pivot.index)):\n    for j in range(len(pivot.columns)):\n        val = pivot.values[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f'{val:.2f}', ha='center', va='center', color='white', fontsize=8)\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', label='Population Growth Rate (1991-2022)')\nax.set_title('District Population Growth Rates within Each Division (1991-2022) -- Highest Ranked Left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

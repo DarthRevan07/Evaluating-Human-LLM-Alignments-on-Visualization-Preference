@@ -1,0 +1,48 @@
+{
+  "table_name": "39",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Among the numeric fields, which elemental combinations most strongly distinguish one Type from another?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of Mean Elemental Composition per Type (Clustered)",
+      "design_rationale": "To summarize distinguishing elemental combinations at the class (Type) level, aggregate each numeric field by 'Type' and plot a clustered heatmap. This makes it easy to compare average elemental concentrations across Types. Ordering Types and elements by similarity (clustering) spotlights which elements or combinations drive the strongest differences. The heatmap encoding, paired with dendrogram-based clustering, enhances pattern detection and synthesis—particularly useful for identifying key elements responsible for separation.",
+      "target_insight": "Pinpoints the elemental features (or their combinations) whose average values most clearly separate glass Types overall, and visually identifies which Types share similar elemental profiles.",
+      "output_fields": [
+        "RI",
+        "Na",
+        "Mg",
+        "Al",
+        "Si",
+        "K",
+        "Ca",
+        "Ba",
+        "Fe",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Elemental fields (RI, Na, Mg, ..., Fe)",
+        "y": "'Type' (each row = a Type category)",
+        "color": "Mean value of element per Type, via sequential colormap (e.g. 'plasma')",
+        "size": "null",
+        "other_aesthetics": "Row and/or column dendrogram to cluster Types and/or elements, annotation with numeric values, tight aspect"
+      }
+    },
+    "transformations": [
+      "Group data by 'Type' and compute mean for each numeric field ('RI', 'Na', ..., 'Fe')",
+      "Optionally scale (normalize) columns for fair color scaling",
+      "Apply hierarchical clustering to Types (rows) and/or elements (columns)",
+      "Convert aggregated means into matrix form for plotting"
+    ],
+    "data_preparation_steps": [
+      "df_type_means = df.groupby('Type')[element_fields].mean()",
+      "Normalize values across each column for heatmap display (optional)",
+      "Use scipy clustering to order rows (Types) and columns (elements), if desired"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom scipy.cluster.hierarchy import linkage, leaves_list\ndf = pd.read_csv('csv_c_squared\\39.csv')\nelement_fields = ['RI', 'Na', 'Mg', 'Al', 'Si', 'K', 'Ca', 'Ba', 'Fe']\ndf_type_means = df.groupby('Type')[element_fields].mean()\n# Normalize columns (z-score) for fair comparison\nmeans_norm = (df_type_means - df_type_means.mean()) / df_type_means.std()\nfrom scipy.spatial.distance import pdist, squareform\nrow_linkage = linkage(means_norm, method='ward')\nrow_order = leaves_list(row_linkage)\ncol_linkage = linkage(means_norm.T, method='ward')\ncol_order = leaves_list(col_linkage)\nordered_means = means_norm.iloc[row_order, col_order]\nfig, ax = plt.subplots(figsize=(1.3*ordered_means.shape[1]+3, 0.80*ordered_means.shape[0]+2))\ncmap = mpl.colormaps['plasma']\nim = ax.imshow(ordered_means, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(col_order)))\nax.set_xticklabels([element_fields[i] for i in col_order], fontsize=11, rotation=35, ha='left')\nax.set_yticks(np.arange(len(row_order)))\nax.set_yticklabels([df_type_means.index[i] for i in row_order], fontsize=11)\nfor i in range(ordered_means.shape[0]):\n    for j in range(ordered_means.shape[1]):\n        val = ordered_means.iloc[i, j]\n        ax.text(j, i, f'{val:.2f}', color='white' if abs(val) > 0.5 else 'black', ha='center', va='center', fontsize=9)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', shrink=0.83, pad=0.03)\ncbar.set_label('Mean Element Z-Score per Type', fontsize=12)\nplt.title('Clustered Heatmap: Mean Elemental Composition by Glass Type\\n(rows: Types, cols: elements, color = normalized mean)', fontsize=15)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable difference in medical charges for males versus females within each region?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked bar chart (region facet, bar height = mean charges, stacked by sex)",
+      "design_rationale": "A stacked bar chart summarizes average medical charges for each region, split proportionally by sex. The 'region' field (4 unique values) forms the faceted x-axis, while bars are divided into colored segments for 'male' and 'female'. This visualization aggregates charges at the mean level, making differences between sexes easily visible as segment heights (and proportion) within each region's total. Using discrete colors for sex allows fast comparison at both total and subgroup level, ideal for overviewing 1338-row dataset without loss of clarity.",
+      "target_insight": "This chart conveys whether males or females contribute more to the mean medical charges in each region, highlighting regional patterns (which regions have larger sex differences, whether overall charges are dominated by one sex, etc.)",
+      "output_fields": [
+        "region",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "mean of charges",
+        "color": "sex",
+        "size": null,
+        "other_aesthetics": "stacked bar division by 'sex'; clear sex legend; distinct color for each sex"
+      }
+    },
+    "transformations": [
+      "Group df by ['region', 'sex'] and calculate mean 'charges'",
+      "Reshape aggregated means to form sex-stacked bars for each 'region'"
+    ],
+    "data_preparation_steps": [
+      "Group df by ['region', 'sex'] and compute mean of 'charges'",
+      "Pivot table to arrange 'sex' means as columns, indexed by 'region'",
+      "Sort regions consistently for axis labels"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\ngroup_means = df.groupby(['region', 'sex'])['charges'].mean().unstack('sex')\nregions = group_means.index.tolist()\nsexes = ['female', 'male']\nsex_colors = {'female': '#5B9BD5', 'male': '#ED7D31'}\nind = np.arange(len(regions))\nbar_width = 0.55\nfig, ax = plt.subplots(figsize=(10, 6))\nbottom_bar = np.zeros(len(regions))\nfor sex in sexes:\n    vals = group_means[sex].values\n    ax.bar(ind, vals, bar_width, bottom=bottom_bar, color=sex_colors[sex], alpha=0.82, label=sex.title())\n    bottom_bar += vals\nax.set_xticks(ind)\nax.set_xticklabels(regions, fontsize=12)\nax.set_xlabel('Region')\nax.set_ylabel('Mean Medical Charges ($)')\nax.set_title('Mean Medical Charges for Males vs Females in Each Region\\n(Stacked Bar Chart)', fontsize=14)\nax.legend(title='Sex', loc='upper right')\nfor i, region in enumerate(regions):\n    total = group_means.loc[region, sex='female'] + group_means.loc[region, sex='male']\n    ax.text(i, total + 1000, f'{total:.0f}', ha='center', va='bottom', fontsize=10, color='black')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

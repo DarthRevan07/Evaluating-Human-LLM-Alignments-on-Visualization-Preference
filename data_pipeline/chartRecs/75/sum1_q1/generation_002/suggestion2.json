@@ -1,0 +1,35 @@
+{
+  "table_name": "75",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do average math scores differ between students who completed the test preparation course versus those who did not?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot",
+      "design_rationale": "A violin plot allows for a nuanced look at both central tendency and the distribution/spread of math scores for each test preparation group. This unconventional chart type is excellent for revealing underlying score distributions, multimodalities, skew, and variation in addition to average differences. It caters to the question by showing not just the mean, but the performance range and density, which can highlight if test prep completion mainly influences the top, bottom, or middle scores.",
+      "target_insight": "The visualization reveals whether students who completed the test preparation course generally score higher, if their scores are less varied, and if the increase is uniform or concentrated in certain score ranges.",
+      "output_fields": [
+        "test preparation course",
+        "math score"
+      ],
+      "chart_encodings": {
+        "x": "test preparation course",
+        "y": "math score",
+        "color": "test preparation course",
+        "size": null,
+        "other_aesthetics": "Show inner box (median/quartiles), violin width by density"
+      }
+    },
+    "transformations": [
+      "No aggregation; stratify data by 'test preparation course' to compare score distributions"
+    ],
+    "data_preparation_steps": [
+      "Prepare arrays of 'math score' for each value of 'test preparation course'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ngroups = df['test preparation course'].unique()\ndata = [df[df['test preparation course']==g]['math score'] for g in groups]\ncolors = mpl.colormaps['viridis'].resampled(len(groups))(np.arange(len(groups)))\nfig, ax = plt.subplots(figsize=(8,6))\nvp = ax.violinplot(data, positions=np.arange(len(groups)), showmeans=False, showmedians=True, showextrema=True)\nfor i, pc in enumerate(vp['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.8)\n    pc.set_edgecolor('black')\nfor partname in ('cbars','cmedians','cmaxes','cmins'):\n    vp[partname].set_edgecolor('black')\n    vp[partname].set_linewidth(1)\nax.set_xticks(np.arange(len(groups)))\nax.set_xticklabels(groups, fontsize=12)\nax.set_ylabel('Math Score', fontsize=12)\nax.set_xlabel('Test Preparation Course', fontsize=12)\nax.set_title('Distribution of Math Scores by Test Preparation Course\\n75', fontsize=14, weight='bold')\nax.set_ylim(0, 100)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

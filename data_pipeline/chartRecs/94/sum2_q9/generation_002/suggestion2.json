@@ -1,0 +1,43 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Are there any years where the population growth (yearly % change) deviates from the overall trend, and what was the density in those years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Year vs Density, shaded by % Change)",
+      "design_rationale": "By mapping 'Year' on x, 'Density (P/Km²)' on y, and coloring each cell by 'Yearly % Change', this heatmap visually clusters years by density and shows whether certain density levels consistently associate with high or low % change. It allows the viewer to spot whether deviations are isolated to specific density brackets or scattered over time. Heatmaps are unconventional but powerful here due to the fixed table size (18 rows) and monotonic time progression, and it provides a compact overview of both variables and their interaction. This approach complements the line plot by revealing correlation or clustering patterns between density levels and abnormal population growth years.",
+      "target_insight": "How population growth rate corresponds to density across different years, highlighting years/density combinations with growth deviations.",
+      "output_fields": [
+        "Year",
+        "Density (P/Km²)",
+        "Yearly % Change"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Density (P/Km²)",
+        "color": "Yearly % Change (normalized for color)",
+        "size": "null",
+        "other_aesthetics": "Discrete color steps; year labels rotated; colorbar for % Change; gridlines"
+      }
+    },
+    "transformations": [
+      "Convert 'Yearly % Change' to float",
+      "Prepare a matrix with 'Year' (x) and 'Density (P/Km²)' (y), values = 'Yearly % Change'",
+      "Sort years and densities for heatmap axes",
+      "Normalize/fix color scale for comparison"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "uniq_years = df['Year'].astype(int).sort_values().unique()",
+      "uniq_densities = df['Density (P/Km²)'].sort_values().unique()",
+      "heatmap_data = np.full((len(uniq_densities), len(uniq_years)), np.nan)",
+      "for i, dens in enumerate(uniq_densities):\n    for j, yr in enumerate(uniq_years):\n        val = df[(df['Year'] == yr) & (df['Density (P/Km²)'] == dens)]['Yearly % Change']\n        if len(val) > 0:\n            heatmap_data[i,j] = val.values[0]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\nuniq_years = df['Year'].astype(int).sort_values().unique()\nuniq_densities = df['Density (P/Km²)'].sort_values().unique()\nheatmap_data = np.full((len(uniq_densities), len(uniq_years)), np.nan)\nfor i, dens in enumerate(uniq_densities):\n    for j, yr in enumerate(uniq_years):\n        val = df[(df['Year'] == yr) & (df['Density (P/Km²)'] == dens)]['Yearly % Change']\n        if len(val) > 0:\n            heatmap_data[i,j] = val.values[0]\n\nfig, ax = plt.subplots(figsize=(12,7))\ncmap = mpl.colormaps['viridis'].resampled(7)\nim = ax.imshow(heatmap_data, aspect='auto', cmap=cmap, vmin=np.nanmin(heatmap_data), vmax=np.nanmax(heatmap_data))\n\nax.set_xticks(np.arange(len(uniq_years)))\nax.set_xticklabels([str(yr) for yr in uniq_years], rotation=45, ha='right')\nax.set_yticks(np.arange(len(uniq_densities)))\nax.set_yticklabels([str(d) for d in uniq_densities])\n\nax.set_xlabel('Year')\nax.set_ylabel('Density (P/Km²)')\nax.set_title('Heatmap of Population Growth % Change by Year and Density', fontsize=15)\n\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Yearly % Change')\nax.grid(False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

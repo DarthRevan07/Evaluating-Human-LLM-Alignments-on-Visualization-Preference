@@ -1,0 +1,38 @@
+{
+  "table_name": "39",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the distribution of RI (refractive index) vary across different Type classifications?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot",
+      "design_rationale": "Violin plots combine density estimation with summary statistics to show not only the range and median but also the full shape of the RI distribution for each glass Type. With 214 rows, this allows us to spot skew, multimodality, and subtle distribution differences across glass classifications. The violin shape helps visualize how common certain RI values are within each Type, revealing whether the underlying physical property distribution differs by Type in ways boxplots might miss.",
+      "target_insight": "Visualize and compare the entire probability density of RI by Type, revealing whether some Types have tighter, looser, or asymmetric distributions of refractive index.",
+      "output_fields": [
+        "RI",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "RI",
+        "color": "Type (fill color for each violin)",
+        "size": "null",
+        "other_aesthetics": "show median; split violins are not needed as Type is a single categorical variable"
+      }
+    },
+    "transformations": [
+      "Create a density estimate (kernel density) of RI for each Type group",
+      "Assign distinct colors per Type for the violin fill"
+    ],
+    "data_preparation_steps": [
+      "For each Type value, extract df['RI'] values",
+      "Sort Type categories for x-axis",
+      "Create color mapping for each violin"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\39.csv')\ntype_values = sorted(df['Type'].unique())\nri_per_type = [df[df['Type'] == t]['RI'].values for t in type_values]\ncmap = mpl.colormaps['plasma'].resampled(len(type_values))\nfig, ax = plt.subplots(figsize=(9,6))\nvp = ax.violinplot(ri_per_type, positions=np.arange(1, len(type_values)+1), widths=0.65, showmedians=True)\nfor i, body in enumerate(vp['bodies']):\n    body.set_facecolor(cmap(i))\n    body.set_edgecolor('black')\n    body.set_alpha(0.8)\nax.set_xticks(np.arange(1, len(type_values)+1))\nax.set_xticklabels([str(t) for t in type_values])\nax.set_xlabel('Type')\nax.set_ylabel('RI')\nax.set_title('RI Distribution for Each Glass Type\\n(Violin Plot: Density & Median)')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=min(type_values), vmax=max(type_values)))\nsm.set_array([])\ncbar = plt.colorbar(sm, ticks=type_values)\ncbar.set_label('Type Classification')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Is there a relationship between traveler age and accommodation type preference?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked bar plot (age bins vs accommodation type preference share)",
+      "design_rationale": "A stacked bar plot categorizes traveler ages into bins (e.g., 20-29, 30-39, 40-49, 50-60), then displays the proportion/absolute count of each accommodation type within each age group. This unconventional perspective highlights the distribution of accommodation preferences across age brackets, thus directly revealing how preference patterns shift with age. It is ideal for showing the composition and dominance patterns for each accommodation type in different age segments, thus addressing whether accommodation preference is dependent on age group.",
+      "target_insight": "How accommodation type popularity changes across age bins; what accommodation types are dominant for specific age groups; composition and diversity of preferences by age.",
+      "output_fields": [
+        "Traveler age",
+        "Accommodation type"
+      ],
+      "chart_encodings": {
+        "x": "Traveler age (binned)",
+        "y": "Count of trips",
+        "color": "Accommodation type (each bar segment color)",
+        "size": null,
+        "other_aesthetics": "Legend for accommodation types, distinct color for each type, gridlines for readability"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Accommodation type' or 'Traveler age'",
+      "Bin 'Traveler age' into four categories: 20-29, 30-39, 40-49, 50-60",
+      "Count occurrences of each 'Accommodation type' within each age bin for stacking"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=[\"Accommodation type\", \"Traveler age\"])",
+      "Define age bin edges and labels",
+      "Create new column 'age_bin' using pd.cut",
+      "Aggregate count of trips per age_bin and accommodation type using pivot table"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf_clean = df.dropna(subset=[\"Accommodation type\", \"Traveler age\"])\nage_bins = [20, 30, 40, 50, 60]\nage_labels = [\"20-29\", \"30-39\", \"40-49\", \"50-60\"]\ndf_clean[\"age_bin\"] = pd.cut(df_clean[\"Traveler age\"], bins=age_bins, labels=age_labels, right=False, include_lowest=True)\npivot = pd.pivot_table(df_clean, index=\"age_bin\", columns=\"Accommodation type\", values=\"Trip ID\", aggfunc=\"count\", fill_value=0)\naccom_types_ordered = sorted(list(pivot.columns))\ncmap = mpl.colormaps[\"tab10\"].resampled(len(accom_types_ordered))\nbar_colors = [cmap(i) for i in range(len(accom_types_ordered))]\nfig, ax = plt.subplots(figsize=(10,6))\nbottom = np.zeros(len(pivot))\nfor i, accom_type in enumerate(accom_types_ordered):\n    counts = pivot[accom_type].values\n    ax.bar(pivot.index, counts, bottom=bottom, label=accom_type, color=bar_colors[i], edgecolor=\"black\")\n    bottom += counts\nax.set_xlabel(\"Traveler age group\", fontsize=14)\nax.set_ylabel(\"Number of trips\", fontsize=14)\nax.set_title(\"Accommodation type preference by traveler age group\\n(Stacked bar chart)\", fontsize=16)\nax.legend(title=\"Accommodation type\", bbox_to_anchor=(1.05, 1), loc=\"upper left\")\nax.grid(True, axis=\"y\", linestyle=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

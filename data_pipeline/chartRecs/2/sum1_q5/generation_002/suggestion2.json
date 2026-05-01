@@ -1,0 +1,45 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How does methane emission from the Waste sector in 2018 vary across different countries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "World Map (Choropleth)",
+      "design_rationale": "A geographic choropleth map visually emphasizes spatial patterns of methane emissions from the Waste sector in 2018. By mapping each country's value to color intensity, viewers gain immediate context for regional distributions, hot spots, and continental disparities. The field 'Country' matches world geography, and '2018' is measured in MTCO2e (continuous). This approach is particularly effective for highlighting global environmental issues, making the geographic aspect explicit and fostering deeper understanding of how emission burdens are spatially distributed.",
+      "target_insight": "Reveals spatial/geographic variation in Waste sector methane emissions in 2018, drawing attention to countries and regions with highest and lowest emissions, and facilitating analysis of global patterns.",
+      "output_fields": [
+        "Country",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Geographic longitude (auto from country shape)",
+        "y": "Geographic latitude (auto from country shape)",
+        "color": "'2018' mapped via color intensity",
+        "size": "null",
+        "other_aesthetics": "Sequential color scale; legend; country borders; map projection"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where df['Sector']=='Waste'",
+      "Remove rows where df['Country']=='World'",
+      "Prepare mapping from df['Country'] to ISO codes for compatibility with geopandas world dataset",
+      "Merge emissions data with geopandas world borders",
+      "Fill missing values with np.nan for countries not present"
+    ],
+    "data_preparation_steps": [
+      "import geopandas as gpd",
+      "world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))",
+      "df_waste = df[df['Sector']=='Waste']",
+      "df_waste = df_waste[df_waste['Country']!='World']",
+      "Optionally, create dictionary for country mapping: country_map = {'United States of America':'United States', ... }",
+      "df_waste['Country'] = df_waste['Country'].replace(country_map)",
+      "world_emissions = world.merge(df_waste[['Country','2018']], left_on='name', right_on='Country', how='left')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport geopandas as gpd\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\nworld = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))\ndf_waste = df[df['Sector']=='Waste']\ndf_waste = df_waste[df_waste['Country']!='World']\n# Example mapping, extend as needed for country name mismatches\ncountry_map = {'United States of America':'United States','Russian Federation':'Russia','United Kingdom':'United Kingdom','Côte d'Ivoire':'Ivory Coast'}\ndf_waste['Country'] = df_waste['Country'].replace(country_map)\nworld_emissions = world.merge(df_waste[['Country','2018']], left_on='name', right_on='Country', how='left')\nimport matplotlib as mpl\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(15,8))\ngdf_plot = world_emissions.dropna(subset=['2018'])\ngdf_plot.plot(column='2018', cmap=cmap, linewidth=0.6, ax=ax, edgecolor='0.4', legend=True, legend_kwds={'label':\"Methane Emissions from Waste Sector (MTCO2e) in 2018\"})\nax.set_title(\"Global Distribution of Methane Emissions from Waste Sector in 2018\")\nax.axis('off')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

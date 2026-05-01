@@ -1,0 +1,70 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How have methane emissions in the Agriculture sector changed across different countries from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides a compact overview of agricultural methane emissions across all countries and years. Intensity of color directly reveals patterns, such as consistently high emitters, sudden rises/falls, and regional emission shifts. This approach suits the substantial row/column count, leverages the schema's annual fields for time, and enables quick, intuitive visual scanning for change and anomaly detection. The country axis is sorted by 2018 emission, helping the viewer focus on the most impactful countries.",
+      "target_insight": "Uncovers both broad and detailed country-year emission patterns: identifies which countries have persistently high emissions, which have decreased or increased emissions, and the timing of such changes.",
+      "output_fields": [
+        "Country",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (columns: '1990' to '2018')",
+        "y": "Country (sorted)",
+        "color": "Emissions (value per cell; viridis colormap, normalized)",
+        "size": null,
+        "other_aesthetics": "Colorbar for emission scale; y-axis labels for top 20 countries, others minimized for readability"
+      }
+    },
+    "transformations": [
+      "Filter rows where Sector == 'Agriculture'",
+      "Extract only annual columns: '1990' to '2018', plus 'Country'",
+      "Sort countries by 2018 emission descending",
+      "Limit y-axis label display to top 20 countries for clarity"
+    ],
+    "data_preparation_steps": [
+      "Filter df to df_agri where df['Sector'] == 'Agriculture'",
+      "Extract ['Country'] plus all annual columns '1990'-'2018' from df_agri",
+      "Sort df_agri by '2018' to organize heatmap rows",
+      "Create a matrix emissions_matrix (countries x years) for plotting",
+      "Prepare lists: country_names (sorted), year_labels (1990-2018)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_agri = df[df['Sector'] == 'Agriculture']\nyears = [str(y) for y in range(1990, 2019)]\ndf_agri_sort = df_agri.sort_values('2018', ascending=False)\nemissions_matrix = df_agri_sort[years].values\ncountry_names = df_agri_sort['Country'].tolist()\nfig, ax = plt.subplots(figsize=(14, 10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(emissions_matrix, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels(years, rotation=90)\n# Show only top 20 country labels for readability\ny_ticks_to_show = min(20, len(country_names))\nax.set_yticks(np.arange(len(country_names)))\nylabels = [name if i < y_ticks_to_show else '' for i, name in enumerate(country_names)]\nax.set_yticklabels(ylabels)\nax.set_xlabel('Year')\nax.set_ylabel('Country')\nax.set_title('Agricultural Methane Emissions Heatmap\\nAll Countries, 1990-2018')\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Methane Emissions (MTCO2e)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,318 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "generation_dir": "secondIter\\chartRecs\\94\\sum1_q1\\generation_002",
+  "schema_context": "Table: From 1955 to 2024:A Century of Global Population\nRows: 18\nColumns: 7\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the calendar year in which global population data was recorded or estimated, spanning from 1955 to 2024 in roughly five-year intervals.\n  - Value Range: 1955.0 to 2024.0\n  - Mean: 1995.28\n\nField: Population\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the estimated total global human population at specific points in time, expressed as large numbers formatted as strings, likely corresponding to yearly figures in a demographic or historical dataset.\n\nField: Yearly % Change\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the annual percentage change in global population, indicating the rate at which the world's population increased each year over the period 1955 to 2024.\n\nField: Yearly Change\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the annual increase in global population, measured as the number of people added each year, reflecting demographic changes over time.\n\nField: Median Age\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 14\n  - Semantic Meaning: This field represents the median age of the global population for each year, indicating the age at which half of the world's population is younger and half is older, reflecting demographic changes from 1955 to 2024.\n  - Value Range: 20.0 to 30.7\n  - Mean: 25.17\n\nField: Fertility Rate\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 16\n  - Semantic Meaning: This field represents the average number of children born per woman in a population for a given year, indicating fertility trends in demography and population studies.\n  - Value Range: 2.31 to 5.08\n  - Mean: 3.29\n\nField: Density (P/Km²)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 16\n  - Semantic Meaning: This field represents the average number of people living per square kilometer in various regions or countries, indicating their population density over time in the context of global demographic studies.\n  - Value Range: 18.0 to 55.0\n  - Mean: 38.94\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Population\"\n  3. \"Yearly % Change\"\n  4. \"Yearly Change\"\n  5. \"Median Age\"\n  6. \"Fertility Rate\"\n  7. \"Density (P/Km²)\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Population']",
+  "table_metadata": {
+    "table_name": "From 1955 to 2024:A Century of Global Population",
+    "file_path": "csv_c2_sec\\94.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 94.csv (Dataset: From 1955 to 2024:A Century of Global Population)",
+    "original_filename": "94.csv",
+    "dataset_name": "From 1955 to 2024:A Century of Global Population",
+    "row_count": 18,
+    "column_count": 7,
+    "table_hash": -8294777096427158668,
+    "fields": [
+      {
+        "name": "Year",
+        "clean_name": "Year",
+        "camel_case_name": "year",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 18,
+        "min_value": 1955.0,
+        "max_value": 2024.0,
+        "mean_value": 1995.2777777777778,
+        "median_value": 1997.5,
+        "sample_values": "1955, 1960, 1965, 1970, 1975, ..., 2020, 2021, 2022, 2023, 2024",
+        "inferred_semantic_summary": "This field represents the calendar year in which global population data was recorded or estimated, spanning from 1955 to 2024 in roughly five-year intervals."
+      },
+      {
+        "name": "Population",
+        "clean_name": "Population",
+        "camel_case_name": "population",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 18,
+        "sample_values": "\"2,746,072,141\", \"3,019,233,434\", \"3,337,111,983\", \"3,695,390,336\", \"4,069,437,231\", ..., \"7,840,952,880\", \"7,909,295,151\", \"7,975,105,156\", \"8,045,311,447\", \"8,118,835,999\"",
+        "inferred_semantic_summary": "This field represents the estimated total global human population at specific points in time, expressed as large numbers formatted as strings, likely corresponding to yearly figures in a demographic or historical dataset."
+      },
+      {
+        "name": "Yearly % Change",
+        "clean_name": "Yearly___Change",
+        "camel_case_name": "yearlyChange",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 18,
+        "sample_values": "0.83 %, 0.87 %, 0.88 %, 0.91 %, 0.98 %, ..., 1.90 %, 1.91 %, 1.95 %, 2.02 %, 2.06 %",
+        "inferred_semantic_summary": "This field represents the annual percentage change in global population, indicating the rate at which the world's population increased each year over the period 1955 to 2024."
+      },
+      {
+        "name": "Yearly Change",
+        "clean_name": "Yearly_Change",
+        "camel_case_name": "yearlyChange",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 18,
+        "sample_values": "\"49,349,997\", \"54,632,259\", \"63,575,710\", \"65,810,005\", \"68,342,271\", ..., \"83,544,581\", \"85,408,718\", \"85,485,397\", \"88,198,886\", \"90,889,050\"",
+        "inferred_semantic_summary": "This field represents the annual increase in global population, measured as the number of people added each year, reflecting demographic changes over time."
+      },
+      {
+        "name": "Median Age",
+        "clean_name": "Median_Age",
+        "camel_case_name": "medianAge",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 14,
+        "min_value": 20.0,
+        "max_value": 30.7,
+        "mean_value": 25.172222222222224,
+        "median_value": 24.5,
+        "sample_values": "20.0, 21.0, 22.0, 23.0, 24.0, ..., 29.7, 30.0, 30.2, 30.5, 30.7",
+        "inferred_semantic_summary": "This field represents the median age of the global population for each year, indicating the age at which half of the world's population is younger and half is older, reflecting demographic changes from 1955 to 2024."
+      },
+      {
+        "name": "Fertility Rate",
+        "clean_name": "Fertility_Rate",
+        "camel_case_name": "fertilityRate",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 16,
+        "min_value": 2.31,
+        "max_value": 5.08,
+        "mean_value": 3.2900000000000005,
+        "median_value": 2.8049999999999997,
+        "sample_values": "2.31, 2.32, 2.35, 2.52, 2.59, ..., 4.08, 4.7, 4.83, 5.01, 5.08",
+        "inferred_semantic_summary": "This field represents the average number of children born per woman in a population for a given year, indicating fertility trends in demography and population studies."
+      },
+      {
+        "name": "Density (P/Km²)",
+        "clean_name": "Density__P_Km²_",
+        "camel_case_name": "densityPKm",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 18,
+        "unique_values": 16,
+        "min_value": 18.0,
+        "max_value": 55.0,
+        "mean_value": 38.94444444444444,
+        "median_value": 40.0,
+        "sample_values": "18, 20, 22, 25, 27, ..., 47, 50, 53, 54, 55",
+        "inferred_semantic_summary": "This field represents the average number of people living per square kilometer in various regions or countries, indicating their population density over time in the context of global demographic studies."
+      }
+    ],
+    "formatted_summary": "## Table 1: From_1955_to_2024_A_Century_of_Global_Population (18 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 94.csv (Dataset: From 1955 to 2024:A Century of Global Population)\n\n### Schema (7 fields)\n  - Year -- type: int64, values: 1955, 1960, 1965, 1970, 1975, ..., 2020, 2021, 2022, 2023, 2024\n  - Population -- type: object, values: \"2,746,072,141\", \"3,019,233,434\", \"3,337,111,983\", \"3,695,390,336\", \"4,069,437,231\", ..., \"7,840,952,880\", \"7,909,295,151\", \"7,975,105,156\", \"8,045,311,447\", \"8,118,835,999\"\n  - Yearly % Change -- type: object, values: 0.83 %, 0.87 %, 0.88 %, 0.91 %, 0.98 %, ..., 1.90 %, 1.91 %, 1.95 %, 2.02 %, 2.06 %\n  - Yearly Change -- type: object, values: \"49,349,997\", \"54,632,259\", \"63,575,710\", \"65,810,005\", \"68,342,271\", ..., \"83,544,581\", \"85,408,718\", \"85,485,397\", \"88,198,886\", \"90,889,050\"\n  - Median Age -- type: float64, values: 20.0, 21.0, 22.0, 23.0, 24.0, ..., 29.7, 30.0, 30.2, 30.5, 30.7\n  - Fertility Rate -- type: float64, values: 2.31, 2.32, 2.35, 2.52, 2.59, ..., 4.08, 4.7, 4.83, 5.01, 5.08\n  - Density (P/Km²) -- type: int64, values: 18, 20, 22, 25, 27, ..., 47, 50, 53, 54, 55\n\n### Sample Data (first 5 rows)\n```\n   Year     Population Yearly % Change Yearly Change  Median Age  Fertility Rate  Density (P/Km²)\n0  2024  8,118,835,999          0.91 %    73,524,552        30.7            2.31               55\n1  2023  8,045,311,447          0.88 %    70,206,291        30.5            2.31               54\n2  2022  7,975,105,156          0.83 %    65,810,005        30.2            2.31               54\n3  2021  7,909,295,151          0.87 %    68,342,271        30.0            2.32               53\n4  2020  7,840,952,880          0.98 %    76,001,848        29.7            2.35               53\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "94",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "question": "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+      "column_combination": [
+        "Year",
+        "Population",
+        "Yearly % Change",
+        "Yearly Change",
+        "Median Age",
+        "Fertility Rate",
+        "Density (P/Km²)"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Line plot with decade-highlighted background bands",
+            "design_rationale": "A conventional line plot with decade-color bands is ideal for visualizing the trajectory of global population over time, especially given the 'Year' and 'Population' fields sampled at regular intervals. Highlighting background by decade emphasizes patterns and shifts in growth rate visually, while the line's slope changes illustrate acceleration and deceleration. This approach makes decade-wise trends explicit and provides an immediate overview of key periods while leveraging precise numeric axes.",
+            "target_insight": "The visualization reveals population growth trends and pacing across different decades, making it easy to spot periods of rapid or slowed growth, and emphasizes how global population trajectory has shifted over time.",
+            "output_fields": [
+              "Year",
+              "Population"
+            ],
+            "chart_encodings": {
+              "x": "Year",
+              "y": "Population",
+              "color": "Decade background bands; line color for population trajectory",
+              "size": null,
+              "other_aesthetics": "Decade background bands, line thickness, year markers"
+            }
+          },
+          "transformations": [
+            "Convert df['Population'] (string) to numeric values for plotting",
+            "Create a 'Decade' column from df['Year'] for background bands"
+          ],
+          "data_preparation_steps": [
+            "df['Population_num'] = df['Population'].str.replace(',', '').astype(float)",
+            "df['Decade'] = (df['Year']//10)*10"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Population_num'] = df['Population'].str.replace(',', '').astype(float)\ndf['Decade'] = (df['Year']//10)*10\nfig, ax = plt.subplots(figsize=(10, 6))\ndecades = df['Decade'].unique()\ndecade_colors = mpl.colormaps['viridis'].resampled(len(decades)).colors\nfor i, dec in enumerate(np.sort(decades)):\n    min_year = dec\n    max_year = dec + 10\n    ax.axvspan(min_year, max_year, color=decade_colors[i], alpha=0.12)\nax.plot(df['Year'], df['Population_num'], color='#003366', linewidth=2, marker='o', label='Global Population')\nax.set_xlabel('Year')\nax.set_ylabel('Population')\nax.set_title('Global Population Growth (1955–2024) with Decade Trends', fontsize=14)\ny_ticks = np.linspace(df['Population_num'].min(), df['Population_num'].max(), 7)\nax.set_yticks(y_ticks)\nax.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x, _: f'{int(x):,}'))\nfor decade, color in zip(decades, decade_colors):\n    ax.text(decade+4.5, df['Population_num'].min()*1.02, str(int(decade))+'s', color=color, fontsize=11, ha='center', va='bottom', alpha=0.8)\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Multi-decade heatmap (unconventional): Year vs. Population Growth Rate",
+            "design_rationale": "Heatmaps are unconventional for longitudinal demographic data, but they can visually encode how growth rates ('Yearly % Change') evolve across decades. By binning years into decades and averaging 'Yearly % Change', the heatmap offers a compact summary that highlights which periods saw the highest or lowest growth rates, with a clear color gradation mapping directly to population change intensity. This is especially effective given the manageable row count and regular year spacing.",
+            "target_insight": "The visualization uncovers shifts in the rate of population growth across decades, pinpointing periods of acceleration/decline and making decade-to-decade comparisons immediately apparent.",
+            "output_fields": [
+              "Year",
+              "Yearly % Change"
+            ],
+            "chart_encodings": {
+              "x": "Decade (categorical)",
+              "y": "Year sampled in each decade",
+              "color": "Average 'Yearly % Change' (continuous colormap)",
+              "size": null,
+              "other_aesthetics": "Annotated cell values, viridis colormap"
+            }
+          },
+          "transformations": [
+            "Convert df['Yearly % Change'] (string, possibly with '%' symbol) to numeric for processing",
+            "Group df['Year'] into 'Decade'",
+            "Pivot/reshape so x = Decade, y = sampled Year, color = growth rate"
+          ],
+          "data_preparation_steps": [
+            "df['Yearly_pct_num'] = df['Yearly % Change'].str.replace('%', '').astype(float)",
+            "df['Decade'] = (df['Year']//10)*10",
+            "heatmap_data = df.pivot(index='Year', columns='Decade', values='Yearly_pct_num')"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly_pct_num'] = df['Yearly % Change'].str.replace('%', '').astype(float)\ndf['Decade'] = (df['Year']//10)*10\nheatmap_data = df.pivot(index='Year', columns='Decade', values='Yearly_pct_num')\nfig, ax = plt.subplots(figsize=(8, 6))\ncmap = mpl.colormaps['viridis']\nvmin = heatmap_data.min().min()\nvmax = heatmap_data.max().max()\nim = ax.imshow(heatmap_data.values, cmap=cmap, vmin=vmin, vmax=vmax, aspect='auto')\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels([str(int(c))+'s' for c in heatmap_data.columns], rotation=45, ha='right')\nax.set_yticklabels([str(int(y)) for y in heatmap_data.index])\nfor i in range(heatmap_data.shape[0]):\n    for j in range(heatmap_data.shape[1]):\n        val = heatmap_data.iloc[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f'{val:.2f}%', ha='center', va='center', color='white' if val > (vmin+vmax)/2 else 'black', fontsize=10)\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Yearly % Change')\nax.set_xlabel('Decade')\nax.set_ylabel('Year')\nax.set_title('Heatmap of Global Population Growth Rates by Decade (1955–2024)', fontsize=14)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T14:13:55.811458",
+      "schema_context": "Table: From 1955 to 2024:A Century of Global Population\nRows: 18\nColumns: 7\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the calendar year in which global population data was recorded or estimated, spanning from 1955 to 2024 in roughly five-year intervals.\n  - Value Range: 1955.0 to 2024.0\n  - Mean: 1995.28\n\nField: Population\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the estimated total global human population at specific points in time, expressed as large numbers formatted as strings, likely corresponding to yearly figures in a demographic or historical dataset.\n\nField: Yearly % Change\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the annual percentage change in global population, indicating the rate at which the world's population increased each year over the period 1955 to 2024.\n\nField: Yearly Change\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the annual increase in global population, measured as the number of people added each year, reflecting demographic changes over time.\n\nField: Median Age\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 14\n  - Semantic Meaning: This field represents the median age of the global population for each year, indicating the age at which half of the world's population is younger and half is older, reflecting demographic changes from 1955 to 2024.\n  - Value Range: 20.0 to 30.7\n  - Mean: 25.17\n\nField: Fertility Rate\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 16\n  - Semantic Meaning: This field represents the average number of children born per woman in a population for a given year, indicating fertility trends in demography and population studies.\n  - Value Range: 2.31 to 5.08\n  - Mean: 3.29\n\nField: Density (P/Km²)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 16\n  - Semantic Meaning: This field represents the average number of people living per square kilometer in various regions or countries, indicating their population density over time in the context of global demographic studies.\n  - Value Range: 18.0 to 55.0\n  - Mean: 38.94\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Population\"\n  3. \"Yearly % Change\"\n  4. \"Yearly Change\"\n  5. \"Median Age\"\n  6. \"Fertility Rate\"\n  7. \"Density (P/Km²)\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Population']",
+      "table_metadata": {
+        "table_name": "From 1955 to 2024:A Century of Global Population",
+        "file_path": "csv_c2_sec\\94.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 94.csv (Dataset: From 1955 to 2024:A Century of Global Population)",
+        "original_filename": "94.csv",
+        "dataset_name": "From 1955 to 2024:A Century of Global Population",
+        "row_count": 18,
+        "column_count": 7,
+        "table_hash": -8294777096427158668,
+        "fields": [
+          {
+            "name": "Year",
+            "clean_name": "Year",
+            "camel_case_name": "year",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 18,
+            "min_value": 1955.0,
+            "max_value": 2024.0,
+            "mean_value": 1995.2777777777778,
+            "median_value": 1997.5,
+            "sample_values": "1955, 1960, 1965, 1970, 1975, ..., 2020, 2021, 2022, 2023, 2024",
+            "inferred_semantic_summary": "This field represents the calendar year in which global population data was recorded or estimated, spanning from 1955 to 2024 in roughly five-year intervals."
+          },
+          {
+            "name": "Population",
+            "clean_name": "Population",
+            "camel_case_name": "population",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 18,
+            "sample_values": "\"2,746,072,141\", \"3,019,233,434\", \"3,337,111,983\", \"3,695,390,336\", \"4,069,437,231\", ..., \"7,840,952,880\", \"7,909,295,151\", \"7,975,105,156\", \"8,045,311,447\", \"8,118,835,999\"",
+            "inferred_semantic_summary": "This field represents the estimated total global human population at specific points in time, expressed as large numbers formatted as strings, likely corresponding to yearly figures in a demographic or historical dataset."
+          },
+          {
+            "name": "Yearly % Change",
+            "clean_name": "Yearly___Change",
+            "camel_case_name": "yearlyChange",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 18,
+            "sample_values": "0.83 %, 0.87 %, 0.88 %, 0.91 %, 0.98 %, ..., 1.90 %, 1.91 %, 1.95 %, 2.02 %, 2.06 %",
+            "inferred_semantic_summary": "This field represents the annual percentage change in global population, indicating the rate at which the world's population increased each year over the period 1955 to 2024."
+          },
+          {
+            "name": "Yearly Change",
+            "clean_name": "Yearly_Change",
+            "camel_case_name": "yearlyChange",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 18,
+            "sample_values": "\"49,349,997\", \"54,632,259\", \"63,575,710\", \"65,810,005\", \"68,342,271\", ..., \"83,544,581\", \"85,408,718\", \"85,485,397\", \"88,198,886\", \"90,889,050\"",
+            "inferred_semantic_summary": "This field represents the annual increase in global population, measured as the number of people added each year, reflecting demographic changes over time."
+          },
+          {
+            "name": "Median Age",
+            "clean_name": "Median_Age",
+            "camel_case_name": "medianAge",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 14,
+            "min_value": 20.0,
+            "max_value": 30.7,
+            "mean_value": 25.172222222222224,
+            "median_value": 24.5,
+            "sample_values": "20.0, 21.0, 22.0, 23.0, 24.0, ..., 29.7, 30.0, 30.2, 30.5, 30.7",
+            "inferred_semantic_summary": "This field represents the median age of the global population for each year, indicating the age at which half of the world's population is younger and half is older, reflecting demographic changes from 1955 to 2024."
+          },
+          {
+            "name": "Fertility Rate",
+            "clean_name": "Fertility_Rate",
+            "camel_case_name": "fertilityRate",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 16,
+            "min_value": 2.31,
+            "max_value": 5.08,
+            "mean_value": 3.2900000000000005,
+            "median_value": 2.8049999999999997,
+            "sample_values": "2.31, 2.32, 2.35, 2.52, 2.59, ..., 4.08, 4.7, 4.83, 5.01, 5.08",
+            "inferred_semantic_summary": "This field represents the average number of children born per woman in a population for a given year, indicating fertility trends in demography and population studies."
+          },
+          {
+            "name": "Density (P/Km²)",
+            "clean_name": "Density__P_Km²_",
+            "camel_case_name": "densityPKm",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 18,
+            "unique_values": 16,
+            "min_value": 18.0,
+            "max_value": 55.0,
+            "mean_value": 38.94444444444444,
+            "median_value": 40.0,
+            "sample_values": "18, 20, 22, 25, 27, ..., 47, 50, 53, 54, 55",
+            "inferred_semantic_summary": "This field represents the average number of people living per square kilometer in various regions or countries, indicating their population density over time in the context of global demographic studies."
+          }
+        ],
+        "formatted_summary": "## Table 1: From_1955_to_2024_A_Century_of_Global_Population (18 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 94.csv (Dataset: From 1955 to 2024:A Century of Global Population)\n\n### Schema (7 fields)\n  - Year -- type: int64, values: 1955, 1960, 1965, 1970, 1975, ..., 2020, 2021, 2022, 2023, 2024\n  - Population -- type: object, values: \"2,746,072,141\", \"3,019,233,434\", \"3,337,111,983\", \"3,695,390,336\", \"4,069,437,231\", ..., \"7,840,952,880\", \"7,909,295,151\", \"7,975,105,156\", \"8,045,311,447\", \"8,118,835,999\"\n  - Yearly % Change -- type: object, values: 0.83 %, 0.87 %, 0.88 %, 0.91 %, 0.98 %, ..., 1.90 %, 1.91 %, 1.95 %, 2.02 %, 2.06 %\n  - Yearly Change -- type: object, values: \"49,349,997\", \"54,632,259\", \"63,575,710\", \"65,810,005\", \"68,342,271\", ..., \"83,544,581\", \"85,408,718\", \"85,485,397\", \"88,198,886\", \"90,889,050\"\n  - Median Age -- type: float64, values: 20.0, 21.0, 22.0, 23.0, 24.0, ..., 29.7, 30.0, 30.2, 30.5, 30.7\n  - Fertility Rate -- type: float64, values: 2.31, 2.32, 2.35, 2.52, 2.59, ..., 4.08, 4.7, 4.83, 5.01, 5.08\n  - Density (P/Km²) -- type: int64, values: 18, 20, 22, 25, 27, ..., 47, 50, 53, 54, 55\n\n### Sample Data (first 5 rows)\n```\n   Year     Population Yearly % Change Yearly Change  Median Age  Fertility Rate  Density (P/Km²)\n0  2024  8,118,835,999          0.91 %    73,524,552        30.7            2.31               55\n1  2023  8,045,311,447          0.88 %    70,206,291        30.5            2.31               54\n2  2022  7,975,105,156          0.83 %    65,810,005        30.2            2.31               54\n3  2021  7,909,295,151          0.87 %    68,342,271        30.0            2.32               53\n4  2020  7,840,952,880          0.98 %    76,001,848        29.7            2.35               53\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

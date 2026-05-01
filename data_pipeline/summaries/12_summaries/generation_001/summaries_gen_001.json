@@ -1,0 +1,43 @@
+{
+  "generation_number": 1,
+  "table_name": "Career Prediction Dataset",
+  "total_rows": 105,
+  "total_columns": 11,
+  "column_names": [
+    "O_score",
+    "C_score",
+    "E_score",
+    "A_score",
+    "N_score",
+    "Numerical Aptitude",
+    "Spatial Aptitude",
+    "Perceptual Aptitude",
+    "Abstract Reasoning",
+    "Verbal Reasoning",
+    "Career"
+  ],
+  "summaries_per_generation": 2,
+  "schema_context": "## Table 1: Career_Prediction_Dataset (105 rows × 11 columns)\n\n### Description\nData loaded from CSV file: 12.csv (Dataset: Career Prediction Dataset)\n\n### Schema (11 fields)\n  - O_score -- type: float64, values: 2.67, 4.01, 4.34, 4.56, 5.12, ..., 8.89, 9.12, 9.23, 9.34, 9.45\n  - C_score -- type: float64, values: 3.56, 3.78, 4.23, 4.45, 5.67, ..., 8.67, 8.78, 8.89, 9.23, 9.45\n  - E_score -- type: float64, values: 2.89, 3.45, 3.67, 3.78, 3.89, ..., 8.12, 8.45, 8.67, 8.78, 9.34\n  - A_score -- type: float64, values: 3.23, 4.01, 4.23, 4.89, 5.12, ..., 8.56, 8.67, 9.12, 9.23, 9.34\n  - N_score -- type: float64, values: 2.89, 3.78, 4.01, 4.23, 4.34, ..., 6.01, 6.34, 6.45, 7.12, 8.12\n  - Numerical Aptitude -- type: float64, values: 2.89, 3.23, 3.45, 3.56, 3.78, ..., 8.89, 9.12, 9.23, 9.34, 9.45\n  - Spatial Aptitude -- type: float64, values: 2.34, 2.78, 2.89, 3.01, 3.12, ..., 8.23, 8.45, 8.67, 9.12, 9.23\n  - Perceptual Aptitude -- type: float64, values: 3.01, 3.12, 3.45, 3.56, 3.67, ..., 8.34, 8.45, 9.12, 9.23, 9.34\n  - Abstract Reasoning -- type: float64, values: 3.01, 3.12, 3.23, 3.45, 3.56, ..., 8.78, 8.89, 9.12, 9.23, 9.34\n  - Verbal Reasoning -- type: float64, values: 3.45, 4.01, 4.23, 4.45, 5.23, ..., 8.45, 8.67, 9.12, 9.23, 9.34\n  - Career -- type: object, values: Accountant, Administrative Officer, Advertising Executive, Aerospace Engineer, Air Traffic Controller, ..., Video Game Tester, Web Developer, Wildlife Biologist, Wildlife Conservationist, Zoologist\n\n### Sample Data (first 5 rows)\n```\n   O_score  C_score  E_score  A_score  N_score  Numerical Aptitude  Spatial Aptitude  Perceptual Aptitude  Abstract Reasoning  Verbal Reasoning              Career\n0     5.45     8.67     3.45     5.34     4.23                9.23              4.56                 6.78                7.89              6.12          Accountant\n1     8.78     5.67     4.56     6.45     4.23                5.12              8.45                 7.89                6.34              6.01    Graphic Designer\n2     6.12     6.78     9.34     7.56     5.01                6.23              4.23                 6.45                6.67              8.45         Salesperson\n3     9.12     8.78     4.23     5.67     4.56                7.89              5.34                 6.45                9.34              7.67  Research Scientist\n4     6.45     7.56     5.67     9.12     4.23                5.34              4.01                 6.23                5.78              8.67             Teacher\n```\n",
+  "source_file": "csv_c2_sec\\12.csv",
+  "sheet_name": "",
+  "summaries": [
+    {
+      "idx": 1,
+      "chain_of_thought": {
+        "target_audience": "Higher education career counselors and student guidance professionals",
+        "curator_intention": "Encourage exploration of relationships between personality traits, cognitive aptitudes, and career outcomes; enable identification of optimal student-career fit scenarios",
+        "common_ground": "A shared objective to inform individualized student counseling and evidence-based career pathway recommendations using multi-dimensional personality and aptitude data"
+      },
+      "narrative_summary": "This dataset enables career counselors to systematically analyze how personality traits and aptitudes relate to eventual career groupings. By jointly visualizing dimensions such as O_score, C_score, E_score, A_score, and N_score alongside cognitive aptitudes, counselors can uncover clusters or trajectories indicative of particular professions. The structure supports exploration of which combinations are most predictive for various career groups, identifies outliers or unusual fits, and can be used to generate actionable student guidance protocols rooted in empirical schema patterns. Stakeholders can accept that career groupings align with distinct cognitive and personality patterns, agree on the value of multifactor profiling for guidance, and establish refined student-to-career matching strategies through interactive data visualizations."
+    },
+    {
+      "idx": 2,
+      "chain_of_thought": {
+        "target_audience": "Organizational talent acquisition specialists and workforce planners",
+        "curator_intention": "Facilitate correlation and trend analysis between psychometric test scores and professional roles; promote acceptance of data-driven talent identification practices",
+        "common_ground": "An aligned interest in leveraging empirical data to optimize recruitment strategies and improve workforce-role alignment using structured psychometric profiles"
+      },
+      "narrative_summary": "For talent acquisition experts, this schema presents a structured framework to visualize and quantify how various personality scores and measured aptitudes correspond to specific job titles. Through comparative analyses and field combinations such as Verbal Reasoning versus Career or Numerical Aptitude distributions by profession, stakeholders can uncover evidence of role-specific requirements and narrow talent searches by identifying desirable psychometric profiles. This supports the acceptance of data-driven approaches in hiring, agreement on the measurable attributes that predict job suitability, and establishing systematic benchmarking standards for human capital decisions directly traceable to the interconnected structure of the schema."
+    }
+  ]
+}

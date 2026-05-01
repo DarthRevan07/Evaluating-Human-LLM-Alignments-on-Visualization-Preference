@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "What is the distribution of horsepower across different fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "To directly compare the spread, median, and outliers of horsepower between 'gas' and 'diesel' cars, we use a boxplot. This leverages the numeric nature of horsepower and the categorical split in fueltype. Boxplots succinctly display central tendency and variability, making it ideal for contrasting distributions and identifying whether one fuel type has more powerful engines or a wider spread.",
+      "target_insight": "Visualizes the range, median, and outliers of horsepower for gas versus diesel vehicles, revealing whether one fuel type is associated with higher or more variable horsepower.",
+      "output_fields": [
+        "fueltype",
+        "horsepower"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "horsepower",
+        "color": "fueltype (distinct colors for each category)",
+        "size": null,
+        "other_aesthetics": "box width, flier markers, alpha, grid lines"
+      }
+    },
+    "transformations": [
+      "Group data by 'fueltype' to split into gas and diesel subsets.",
+      "Extract 'horsepower' values for each group for boxplot creation."
+    ],
+    "data_preparation_steps": [
+      "Read entire table from csv_c_squared\\22.csv.",
+      "Create a list of horsepower arrays, one per unique value of df['fueltype'] ('gas', 'diesel')."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\nfueltypes = df['fueltype'].unique()\nhorsepower_data = [df[df['fueltype'] == ft]['horsepower'] for ft in fueltypes]\nfig, ax = plt.subplots(figsize=(8,6))\nbox = ax.boxplot(horsepower_data, patch_artist=True, widths=0.5)\ncmap = mpl.colormaps['Set2'].resampled(len(fueltypes))\nfor patch, color in zip(box['boxes'], cmap.colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_color('black')\nax.set_xticks([1,2])\nax.set_xticklabels(fueltypes)\nax.set_xlabel(\"fueltype\")\nax.set_ylabel(\"horsepower\")\nax.set_title(\"Distribution of horsepower across fuel types\\n(Boxplot: gas vs diesel)\")\nax.grid(True, axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

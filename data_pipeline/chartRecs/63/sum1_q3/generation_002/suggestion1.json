@@ -1,0 +1,41 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "How do annual income levels relate to the likelihood of purchase?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Income Binned Purchase Rate Bar Plot",
+      "design_rationale": "Bar plots are effective for Categorical Binned Summaries. Here, binning AnnualIncome into quantile-based intervals and then computing the mean PurchaseStatus for each bin directly answers how purchase likelihood changes across income levels. This summarizes the relationship cleanly, managing the high cardinality (1388 unique income values) by reducing noise and showing clear groupwise trends, especially valuable for large datasets where numeric fields need grouping.",
+      "target_insight": "Shows whether purchase likelihood increases, decreases, or plateaus across income tiers, revealing if high-income customers are more or less likely to buy.",
+      "output_fields": [
+        "AnnualIncome",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "AnnualIncome (binned into quantiles)",
+        "y": "Mean PurchaseStatus per bin",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bar width mapped to bin size; annotated y-axis values for clarity"
+      }
+    },
+    "transformations": [
+      "Bin df['AnnualIncome'] into 5 quantile-based buckets using pd.qcut, labeling each bin",
+      "Group by AnnualIncome bin labels and compute mean of df['PurchaseStatus']",
+      "Sort bins in increasing order for x-axis clarity"
+    ],
+    "data_preparation_steps": [
+      "income_bins, bin_edges = pd.qcut(df['AnnualIncome'], 5, retbins=True, labels=False)",
+      "Create bin label strings: [f'{int(bin_edges[i])}-{int(bin_edges[i+1])}' for i in range(len(bin_edges)-1)]",
+      "Add labeled bins as new column df['IncomeBinLabel']",
+      "Group df by df['IncomeBinLabel'], aggregate mean PurchaseStatus",
+      "Prepare groupby result as df_plot with columns 'IncomeBinLabel' and 'MeanPurchaseStatus'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\n# Bin AnnualIncome into 5 quantiles\nincome_bins, bin_edges = pd.qcut(df['AnnualIncome'], 5, retbins=True, labels=False)\nbin_labels = [f'{int(bin_edges[i])}-{int(bin_edges[i+1])}' for i in range(len(bin_edges)-1)]\ndf['IncomeBinLabel'] = income_bins.map(dict(zip(range(len(bin_labels)), bin_labels)))\ndf_plot = df.groupby('IncomeBinLabel', observed=True)['PurchaseStatus'].mean().reset_index().rename(columns={'PurchaseStatus': 'MeanPurchaseStatus'})\nfig, ax = plt.subplots(figsize=(10,6))\nbars = ax.bar(df_plot['IncomeBinLabel'], df_plot['MeanPurchaseStatus'], color='#4682b4', edgecolor='white')\nax.set_xlabel(\"Annual Income Bin (currency units, quantile ranges)\")\nax.set_ylabel(\"Average Purchase Status (Likelihood of Purchase)\")\nax.set_title(\"Purchase Likelihood Across Income Levels\\nQuantile-binned Annual Income vs Mean PurchaseStatus\", fontsize=14)\nax.set_xticklabels(df_plot['IncomeBinLabel'], rotation=30, ha='right')\nfor bar in bars:\n    yval = bar.get_height()\n    ax.text(bar.get_x() + bar.get_width() / 2, yval + 0.01, f'{yval:.2f}', ha='center', va='bottom', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

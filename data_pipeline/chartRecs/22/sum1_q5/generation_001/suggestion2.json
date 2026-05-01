@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there noticeable differences in price between fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot with overlayed strip (swarm) points",
+      "design_rationale": "Violin plots add detail by showing the full price distribution shape for each fuel type, capturing multimodality or skewness that boxplots could miss. Overlaying individual points with a strip plot (swarm) reveals every car's price within each fuel category, showing density and spread amid the distributions. This hybrid approach helps users visually assess price clustering, gaps, outliers, and even sample sizes, thus deepening the analytical story for 'fueltype' vs 'price'.",
+      "target_insight": "Distribution shape (not just quartiles/medians) and individual car price placement for gas vs diesel, offering nuanced insight into whether price differences are broad, subtle, or cluster-based.",
+      "output_fields": [
+        "fueltype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "price",
+        "color": "fueltype (for violin and points)",
+        "size": null,
+        "other_aesthetics": "violin width, strip marker shape/alpha, legend, combination of violin and scatter"
+      }
+    },
+    "transformations": [
+      "Filter out any rows with missing values in 'fueltype' or 'price'",
+      "Create distribution arrays for each fueltype",
+      "Prepare individual car prices as points to overlay within each violin"
+    ],
+    "data_preparation_steps": [
+      "df_violin = df[['fueltype', 'price']].copy()",
+      "df_violin = df_violin.dropna(subset=['fueltype', 'price'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf_violin = df[['fueltype', 'price']].copy()\ndf_violin = df_violin.dropna(subset=['fueltype', 'price'])\nfuel_types = ['gas', 'diesel']\ndata_to_plot = [df_violin[df_violin['fueltype'] == ft]['price'] for ft in fuel_types]\nfig, ax = plt.subplots(figsize=(7, 6))\ncolors = ['#009E73', '#F0E442']\nparts = ax.violinplot(data_to_plot,\n                     positions = [0,1],\n                     widths = 0.6,\n                     showmeans=False,\n                     showmedians=True,\n                     showextrema=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_edgecolor('#333')\n    pc.set_alpha(0.33)\nfor i in range(2):\n    ax.scatter(np.full(len(data_to_plot[i]), i), data_to_plot[i],\n               color=colors[i],\n               edgecolor='#333',\n               alpha=0.62,\n               s=28,\n               label=fuel_types[i] if i==0 else None)\nax.set_xticks([0,1])\nax.set_xticklabels(fuel_types, fontsize=12)\nax.set_xlabel('fueltype', fontsize=13)\nax.set_ylabel('price', fontsize=13)\nax.set_title('Price Distribution Shape and Values by Fuel Type\\nViolin + Strip: Gas vs Diesel', fontsize=15, pad=15)\nax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

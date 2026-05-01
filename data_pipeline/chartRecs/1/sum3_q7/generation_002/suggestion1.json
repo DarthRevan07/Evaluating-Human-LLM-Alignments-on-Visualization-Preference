@@ -1,0 +1,47 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "What is the relationship between the year of GDP measurement and the sectoral composition (agriculture, industry, services) in a given country?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Area Chart",
+      "design_rationale": "A stacked area chart allows a macro-level view of how sectoral contributions (agriculture, industry, services) have changed over time, aggregating across countries. By plotting sector percentage averages for each 'Year GDP ', we tell the story of global economic shifts (e.g., are services rising over time versus agriculture/industry?). This is especially effective given the limited unique years in 'Year GDP ' and continuous percentage contribution values for sectors.",
+      "target_insight": "Reveals overarching temporal trends in sectoral composition (how the global economy is shifting between agriculture, industry, and services) and helps answer if certain sectors are growing/shrinking in contribution to GDP over measured years.",
+      "output_fields": [
+        "Year GDP ",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "Aggregated mean sector % values (Agriculture, Industry, Services)",
+        "color": "Sector",
+        "size": null,
+        "other_aesthetics": "Stacked area (order: agriculture, industry, services); Axis labels; Legend for sectors"
+      }
+    },
+    "transformations": [
+      "Convert sector % fields ('Agriculture Sector GDP of % Contribution', 'Industry%ofGDP', 'Services%ofGDP') to numeric, handling missing and non-number values",
+      "Group by 'Year GDP ' and calculate mean sector % for each year",
+      "Sort by 'Year GDP ' for temporal ordering"
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')",
+      "df_grouped = df.groupby('Year GDP ').agg({'Agriculture Sector GDP of % Contribution':'mean', 'Industry%ofGDP':'mean', 'Services%ofGDP':'mean'}).reset_index()",
+      "df_grouped_sorted = df_grouped.sort_values('Year GDP ')",
+      "years = df_grouped_sorted['Year GDP '].astype(str)",
+      "agri = df_grouped_sorted['Agriculture Sector GDP of % Contribution'].values",
+      "ind = df_grouped_sorted['Industry%ofGDP'].values",
+      "serv = df_grouped_sorted['Services%ofGDP'].values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')\ndf_grouped = df.groupby('Year GDP ').agg({'Agriculture Sector GDP of % Contribution':'mean', 'Industry%ofGDP':'mean', 'Services%ofGDP':'mean'}).reset_index()\ndf_grouped_sorted = df_grouped.sort_values('Year GDP ')\nyears = df_grouped_sorted['Year GDP '].astype(str)\nagri = df_grouped_sorted['Agriculture Sector GDP of % Contribution'].values\nind = df_grouped_sorted['Industry%ofGDP'].values\nserv = df_grouped_sorted['Services%ofGDP'].values\nfig, ax = plt.subplots(figsize=(10,6))\nax.stackplot(years, agri, ind, serv, labels=['Agriculture','Industry','Services'], colors=['#78C850','#6890F0','#F0C850'])\nax.set_xlabel('Year (GDP Measurement)')\nax.set_ylabel('Global Mean Sector % of GDP')\nax.set_title('Global Sectoral GDP Composition Over Time\\nMean % by Sector and Year')\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

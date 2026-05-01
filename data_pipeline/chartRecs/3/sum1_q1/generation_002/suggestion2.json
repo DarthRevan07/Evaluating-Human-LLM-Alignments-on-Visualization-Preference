@@ -1,0 +1,47 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which countries have the highest rice yield per hectare, and how does their total rice production compare with those having the greatest production volumes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot (Bubble Plot)",
+      "design_rationale": "A bubble scatter plot allows us to visually compare two important metrics for each country: rice yield per hectare vs. total rice production. By encoding yield on the y-axis, production on the x-axis, and area cultivated (Rice Acreage (Hectare)) as the bubble's size, the plot highlights whether high yield countries are also dominant in overall production and acreage – an insight not visible in rankings alone. Color encodes yield rank for added depth.",
+      "target_insight": "This visualization reveals the relationship (or potential disconnect) between rice yield and total production, and shows whether countries with high yield are also those with largest farming area or greatest tonnage produced.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rice Production (Tons)",
+        "Rice Acreage (Hectare)",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production (Tons)",
+        "y": "Rice Yield (Kg / Hectare)",
+        "color": "Rank of Rice Yield (Viridis colormap inverted so rank 1 = brightest)",
+        "size": "Rice Acreage (Hectare)",
+        "other_aesthetics": "Bubble labels for top 10 in yield; transparency (alpha=0.7) for visual balance"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Yield (Kg / Hectare)', 'Rice Production (Tons)', and 'Rice Acreage (Hectare)' from string to numeric (handle 'K' and 'M')",
+      "Drop rows with missing/invalid numeric values",
+      "Invert 'Rank of Rice Yield' for the colormap (rank 1 = brightest)",
+      "Select all countries for complete global comparison",
+      "Label bubbles for top 10 yield countries"
+    ],
+    "data_preparation_steps": [
+      "df['Rice Yield (Kg / Hectare)'] = df['Rice Yield (Kg / Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)",
+      "df['Rice Production (Tons)'] = df['Rice Production (Tons)'].str.replace('K','000').str.replace('M','000000').astype(float)",
+      "df['Rice Acreage (Hectare)'] = df['Rice Acreage (Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)",
+      "df = df.dropna(subset=['Rice Yield (Kg / Hectare)','Rice Production (Tons)','Rice Acreage (Hectare)','Rank of Rice Yield'])",
+      "rank_inv = df['Rank of Rice Yield'].max() - df['Rank of Rice Yield'] + 1",
+      "top10 = df.sort_values('Rank of Rice Yield').head(10)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf['Rice Yield (Kg / Hectare)'] = df['Rice Yield (Kg / Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)\ndf['Rice Production (Tons)'] = df['Rice Production (Tons)'].str.replace('K','000').str.replace('M','000000').astype(float)\ndf['Rice Acreage (Hectare)'] = df['Rice Acreage (Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)\ndf = df.dropna(subset=['Rice Yield (Kg / Hectare)','Rice Production (Tons)','Rice Acreage (Hectare)','Rank of Rice Yield'])\nrank_inv = df['Rank of Rice Yield'].max() - df['Rank of Rice Yield'] + 1\ncmap = mpl.colormaps['viridis']\ncolors = cmap(rank_inv / rank_inv.max())\nsizes = np.sqrt(df['Rice Acreage (Hectare)'])/np.sqrt(df['Rice Acreage (Hectare)'].max())*1200\nfig, ax = plt.subplots(figsize=(10,8))\nsc = ax.scatter(df['Rice Production (Tons)'], df['Rice Yield (Kg / Hectare)'], s=sizes, c=colors, alpha=0.7, edgecolors='k')\nfor idx, row in df.sort_values('Rank of Rice Yield').head(10).iterrows():\n    ax.text(row['Rice Production (Tons)'], row['Rice Yield (Kg / Hectare)'], row['Country'], fontsize=9, va='bottom', ha='right', color='darkblue')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=1, vmax=df['Rank of Rice Yield'].max()))\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Rank of Rice Yield (1 = Highest)', fontsize=12)\nax.set_xlabel('Rice Production (Tons)', fontsize=13)\nax.set_ylabel('Rice Yield (Kg / Hectare)', fontsize=13)\nplt.title('Rice Yield vs. Total Production\\nBubble size = Acreage, Color = Yield Rank', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

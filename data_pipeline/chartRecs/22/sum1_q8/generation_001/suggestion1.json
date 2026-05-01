@@ -1,0 +1,40 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which combination of enginetype and enginesize consistently leads to higher car prices?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap lets us compare the aggregated mean price directly for each categorical 'enginetype' and binned 'enginesize' combination. By binning 'enginesize' into quantiles, we can reveal which bands of engine capacity, for each engine type, drive the highest average prices. The grid visual supports discovering consistent high-price regions across combinations and avoids clutter from too many unique sizes.",
+      "target_insight": "Identifies specific combinations of 'enginetype' and 'enginesize' ranges where car prices are highest, showing persistent price hot spots across engine configurations and sizes.",
+      "output_fields": [
+        "enginetype",
+        "enginesize",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginetype",
+        "y": "enginesize (binned)",
+        "color": "Mean price across each group",
+        "size": null,
+        "other_aesthetics": "Colormap intensity for price; annotation of mean price per cell"
+      }
+    },
+    "transformations": [
+      "Bin 'enginesize' into 5 quantile bins labeled from smallest to largest.",
+      "Group by 'enginetype' and binned 'enginesize' to compute mean 'price' for each group.",
+      "Pivot the result so 'enginetype' becomes columns and binned 'enginesize' becomes rows."
+    ],
+    "data_preparation_steps": [
+      "Create a new column in df: 'enginesize_bin' using pd.qcut on 'enginesize' with 5 quantile groups.",
+      "Group df by ['enginetype', 'enginesize_bin'] and aggregate mean 'price'.",
+      "Pivot the grouped mean dataframe into a matrix with 'enginesize_bin' as rows and 'enginetype' as columns."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf['enginesize_bin'] = pd.qcut(df['enginesize'], q=5, labels=[\"1 (Smallest)\", \"2\", \"3\", \"4\", \"5 (Largest)\"])\ngrouped = df.groupby(['enginetype', 'enginesize_bin'])['price'].mean().reset_index()\npivot = grouped.pivot(index='enginesize_bin', columns='enginetype', values='price')\nfig, ax = plt.subplots(figsize=(10, 6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(pivot.shape[1]))\nax.set_xticklabels(pivot.columns)\nax.set_yticks(np.arange(pivot.shape[0]))\nax.set_yticklabels(pivot.index)\nfor i in range(pivot.shape[0]):\n    for j in range(pivot.shape[1]):\n        val = pivot.values[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f'{int(val):,}', ha='center', va='center', color='white' if val > np.nanmean(pivot.values) else 'black')\nplt.xlabel('enginetype')\nplt.ylabel('enginesize_bin')\nplt.title('Mean Car Price by enginetype and enginesize_bin\\n(Higher prices show consistent hot spots)', fontsize=14)\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', label='Mean price (USD)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

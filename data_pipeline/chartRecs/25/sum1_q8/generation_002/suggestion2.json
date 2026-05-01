@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Are there any outliers or anomalies in the 365-day % change or 30-day % change values that stand out when compared across all stock symbols?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with density shading",
+      "design_rationale": "A scatterplot with both '365 d % chng' and '30 d % chng' on the axes maps each stock as a point, revealing relationships and joint anomalies. By coloring points according to density (via a colormap), low-density areas highlight outliers. Annotating points furthest from the median, and providing gridlines, allows users to quickly identify stocks with unusual short-term or long-term changes and locate noteworthy combinations (e.g., stocks with high annual growth but low monthly change).",
+      "target_insight": "This chart exposes stocks that are outliers in either or both metrics, especially those whose joint performance (e.g., extreme positive annual but negative monthly change) sets them apart from the crowd.",
+      "output_fields": [
+        "365 d % chng",
+        "30 d % chng",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "365 d % chng",
+        "y": "30 d % chng",
+        "color": "point density via colormap (to emphasize outliers)",
+        "size": "null",
+        "other_aesthetics": "annotate most extreme points with Symbol; alpha for overlap"
+      }
+    },
+    "transformations": [
+      "Compute 2D point density for all stocks in ('365 d % chng', '30 d % chng') space via kernel density estimation or 2D histogram",
+      "Identify stocks with lowest density (i.e., visual outliers)",
+      "Annotate up to 4 most extreme points for joint or individual anomaly"
+    ],
+    "data_preparation_steps": [
+      "Extract '365 d % chng', '30 d % chng', and 'Symbol' from df",
+      "Calculate density for each point using 2D histogram binning over full range",
+      "Select stocks with lowest density for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\nx = df[\"365 d % chng\"].values\ny = df[\"30 d % chng\"].values\nsymbols = df[\"Symbol\"].values\n\n# 2D histogram for density estimation\nbins_365 = np.linspace(min(x), max(x), 15)\nbins_30 = np.linspace(min(y), max(y), 15)\nhist, xedges, yedges = np.histogram2d(x, y, bins=[bins_365, bins_30])\n# Assign each point a density value\nx_bin = np.digitize(x, xedges) - 1\ny_bin = np.digitize(y, yedges) - 1\ndensity = np.array([hist[xb, yb] if (0<=xb<hist.shape[0] and 0<=yb<hist.shape[1]) else 0 for xb, yb in zip(x_bin, y_bin)])\n\n# Lower density means outlier\noutlier_idx = np.argsort(density)[:4]\n\ncmap = mpl.colormaps[\"viridis\"]\nnorm = mpl.colors.Normalize(vmin=min(density), vmax=max(density))\n\nfig, ax = plt.subplots(figsize=(9,6))\nsc = ax.scatter(x, y, c=density, cmap=cmap, norm=norm, alpha=0.8, edgecolors=\"k\", s=80)\nfor idx in outlier_idx:\n    ax.scatter(x[idx], y[idx], s=120, color=\"#d12020\", edgecolor=\"k\", zorder=5)\n    ax.text(x[idx]+1, y[idx], symbols[idx], fontsize=10, color=\"#d12020\", verticalalignment=\"center\")\n\nax.set_xlabel(\"365 d % chng\")\nax.set_ylabel(\"30 d % chng\")\nax.set_title(\"Joint Scatter of NIFTY-50 Stocks\\nHighlighting Outliers in 365-day vs 30-day % Change\", fontsize=14)\ncbar = plt.colorbar(sc, ax=ax)\ncbar.set_label(\"Local Point Density\")\nax.axhline(0, color=\"#808080\", linestyle=\"--\", linewidth=1, alpha=0.6)\nax.axvline(0, color=\"#808080\", linestyle=\"--\", linewidth=1, alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

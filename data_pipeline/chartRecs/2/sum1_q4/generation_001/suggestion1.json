@@ -1,0 +1,71 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there countries where methane emissions from the Energy sector show clear decreasing trends between 1990 and 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Small multiple line chart (faceted line plot)",
+      "design_rationale": "A small multiple line chart presents trends for the Energy sector methane emissions for multiple countries in parallel, allowing easy visual comparison. By selecting the top countries with the steepest decreases, this avoids clutter from all 195 countries and gives clarity. The exact field names are used for grouping and filtering, ensuring only Energy sector data is considered. This helps visually answer which countries show clear decreasing trends.",
+      "target_insight": "Top countries (by magnitude of decrease) in Energy sector methane emissions showing clear downward trends, visualized side by side.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "2018",
+        "2017",
+        "2016",
+        "2015",
+        "2014",
+        "2013",
+        "2012",
+        "2011",
+        "2010",
+        "2009",
+        "2008",
+        "2007",
+        "2006",
+        "2005",
+        "2004",
+        "2003",
+        "2002",
+        "2001",
+        "2000",
+        "1999",
+        "1998",
+        "1997",
+        "1996",
+        "1995",
+        "1994",
+        "1993",
+        "1992",
+        "1991",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Year (time, using columns '1990'-'2018')",
+        "y": "Methane emissions (field values from year columns)",
+        "color": "null (single color for each country)",
+        "size": "null",
+        "other_aesthetics": "Facets: Each subplot is one country; line width to emphasize trend"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where df['Sector'] == 'Energy'",
+      "Drop rows with missing values in '1990' or '2018'",
+      "Compute change: df['2018'] - df['1990'] for each country",
+      "Select top 6 countries with largest decrease (most negative change)"
+    ],
+    "data_preparation_steps": [
+      "df_energy = df[df['Sector'] == 'Energy']",
+      "df_energy = df_energy.dropna(subset=['1990', '2018'])",
+      "df_energy['Decrease'] = df_energy['2018'] - df_energy['1990']",
+      "top_decreases = df_energy.nsmallest(6, 'Decrease')",
+      "years = [str(y) for y in range(1990, 2019)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\ndf_energy = df[df['Sector'] == 'Energy']\ndf_energy = df_energy.dropna(subset=[\"1990\", \"2018\"])\ndf_energy['Decrease'] = df_energy['2018'] - df_energy['1990']\ntop_decreases = df_energy.nsmallest(6, 'Decrease')\nyears = [str(y) for y in range(1990, 2019)]\nfig, axes = plt.subplots(2, 3, figsize=(18, 8), sharex=True, sharey=True)\naxes = axes.flatten()\nfor i, (idx, row) in enumerate(top_decreases.iterrows()):\n    country = row['Country']\n    emissions = row[years].values.astype(float)\n    axes[i].plot(years, emissions, color='C0', linewidth=2)\n    axes[i].set_title(country, fontsize=12)\n    axes[i].grid(True, linestyle='--', alpha=0.3)\n    axes[i].tick_params(axis='x', labelrotation=45)\nfor ax in axes:\n    ax.set_ylabel('Methane emissions (MTCO2e)')\n    ax.set_xlabel('Year')\nfig.suptitle(\"Energy sector methane emissions (1990-2018): Top 6 countries with biggest decrease\", fontsize=16)\nplt.tight_layout(rect=[0, 0, 1, 0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "Are there any years where the population growth (yearly % change) deviates from the overall trend, and what was the density in those years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line (with outlier annotation)",
+      "design_rationale": "A line plot of 'Yearly % Change' over 'Year' quickly visually isolates periods where population growth sharply deviates from its typical pattern. Annotating these points and showing the corresponding 'Density (P/Km²)' reveals connections between density and anomalous growth years, highlighting possible demographic, environmental, or policy-driven shifts. Line plots are ideal here since the data is temporal and only 18 rows—patterns, inflections, and anomalies stand out clearly. Outlier annotation directly answers: where are the biggest deviations from population growth trend and what was density then?",
+      "target_insight": "Years with abnormally high or low population growth, alongside the population density in those years.",
+      "output_fields": [
+        "Year",
+        "Yearly % Change",
+        "Density (P/Km²)"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Yearly % Change",
+        "color": "null (single color line, outliers distinct)",
+        "size": "null",
+        "other_aesthetics": "Outlier points marked and annotated with density; line transparency; grid; title/subtitle"
+      }
+    },
+    "transformations": [
+      "Convert 'Yearly % Change' to float for numeric trend analysis",
+      "Compute mean and standard deviation of 'Yearly % Change'",
+      "Identify years where 'Yearly % Change' is >1 standard deviation from mean (positive/negative outliers)",
+      "Extract those years' corresponding 'Density (P/Km²)' for annotation"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "mean_change = df['Yearly % Change'].mean()",
+      "std_change = df['Yearly % Change'].std()",
+      "outlier_mask = (df['Yearly % Change'] > mean_change + std_change) | (df['Yearly % Change'] < mean_change - std_change)",
+      "df_outliers = df[outlier_mask]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\n\nmean_change = df['Yearly % Change'].mean()\nstd_change = df['Yearly % Change'].std()\noutlier_mask = (df['Yearly % Change'] > mean_change + std_change) | (df['Yearly % Change'] < mean_change - std_change)\ndf_outliers = df[outlier_mask]\n\nfig, ax = plt.subplots(figsize=(10,6))\nax.plot(df['Year'], df['Yearly % Change'], color='steelblue', linewidth=2, alpha=0.8, label='Yearly % Change')\nax.scatter(df_outliers['Year'], df_outliers['Yearly % Change'], color='red', s=80, zorder=3, label='Outlier Years')\n\nfor idx, row in df_outliers.iterrows():\n    txt = f\"Density: {row['Density (P/Km²)']}\"\n    ax.annotate(txt, (row['Year'], row['Yearly % Change']), textcoords='offset points', xytext=(0, -30),\n                ha='center', color='red', fontsize=10, bbox=dict(boxstyle='round,pad=0.3', fc='white', ec='red', lw=1, alpha=0.6))\n\nax.axhline(mean_change, color='gray', linestyle='--', linewidth=1, label='Mean % Change')\nax.set_xlabel('Year')\nax.set_ylabel('Yearly % Change')\nax.set_title('Global Population Growth Trend and Outlier Years\\nDeviations Annotated with Density', fontsize=15)\nax.grid(True, linestyle=':', alpha=0.4)\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

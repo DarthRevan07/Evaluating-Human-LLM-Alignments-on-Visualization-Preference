@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Are Clothing products more sensitive to Promotion in terms of Sales Volume compared to Food products?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot with overlaid swarmplot",
+      "design_rationale": "A boxplot of Sales Volume for Clothing and Food, grouped by Promotion, displays the entire distribution—not just averages. Overlaying a swarmplot (or jittered scatter points) captures outliers and distributional details. This approach visualizes not just the median and interquartile range shift due to Promotion, but also the spread and occurrence of high/low values, offering deep insight into how sensitive (and variable) Sales Volume is for each category under Promotion vs. No Promotion.",
+      "target_insight": "Highlights differences in Sales Volume distribution and variability by Category & Promotion, revealing not only if the mean increases but if Promotion changes the overall distribution more for Clothing vs. Food.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category + Promotion",
+        "y": "Sales Volume",
+        "color": "Product Category",
+        "size": null,
+        "other_aesthetics": "Boxplots with overlaid scatter (swarm); distinctive colors by Product Category"
+      }
+    },
+    "transformations": [
+      "Filter to rows where 'Product Category' is 'Clothing' or 'Food'",
+      "For each of the four groups (Clothing/Promotion:Yes, Clothing/Promotion:No, Food/Promotion:Yes, Food/Promotion:No), retain their 'Sales Volume' for distributional plotting"
+    ],
+    "data_preparation_steps": [
+      "df_box = df[df['Product Category'].isin(['Clothing','Food'])].copy()",
+      "df_box['cat_prom'] = df_box['Product Category'] + ' | ' + df_box['Promotion']",
+      "order = ['Clothing | Yes','Clothing | No','Food | Yes','Food | No']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_box = df[df['Product Category'].isin(['Clothing','Food'])].copy()\ndf_box['cat_prom'] = df_box['Product Category'] + ' | ' + df_box['Promotion']\norder = ['Clothing | Yes','Clothing | No','Food | Yes','Food | No']\nbox_colors = ['#2980b9','#85c1e9','#ba4a00','#fad7a0']\nfig, ax = plt.subplots(figsize=(9,6))\nbp = ax.boxplot(\n    [df_box[df_box['cat_prom']==g]['Sales Volume'] for g in order],\n    patch_artist=True,\n    labels=order\n)\nfor patch, color in zip(bp['boxes'], box_colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.65)\njitter = 0.15\nnp.random.seed(42)\nfor i, grp in enumerate(order):\n    y = df_box[df_box['cat_prom']==grp]['Sales Volume'].values\n    x = np.random.normal(i+1, jitter, size=len(y))\n    scat = ax.scatter(x, y, color=box_colors[i], edgecolor='k', alpha=0.65, s=23, linewidth=0.5)\nax.set_xlabel('Product Category and Promotion Status')\nax.set_ylabel('Sales Volume')\nax.set_title('Sales Volume Distribution by Promotion\\nClothing vs. Food with Overlaid Sales Points')\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\ncat_labels = ['Clothing','Clothing','Food','Food']\nprom_labels = ['Yes','No','Yes','No']\nfrom matplotlib.patches import Patch\nlegend_handles = [Patch(facecolor=box_colors[0], label='Clothing'),\n                  Patch(facecolor=box_colors[2], label='Food')]\nax.legend(handles=legend_handles, title='Product Category', loc='upper left', frameon=False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

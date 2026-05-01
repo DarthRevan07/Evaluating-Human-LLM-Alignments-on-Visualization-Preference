@@ -1,0 +1,38 @@
+{
+  "table_name": "37",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Is there a relationship between annual income and spending score among mall customers?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Gender Hue",
+      "design_rationale": "A scatter plot is ideal for visualizing the potential relationship between two continuous numeric variables: 'Annual Income (k$)' and 'Spending Score (1-100)'. By adding color encoding based on 'Gender', we can reveal if gender plays a role in this relationship. This approach leverages the full detail level for 200 customers, showing both potential trends and possible gender-based clusters.",
+      "target_insight": "Direct relationship pattern (e.g., correlation, clustering) between annual income and spending score, with visibility on gender-based differences.",
+      "output_fields": [
+        "Annual Income (k$)",
+        "Spending Score (1-100)",
+        "Gender"
+      ],
+      "chart_encodings": {
+        "x": "Annual Income (k$)",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (using distinct colors for Male and Female)",
+        "size": null,
+        "other_aesthetics": "alpha=0.7 for transparency; legend for Gender"
+      }
+    },
+    "transformations": [
+      "No aggregation: Use entire dataset to retain detail",
+      "Map 'Gender' categorical values to distinct colors ('Female' to purple, 'Male' to orange)"
+    ],
+    "data_preparation_steps": [
+      "Assign color to each row in df based on 'Gender' value",
+      "Create two scatter series: one for Female, one for Male"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\37.csv\")\ngender_colors = {\"Female\": \"#8e44ad\", \"Male\": \"#e67e22\"}\nfig, ax = plt.subplots(figsize=(8,6))\nfor gender in [\"Female\", \"Male\"]:\n    mask = df[\"Gender\"] == gender\n    ax.scatter(df.loc[mask, \"Annual Income (k$)\"],\n               df.loc[mask, \"Spending Score (1-100)\"],\n               c=gender_colors[gender],\n               label=gender,\n               alpha=0.7,\n               edgecolors=\"w\",\n               s=70)\nax.set_xlabel(\"Annual Income (k$)\")\nax.set_ylabel(\"Spending Score (1-100)\")\nax.set_title(\"Annual Income vs Spending Score\\nMall Customers by Gender\")\nax.legend(title=\"Gender\", loc=\"upper right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

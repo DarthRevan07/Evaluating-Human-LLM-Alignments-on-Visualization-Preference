@@ -1,0 +1,41 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which countries are outliers in terms of either extremely high or low rice production per hectare relative to their rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bivariate Rank Heatmap",
+      "design_rationale": "By cross-tabulating rank order in rice production and rice yield, we expose the joint ranking landscape. Countries appearing far from the diagonal (where production rank and yield rank would be similar) are visual outliers. This unconventional heatmap allows scanning for those nations whose productivity per hectare dramatically exceeds or lags their bulk production ranking—providing a deep-dive comparative perspective across all countries.",
+      "target_insight": "Visual map of countries whose rice yield rank differs substantially from their rice production rank, highlighting nations with unexpected agricultural efficiency or inefficiency not explained by sheer scale.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Yield",
+        "color": "Presence of country (binary: intensity=1 if present, else 0); outlier annotation for large rank gap",
+        "size": "null",
+        "other_aesthetics": "Country text annotation for absolute rank gap > 40; colormap=mpl.colormaps['magma']; alpha=1.0"
+      }
+    },
+    "transformations": [
+      "Convert 'Rank of Rice Production', 'Rank of Rice Yield' to integer.",
+      "For each country, compute absolute difference between 'Rank of Rice Yield' and 'Rank of Rice Production'.",
+      "Filter and flag countries with absolute rank difference > 40 as outliers."
+    ],
+    "data_preparation_steps": [
+      "df['Rank of Rice Production'] = pd.to_numeric(df['Rank of Rice Production'], errors='coerce')",
+      "df['Rank of Rice Yield'] = pd.to_numeric(df['Rank of Rice Yield'], errors='coerce')",
+      "df = df.dropna(subset=['Rank of Rice Production', 'Rank of Rice Yield'])",
+      "df['rank_gap'] = np.abs(df['Rank of Rice Yield'] - df['Rank of Rice Production'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf['Rank of Rice Production'] = pd.to_numeric(df['Rank of Rice Production'], errors='coerce')\ndf['Rank of Rice Yield'] = pd.to_numeric(df['Rank of Rice Yield'], errors='coerce')\ndf = df.dropna(subset=['Rank of Rice Production', 'Rank of Rice Yield'])\ndf['rank_gap'] = np.abs(df['Rank of Rice Yield'] - df['Rank of Rice Production'])\n# Create heatmap grid\nmax_rank_prod = int(df['Rank of Rice Production'].max())\nmax_rank_yield = int(df['Rank of Rice Yield'].max())\nheatmap = np.zeros((max_rank_yield+1, max_rank_prod+1))\nfor idx, row in df.iterrows():\n    prod_rank = int(row['Rank of Rice Production'])\n    yield_rank = int(row['Rank of Rice Yield'])\n    heatmap[yield_rank, prod_rank] = 1\nplt.figure(figsize=(12, 9))\ncmap = mpl.colormaps['magma']\nplt.imshow(heatmap, origin='lower', cmap=cmap, aspect='auto')\nplt.xlabel('Rank of Rice Production')\nplt.ylabel('Rank of Rice Yield')\nplt.title('Bivariate Rank Heatmap:\\nCountries with Large Yield vs Production Rank Gaps')\nplt.colorbar(label='Country Presence')\n# Annotate countries with absolute rank gap > 40\nfor idx, row in df.iterrows():\n    if row['rank_gap'] > 40:\n        plt.text(int(row['Rank of Rice Production']), int(row['Rank of Rice Yield']), row['Country'], fontsize=8, color='white', ha='center', va='center', alpha=0.88)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

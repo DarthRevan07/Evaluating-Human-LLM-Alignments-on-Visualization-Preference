@@ -1,0 +1,38 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do caffeine levels vary among different drink types, such as coffee, tea, energy drinks, and soft drinks?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is highly effective for visualizing the distribution and variation in caffeine content across different drink types, given the categorical 'type' field and wide range in 'Caffeine (mg)'. Boxplots offer a clear view of medians, spread, and outliers, allowing the audience to immediately see which drink types tend toward higher or lower caffeine, and which have the greatest variability within their category. The large number of unique drinks (610) means a boxplot will summarize the complex data compactly.",
+      "target_insight": "Shows central tendency, spread, and outliers of caffeine levels for each major drink type to reveal which categories contain the most, the least, and the widest variance in caffeine content.",
+      "output_fields": [
+        "type",
+        "Caffeine (mg)"
+      ],
+      "chart_encodings": {
+        "x": "type",
+        "y": "Caffeine (mg)",
+        "color": "type (distinct color per category)",
+        "size": null,
+        "other_aesthetics": "show outliers, use grid for easier comparison"
+      }
+    },
+    "transformations": [
+      "Group by 'type' and summarize distribution of 'Caffeine (mg)' for each drink type",
+      "Filter: Only show drink types relevant to comparison (e.g., exclude water, drink mixes if not meaningful for caffeine)"
+    ],
+    "data_preparation_steps": [
+      "Determine relevant drink types for caffeine comparison (e.g., coffee, tea, energy drinks, soft drinks)",
+      "Subset df to exclude any types with zero caffeine or irrelevant to the question (such as water and drink mixes)",
+      "Prepare a list of colors for each drink 'type'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\112.csv')\n# Filter to relevant types for caffeine comparison\nrelevant_types = ['Coffee', 'Tea', 'Energy Drink', 'Soft Drink']\ndf_plot = df[df['type'].isin(relevant_types)]\n# Create color mapping for each drink type\ncolor_list = ['#B7791B', '#4B8B3B', '#3366CF', '#E54444']\ntype_order = relevant_types\ncolor_dict = dict(zip(type_order, color_list))\nplt.figure(figsize=(8, 6))\nboxplot = plt.boxplot([df_plot[df_plot['type']==t]['Caffeine (mg)'] for t in type_order],\n                     patch_artist=True,\n                     labels=type_order)\nfor patch, t in zip(boxplot['boxes'], type_order):\n    patch.set_facecolor(color_dict[t])\nplt.title('Caffeine Content Distribution by Drink Type\\n(Outliers, Medians, Spread)', fontsize=14)\nplt.xlabel('Drink Type', fontsize=12)\nplt.ylabel('Caffeine (mg)', fontsize=12)\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.xticks(fontsize=11)\nplt.yticks(fontsize=11)\n# Create legend manually\nfrom matplotlib.patches import Patch\nlegend_handles = [Patch(facecolor=color_dict[t], label=t) for t in type_order]\nplt.legend(handles=legend_handles, title='Drink Type')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

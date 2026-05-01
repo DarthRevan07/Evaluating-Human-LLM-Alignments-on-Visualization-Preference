@@ -1,0 +1,38 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "What patterns can be observed in the number of space flights across different military ranks?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (strip-enhanced)",
+      "design_rationale": "A boxplot (with overlaid stripplot) allows for detailed visual exploration of how the distribution of space flights (including medians, quartiles, outliers, and individual values) varies across different military ranks. Since 'Military Rank' is categorical with moderate cardinality and 'Space Flights' is discrete and numeric, this is effective to examine spread, central tendency, and variance alongside the number and spread of non-missing counts for each rank.",
+      "target_insight": "Highlights not just central tendency but also the diversity of number of flights per military rank, showing if some ranks cluster at particular counts, which ranks have the widest range, and comparison of involvement (space flights) by military status.",
+      "output_fields": [
+        "Military Rank",
+        "Space Flights"
+      ],
+      "chart_encodings": {
+        "x": "Military Rank",
+        "y": "Space Flights",
+        "color": "Military Rank (for overlaid points only, using consistent palette for distinction)",
+        "size": "null",
+        "other_aesthetics": "box fill (whiskers, median, fliers); overlaid strip for individual astronauts"
+      }
+    },
+    "transformations": [
+      "Remove records where df['Military Rank'] is null to ensure boxplot x-axis consistency",
+      "Verify df['Space Flights'] is present for all records (it has no nulls per schema)"
+    ],
+    "data_preparation_steps": [
+      "df_viz = df[df['Military Rank'].notna()]",
+      "Sort military ranks by median 'Space Flights' (optional, for logical order of boxplot x-axis)",
+      "Obtain list of unique military ranks for color palette"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf_viz = df[df['Military Rank'].notna()].copy()\norder = df_viz.groupby('Military Rank')['Space Flights'].median().sort_values(ascending=False).index.tolist()\nranks = order\npalette = mpl.colormaps['tab10'].colors\nrank_color_map = {rank: palette[i % len(palette)] for i, rank in enumerate(ranks)}\nfig, ax = plt.subplots(figsize=(12,6))\ndf_viz.boxplot(column='Space Flights', by='Military Rank', ax=ax, grid=False, patch_artist=True, showfliers=True, boxprops=dict(facecolor='lightgrey', alpha=0.7), medianprops=dict(color='red'), flierprops=dict(marker='o', markersize=5, markerfacecolor='orange', linestyle='none'), widths=0.6)\nfor i, rank in enumerate(ranks):\n    y = df_viz[df_viz['Military Rank'] == rank]['Space Flights']\n    x = np.random.normal(loc=i+1, scale=0.07, size=len(y))\n    ax.scatter(x, y, color=rank_color_map[rank], alpha=0.7, label=rank if i < 1 else None, edgecolor='k', s=30, zorder=2)\nax.set_xticks(range(1, len(ranks)+1))\nax.set_xticklabels(ranks, rotation=40, ha='right')\nax.set_xlabel('Military Rank')\nax.set_ylabel('Space Flights')\nax.set_title('Distribution of Space Flights Across Military Ranks')\nplt.suptitle('')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

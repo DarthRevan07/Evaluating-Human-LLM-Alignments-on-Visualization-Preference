@@ -1,0 +1,66 @@
+{
+  "table_name": "world’s wildlife?",
+  "file_path": "csv_c2_sec\\6.csv",
+  "sheet_name": "",
+  "description": "Data loaded from CSV file: 6.csv (Dataset: world’s wildlife?)",
+  "original_filename": "6.csv",
+  "dataset_name": "world’s wildlife?",
+  "row_count": 13549,
+  "column_count": 4,
+  "table_hash": -5728102797680877285,
+  "fields": [
+    {
+      "name": "country",
+      "clean_name": "country",
+      "camel_case_name": "country",
+      "data_type": "object",
+      "inferred_ts_type": "string",
+      "null_count": 0,
+      "non_null_count": 13549,
+      "unique_values": 241,
+      "sample_values": "Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe",
+      "inferred_semantic_summary": "This field identifies the geographic entity—such as countries, regions, or global aggregations—used to categorize wildlife data in an international context."
+    },
+    {
+      "name": "code country",
+      "clean_name": "code_country",
+      "camel_case_name": "codeCountry",
+      "data_type": "object",
+      "inferred_ts_type": "string",
+      "null_count": 0,
+      "non_null_count": 13549,
+      "unique_values": 198,
+      "sample_values": "0, AFG, AGO, ALB, ARE, ..., VUT, YEM, ZAF, ZMB, ZWE",
+      "inferred_semantic_summary": "This field represents standardized country codes (such as ISO alpha-3 codes) identifying nations included in the world's wildlife dataset."
+    },
+    {
+      "name": "Year",
+      "clean_name": "Year",
+      "camel_case_name": "year",
+      "data_type": "int64",
+      "inferred_ts_type": "number",
+      "null_count": 0,
+      "non_null_count": 13549,
+      "unique_values": 172,
+      "min_value": 1275.0,
+      "max_value": 2023.0,
+      "mean_value": 1991.2927153295445,
+      "median_value": 1993.0,
+      "sample_values": "1275, 1305, 1355, 1405, 1455, ..., 2019, 2020, 2021, 2022, 2023",
+      "inferred_semantic_summary": "This field records the calendar year during which wildlife-related data or events were observed, spanning from 1275 to 2023, indicating a historical timeline in biodiversity or species monitoring."
+    },
+    {
+      "name": "Maize yield",
+      "clean_name": "Maize_yield",
+      "camel_case_name": "maizeYield",
+      "data_type": "object",
+      "inferred_ts_type": "string",
+      "null_count": 48,
+      "non_null_count": 13501,
+      "unique_values": 9942,
+      "sample_values": "1.41, 46.507.044, 11.136.999, 3.6474, 198.092, ..., 2.1945, 3.5105, 1.2398, 7.509, 5.6183",
+      "inferred_semantic_summary": "The \"Maize yield\" field likely represents the quantity of maize harvested, measured per unit area (such as tons or kilograms per hectare), reported as numeric string values for various locations or periods in agricultural and environmental datasets."
+    }
+  ],
+  "formatted_summary": "## Table 1: world_s_wildlife_ (13,549 rows × 4 columns)\n\n### Description\nData loaded from CSV file: 6.csv (Dataset: world’s wildlife?)\n\n### Schema (4 fields)\n  - country -- type: object, values: Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe\n  - code country -- type: object, values: 0, AFG, AGO, ALB, ARE, ..., VUT, YEM, ZAF, ZMB, ZWE\n  - Year -- type: int64, values: 1275, 1305, 1355, 1405, 1455, ..., 2019, 2020, 2021, 2022, 2023\n  - Maize yield -- type: object, values: 1.41, 46.507.044, 11.136.999, 3.6474, 198.092, ..., 2.1945, 3.5105, 1.2398, 7.509, 5.6183\n\n### Sample Data (first 5 rows)\n```\n          country code country  Year Maize yield\n0  United Kingdom          GBR  1275           0\n1  United Kingdom          GBR  1305           0\n2  United Kingdom          GBR  1355           0\n3  United Kingdom          GBR  1405           0\n4  United Kingdom          GBR  1455           0\n```\n"
+}

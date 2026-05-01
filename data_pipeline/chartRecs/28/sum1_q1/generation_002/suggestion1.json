@@ -1,0 +1,37 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the average car price vary across different manufacturers?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart effectively compares average car prices across manufacturers, accommodating many categories (65 unique values). This form optimizes readability, allowing users to scan values quickly and see which manufacturers have notably high or low average prices. Sorting bars from highest to lowest further emphasizes outliers and trends. Given the wide price range and manufacturer count, it avoids axis overcrowding that occurs in vertical bar charts.",
+      "target_insight": "The major variations in average listed car price among automotive manufacturers, showing which brands are associated with higher or lower price points in the market.",
+      "output_fields": [
+        "Manufacturer",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Average of Price",
+        "y": "Manufacturer",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bar length reflects average Price; sorted descending; labels for top 10 manufacturers"
+      }
+    },
+    "transformations": [
+      "Group by Manufacturer, aggregate Price with mean to compute average price per manufacturer",
+      "Sort the resulting manufacturer-average dataframe by average price, descending"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('Manufacturer')['Price'].mean().reset_index()",
+      "df_grouped_sorted = df_grouped.sort_values('Price', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf_grouped = df.groupby('Manufacturer')['Price'].mean().reset_index()\ndf_grouped_sorted = df_grouped.sort_values('Price', ascending=False)\nfig, ax = plt.subplots(figsize=(10, 16))\nax.barh(df_grouped_sorted['Manufacturer'], df_grouped_sorted['Price'], color='skyblue')\nax.set_xlabel('Average Price')\nax.set_ylabel('Manufacturer')\nax.set_title('Average Car Price by Manufacturer\\n(sorted descending)', pad=20)\nax.invert_yaxis()\nfor i in range(10):\n    ax.text(df_grouped_sorted['Price'].iloc[i]+500, i, f'{df_grouped_sorted['Price'].iloc[i]:.0f}', va='center', fontsize=10, color='navy')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

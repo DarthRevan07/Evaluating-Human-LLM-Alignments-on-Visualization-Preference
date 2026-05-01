@@ -1,0 +1,41 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Which stocks have the highest turnover (crs.) and do they show significant price movement as indicated by % Chng?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Ordered)",
+      "design_rationale": "A horizontal bar chart displays the top stocks by turnover (crs.) in descending order, making it easy to compare high-turnover stocks. By coloring each bar according to % Chng, we also integrate the magnitude and direction of price movement. This combined encoding spotlights not only which stocks lead by trading volume value, but also whether heavy trading associates with notable price volatility (positive or negative). The horizontal layout is optimal for long categorical labels (stock symbols) and facilitates legibility for up to 50 rows.",
+      "target_insight": "Identify the top N stocks by turnover and instantly see which ones also exhibit the most significant (positive or negative) % price changes.",
+      "output_fields": [
+        "Symbol",
+        "Turnover (crs.)",
+        "% Chng"
+      ],
+      "chart_encodings": {
+        "x": "Turnover (crs.)",
+        "y": "Symbol (stocks sorted by turnover descending)",
+        "color": "% Chng mapped to coolwarm colormap to indicate price increase/decrease",
+        "size": null,
+        "other_aesthetics": "Bar edge outlines; colorbar for % Chng; labels on bars for extreme turnover; tightened y-axis for label clarity"
+      }
+    },
+    "transformations": [
+      "Convert df['Turnover (crs.)'] to numeric (float), handling commas and formatting",
+      "Sort dataframe by df['Turnover (crs.)'] descending",
+      "Select the top 15 stocks (for maximum clarity in a bar chart)",
+      "No aggregation needed, as each symbol is unique"
+    ],
+    "data_preparation_steps": [
+      "df['Turnover (crs.)'] = pd.to_numeric(df['Turnover (crs.)'].str.replace(',', ''), errors='coerce')",
+      "df_sorted = df.sort_values('Turnover (crs.)', ascending=False)",
+      "df_top = df_sorted.head(15).copy()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['Turnover (crs.)'] = pd.to_numeric(df['Turnover (crs.)'].str.replace(',', ''), errors='coerce')\ndf_sorted = df.sort_values('Turnover (crs.)', ascending=False)\ndf_top = df_sorted.head(15).copy()\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.TwoSlopeNorm(vcenter=0, vmin=df_top['% Chng'].min(), vmax=df_top['% Chng'].max())\ncolors = cmap(norm(df_top['% Chng']))\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(\n    y=df_top['Symbol'],\n    width=df_top['Turnover (crs.)'],\n    color=colors,\n    edgecolor='black',\n    height=0.7\n)\nax.set_xlabel('Turnover (crs.)')\nax.set_ylabel('Symbol')\nax.set_title('Top 15 NIFTY-50 Stocks by Turnover (crs.)\\nColored by % Chng Price Movement')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax)\ncbar.set_label('% Chng')\nax.invert_yaxis()\nfor i, (turnover, sym) in enumerate(zip(df_top['Turnover (crs.)'], df_top['Symbol'])):\n    ax.text(turnover + df_top['Turnover (crs.)'].max() * 0.01,\n            i,\n            f'{turnover:,.1f}',\n            va='center', ha='left', fontsize=8, color='black')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

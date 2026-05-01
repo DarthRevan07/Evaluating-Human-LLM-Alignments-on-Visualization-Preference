@@ -1,0 +1,41 @@
+{
+  "table_name": "429",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there any domestic states that import significantly more dogs than they export?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Ratio Map",
+      "design_rationale": "A scatter plot of imported vs exported values for each domestic state, colored by the ratio of imported/exported, reveals both absolute and relative differences. States far above the diagonal import more than they export; color intensity highlights states with extreme import ratios. Handling NaN values (fillna(0)) enables ratio calculation, with special care for divide-by-zero.",
+      "target_insight": "Displays which states are the most imbalanced in imports vs exports. States with high import/export ratios (highlighted) indicate disproportionate importation.",
+      "output_fields": [
+        "location",
+        "imported",
+        "exported"
+      ],
+      "chart_encodings": {
+        "x": "exported",
+        "y": "imported",
+        "color": "imported/exported ratio (continuous colormap)",
+        "size": null,
+        "other_aesthetics": "point labels for top importers, reference diagonal line"
+      }
+    },
+    "transformations": [
+      "Filter for rows where inUS is True (domestic states only)",
+      "Fill NaNs in imported and exported with 0 for numeric comparison",
+      "Calculate imported-to-exported ratio (handle divide-by-zero: set ratio to NaN or high value where exported==0)"
+    ],
+    "data_preparation_steps": [
+      "df_domestic = df[df['inUS'] == True]",
+      "df_domestic['imported'] = df_domestic['imported'].fillna(0)",
+      "df_domestic['exported'] = df_domestic['exported'].fillna(0)",
+      "df_domestic['ratio'] = np.where(df_domestic['exported'] == 0, np.nan, df_domestic['imported'] / df_domestic['exported'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\429.csv')\ndf_domestic = df[df['inUS'] == True].copy()\ndf_domestic['imported'] = df_domestic['imported'].fillna(0)\ndf_domestic['exported'] = df_domestic['exported'].fillna(0)\ndf_domestic['ratio'] = np.where(df_domestic['exported'] == 0, np.nan, df_domestic['imported'] / df_domestic['exported'])\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(8, 8))\nsc = ax.scatter(df_domestic['exported'], df_domestic['imported'], c=df_domestic['ratio'], cmap=cmap, s=80, edgecolor='black')\nmax_lim = max(df_domestic['imported'].max(), df_domestic['exported'].max()) + 20\nax.plot([0, max_lim], [0, max_lim], color='grey', linestyle='--', linewidth=1)\nfor i, row in df_domestic.nlargest(5, 'ratio').iterrows():\n    ax.text(row['exported'] + 2, row['imported'] + 2, row['location'], fontsize=9, color='blue')\ncbar = plt.colorbar(sc, ax=ax)\ncbar.set_label('Import/Export Ratio')\nax.set_xlabel('Dogs Exported')\nax.set_ylabel('Dogs Imported')\nplt.title('U.S. States: Imports vs Exports of Dogs\\n(Color: Import/Export Ratio)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

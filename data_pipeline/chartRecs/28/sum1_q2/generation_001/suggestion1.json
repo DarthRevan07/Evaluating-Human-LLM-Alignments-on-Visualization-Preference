@@ -1,0 +1,40 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What pricing trends can be observed for various car categories over different production years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart with Category Coloring",
+      "design_rationale": "A line chart with each car 'Category' as a separate line enables clear comparison of pricing trends over different production years. The approach leverages the numeric 'Price' and 'Prod. year' fields, aggregating median prices per year and category to smooth out outliers and better reveal general trends, especially given the wider price range and data volume. Coloring by 'Category' effectively distinguishes body types for users and highlights relative price evolution over time.",
+      "target_insight": "This visualization reveals how median car prices have changed over time for each car category, making it easy to spot which categories are appreciating, depreciating, or remain stable as production years advance.",
+      "output_fields": [
+        "Prod. year",
+        "Price",
+        "Category"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Price (aggregated as median per year and category)",
+        "color": "Category",
+        "size": null,
+        "other_aesthetics": "Alpha set for lines, legend for categories, clear grid lines, larger figure for clarity"
+      }
+    },
+    "transformations": [
+      "Group by 'Prod. year' and 'Category', aggregate 'Price' using median to reduce effects of price outliers.",
+      "Sort by 'Prod. year' for correct x-axis ordering."
+    ],
+    "data_preparation_steps": [
+      "Read data from csv_c_squared\\28.csv with pandas.",
+      "Group df by ['Prod. year', 'Category'] and compute median of 'Price'.",
+      "Pivot data so each 'Category' becomes a line across 'Prod. year' (columns for 'Category', index for 'Prod. year').",
+      "Reset index to get numeric years for x-axis."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_group = df.groupby([\"Prod. year\", \"Category\"], as_index=False)[\"Price\"].median()\ndf_pivot = df_group.pivot(index=\"Prod. year\", columns=\"Category\", values=\"Price\")\ncategories = df_pivot.columns.tolist()\ncmap = mpl.colormaps[\"tab10\"]\ncolors = [cmap(i) for i in range(len(categories))]\nplt.figure(figsize=(13, 7))\nfor idx, cat in enumerate(categories):\n    plt.plot(df_pivot.index, df_pivot[cat], label=cat, color=colors[idx], alpha=0.86, linewidth=2)\nplt.title(\"Pricing Trends by Car Category Over Production Years\")\nplt.xlabel(\"Production Year\")\nplt.ylabel(\"Median Price\")\nplt.grid(True, linestyle=\"--\", alpha=0.5)\nplt.legend(title=\"Category\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

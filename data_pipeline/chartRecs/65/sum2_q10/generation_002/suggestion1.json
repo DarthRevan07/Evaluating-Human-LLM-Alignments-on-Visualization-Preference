@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "Are Clothing products more sensitive to Promotion in terms of Sales Volume compared to Food products?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart provides a side-by-side comparison of average Sales Volume for Clothing and Food products, split by Promotion status (Yes vs. No). This directly reveals each category’s Sales Volume lift due to Promotion, making it easy to spot which group is more sensitive to promotional activity. Bar charts are ideal for comparing aggregated categorical data and visually quantifying differences.",
+      "target_insight": "Shows clearly whether Clothing or Food sees a greater average Sales Volume increase when promoted—directly visualizing comparative promotion sensitivity.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category",
+        "y": "Average Sales Volume",
+        "color": "Promotion",
+        "size": null,
+        "other_aesthetics": "Grouped bars, legend for Promotion levels"
+      }
+    },
+    "transformations": [
+      "Filter to rows where 'Product Category' is 'Clothing' or 'Food'",
+      "Group by 'Product Category' and 'Promotion', aggregating mean of 'Sales Volume'",
+      "Reset index for plotting compatibility"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df[df['Product Category'].isin(['Clothing','Food'])]",
+      "df_grouped = df_plot.groupby(['Product Category','Promotion'], as_index=False)['Sales Volume'].mean()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_plot = df[df['Product Category'].isin(['Clothing','Food'])]\ndf_grouped = df_plot.groupby(['Product Category','Promotion'], as_index=False)['Sales Volume'].mean()\nproduct_categories = ['Clothing', 'Food']\npromotion_status = ['Yes', 'No']\nbar_width = 0.35\nx = np.arange(len(product_categories))\nmeans_yes = [df_grouped[(df_grouped['Product Category'] == cat) & (df_grouped['Promotion'] == 'Yes')]['Sales Volume'].values[0] if not df_grouped[(df_grouped['Product Category'] == cat) & (df_grouped['Promotion'] == 'Yes')].empty else np.nan for cat in product_categories]\nmeans_no = [df_grouped[(df_grouped['Product Category'] == cat) & (df_grouped['Promotion'] == 'No')]['Sales Volume'].values[0] if not df_grouped[(df_grouped['Product Category'] == cat) & (df_grouped['Promotion'] == 'No')].empty else np.nan for cat in product_categories]\nfig, ax = plt.subplots(figsize=(7, 5))\nb1 = ax.bar(x - bar_width/2, means_yes, bar_width, label='Promotion: Yes', color='#3498db')\nb2 = ax.bar(x + bar_width/2, means_no, bar_width, label='Promotion: No', color='#e67e22')\nax.set_xlabel('Product Category')\nax.set_ylabel('Average Sales Volume')\nax.set_title('Impact of Promotion on Sales Volume\\nClothing vs. Food Products')\nax.set_xticks(x)\nax.set_xticklabels(product_categories)\nax.legend(title='Promotion')\nfor idx, val in enumerate(means_yes):\n    if not np.isnan(val):\n        ax.text(x[idx] - bar_width/2, val + 20, f'{val:.0f}', ha='center', va='bottom', fontsize=9)\nfor idx, val in enumerate(means_no):\n    if not np.isnan(val):\n        ax.text(x[idx] + bar_width/2, val + 20, f'{val:.0f}', ha='center', va='bottom', fontsize=9)\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

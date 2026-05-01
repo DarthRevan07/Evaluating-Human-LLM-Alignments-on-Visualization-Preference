@@ -1,0 +1,44 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Which Generation features the highest proportion of Legendary Pokémon compared to its total Pokémon count?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart allows for clear, direct comparison of the proportion of Legendary Pokémon within each Generation. Given that 'Generation' is categorical and that proportion is a numeric metric derived from the counts of 'Legendary' Pokémon and the total count per generation, a bar chart succinctly displays relative differences. The horizontal layout emphasizes the ranking, making it easy to spot the generation with the highest proportion.",
+      "target_insight": "Identifies which generation has the highest proportion of Legendary Pokémon relative to all Pokémon introduced in that generation, and visually compares all generations.",
+      "output_fields": [
+        "Generation",
+        "Legendary"
+      ],
+      "chart_encodings": {
+        "x": "Proportion of Legendary Pokémon",
+        "y": "Generation",
+        "color": "Distinct color per bar using a categorical palette (e.g., tab10)",
+        "size": null,
+        "other_aesthetics": "Bar labels, sorted descending by proportion, gridlines for readability"
+      }
+    },
+    "transformations": [
+      "Group df by 'Generation'",
+      "Count number of Pokémon per 'Generation'",
+      "Count number of Legendary Pokémon per 'Generation' (Legendary == True)",
+      "Calculate proportion: (Legendary count / total count) per Generation",
+      "Sort generations descending by proportion"
+    ],
+    "data_preparation_steps": [
+      "grouped = df.groupby('Generation')",
+      "legendary_count = grouped['Legendary'].sum()",
+      "total_count = grouped['Legendary'].count()",
+      "proportion = legendary_count / total_count",
+      "df_prop = pd.DataFrame({'Generation': legendary_count.index, 'Legendary Proportion': proportion})",
+      "df_prop = df_prop.sort_values('Legendary Proportion', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ngrouped = df.groupby('Generation')\nlegendary_count = grouped['Legendary'].sum()\ntotal_count = grouped['Legendary'].count()\nproportion = legendary_count / total_count\ndf_prop = pd.DataFrame({'Generation': legendary_count.index, 'Legendary Proportion': proportion})\ndf_prop = df_prop.sort_values('Legendary Proportion', ascending=False)\ncolors = plt.get_cmap('tab10')(np.arange(len(df_prop)))\nfig, ax = plt.subplots(figsize=(8, 6))\nbars = ax.barh(df_prop['Generation'].astype(str), df_prop['Legendary Proportion'], color=colors)\nfor i, bar in enumerate(bars):\n    ax.text(bar.get_width() + 0.005, bar.get_y() + bar.get_height()/2,\n            f\"{df_prop['Legendary Proportion'].iloc[i]:.2%}\", va=\"center\", fontsize=10)\nax.set_xlabel(\"Proportion of Legendary Pokémon\")\nax.set_ylabel(\"Generation\")\nax.set_title(\"Proportion of Legendary Pokémon per Generation\\n(Sorted Descending)\", fontsize=14)\nax.grid(axis=\"x\", linestyle=\"--\", alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

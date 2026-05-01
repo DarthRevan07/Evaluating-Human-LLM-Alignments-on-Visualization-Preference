@@ -1,0 +1,36 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does citympg differ across the various fueltype categories?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is ideal for comparing the distribution, central tendency, and spread of citympg (fuel efficiency in city driving) across the two 'fueltype' categories ('diesel' and 'gasoline'). With only two categories and a continuous outcome, this allows viewers to quickly observe differences in medians, ranges, and the presence of outliers. The boxplot visually communicates both the typical and atypical values, making it easy to assess whether, for example, diesel cars have higher or lower city fuel efficiency compared to gasoline cars.",
+      "target_insight": "Visualize the full distribution and central tendency (median, quartiles) of citympg for each fueltype, revealing comparative efficiency patterns and presence of outliers.",
+      "output_fields": [
+        "fueltype",
+        "citympg"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "citympg",
+        "color": "fueltype (used for distinction between boxes)",
+        "size": null,
+        "other_aesthetics": "box shape, outlier markers, grid, legend for color"
+      }
+    },
+    "transformations": [
+      "Group df by 'fueltype' and extract the distribution of 'citympg' for each group"
+    ],
+    "data_preparation_steps": [
+      "Ensure 'citympg' values are numeric and non-null",
+      "Confirm 'fueltype' field has only two unique categories"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ncolors = {'diesel': '#1f77b4', 'gasoline': '#ff7f0e'}\nfueltypes = ['diesel', 'gasoline']\ndata = [df[df['fueltype'] == ft]['citympg'].values for ft in fueltypes]\nplt.figure(figsize=(8,5))\nbp = plt.boxplot(data, labels=fueltypes, patch_artist=True, widths=0.6)\nfor patch, ft in zip(bp['boxes'], fueltypes):\n    patch.set_facecolor(colors[ft])\n    patch.set_alpha(0.7)\nplt.ylabel('citympg')\nplt.xlabel('fueltype')\nplt.title('Distribution of citympg by fueltype\\nComparing City Fuel Efficiency between Diesel and Gasoline Cars')\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.legend([mpl.patches.Patch(color=colors[ft], label=ft) for ft in fueltypes], fueltypes, title='Fuel Type', loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

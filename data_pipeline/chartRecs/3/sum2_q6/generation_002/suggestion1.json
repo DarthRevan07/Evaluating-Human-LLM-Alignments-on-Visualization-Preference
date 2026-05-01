@@ -1,0 +1,42 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Which countries have the lowest rice production per person despite having large rice acreage?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bubble Scatter Plot",
+      "design_rationale": "This visualization maps each country to its total rice acreage (x-axis) and per-person rice production (y-axis), with bubble size representing total rice production. By sorting countries with large rice acreage (right half of the chart) but low per capita output (lower region of the chart), we can spot those most relevant to the question. Bubble size adds an extra layer to compare the absolute scale vs. efficiency. Annotating outlier countries (large acreage, low per capita) directly addresses the question's core.",
+      "target_insight": "Countries with the largest rice acreage but surprisingly low rice production per capita are visually highlighted in the lower-right sector with relatively small y-values. These are the prime candidates for low efficiency per person despite significant land input.",
+      "output_fields": [
+        "Country",
+        "Rice Acreage (Hectare)",
+        "Rice Production Per Person (Kg)",
+        "Rice Production (Tons)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Acreage (Hectare)",
+        "y": "Rice Production Per Person (Kg)",
+        "color": "null",
+        "size": "Rice Production (Tons)",
+        "other_aesthetics": "alpha=0.7; edgecolor='k'; annotated countries with large acreage and low per capita; log scales for better spread if strong skew"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Acreage (Hectare)', 'Rice Production Per Person (Kg)', and 'Rice Production (Tons)' from abbreviated strings (K/M) to float",
+      "Filter to countries in the top quartile of 'Rice Acreage (Hectare)' (representing 'large rice acreage')",
+      "Within these, select countries in the bottom quartile for 'Rice Production Per Person (Kg)' (representing 'lowest per capita')"
+    ],
+    "data_preparation_steps": [
+      "Define a helper function to convert K and M suffixed strings to floats",
+      "Apply this function to 'Rice Acreage (Hectare)', 'Rice Production Per Person (Kg)', and 'Rice Production (Tons)' to get clean numeric columns",
+      "Calculate thresholds for top 25% 'Rice Acreage (Hectare)' and bottom 25% 'Rice Production Per Person (Kg)'",
+      "Filter df to those above the acreage threshold and below the per-person threshold for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndef parse_number(x):\n    if isinstance(x, str):\n        x = x.replace(',', '').replace(' ', '')\n        if x.endswith('M'):\n            return float(x[:-1]) * 1e6\n        if x.endswith('K'):\n            return float(x[:-1]) * 1e3\n        try:\n            return float(x)\n        except:\n            return np.nan\n    return np.nan\n\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf[\"Rice Acreage (Hectare)_num\"] = df[\"Rice Acreage (Hectare)\"].apply(parse_number)\ndf[\"Rice Production (Tons)_num\"] = df[\"Rice Production (Tons)\"].apply(parse_number)\ndf[\"Rice Production Per Person (Kg)_num\"] = df[\"Rice Production Per Person (Kg)\"].apply(parse_number)\n\ntop_acreage_thresh = df[\"Rice Acreage (Hectare)_num\"].quantile(0.75)\nbottom_per_person_thresh = df[\"Rice Production Per Person (Kg)_num\"].quantile(0.25)\n\n# Core plot: all countries as context\nfig, ax = plt.subplots(figsize=(10,8))\nsc = ax.scatter(\n    df[\"Rice Acreage (Hectare)_num\"],\n    df[\"Rice Production Per Person (Kg)_num\"],\n    s = df[\"Rice Production (Tons)_num\"] / 1e5,\n    alpha=0.5,\n    edgecolor='k',\n    linewidth=0.5\n)\n\n# Highlighting subset with large acreage, low per capita\nsubset = df[(df[\"Rice Acreage (Hectare)_num\"] >= top_acreage_thresh) & (df[\"Rice Production Per Person (Kg)_num\"] <= bottom_per_person_thresh)]\nax.scatter(\n    subset[\"Rice Acreage (Hectare)_num\"],\n    subset[\"Rice Production Per Person (Kg)_num\"],\n    s = subset[\"Rice Production (Tons)_num\"] / 1e5,\n    color='red',\n    alpha=0.7,\n    edgecolor='k',\n    linewidth=1,\n    label=\"Low per capita, High acreage\"\n)\n\nfor idx, row in subset.iterrows():\n    ax.text(\n        row[\"Rice Acreage (Hectare)_num\"] * 1.05,\n        row[\"Rice Production Per Person (Kg)_num\"] * 1.05,\n        row[\"Country\"],\n        fontsize=9,\n        color='darkred',\n        ha='left',\n        va='bottom',\n        fontweight='bold'\n    )\n\nax.set_xlabel(\"Rice Acreage (Hectare)\")\nax.set_ylabel(\"Rice Production Per Person (Kg)\")\nax.set_title(\n    \"Countries with Largest Rice Acreage but Low Rice Production Per Capita\\n\"\n    + \"Bubble Size: Total Rice Production (Tons)\"\n)\nax.set_xscale(\"log\")\nax.set_yscale(\"log\")\nax.legend(loc='upper left')\n\n# Build bubble size reference/legend manually\nfor size in [1e6, 5e6, 1e7]:\n    ax.scatter([], [], s=size/1e5, label=str(int(size))+\" Tons\", color='grey', alpha=0.3, edgecolor='k')\nlegend_labels = [\"1M Tons\", \"5M Tons\", \"10M Tons\"]\nhandles, labels = ax.get_legend_handles_labels()\nax.legend(handles[-3:] + handles[:1], legend_labels + [\"Low per capita, High acreage\"], loc='best', frameon=True)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

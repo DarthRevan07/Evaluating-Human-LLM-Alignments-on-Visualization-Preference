@@ -1,0 +1,37 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do global sales differ across platforms, and which platforms consistently lead in overall sales?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart offers a clear, rank-ordered view of total global sales across all platforms. Given the relatively moderate number of unique platforms (31), aggregating total 'Global_Sales' by 'Platform' and sorting them makes it easy to identify which platforms are leading and enables intuitive side-by-side comparisons. The horizontal orientation accommodates longer platform names and helps emphasize the top performers, directly answering which platforms consistently lead in overall sales.",
+      "target_insight": "It showcases the cumulative sales volume distribution across platforms, revealing top-selling systems and the magnitude of difference between them.",
+      "output_fields": [
+        "Platform",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Global_Sales (Sum per Platform)",
+        "y": "Platform",
+        "color": "None (single color for all bars)",
+        "size": "None",
+        "other_aesthetics": "Sorted by x descending; bar labels showing actual values"
+      }
+    },
+    "transformations": [
+      "Group df by 'Platform' and aggregate total sum of 'Global_Sales'",
+      "Sort resultant aggregated DataFrame by total 'Global_Sales' descending"
+    ],
+    "data_preparation_steps": [
+      "df_platform_sales = df.groupby('Platform', as_index=False)['Global_Sales'].sum()",
+      "df_platform_sales = df_platform_sales.sort_values('Global_Sales', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_platform_sales = df.groupby('Platform', as_index=False)['Global_Sales'].sum()\ndf_platform_sales = df_platform_sales.sort_values('Global_Sales', ascending=False)\nfig, ax = plt.subplots(figsize=(10,8))\nbars = ax.barh(df_platform_sales['Platform'], df_platform_sales['Global_Sales'], color='cornflowerblue')\nax.invert_yaxis()\nax.set_xlabel('Total Global Sales (Millions)')\nax.set_ylabel('Platform')\nax.set_title('Total Global Video Game Sales by Platform\\n(Ranked Order)')\nfor i, v in enumerate(df_platform_sales['Global_Sales']):\n    ax.text(v + 1, i, f'{v:.1f}', va='center', fontsize=9)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

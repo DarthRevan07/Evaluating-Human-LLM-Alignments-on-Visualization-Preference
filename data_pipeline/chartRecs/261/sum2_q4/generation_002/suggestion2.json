@@ -1,0 +1,38 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does Space Walks (hr) vary between male and female astronauts?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Strip plot with summary overlay (mean and standard deviation)",
+      "design_rationale": "A strip plot (jittered scatter) provides a detailed view of individual 'Space Walks (hr)' measurements per astronaut, directly mapped to their gender. By overlaying means and error bars for each gender, we gain both granular and summary perspectives, showing central tendency and variability alongside outliers and distribution shape. This uncovers whether gender differences are due to concentration or outlier-driven effects.",
+      "target_insight": "The visualization shows the spread of individual astronauts' spacewalk hours for each gender, highlights mean values and variability, and identifies clustering or exceptional cases.",
+      "output_fields": [
+        "Gender",
+        "Space Walks (hr)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Space Walks (hr)",
+        "color": "Gender (point color)",
+        "size": null,
+        "other_aesthetics": "point alpha; summary overlay with mean and std error bars"
+      }
+    },
+    "transformations": [
+      "Extract 'Gender' and 'Space Walks (hr)' for all astronauts",
+      "Compute mean and standard deviation of 'Space Walks (hr)' per Gender"
+    ],
+    "data_preparation_steps": [
+      "Read data from 'csv_c_squared\\261.csv' into df",
+      "For each astronaut, record 'Gender' and 'Space Walks (hr)'",
+      "Calculate mean and std of 'Space Walks (hr)' for male and female groups"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ngenders = df['Gender'].unique()\ncolors = {genders[0]: \"#1f77b4\", genders[1]: \"#ff7f0e\"}\nfig, ax = plt.subplots(figsize=(8,6))\nfor idx, gender in enumerate(genders):\n    y = df[df['Gender'] == gender]['Space Walks (hr)'].values\n    x = np.random.normal(loc=idx, scale=0.08, size=len(y))\n    ax.scatter(x, y, color=colors[gender], alpha=0.5, label=gender)\n    mean = np.mean(y)\n    std = np.std(y)\n    ax.errorbar(idx, mean, yerr=std, fmt='o', color='black', capsize=8, markersize=10, lw=2)\nax.set_xticks([0,1])\nax.set_xticklabels(genders)\nax.set_xlabel(\"Gender\")\nax.set_ylabel(\"Space Walks (hr)\")\nax.set_title(\"Individual Space Walks (hr) by Gender with Means and Std\\nNASA Astronauts 1959-Present\")\nax.grid(True, linestyle=\"--\", linewidth=0.5, alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

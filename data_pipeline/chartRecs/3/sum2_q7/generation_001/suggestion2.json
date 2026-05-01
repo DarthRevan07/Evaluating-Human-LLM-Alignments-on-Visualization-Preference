@@ -1,0 +1,39 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Are there outliers where a country’s rank in rice production per person differs greatly from its rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar chart of rank difference (sorted)",
+      "design_rationale": "A horizontal bar chart showing the absolute rank difference for all countries, sorted descending, makes it easy to spot the most extreme outliers and the distribution of rank differences across the entire set of 119 countries. Countries with the biggest differences stand out visually at the top, and labeling bars allows direct identification by country name. This is a classic method for outlier detection and ranking comparison, especially effective for a moderately large set (119 rows).",
+      "target_insight": "Which countries are the largest outliers with respect to their rice production and per person ranks, and how the distribution of these outlier differences looks globally.",
+      "output_fields": [
+        "Country",
+        "Rank Difference"
+      ],
+      "chart_encodings": {
+        "x": "Rank Difference (absolute)",
+        "y": "Country (sorted by rank difference descending)",
+        "color": "Gradient color mapping to rank difference (e.g., viridis colormap); most extreme outliers in dark color",
+        "size": "null",
+        "other_aesthetics": "Label top N (e.g., 10) countries with largest difference on bar; Horizontal layout for readability"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Rank of Rice Production' is null",
+      "Calculate absolute difference between 'Rank of Rice Production' and 'Rank of Rice Production Per Person'; store as 'Rank Difference'",
+      "Sort dataframe descending by 'Rank Difference'"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Rank of Rice Production'])",
+      "df['Rank Difference'] = np.abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])",
+      "df_sorted = df.sort_values('Rank Difference', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf = df.dropna(subset=['Rank of Rice Production'])\ndf['Rank Difference'] = np.abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])\ndf_sorted = df.sort_values('Rank Difference', ascending=False)\n\nfig, ax = plt.subplots(figsize=(12, 10))\ncmap = mpl.colormaps['viridis']\nrank_diff_norm = mpl.colors.Normalize(vmin=df_sorted['Rank Difference'].min(), vmax=df_sorted['Rank Difference'].max())\ncolors = cmap(rank_diff_norm(df_sorted['Rank Difference'].values))\n\nax.barh(df_sorted['Country'], df_sorted['Rank Difference'], color=colors, edgecolor='k')\n\nfor i in range(10):\n    ax.text(df_sorted['Rank Difference'].iloc[i] + 1, i, str(int(df_sorted['Rank Difference'].iloc[i])), fontsize=10, color='black', va='center')\n\nsm = plt.cm.ScalarMappable(cmap=cmap, norm=rank_diff_norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Absolute Rank Difference')\n\nax.set_xlabel('Absolute Rank Difference')\nax.set_ylabel('Country')\nax.set_title('Top Outliers in Rice Production vs Rice Production Per Person Rankings\\nBar length and color indicate discrepancy')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

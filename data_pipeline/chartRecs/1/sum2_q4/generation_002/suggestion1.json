@@ -1,0 +1,47 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there countries where the Agriculture Sector GDP Rank is significantly better than their overall Rank?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Divergence Bar Chart",
+      "design_rationale": "A divergence bar chart is perfect for visualizing the difference between 'Agriculture Sector GDP Rank' and 'Rank' for each country, sorted by greatest positive difference. This makes it easy to spot countries where agricultural ranking is significantly better than overall GDP ranking. Using color or orientation, we can effectively highlight those outliers and display the magnitude of divergence.",
+      "target_insight": "The visualization reveals which countries excel in agriculture relative to their economic standing, quantifies the divergence, and highlights major outliers to answer the core question directly.",
+      "output_fields": [
+        "Country/Economy",
+        "Rank",
+        "Agriculture Sector GDP Rank"
+      ],
+      "chart_encodings": {
+        "x": "Country/Economy (sorted by divergence)",
+        "y": "Divergence (Rank - Agriculture Sector GDP Rank)",
+        "color": "Positive vs Negative divergence (red for positive, blue for negative)",
+        "size": null,
+        "other_aesthetics": "Horizontal orientation, annotation for top/bottom countries"
+      }
+    },
+    "transformations": [
+      "Convert 'Rank' and 'Agriculture Sector GDP Rank' to numeric, coercing '-' to NaN",
+      "Calculate divergence as: int('Rank') - int('Agriculture Sector GDP Rank') for each country",
+      "Drop rows with NaN in either ranking",
+      "Sort countries by divergence descending",
+      "Select top 20 countries with greatest positive divergence (where agriculture rank is better)",
+      "Prepare a column for color: assign 'positive' if divergence > 0, 'negative' if <= 0"
+    ],
+    "data_preparation_steps": [
+      "df['Rank'] = pd.to_numeric(df['Rank'], errors='coerce')",
+      "df['Agriculture Sector GDP Rank'] = pd.to_numeric(df['Agriculture Sector GDP Rank'], errors='coerce')",
+      "df = df.dropna(subset=['Rank', 'Agriculture Sector GDP Rank'])",
+      "df['Divergence'] = df['Rank'] - df['Agriculture Sector GDP Rank']",
+      "df = df.sort_values('Divergence', ascending=False)",
+      "df_plot = df[df['Divergence'] > 0].head(20).copy()",
+      "df_plot['Color'] = np.where(df_plot['Divergence'] > 0, 'red', 'blue')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Rank'] = pd.to_numeric(df['Rank'], errors='coerce')\ndf['Agriculture Sector GDP Rank'] = pd.to_numeric(df['Agriculture Sector GDP Rank'], errors='coerce')\ndf = df.dropna(subset=['Rank','Agriculture Sector GDP Rank'])\ndf['Divergence'] = df['Rank'] - df['Agriculture Sector GDP Rank']\ndf = df.sort_values('Divergence', ascending=False)\ndf_plot = df[df['Divergence'] > 0].head(20).copy()\ndf_plot['Color'] = np.where(df_plot['Divergence'] > 0, 'red', 'blue')\nplt.figure(figsize=(12,8))\nax = plt.gca()\nbars = ax.barh(df_plot['Country/Economy'], df_plot['Divergence'], color=df_plot['Color'])\nax.set_xlabel('Divergence (Overall Rank - Agriculture Sector GDP Rank)')\nax.set_ylabel('Country/Economy')\nax.set_title('Countries where Agriculture Sector GDP Rank is much better than Overall GDP Rank')\nax.invert_yaxis()\nfor i, v in enumerate(df_plot['Divergence']):\n    ax.text(v+0.5, i, str(v), va='center', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

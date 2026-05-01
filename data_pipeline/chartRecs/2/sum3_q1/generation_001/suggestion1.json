@@ -1,0 +1,69 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How have methane emissions changed in the Energy sector across different countries between 1990 and 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Multi-country Time Series Line Chart",
+      "design_rationale": "A time series line chart lets us directly see the temporal change—trends, spikes, periods of decline—in methane emissions for the Energy sector in different countries from 1990 to 2018. The schema provides annual emissions for each country and sector, so plotting each country as a separate line highlights both the global patterns and country-specific dynamics. Selecting the top-emitting countries avoids clutter and focuses the analysis on countries with most impact.",
+      "target_insight": "Comparative temporal trends in energy sector methane emissions for top countries; which nations have rising, falling, or stable emissions since 1990.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (as index from the field names: '1990'...'2018')",
+        "y": "Methane Emissions for Energy sector per country (field values per year)",
+        "color": "Country",
+        "size": null,
+        "other_aesthetics": "Use a distinct color for each country, legend, thicker lines for top 3; labels for key lines at end; gridlines; tight axes; title with line breaks via \\n"
+      }
+    },
+    "transformations": [
+      "Filter for rows where df['Sector'] == 'Energy'",
+      "Select countries with highest 2018 emissions in energy sector (e.g., top 7 countries by df['2018'])",
+      "Subset only relevant columns: 'Country' and annual fields '1990' to '2018'"
+    ],
+    "data_preparation_steps": [
+      "energy_df = df[df['Sector'] == 'Energy']",
+      "top_countries = energy_df.sort_values('2018', ascending=False)['Country'].head(7).tolist()",
+      "df_plot = energy_df[energy_df['Country'].isin(top_countries)]",
+      "years = [str(y) for y in range(1990, 2019)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nenergy_df = df[df['Sector'] == 'Energy']\ntop_countries = energy_df.sort_values('2018', ascending=False)['Country'].head(7).tolist()\ndf_plot = energy_df[energy_df['Country'].isin(top_countries)]\nyears = [str(y) for y in range(1990, 2019)]\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['tab10']\nfor idx, country in enumerate(top_countries):\n    row = df_plot[df_plot['Country'] == country]\n    emissions = row[years].values.flatten()\n    line_width = 2.5 if idx < 3 else 1.5\n    ax.plot(years, emissions, label=country, color=cmap(idx), linewidth=line_width)\n    ax.text(years[-1], emissions[-1], country, color=cmap(idx), fontsize=10, va='center', ha='left')\nax.set_xlabel('Year')\nax.set_ylabel('Methane Emissions (Energy sector, MTCO2e)')\nax.set_title('Methane Emissions in the Energy Sector\\nTop Countries 1990-2018', fontsize=16)\nax.grid(True, alpha=0.3)\nax.margins(x=0)\nplt.legend(title='Country', loc='upper left', bbox_to_anchor=(1,1))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

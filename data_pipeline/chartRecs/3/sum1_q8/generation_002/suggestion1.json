@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What are the top five countries for rice yield per hectare, and what are their corresponding ranks in rice acreage and total production?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart ranks the top five countries by rice yield (Kg / Hectare) for direct comparison and clarity. Beside each country, annotate their ranks in acreage and production for contextual insight. This presentation focuses the viewer on agricultural productivity while making it easy to see how these most efficient countries fare in terms of total area cultivated and output. Horizontal bars maximize space for annotation and legibility given potentially long country names.",
+      "target_insight": "Who are the most efficient rice-producing countries, and how do they compare in terms of land under rice and overall production?",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rank of Rice Acreage",
+        "Rank of Rice Production"
+      ],
+      "chart_encodings": {
+        "x": "Rice Yield (Kg / Hectare)",
+        "y": "Country",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "annotate each bar with rank in rice acreage and production; bold font for countries"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Yield (Kg / Hectare)' to numeric for sorting.",
+      "Sort descending by 'Rice Yield (Kg / Hectare)'.",
+      "Select top 5 rows.",
+      "Prepare country labels and annotate bars with 'Rank of Rice Acreage' and 'Rank of Rice Production'."
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c_squared\\3.csv.",
+      "Replace 'Rice Yield (Kg / Hectare)' K/M abbreviations, convert to numeric.",
+      "Sort by 'Rice Yield (Kg / Hectare)' descending.",
+      "Select top 5 countries.",
+      "Extract values for 'Country', 'Rice Yield (Kg / Hectare)', 'Rank of Rice Acreage', 'Rank of Rice Production'."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\n# Convert 'Rice Yield (Kg / Hectare)' to numeric\nyield_col = \"Rice Yield (Kg / Hectare)\"\ndef parse_shorthand(s):\n    if isinstance(s, str):\n        s = s.upper().replace(',', '')\n        if s.endswith('M'):\n            return float(s[:-1]) * 1e6\n        elif s.endswith('K'):\n            return float(s[:-1]) * 1e3\n        else:\n            return float(s)\n    return np.nan\ndf[yield_col] = df[yield_col].apply(parse_shorthand)\ndf_top = df.sort_values(by=yield_col, ascending=False).head(5)\nfig, ax = plt.subplots(figsize=(8, 6))\nbars = ax.barh(\n    df_top[\"Country\"],\n    df_top[yield_col],\n    color=\"#386cb0\"\n)\nfor i, (country, yld, acre_rank, prod_rank) in enumerate(zip(\n    df_top[\"Country\"],\n    df_top[yield_col],\n    df_top[\"Rank of Rice Acreage\"],\n    df_top[\"Rank of Rice Production\"]\n)):\n    annotation = \"Acreage rank: \" + str(int(acre_rank)) + \"  |  Production rank: \" + str(int(prod_rank))\n    ax.text(\n        yld + yld * 0.03,\n        i,\n        annotation,\n        va=\"center\",\n        ha=\"left\",\n        fontsize=11,\n        color=\"#333333\"\n    )\nax.set_xlabel(\"Rice Yield (Kg / Hectare)\", fontsize=12)\nax.set_ylabel(\"Country\", fontsize=12)\nax.set_yticklabels(df_top[\"Country\"], fontweight=\"bold\")\nplt.title(\"Top 5 Countries for Rice Yield per Hectare\\nwith Acreage and Production Ranks\", fontsize=14, fontweight=\"bold\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there noticeable differences in spending behavior between genders?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot (with kernel density contour overlay)",
+      "design_rationale": "By plotting 'Annual Income (k$)' versus 'Spending Score (1-100)' as a scatter plot, colored by gender, we can investigate whether spending patterns relative to income differ between genders. Overlaying kernel density contours for each gender allows us to visualize clusters, concentration, and underlying behavioral differences not apparent from summary statistics alone, giving a nuanced view of spending behavior versus purchasing power for both groups.",
+      "target_insight": "How spending score relates to annual income for each gender; whether spending behavior at similar income levels differs between female and male customers, and whether gender-specific clusters or trends emerge.",
+      "output_fields": [
+        "Annual Income (k$)",
+        "Spending Score (1-100)",
+        "Gender"
+      ],
+      "chart_encodings": {
+        "x": "Annual Income (k$)",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (distinct color for each gender)",
+        "size": "Uniform (all points same size)",
+        "other_aesthetics": "Density contour overlays, legend for gender"
+      }
+    },
+    "transformations": [
+      "No aggregation: each point represents a customer.",
+      "Filter to rows where both 'Annual Income (k$)' and 'Spending Score (1-100)' are present.",
+      "Compute kernel density estimate for each gender using the two numeric fields."
+    ],
+    "data_preparation_steps": [
+      "Extract 'Annual Income (k$)', 'Spending Score (1-100)', and 'Gender' columns from df.",
+      "Split data into Female and Male subsets for separate plotting.",
+      "Generate density contours using scipy.stats.gaussian_kde for each gender."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom scipy.stats import gaussian_kde\ndf = pd.read_csv('csv_c2_sec\\37.csv')\ngenders = ['Female', 'Male']\ngender_colors = {'Female':'#e75480', 'Male':'#3b75c1'}\nfig, ax = plt.subplots(figsize=(8,6))\nfor gender in genders:\n    subset = df[df['Gender']==gender]\n    x = subset['Annual Income (k$)']\n    y = subset['Spending Score (1-100)']\n    ax.scatter(x, y, c=gender_colors[gender], label=gender, alpha=0.5, edgecolors='none')\n    xy = np.vstack([x.values, y.values])\n    kde = gaussian_kde(xy)\n    xi, yi = np.meshgrid(np.linspace(x.min(), x.max(), 100), np.linspace(y.min(), y.max(), 100))\n    zi = kde(np.vstack([xi.ravel(), yi.ravel()])).reshape(xi.shape)\n    ax.contour(xi, yi, zi, colors=gender_colors[gender], linewidths=2, linestyles='dashed', alpha=0.6)\nax.set_xlabel('Annual Income (k$)')\nax.set_ylabel('Spending Score (1-100)')\nax.set_title('Spending Score vs Annual Income by Gender\\nMall Customer Segmentation Data')\nlegend = ax.legend(title='Gender')\nfor text in legend.get_texts():\n    text.set_color('black')\nax.grid(True, linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

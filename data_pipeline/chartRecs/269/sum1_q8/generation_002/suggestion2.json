@@ -1,0 +1,38 @@
+{
+  "table_name": "269",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries rank in the top 10 for 2023 population, and on which continents are they located?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "continent-summary treemap",
+      "design_rationale": "A treemap groups countries by continent and visually encodes the relative share of each country's population within their continents (and the world overall) by area size. This highlights not only which countries are largest, but also which continents dominate the top 10 spots, and the split within those continents. Unlike the bar chart, this approach emphasizes proportional relationships spatially, and intuitively reveals how population is distributed among continents and countries.",
+      "target_insight": "Distribution of top 10 populated countries split across continents, and how much each contributes within those continents.",
+      "output_fields": [
+        "continent",
+        "country",
+        "2023 population"
+      ],
+      "chart_encodings": {
+        "x": "Treemap: spatial position is automatic",
+        "y": "Treemap: area encodes '2023 population'",
+        "color": "'continent' for group hues; 'country' for label",
+        "size": "'2023 population'",
+        "other_aesthetics": "Country labels inside boxes; color blocks grouped by continent with legend"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['rank'] <= 10",
+      "Sort rows by df['2023 population'] descending"
+    ],
+    "data_preparation_steps": [
+      "df_top10 = df[df['rank'] <= 10]",
+      "df_top10 = df_top10.sort_values(by='2023 population', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nimport squarify\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf_top10 = df[df['rank'] <= 10]\ndf_top10 = df_top10.sort_values(by='2023 population', ascending=False)\ncontinent_order = df_top10['continent'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(continent_order))\ncontinent_lut = {c: cmap.colors[i] for i, c in enumerate(continent_order)}\ncolors = [continent_lut[cont] for cont in df_top10['continent']]\nlabels = [f'{country}\\n{pop:,}' for country, pop in zip(df_top10['country'], df_top10['2023 population'])]\nfig, ax = plt.subplots(figsize=(12, 7))\nsquarify.plot(sizes=df_top10['2023 population'], label=labels, color=colors, alpha=0.86, ax=ax, pad=True, text_kwargs={'fontsize':12})\nax.set_title('Population Distribution of Top 10 Countries (2023)\\nGrouped by Continent')\nax.axis('off')\nlegend_handles = [mpl.patches.Patch(color=continent_lut[cont], label=cont) for cont in continent_order]\nax.legend(handles=legend_handles, title='Continent', loc='upper right', frameon=False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

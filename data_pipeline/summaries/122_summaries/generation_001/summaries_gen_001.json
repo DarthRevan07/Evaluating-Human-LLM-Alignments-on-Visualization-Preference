@@ -1,0 +1,43 @@
+{
+  "generation_number": 1,
+  "table_name": "Video Game Sales",
+  "total_rows": 16598,
+  "total_columns": 11,
+  "column_names": [
+    "Rank",
+    "Name",
+    "Platform",
+    "Year",
+    "Genre",
+    "Publisher",
+    "NA_Sales",
+    "EU_Sales",
+    "JP_Sales",
+    "Other_Sales",
+    "Global_Sales"
+  ],
+  "summaries_per_generation": 2,
+  "schema_context": "## Table 1: Video_Game_Sales (16,598 rows × 11 columns)\n\n### Description\nData loaded from CSV file: 122.csv (Dataset: Video Game Sales)\n\n### Schema (11 fields)\n  - Rank -- type: int64, values: 1, 2, 3, 4, 5, ..., 16596, 16597, 16598, 16599, 16600\n  - Name -- type: object, values: '98 Koshien, .hack//G.U. Vol.1//Rebirth, .hack//G.U. Vol.2//Reminisce, .hack//G.U. Vol.2//Reminisce (jp sales), .hack//G.U. Vol.3//Redemption, ..., thinkSMART: Chess for Kids, uDraw Studio, uDraw Studio: Instant Artist, wwe Smackdown vs. Raw 2006, ¡Shin Chan Flipa en colores!\n  - Platform -- type: object, values: 2600, 3DO, 3DS, DC, DS, ..., Wii, WiiU, X360, XB, XOne\n  - Year -- type: float64, values: nan, nan, nan, nan, nan, ..., nan, nan, nan, nan, nan\n  - Genre -- type: object, values: Action, Adventure, Fighting, Misc, Platform, ..., Role-Playing, Shooter, Simulation, Sports, Strategy\n  - Publisher -- type: object, values: RED Entertainment, Cygames, Performance Designed Products, Angel Studios, ArtDink, ..., Focus Home Interactive, NCS, MLB.com, Nippon Ichi Software, Microids\n  - NA_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 15.85, 23.2, 26.93, 29.08, 41.49\n  - EU_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 9.27, 11.0, 11.01, 12.88, 29.02\n  - JP_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 6.04, 6.5, 6.81, 7.2, 10.22\n  - Other_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 3.31, 4.14, 7.53, 8.46, 10.57\n  - Global_Sales -- type: float64, values: 0.01, 0.02, 0.03, 0.04, 0.05, ..., 31.37, 33.0, 35.82, 40.24, 82.74\n\n### Sample Data (first 5 rows)\n```\n   Rank                      Name Platform    Year         Genre Publisher  NA_Sales  EU_Sales  JP_Sales  Other_Sales  Global_Sales\n0     1                Wii Sports      Wii  2006.0        Sports  Nintendo     41.49     29.02      3.77         8.46         82.74\n1     2         Super Mario Bros.      NES  1985.0      Platform  Nintendo     29.08      3.58      6.81         0.77         40.24\n2     3            Mario Kart Wii      Wii  2008.0        Racing  Nintendo     15.85     12.88      3.79         3.31         35.82\n3     4         Wii Sports Resort      Wii  2009.0        Sports  Nintendo     15.75     11.01      3.28         2.96         33.00\n4     5  Pokemon Red/Pokemon Blue       GB  1996.0  Role-Playing  Nintendo     11.27      8.89     10.22         1.00         31.37\n```\n",
+  "source_file": "csv_c2_sec\\122.csv",
+  "sheet_name": "",
+  "summaries": [
+    {
+      "idx": 1,
+      "chain_of_thought": {
+        "target_audience": "Business executives and decision makers in the gaming industry",
+        "curator_intention": "Encourage quantifiable trend analysis across years, platforms, and publishers, stimulating acceptance of regions driving sales and establishing successful game characteristics for investment strategy",
+        "common_ground": "Both curator and audience seek to identify high-performance segments, evaluate publisher and platform impact, and optimize market strategy based on historical data patterns"
+      },
+      "narrative_summary": "The schema offers executives a broad structure for examining the interplay between sales regions, genres, platforms, and publisher activities across time. By leveraging fields such as Platform, Year, Publisher, and Global_Sales in combination, visualization analysis can reveal market trends, dominant platforms, and publisher strategies that account for the biggest sales successes. Executives are prompted to accept sales distribution realities, agree with strategic positions of leading publishers, and establish data-driven investment priorities by recognizing platform or genre sales concentration. This analytical pathway enables actionable outcomes like identifying untapped market opportunities, optimizing product launch strategies, and understanding region-specific demand fluctuations."
+    },
+    {
+      "idx": 2,
+      "chain_of_thought": {
+        "target_audience": "Academic researchers and data analysts focused on cultural and market studies",
+        "curator_intention": "Encourage exploration of regional preference, genre popularity, and potential cultural patterns within gaming sales, prompting inference and deeper analysis of sociocultural factors",
+        "common_ground": "Both parties are interested in understanding how cultural, regional, and genre differences contribute to global sales distributions, seeking correlations and causal relationships within the dataset"
+      },
+      "narrative_summary": "This schema empowers researchers to analyze sales dynamics through the lens of region (NA_Sales, EU_Sales, JP_Sales, Other_Sales), Genre, and Year, facilitating visualization that uncovers how gaming popularity and cultural trends evolve geographically and temporally. Analysts are invited to infer regional preferences, detect outliers in genre popularity within specific markets, and explore correlations between cultural contexts and sales performance. The structure supports actionable insights into the dynamics of gaming as a social phenomenon, allowing the identification of shifts in audience tastes, the rise and fall of genres across territories, and the influence of publisher and platform choices on regional adoption."
+    }
+  ]
+}

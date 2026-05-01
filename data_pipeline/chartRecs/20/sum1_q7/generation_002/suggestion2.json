@@ -1,0 +1,40 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do certain genres cluster within specific nationalities or spread across multiple countries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Genres x Nationalities Matrix)",
+      "design_rationale": "A heatmap visually quantifies the number of artworks per genre-nationality combination. By organizing genres as rows and nationalities as columns, the matrix instantly reveals genre concentration or dispersion across countries, as well as distinctive clustering patterns. This conventional chart provides a deep yet immediate summary of overlaps and exclusives, leveraging categorical matrix mapping for a dataset with many unique genres and nationalities.",
+      "target_insight": "Which genres are distributed across multiple nationalities, and which are clustered within few or single nationalities.",
+      "output_fields": [
+        "genre",
+        "nationality",
+        "id"
+      ],
+      "chart_encodings": {
+        "x": "nationality",
+        "y": "genre",
+        "color": "artwork count (cell intensity)",
+        "size": null,
+        "other_aesthetics": "annotate matrix with counts; colorbar for intensity"
+      }
+    },
+    "transformations": [
+      "Split any multi-genre values in df['genre'] by commas for correct genre mapping",
+      "Group by genre and nationality, count artworks to create matrix",
+      "Pivot table so genres are rows and nationalities are columns"
+    ],
+    "data_preparation_steps": [
+      "Explode df['genre'] so every row has one genre",
+      "Create pivot table: index=genre, columns=nationality, values=count of artworks (id)",
+      "Fill missing combinations with zeros"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndf['genre'] = df['genre'].str.split(',')\ndf_exploded = df.explode('genre')\ndf_exploded['genre'] = df_exploded['genre'].str.strip()\npivot = pd.pivot_table(df_exploded, index='genre', columns='nationality', values='id', aggfunc='count', fill_value=0)\nplt.figure(figsize=(14,10))\nimport matplotlib as mpl\ncmap = mpl.colormaps['viridis']\nim = plt.imshow(pivot.values, cmap=cmap, aspect='auto')\nplt.colorbar(im,label='Number of Artworks')\nplt.xticks(np.arange(pivot.shape[1]), pivot.columns, rotation=40, ha='right')\nplt.yticks(np.arange(pivot.shape[0]), pivot.index)\nfor i in range(pivot.shape[0]):\n    for j in range(pivot.shape[1]):\n        plt.text(j, i, str(pivot.values[i,j]), ha='center', va='center', fontsize=8, color='white' if pivot.values[i,j] > np.max(pivot.values)/2 else 'black')\nplt.title('Distribution of Genres Across Nationalities\\n(Clustered vs. Spread)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

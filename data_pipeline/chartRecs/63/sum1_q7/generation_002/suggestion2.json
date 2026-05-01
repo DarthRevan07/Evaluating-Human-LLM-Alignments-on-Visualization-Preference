@@ -1,0 +1,39 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which product categories have the highest proportion of successful purchases?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "stacked column chart (relative, showing purchase status composition per category)",
+      "design_rationale": "A stacked column chart shows the full purchase outcome composition for each product category, with segments for successful and unsuccessful purchases. By stacking normalized values, each column is directly comparable regardless of total transactions per category, emphasizing the conversion rate visually. This approach highlights not only top performers but also categories with higher drop-off rates, creating actionable insights for optimization.",
+      "target_insight": "Expose the proportion of successful vs. unsuccessful purchases for all product categories in a single view, enabling direct visual comparison of each category's purchase conversion performance.",
+      "output_fields": [
+        "ProductCategory",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "ProductCategory",
+        "y": "Relative proportion (stacked for success/failure)",
+        "color": "PurchaseStatus segment (0 = unsuccessful, 1 = successful)",
+        "size": "null",
+        "other_aesthetics": "Normalized stacks (y-axis is proportion per category); distinct color for each segment; legend for PurchaseStatus"
+      }
+    },
+    "transformations": [
+      "Group df by df['ProductCategory'] and df['PurchaseStatus']",
+      "Count the number of each PurchaseStatus for each ProductCategory",
+      "Pivot to a table: rows=ProductCategory, columns=PurchaseStatus (0,1), values=counts",
+      "Normalize counts for each ProductCategory so sum = 1 (proportion per status)"
+    ],
+    "data_preparation_steps": [
+      "df_counts = df.groupby(['ProductCategory', 'PurchaseStatus']).size().unstack(fill_value=0)",
+      "df_norm = df_counts.div(df_counts.sum(axis=1), axis=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_counts = df.groupby(['ProductCategory', 'PurchaseStatus']).size().unstack(fill_value=0)\ndf_norm = df_counts.div(df_counts.sum(axis=1), axis=0)\nproduct_categories = df_norm.index.astype(str)\nsuccess_prop = df_norm[1]\nfailure_prop = df_norm[0]\nfig, ax = plt.subplots(figsize=(8,5))\nbottoms = failure_prop.values\nax.bar(product_categories, failure_prop.values, label='Unsuccessful (0)', color='#d9534f')\nax.bar(product_categories, success_prop.values, bottom=failure_prop.values, label='Successful (1)', color='#5cb85c')\nfor idx, (cat, succ, fail) in enumerate(zip(product_categories, success_prop.values, failure_prop.values)):\n    ax.text(idx, succ + fail - 0.05, f'{succ:.2%}', ha='center', va='bottom', fontsize=10)\n    ax.text(idx, fail/2, f'{fail:.2%}', ha='center', va='center', fontsize=10, color='white')\nax.set_ylabel('Proportion of Purchases')\nax.set_xlabel('ProductCategory')\nax.set_ylim(0,1.05)\nax.set_title('Proportion of Successful vs Unsuccessful Purchases by Product Category')\nax.legend(title='PurchaseStatus')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

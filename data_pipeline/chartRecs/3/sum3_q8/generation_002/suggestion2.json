@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries have both high rice production (Tons) and high rice yield (Kg / Hectare)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Ranked Heatmap",
+      "design_rationale": "A heatmap that cross-segments countries according to their rank in 'Rice Production' and 'Rice Yield' provides an intuitive overview of global leaders, laggards, and those meeting both criteria. Rows are countries, columns show normalized ranks for production and yield. Highlight cells where countries are in the top quartile for both metrics. This visualization transforms ordinal ranking into visual intensity, letting viewers, at a glance, see which nations excel in both dimensions.",
+      "target_insight": "Countries that rank in the top quartile for both rice production and yield are visually highlighted, letting viewers identify global dual leaders quickly.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "['Rank of Rice Production', 'Rank of Rice Yield'] (columns per metric)",
+        "y": "Country",
+        "color": "Rank, low values = high rank; intensity mapping",
+        "size": null,
+        "other_aesthetics": "Highlight cells (e.g., borders or color) for countries with both ranks in top quartile"
+      }
+    },
+    "transformations": [
+      "Fill missing values for ranks with a large number (e.g., max+1) to push them out of top quartiles",
+      "Normalize ranks so lower values are high performance",
+      "Determine top quartile threshold for ranks",
+      "Add a boolean column: 'both_top_quartile' for countries with both ranks in top quartile"
+    ],
+    "data_preparation_steps": [
+      "Fill nulls in 'Rank of Rice Production'/'Rank of Rice Yield' with 119 (one above max rank)",
+      "Determine 25th percentile for ranks (as low rank values mean high performance)",
+      "Create DataFrame with Country as index and columns for both ranks",
+      "Create a mask to highlight cells where rank is in top quartile",
+      "Prepare a binary overlay for both_top_quartile countries"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\nrank_prod = df['Rank of Rice Production'].fillna(119)\nrank_yield = df['Rank of Rice Yield'].fillna(119)\nrank_df = pd.DataFrame({\n    'Country': df['Country'],\n    'Rank of Rice Production': rank_prod,\n    'Rank of Rice Yield': rank_yield\n})\np25_prod = np.percentile(rank_prod, 25)\np25_yield = np.percentile(rank_yield, 25)\nrank_df['both_top_quartile'] = (rank_df['Rank of Rice Production'] <= p25_prod) & (rank_df['Rank of Rice Yield'] <= p25_yield)\nrank_matrix = rank_df.set_index('Country')[['Rank of Rice Production', 'Rank of Rice Yield']].values\nfig, ax = plt.subplots(figsize=(7, 12))\ncmap = mpl.colormaps['viridis']\nrank_norm = mpl.colors.Normalize(vmin=1, vmax=119)\nim = ax.imshow(rank_matrix, cmap=cmap, norm=rank_norm, aspect='auto')\nax.set_xticks([0, 1])\nax.set_xticklabels(['Production Rank', 'Yield Rank'])\nax.set_yticks(np.arange(len(rank_df)))\nax.set_yticklabels(rank_df['Country'].values, fontsize=8)\nfor i in range(len(rank_df)):\n    for j in range(2):\n        is_high = (rank_df.iloc[i, j+1] <= (p25_prod if j == 0 else p25_yield))\n        if rank_df.iloc[i]['both_top_quartile'] and is_high:\n            ax.add_patch(\n                plt.Rectangle((j - 0.4, i - 0.4), 0.8, 0.8, fill=False, edgecolor='red', linewidth=2)\n            )\ncbar = plt.colorbar(im, ax=ax, fraction=0.03, pad=0.04)\ncbar.set_label('Rank (Lower is Better)', fontsize=9)\nax.set_title(\"Global Rice Production & Yield Ranks by Country\\nRed-boxed cells: Top Quartile in Both Metrics\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

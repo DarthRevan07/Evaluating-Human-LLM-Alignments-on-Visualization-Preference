@@ -1,0 +1,49 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there any countries where the agriculture, industry, and services sectors contribute almost equally to GDP, based on their % contributions?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Ternary Plot (Triangle Plot)",
+      "design_rationale": "A ternary plot visualizes three-part compositions (agriculture, industry, services) simultaneously for each country. Countries with almost equal sector %s will appear near the triangle's center. This geometric display is effective for instantly identifying balance and imbalance across the entire dataset, as well as the density of countries near the 'equal' zone. It leverages the compositional nature of sectoral %s, enabling a holistic answer to the analytical question.",
+      "target_insight": "This plot reveals whether any countries have nearly equal contributions from all three sectors by positioning them near the plot's center, and illustrates the overall distribution of sectoral balance worldwide.",
+      "output_fields": [
+        "Country/Economy",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "transformed position from the three sectoral % fields",
+        "y": "transformed position from the three sectoral % fields",
+        "color": "Highlight points close to center (balanced), others in gray",
+        "size": null,
+        "other_aesthetics": "Annotations for countries in central region ('balanced')"
+      }
+    },
+    "transformations": [
+      "Convert all three sector % fields to float",
+      "Drop rows with missing or invalid values in those three fields",
+      "Normalize each row's sector % values to sum to 100 (if not already)",
+      "Calculate for each country the absolute difference between the sector %s; select those where all three values are within 10 points from mean ('balanced')"
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')",
+      "df_clean = df.dropna(subset=['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP'])",
+      "comps = df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].values",
+      "row_sums = comps.sum(axis=1).reshape(-1,1)",
+      "comps_norm = comps / row_sums * 100",
+      "mean_comps = comps_norm.mean(axis=1)",
+      "maxdev = np.abs(comps_norm - mean_comps.reshape(-1,1)).max(axis=1)",
+      "balanced_mask = maxdev <= 10"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')\ndf_clean = df.dropna(subset=['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP'])\ndata = df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].values\ndata_sum = data.sum(axis=1).reshape(-1,1)\ndata_norm = data / data_sum * 100\nmean_vals = data_norm.mean(axis=1)\nmaxdev = np.abs(data_norm - mean_vals.reshape(-1,1)).max(axis=1)\nbalanced_mask = maxdev <= 10\n# ternary plot transformation (triangle coords)\ndef ternary_transform(row):\n    a, i, s = row\n    x = 0.5 * (2 * i + s) / (a + i + s)\n    y = (np.sqrt(3)/2) * s / (a + i + s)\n    return x, y\nternary_coords = np.array([ternary_transform(r) for r in data_norm])\nfig, ax = plt.subplots(figsize=(7,7))\nax.plot([0,1,0.5,0], [0,0,np.sqrt(3)/2,0], 'k-', lw=1.2)\nax.scatter(ternary_coords[:,0], ternary_coords[:,1], c='lightgray', alpha=0.5, label='All countries')\nax.scatter(ternary_coords[balanced_mask,0], ternary_coords[balanced_mask,1], c='red', s=75, edgecolor='black', label='Balanced sectors')\nfor idx in np.where(balanced_mask)[0]:\n    ax.text(ternary_coords[idx,0]+0.02, ternary_coords[idx,1]+0.02, df_clean.iloc[idx]['Country/Economy'], fontsize=8, color='black')\nax.set_xlim(-0.05,1.05)\nax.set_ylim(-0.05,np.sqrt(3)/2+0.05)\nax.set_xticks([])\nax.set_yticks([])\nax.set_title('Ternary Plot: Sectoral GDP Composition\\nCountries with Balanced Agriculture, Industry, Services', fontsize=13)\nax.text(-0.1,-0.02,'Agriculture',fontsize=11)\nax.text(1.04,-0.02,'Industry',fontsize=11)\nax.text(0.47,np.sqrt(3)/2+0.04,'Services',fontsize=11)\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

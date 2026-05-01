@@ -1,0 +1,39 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Are there any months or years where the highest temperature appears much higher or lower than the surrounding periods?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Yearly boxplot with monthly overlay (facet grid)",
+      "design_rationale": "Boxplots grouped by year visualize the spread and central tendency of monthly highest temperatures within each year, highlighting both absolute and relative outliers. By plotting a scatter overlay of each month within the box, viewers can spot individual months that deviate sharply (much higher/lower than their year) and compare year-to-year variability, answering whether some years had unusually high or low singular months. Faceting allows deep-dive and overview perspectives simultaneously.",
+      "target_insight": "Identify years and specific months where highest temperatures deviate significantly from annual norms, visualizing outlier months in context of their year's distribution.",
+      "output_fields": [
+        "Year",
+        "Temperature",
+        "Date"
+      ],
+      "chart_encodings": {
+        "x": "Year (categorical, one box per year)",
+        "y": "Temperature",
+        "color": "Month (overlay points, categorical colormap for month)",
+        "size": "null",
+        "other_aesthetics": "Scatter overlay shape for months, facet grid with wide boxes"
+      }
+    },
+    "transformations": [
+      "Extract month names from 'Date' for coloring overlay points",
+      "Group data by 'Year' for boxplot structure"
+    ],
+    "data_preparation_steps": [
+      "df['Month'] = pd.to_datetime(df['Date'], format='%b %Y').dt.month_name()",
+      "# Create ordered years for boxplot axis\nyears = sorted(df['Year'].unique())\nmonths = df['Month'].unique()",
+      "# Assign colors to months\nimport matplotlib as mpl\nmonth_cmap = mpl.colormaps['tab20']\nmonth_colors = {month: month_cmap(i / len(months)) for i, month in enumerate(months)}"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf['Month'] = pd.to_datetime(df['Date'], format='%b %Y').dt.month_name()\nyears = sorted(df['Year'].unique())\nmonths = df['Month'].unique()\nmonth_cmap = mpl.colormaps['tab20']\nmonth_colors = {month: month_cmap(i / len(months)) for i, month in enumerate(months)}\n\nfig, ax = plt.subplots(figsize=(10, 6))\n# Boxplot: one box per year\nbp = ax.boxplot([df[df['Year']==year]['Temperature'] for year in years],\n                positions=np.arange(len(years)),\n                widths=0.6,\n                patch_artist=True, boxprops=dict(facecolor='lightgray', alpha=0.25), medianprops=dict(color='black'))\n# Overlay month points\nfor i, year in enumerate(years):\n    df_year = df[df['Year'] == year]\n    for j, row in df_year.iterrows():\n        ax.scatter(i, row['Temperature'], color=month_colors[row['Month']], s=40, edgecolor='k', label=row['Month'] if i==0 else None, alpha=0.85, zorder=5)\n# Create custom legend for months\nhandles = [mpl.lines.Line2D([0], [0], marker='o', color='w', markerfacecolor=month_colors[month], label=month, markersize=8) for month in months]\nax.legend(handles=handles, title='Month', bbox_to_anchor=(1.02, 1.0), loc='upper left')\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels(years)\nax.set_xlabel('Year')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Yearly Distribution of Highest Monthly Temperatures with Monthly Overlay')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

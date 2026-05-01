@@ -1,0 +1,48 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Are there significant anomalies or spikes in methane emissions for any country-sector combination in a given year?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line chart grid (facet per Sector, top countries, emission outlier highlight)",
+      "design_rationale": "Faceted line charts offer focused, sector-level deep dives into the temporal evolution of emissions for top emitting countries in each sector. By plotting 5-8 major countries per sector, and marking spike years with markers (outlier highlight), this design shows whether spikes/anomalies happen in specific countries/sectors/years or are sector-wide phenomena. This also helps distinguish consistent emission patterns from sudden jumps, supporting the anomaly-detection goal while making sector differences clear.",
+      "target_insight": "For each sector, which countries experienced dramatic emission spikes in certain years? Are they consistent or sudden? Are spikes concurrent among countries, or isolated?",
+      "output_fields": [
+        "Sector",
+        "Country",
+        "Year (columns 1990-2018)",
+        "Emissions",
+        "Spike indicator"
+      ],
+      "chart_encodings": {
+        "x": "Year (columns 1990-2018)",
+        "y": "Emissions",
+        "color": "Country",
+        "size": null,
+        "other_aesthetics": "Facet by 'Sector'; highlight spike years by markers; legend for countries; alpha for spike markers"
+      }
+    },
+    "transformations": [
+      "Unpivot year columns from '1990' to '2018' into a 'Year' column with emissions as value",
+      "For each 'Sector', select top 5 countries by average emissions for clearer lines",
+      "For each country-sector, compute z-score to determine spike years (abs(z-score) > 2 as spike threshold)",
+      "Prepare panel data: for each Sector, plot lines for each selected Country across years, mark years with spike"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\2.csv')",
+      "years = [str(y) for y in range(1990, 2019)]",
+      "df_melt = df.melt(id_vars=['Country','Sector'], value_vars=years, var_name='Year', value_name='Emissions')",
+      "df_melt['Emissions_z'] = df_melt.groupby(['Country','Sector'])['Emissions'].transform(lambda x: (x-x.mean())/x.std(ddof=0))",
+      "spikes = df_melt[np.abs(df_melt['Emissions_z'])>2]",
+      "sector_country_means = df_melt.groupby(['Sector','Country'])['Emissions'].mean().reset_index()",
+      "top_countries_per_sector = sector_country_means.groupby('Sector').apply(lambda x: x.nlargest(5,'Emissions'))",
+      "df_top = df_melt.merge(top_countries_per_sector[['Sector','Country']], on=['Sector','Country'], how='inner')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nyears = [str(y) for y in range(1990, 2019)]\ndf_melt = df.melt(id_vars=['Country','Sector'], value_vars=years, var_name='Year', value_name='Emissions')\ndf_melt['Emissions_z'] = df_melt.groupby(['Country','Sector'])['Emissions'].transform(lambda x: (x-x.mean())/x.std(ddof=0))\nspikes = df_melt[np.abs(df_melt['Emissions_z'])>2]\nsector_country_means = df_melt.groupby(['Sector','Country'])['Emissions'].mean().reset_index()\ntop_countries_per_sector = sector_country_means.groupby('Sector').apply(lambda x: x.nlargest(5,'Emissions'))\ndf_top = df_melt.merge(top_countries_per_sector[['Sector','Country']], on=['Sector','Country'], how='inner')\nsectors = df_top['Sector'].unique()\nfig, axes = plt.subplots(len(sectors), 1, figsize=(16, 4*len(sectors)), sharex=True)\nif len(sectors)==1:\n    axes = [axes]\nfor i, sector in enumerate(sectors):\n    ax = axes[i]\n    df_sector = df_top[df_top['Sector']==sector]\n    countries = df_sector['Country'].unique()\n    for country in countries:\n        df_plot = df_sector[df_sector['Country']==country]\n        ax.plot(df_plot['Year'], df_plot['Emissions'], label=country)\n        spike_years = df_plot[np.abs(df_plot['Emissions_z'])>2]\n        ax.scatter(spike_years['Year'], spike_years['Emissions'], color='red', marker='o', s=80, alpha=0.6, label=country+' spike' if len(spike_years)>0 else None)\n    ax.set_title('Sector: '+str(sector))\n    ax.set_ylabel('Methane Emissions (MTCO2e)')\n    ax.legend(loc='upper left', fontsize=8)\nplt.xlabel('Year')\nplt.tight_layout()\nplt.suptitle('Methane Emissions Spikes by Country for Each Sector\\n(Highlight: Years with >2 std dev anomaly)', y=1.03)\nplt.show()"
+  },
+  "schema_based": true
+}

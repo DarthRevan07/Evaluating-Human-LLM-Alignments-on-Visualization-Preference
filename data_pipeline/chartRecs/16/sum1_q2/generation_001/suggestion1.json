@@ -1,0 +1,39 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Which Generation features the highest proportion of Legendary Pokémon compared to its total Pokémon count?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart",
+      "design_rationale": "Bar charts clearly compare categorical proportions, making them ideal for highlighting the Legendary ratio per Generation. Each bar represents a single Generation's ratio of Legendary Pokémon to total Pokémon, so visual comparison is direct and intuitive. The data schema provides both categorical (Generation) and binary (Legendary) variables, supporting straightforward aggregation.",
+      "target_insight": "Directly reveals which Generation features the highest proportion of Legendary Pokémon relative to its total count, facilitating direct comparison across Generations.",
+      "output_fields": [
+        "Generation",
+        "Legendary"
+      ],
+      "chart_encodings": {
+        "x": "Generation",
+        "y": "Legendary proportion (calculated: count of Legendary / total Pokémon)",
+        "color": "Distinct bar color per Generation (cmap: Set2)",
+        "size": null,
+        "other_aesthetics": "Value label annotations on each bar; subtle gridlines for readability"
+      }
+    },
+    "transformations": [
+      "Group df by 'Generation' and aggregate counts of Pokémon and Legendary Pokémon",
+      "Calculate ratio: count of Legendary Pokémon / total Pokémon in each Generation"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('Generation')",
+      "legendary_counts = df_grouped['Legendary'].sum()",
+      "total_counts = df_grouped.size()",
+      "legendary_proportions = legendary_counts / total_counts"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\16.csv')\ndf_grouped = df.groupby('Generation')\nlegendary_counts = df_grouped['Legendary'].sum()\ntotal_counts = df_grouped.size()\nlegendary_proportions = legendary_counts / total_counts\nx = legendary_proportions.index.values\ny = legendary_proportions.values\ncmap = mpl.colormaps['Set2']\ncolors = [cmap(i) for i in range(len(x))]\nfig, ax = plt.subplots(figsize=(8, 5))\nbars = ax.bar(x, y, color=colors, edgecolor='black')\nfor i, rect in enumerate(bars):\n    val = y[i]\n    ax.text(rect.get_x() + rect.get_width()/2, rect.get_height() + 0.01, f'{val:.2%}', ha='center', va='bottom', fontsize=10)\nax.set_xlabel('Generation')\nax.set_ylabel('Proportion of Legendary Pokémon')\nax.set_title('Legendary Pokémon Proportion by Generation\\n(Highest Ratio Highlighted)', fontsize=14)\nax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

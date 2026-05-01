@@ -1,0 +1,481 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\25\\sum1_q7\\generation_002",
+  "schema_context": "Table: NIFTY-50 Stocks Dataset\nRows: 50\nColumns: 13\n\nFIELD INFORMATION:\nField: Symbol\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Symbol\" field represents the unique stock ticker codes assigned to each company listed in the NIFTY-50 index on the Indian stock market.\n\nField: Open\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the opening price of each NIFTY-50 stock at the start of a trading session, recorded as a monetary value (likely in INR) and stored as a string.\n\nField: High\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: High represents the highest trading price reached by each NIFTY-50 stock within a specific period, expressed as a string formatted monetary value.\n\nField: Low\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Low\" field represents the lowest trading price (in INR) reached by each NIFTY-50 stock during a specific time period, recorded as a string with potential formatting variations.\n\nField: LTP\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: LTP represents the \"Last Traded Price\" of each NIFTY-50 stock, indicating the most recent price at which shares were bought or sold on the stock exchange.\n\nField: Chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Chng\" field represents the absolute change in stock price (in currency units) for each NIFTY-50 company over a specific time period, indicating how much each stock’s price has increased or decreased.\n  - Value Range: -770.5 to 158.4\n  - Mean: -70.13\n\nField: % Chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 48\n  - Semantic Meaning: The % Chng field represents the daily percentage change in the stock price for each NIFTY-50 company, indicating how much the price has increased or decreased during the trading day.\n  - Value Range: -7.48 to 7.23\n  - Mean: -2.93\n\nField: Volume (lacs)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 49\n  - Semantic Meaning: This field represents the total number of shares (in lakhs) traded for each NIFTY-50 listed stock during a specific period, indicating the trading activity and liquidity of these stocks in the Indian stock market.\n  - Value Range: 0.3 to 517.88\n  - Mean: 71.27\n\nField: Turnover (crs.)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the total monetary value (in crores of rupees) of shares traded for each NIFTY-50 company, indicating their daily trading activity on the stock market.\n\nField: 52w H\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the highest stock price achieved by each NIFTY-50 company over the past 52 weeks, indicating yearly performance peaks in the Indian stock market.\n\nField: 52w L\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"52w L\" field represents the lowest stock price for each NIFTY-50 company over the past 52 weeks, indicating the annual minimum trading value for monitoring performance trends in the Indian equity market.\n\nField: 365 d % chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the percentage change in stock price for each NIFTY-50 company over the past 365 days, reflecting their annual performance.\n  - Value Range: -16.02 to 167.95\n  - Mean: 41.20\n\nField: 30 d % chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the percentage change in the stock price of each NIFTY 50 company over the past 30 days, indicating recent performance or returns for each constituent.\n  - Value Range: -22.08 to 6.36\n  - Mean: -6.00\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Symbol\"\n  2. \"Open\"\n  3. \"High\"\n  4. \"Low\"\n  5. \"LTP\"\n  6. \"Chng\"\n  7. \"% Chng\"\n  8. \"Volume (lacs)\"\n  9. \"Turnover (crs.)\"\n  10. \"52w H\"\n  11. \"52w L\"\n  12. \"365 d % chng\"\n  13. \"30 d % chng\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Symbol'], df['Open']",
+  "table_metadata": {
+    "table_name": "NIFTY-50 Stocks Dataset",
+    "file_path": "csv_c_squared\\25.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 25.csv (Dataset: NIFTY-50 Stocks Dataset)",
+    "original_filename": "25.csv",
+    "dataset_name": "NIFTY-50 Stocks Dataset",
+    "row_count": 50,
+    "column_count": 13,
+    "table_hash": 2134491630899873084,
+    "fields": [
+      {
+        "name": "Symbol",
+        "clean_name": "Symbol",
+        "camel_case_name": "symbol",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "ADANIPORTS, ASIANPAINT, AXISBANK, BAJAJ-AUTO, BAJAJFINSV, ..., TECHM, TITAN, ULTRACEMCO, UPL, WIPRO",
+        "inferred_semantic_summary": "The \"Symbol\" field represents the unique stock ticker codes assigned to each company listed in the NIFTY-50 index on the Indian stock market."
+      },
+      {
+        "name": "Open",
+        "clean_name": "Open",
+        "camel_case_name": "open",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,120.00\", \"1,154.00\", \"1,157.90\", \"1,500.00\", \"1,544.00\", ..., 775, 800.2, 885, 892, 951",
+        "inferred_semantic_summary": "This field represents the opening price of each NIFTY-50 stock at the start of a trading session, recorded as a monetary value (likely in INR) and stored as a string."
+      },
+      {
+        "name": "High",
+        "clean_name": "High",
+        "camel_case_name": "high",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,126.00\", \"1,154.00\", \"1,159.50\", \"1,506.70\", \"1,550.00\", ..., 798.9, 805, 885, 956.95, 976.05",
+        "inferred_semantic_summary": "High represents the highest trading price reached by each NIFTY-50 stock within a specific period, expressed as a string formatted monetary value."
+      },
+      {
+        "name": "Low",
+        "clean_name": "Low",
+        "camel_case_name": "low",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,103.30\", \"1,105.25\", \"1,106.25\", \"1,485.00\", \"1,510.15\", ..., 762, 763.15, 843, 890.65, 898",
+        "inferred_semantic_summary": "The \"Low\" field represents the lowest trading price (in INR) reached by each NIFTY-50 stock during a specific time period, recorded as a string with potential formatting variations."
+      },
+      {
+        "name": "LTP",
+        "clean_name": "LTP",
+        "camel_case_name": "ltp",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,110.25\", \"1,111.65\", \"1,130.85\", \"1,489.50\", \"1,519.00\", ..., 767.25, 769.9, 855.05, 899.95, 965",
+        "inferred_semantic_summary": "LTP represents the \"Last Traded Price\" of each NIFTY-50 stock, indicating the most recent price at which shares were bought or sold on the stock exchange."
+      },
+      {
+        "name": "Chng",
+        "clean_name": "Chng",
+        "camel_case_name": "chng",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "min_value": -770.5,
+        "max_value": 158.4,
+        "mean_value": -70.13300000000001,
+        "median_value": -29.975,
+        "sample_values": "-770.5, -684.85, -422.5, -345.8, -210.35, ..., -1.75, 65.05, 71.95, 140.2, 158.4",
+        "inferred_semantic_summary": "The \"Chng\" field represents the absolute change in stock price (in currency units) for each NIFTY-50 company over a specific time period, indicating how much each stock’s price has increased or decreased."
+      },
+      {
+        "name": "% Chng",
+        "clean_name": "__Chng",
+        "camel_case_name": "chng",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 48,
+        "min_value": -7.48,
+        "max_value": 7.23,
+        "mean_value": -2.9301999999999997,
+        "median_value": -3.3,
+        "sample_values": "-7.48, -6.77, -6.57, -6.22, -6.19, ..., -0.19, 0.38, 2.92, 3.45, 7.23",
+        "inferred_semantic_summary": "The % Chng field represents the daily percentage change in the stock price for each NIFTY-50 company, indicating how much the price has increased or decreased during the trading day."
+      },
+      {
+        "name": "Volume (lacs)",
+        "clean_name": "Volume__lacs_",
+        "camel_case_name": "volumeLacs",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 49,
+        "min_value": 0.3,
+        "max_value": 517.88,
+        "mean_value": 71.26660000000001,
+        "median_value": 30.75,
+        "sample_values": "0.3, 0.56, 2.66, 3.42, 3.73, ..., 189.88, 231.36, 263.06, 270.27, 517.88",
+        "inferred_semantic_summary": "This field represents the total number of shares (in lakhs) traded for each NIFTY-50 listed stock during a specific period, indicating the trading activity and liquidity of these stocks in the Indian stock market."
+      },
+      {
+        "name": "Turnover (crs.)",
+        "clean_name": "Turnover__crs__",
+        "camel_case_name": "turnoverCrs",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,161.63\", \"1,200.79\", \"1,249.55\", \"1,380.90\", \"1,385.86\", ..., 775.37, 830.06, 840.81, 927.88, 94.57",
+        "inferred_semantic_summary": "This field represents the total monetary value (in crores of rupees) of shares traded for each NIFTY-50 company, indicating their daily trading activity on the stock market."
+      },
+      {
+        "name": "52w H",
+        "clean_name": "_52w_H",
+        "camel_case_name": "52WH",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,005.00\", \"1,242.00\", \"1,273.90\", \"1,377.75\", \"1,534.50\", ..., 866.9, 867, 889, 901, 979",
+        "inferred_semantic_summary": "This field represents the highest stock price achieved by each NIFTY-50 company over the past 52 weeks, indicating yearly performance peaks in the Indian stock market."
+      },
+      {
+        "name": "52w L",
+        "clean_name": "_52w_L",
+        "camel_case_name": "52WL",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "\"1,091.00\", \"1,092.00\", \"1,300.35\", \"1,342.00\", \"1,626.00\", ..., 825.2, 84, 840.05, 846.7, 88.15",
+        "inferred_semantic_summary": "The \"52w L\" field represents the lowest stock price for each NIFTY-50 company over the past 52 weeks, indicating the annual minimum trading value for monitoring performance trends in the Indian equity market."
+      },
+      {
+        "name": "365 d % chng",
+        "clean_name": "_365_d___chng",
+        "camel_case_name": "365DChng",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "min_value": -16.02,
+        "max_value": 167.95,
+        "mean_value": 41.203,
+        "median_value": 35.86,
+        "sample_values": "-16.02, -5.95, -1.22, -1.17, 0.3, ..., 91.38, 93.42, 99.95, 105.13, 167.95",
+        "inferred_semantic_summary": "This field represents the percentage change in stock price for each NIFTY-50 company over the past 365 days, reflecting their annual performance."
+      },
+      {
+        "name": "30 d % chng",
+        "clean_name": "_30_d___chng",
+        "camel_case_name": "30DChng",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "min_value": -22.08,
+        "max_value": 6.36,
+        "mean_value": -5.9968,
+        "median_value": -5.705,
+        "sample_values": "-22.08, -21.49, -17.37, -14.06, -13.69, ..., 1.8, 5.66, 5.7, 6.34, 6.36",
+        "inferred_semantic_summary": "This field represents the percentage change in the stock price of each NIFTY 50 company over the past 30 days, indicating recent performance or returns for each constituent."
+      }
+    ],
+    "formatted_summary": "## Table 1: NIFTY_50_Stocks_Dataset (50 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 25.csv (Dataset: NIFTY-50 Stocks Dataset)\n\n### Schema (13 fields)\n  - Symbol -- type: object, values: ADANIPORTS, ASIANPAINT, AXISBANK, BAJAJ-AUTO, BAJAJFINSV, ..., TECHM, TITAN, ULTRACEMCO, UPL, WIPRO\n  - Open -- type: object, values: \"1,120.00\", \"1,154.00\", \"1,157.90\", \"1,500.00\", \"1,544.00\", ..., 775, 800.2, 885, 892, 951\n  - High -- type: object, values: \"1,126.00\", \"1,154.00\", \"1,159.50\", \"1,506.70\", \"1,550.00\", ..., 798.9, 805, 885, 956.95, 976.05\n  - Low -- type: object, values: \"1,103.30\", \"1,105.25\", \"1,106.25\", \"1,485.00\", \"1,510.15\", ..., 762, 763.15, 843, 890.65, 898\n  - LTP -- type: object, values: \"1,110.25\", \"1,111.65\", \"1,130.85\", \"1,489.50\", \"1,519.00\", ..., 767.25, 769.9, 855.05, 899.95, 965\n  - Chng -- type: float64, values: -770.5, -684.85, -422.5, -345.8, -210.35, ..., -1.75, 65.05, 71.95, 140.2, 158.4\n  - % Chng -- type: float64, values: -7.48, -6.77, -6.57, -6.22, -6.19, ..., -0.19, 0.38, 2.92, 3.45, 7.23\n  - Volume (lacs) -- type: float64, values: 0.3, 0.56, 2.66, 3.42, 3.73, ..., 189.88, 231.36, 263.06, 270.27, 517.88\n  - Turnover (crs.) -- type: object, values: \"1,161.63\", \"1,200.79\", \"1,249.55\", \"1,380.90\", \"1,385.86\", ..., 775.37, 830.06, 840.81, 927.88, 94.57\n  - 52w H -- type: object, values: \"1,005.00\", \"1,242.00\", \"1,273.90\", \"1,377.75\", \"1,534.50\", ..., 866.9, 867, 889, 901, 979\n  - 52w L -- type: object, values: \"1,091.00\", \"1,092.00\", \"1,300.35\", \"1,342.00\", \"1,626.00\", ..., 825.2, 84, 840.05, 846.7, 88.15\n  - 365 d % chng -- type: float64, values: -16.02, -5.95, -1.22, -1.17, 0.3, ..., 91.38, 93.42, 99.95, 105.13, 167.95\n  - 30 d % chng -- type: float64, values: -22.08, -21.49, -17.37, -14.06, -13.69, ..., 1.8, 5.66, 5.7, 6.34, 6.36\n\n### Sample Data (first 5 rows)\n```\n       Symbol       Open       High        Low        LTP    Chng  % Chng  Volume (lacs) Turnover (crs.)      52w H     52w L  365 d % chng  30 d % chng\n0  ADANIPORTS        750        766     713.25        715  -47.45   -6.22          72.20          532.63        901     384.4         79.22        -4.65\n1  ASIANPAINT   3,101.00   3,167.35   3,091.00   3,138.00   -6.25   -0.20          10.29          322.53   3,505.00  2,117.15         45.66         5.66\n2    AXISBANK        669      674.9     660.45        661  -18.90   -2.78         102.53             684      866.9     568.4         10.19       -21.49\n3  BAJAJ-AUTO   3,370.00   3,383.50   3,320.00   3,335.00  -56.70   -1.67           3.42          114.59   4,361.40  3,041.00          9.30       -12.05\n4  BAJAJFINSV  17,200.00  17,237.20  16,610.00  16,684.00 -684.85   -3.94           3.42          576.79  19,325.00  8,273.70         91.38        -9.10\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "25",
+      "summary_idx": 1,
+      "question_idx": 7,
+      "question": "Do stocks with larger intra-day price ranges (difference between High and Low) tend to also have higher trading volumes?",
+      "column_combination": [
+        "Symbol",
+        "Open",
+        "High",
+        "Low",
+        "LTP",
+        "Chng",
+        "% Chng",
+        "Volume (lacs)",
+        "Turnover (crs.)",
+        "52w H",
+        "52w L",
+        "365 d % chng",
+        "30 d % chng"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Scatter plot",
+            "design_rationale": "A scatter plot is a classic approach for visualizing correlations between two continuous variables. In this case, plotting intra-day price range (High - Low) against trading volume (Volume (lacs)) directly answers whether stocks with larger price movement also trade in higher volumes. Each stock is represented individually (50 points), avoiding overplotting and conveying the relationship effectively. Color encoding by '365 d % chng' adds context\\u2014distinguishing stocks with strong yearly performance.",
+            "target_insight": "Reveals the direct relationship (if any) between intra-day price range and trading volume, with emphasis on annual performance.",
+            "output_fields": [
+              "Symbol",
+              "High",
+              "Low",
+              "Volume (lacs)",
+              "365 d % chng"
+            ],
+            "chart_encodings": {
+              "x": "'High' - 'Low'",
+              "y": "Volume (lacs)",
+              "color": "365 d % chng",
+              "size": "null",
+              "other_aesthetics": "Alpha=0.8; colorbar for annual % change"
+            }
+          },
+          "transformations": [
+            "Convert df['High'] and df['Low'] to float (since both are object type strings)",
+            "Compute intra-day price range as new column: df['Range'] = df['High'] - df['Low']"
+          ],
+          "data_preparation_steps": [
+            "df['High'] = pd.to_numeric(df['High'], errors='coerce')",
+            "df['Low'] = pd.to_numeric(df['Low'], errors='coerce')",
+            "df['Range'] = df['High'] - df['Low']"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['High'] = pd.to_numeric(df['High'], errors='coerce')\ndf['Low'] = pd.to_numeric(df['Low'], errors='coerce')\ndf['Range'] = df['High'] - df['Low']\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['365 d % chng'].min(), vmax=df['365 d % chng'].max())\nfig, ax = plt.subplots(figsize=(8,6))\nscatter = ax.scatter(df['Range'], df['Volume (lacs)'], c=df['365 d % chng'], cmap=cmap, norm=norm, alpha=0.8)\nax.set_xlabel('Intra-Day Price Range (High - Low)')\nax.set_ylabel('Trading Volume (lacs)')\ntitle_text = 'Relationship between Intra-Day Price Range and Trading Volume for NIFTY-50 Stocks\\n'\nsubtitle_text = '(Color = 365 d % chng: Annual Performance)'\nax.set_title(title_text + subtitle_text)\ncbar = plt.colorbar(scatter, ax=ax, pad=0.02)\ncbar.set_label('365 d % chng (Annual % Change)')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Hexbin/2D density plot",
+            "design_rationale": "A hexbin plot visualizes the density and distribution of points in the (Range, Volume) space, ideal for small-medium datasets. This allows us to see clusters of stocks with similar trading activity and volatility, as well as outliers (e.g. extremely high range or volume). The grid approach emphasizes patterns, making it easier to spot concentration zones or whether higher price ranges coincide with high volume 'hotspots'. Color shows count per bin, highlighting the frequency of stock occurrences.",
+            "target_insight": "Uncovers whether high-range/high-volume stocks form dense clusters or are rare outliers, providing a broader statistical context of the relationship.",
+            "output_fields": [
+              "Symbol",
+              "High",
+              "Low",
+              "Volume (lacs)"
+            ],
+            "chart_encodings": {
+              "x": "'High' - 'Low'",
+              "y": "Volume (lacs)",
+              "color": "Count per hexbin",
+              "size": "null",
+              "other_aesthetics": "Hexbin grid, colorbar for bin frequency"
+            }
+          },
+          "transformations": [
+            "Convert df['High'] and df['Low'] to float",
+            "Compute intra-day price range as df['Range'] = df['High'] - df['Low']"
+          ],
+          "data_preparation_steps": [
+            "df['High'] = pd.to_numeric(df['High'], errors='coerce')",
+            "df['Low'] = pd.to_numeric(df['Low'], errors='coerce')",
+            "df['Range'] = df['High'] - df['Low']"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['High'] = pd.to_numeric(df['High'], errors='coerce')\ndf['Low'] = pd.to_numeric(df['Low'], errors='coerce')\ndf['Range'] = df['High'] - df['Low']\ncmap = mpl.colormaps['plasma']\nfig, ax = plt.subplots(figsize=(8,6))\nhexplot = ax.hexbin(df['Range'], df['Volume (lacs)'], gridsize=15, cmap=cmap, mincnt=1)\nax.set_xlabel('Intra-Day Price Range (High - Low)')\nax.set_ylabel('Trading Volume (lacs)')\ntitle_text = 'Hexbin Density of NIFTY-50 Stocks\\n'\nsubtitle_text = '(How intra-day price swings relate to trading activity: frequency per bin)'\nax.set_title(title_text + subtitle_text)\ncbar = plt.colorbar(hexplot, ax=ax)\ncbar.set_label('Number of stocks per hexbin')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T17:50:44.130836",
+      "schema_context": "Table: NIFTY-50 Stocks Dataset\nRows: 50\nColumns: 13\n\nFIELD INFORMATION:\nField: Symbol\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Symbol\" field represents the unique stock ticker codes assigned to each company listed in the NIFTY-50 index on the Indian stock market.\n\nField: Open\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the opening price of each NIFTY-50 stock at the start of a trading session, recorded as a monetary value (likely in INR) and stored as a string.\n\nField: High\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: High represents the highest trading price reached by each NIFTY-50 stock within a specific period, expressed as a string formatted monetary value.\n\nField: Low\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Low\" field represents the lowest trading price (in INR) reached by each NIFTY-50 stock during a specific time period, recorded as a string with potential formatting variations.\n\nField: LTP\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: LTP represents the \"Last Traded Price\" of each NIFTY-50 stock, indicating the most recent price at which shares were bought or sold on the stock exchange.\n\nField: Chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"Chng\" field represents the absolute change in stock price (in currency units) for each NIFTY-50 company over a specific time period, indicating how much each stock’s price has increased or decreased.\n  - Value Range: -770.5 to 158.4\n  - Mean: -70.13\n\nField: % Chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 48\n  - Semantic Meaning: The % Chng field represents the daily percentage change in the stock price for each NIFTY-50 company, indicating how much the price has increased or decreased during the trading day.\n  - Value Range: -7.48 to 7.23\n  - Mean: -2.93\n\nField: Volume (lacs)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 49\n  - Semantic Meaning: This field represents the total number of shares (in lakhs) traded for each NIFTY-50 listed stock during a specific period, indicating the trading activity and liquidity of these stocks in the Indian stock market.\n  - Value Range: 0.3 to 517.88\n  - Mean: 71.27\n\nField: Turnover (crs.)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the total monetary value (in crores of rupees) of shares traded for each NIFTY-50 company, indicating their daily trading activity on the stock market.\n\nField: 52w H\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the highest stock price achieved by each NIFTY-50 company over the past 52 weeks, indicating yearly performance peaks in the Indian stock market.\n\nField: 52w L\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: The \"52w L\" field represents the lowest stock price for each NIFTY-50 company over the past 52 weeks, indicating the annual minimum trading value for monitoring performance trends in the Indian equity market.\n\nField: 365 d % chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the percentage change in stock price for each NIFTY-50 company over the past 365 days, reflecting their annual performance.\n  - Value Range: -16.02 to 167.95\n  - Mean: 41.20\n\nField: 30 d % chng\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the percentage change in the stock price of each NIFTY 50 company over the past 30 days, indicating recent performance or returns for each constituent.\n  - Value Range: -22.08 to 6.36\n  - Mean: -6.00\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Symbol\"\n  2. \"Open\"\n  3. \"High\"\n  4. \"Low\"\n  5. \"LTP\"\n  6. \"Chng\"\n  7. \"% Chng\"\n  8. \"Volume (lacs)\"\n  9. \"Turnover (crs.)\"\n  10. \"52w H\"\n  11. \"52w L\"\n  12. \"365 d % chng\"\n  13. \"30 d % chng\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Symbol'], df['Open']",
+      "table_metadata": {
+        "table_name": "NIFTY-50 Stocks Dataset",
+        "file_path": "csv_c_squared\\25.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 25.csv (Dataset: NIFTY-50 Stocks Dataset)",
+        "original_filename": "25.csv",
+        "dataset_name": "NIFTY-50 Stocks Dataset",
+        "row_count": 50,
+        "column_count": 13,
+        "table_hash": 2134491630899873084,
+        "fields": [
+          {
+            "name": "Symbol",
+            "clean_name": "Symbol",
+            "camel_case_name": "symbol",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "ADANIPORTS, ASIANPAINT, AXISBANK, BAJAJ-AUTO, BAJAJFINSV, ..., TECHM, TITAN, ULTRACEMCO, UPL, WIPRO",
+            "inferred_semantic_summary": "The \"Symbol\" field represents the unique stock ticker codes assigned to each company listed in the NIFTY-50 index on the Indian stock market."
+          },
+          {
+            "name": "Open",
+            "clean_name": "Open",
+            "camel_case_name": "open",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,120.00\", \"1,154.00\", \"1,157.90\", \"1,500.00\", \"1,544.00\", ..., 775, 800.2, 885, 892, 951",
+            "inferred_semantic_summary": "This field represents the opening price of each NIFTY-50 stock at the start of a trading session, recorded as a monetary value (likely in INR) and stored as a string."
+          },
+          {
+            "name": "High",
+            "clean_name": "High",
+            "camel_case_name": "high",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,126.00\", \"1,154.00\", \"1,159.50\", \"1,506.70\", \"1,550.00\", ..., 798.9, 805, 885, 956.95, 976.05",
+            "inferred_semantic_summary": "High represents the highest trading price reached by each NIFTY-50 stock within a specific period, expressed as a string formatted monetary value."
+          },
+          {
+            "name": "Low",
+            "clean_name": "Low",
+            "camel_case_name": "low",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,103.30\", \"1,105.25\", \"1,106.25\", \"1,485.00\", \"1,510.15\", ..., 762, 763.15, 843, 890.65, 898",
+            "inferred_semantic_summary": "The \"Low\" field represents the lowest trading price (in INR) reached by each NIFTY-50 stock during a specific time period, recorded as a string with potential formatting variations."
+          },
+          {
+            "name": "LTP",
+            "clean_name": "LTP",
+            "camel_case_name": "ltp",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,110.25\", \"1,111.65\", \"1,130.85\", \"1,489.50\", \"1,519.00\", ..., 767.25, 769.9, 855.05, 899.95, 965",
+            "inferred_semantic_summary": "LTP represents the \"Last Traded Price\" of each NIFTY-50 stock, indicating the most recent price at which shares were bought or sold on the stock exchange."
+          },
+          {
+            "name": "Chng",
+            "clean_name": "Chng",
+            "camel_case_name": "chng",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "min_value": -770.5,
+            "max_value": 158.4,
+            "mean_value": -70.13300000000001,
+            "median_value": -29.975,
+            "sample_values": "-770.5, -684.85, -422.5, -345.8, -210.35, ..., -1.75, 65.05, 71.95, 140.2, 158.4",
+            "inferred_semantic_summary": "The \"Chng\" field represents the absolute change in stock price (in currency units) for each NIFTY-50 company over a specific time period, indicating how much each stock’s price has increased or decreased."
+          },
+          {
+            "name": "% Chng",
+            "clean_name": "__Chng",
+            "camel_case_name": "chng",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 48,
+            "min_value": -7.48,
+            "max_value": 7.23,
+            "mean_value": -2.9301999999999997,
+            "median_value": -3.3,
+            "sample_values": "-7.48, -6.77, -6.57, -6.22, -6.19, ..., -0.19, 0.38, 2.92, 3.45, 7.23",
+            "inferred_semantic_summary": "The % Chng field represents the daily percentage change in the stock price for each NIFTY-50 company, indicating how much the price has increased or decreased during the trading day."
+          },
+          {
+            "name": "Volume (lacs)",
+            "clean_name": "Volume__lacs_",
+            "camel_case_name": "volumeLacs",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 49,
+            "min_value": 0.3,
+            "max_value": 517.88,
+            "mean_value": 71.26660000000001,
+            "median_value": 30.75,
+            "sample_values": "0.3, 0.56, 2.66, 3.42, 3.73, ..., 189.88, 231.36, 263.06, 270.27, 517.88",
+            "inferred_semantic_summary": "This field represents the total number of shares (in lakhs) traded for each NIFTY-50 listed stock during a specific period, indicating the trading activity and liquidity of these stocks in the Indian stock market."
+          },
+          {
+            "name": "Turnover (crs.)",
+            "clean_name": "Turnover__crs__",
+            "camel_case_name": "turnoverCrs",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,161.63\", \"1,200.79\", \"1,249.55\", \"1,380.90\", \"1,385.86\", ..., 775.37, 830.06, 840.81, 927.88, 94.57",
+            "inferred_semantic_summary": "This field represents the total monetary value (in crores of rupees) of shares traded for each NIFTY-50 company, indicating their daily trading activity on the stock market."
+          },
+          {
+            "name": "52w H",
+            "clean_name": "_52w_H",
+            "camel_case_name": "52WH",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,005.00\", \"1,242.00\", \"1,273.90\", \"1,377.75\", \"1,534.50\", ..., 866.9, 867, 889, 901, 979",
+            "inferred_semantic_summary": "This field represents the highest stock price achieved by each NIFTY-50 company over the past 52 weeks, indicating yearly performance peaks in the Indian stock market."
+          },
+          {
+            "name": "52w L",
+            "clean_name": "_52w_L",
+            "camel_case_name": "52WL",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "\"1,091.00\", \"1,092.00\", \"1,300.35\", \"1,342.00\", \"1,626.00\", ..., 825.2, 84, 840.05, 846.7, 88.15",
+            "inferred_semantic_summary": "The \"52w L\" field represents the lowest stock price for each NIFTY-50 company over the past 52 weeks, indicating the annual minimum trading value for monitoring performance trends in the Indian equity market."
+          },
+          {
+            "name": "365 d % chng",
+            "clean_name": "_365_d___chng",
+            "camel_case_name": "365DChng",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "min_value": -16.02,
+            "max_value": 167.95,
+            "mean_value": 41.203,
+            "median_value": 35.86,
+            "sample_values": "-16.02, -5.95, -1.22, -1.17, 0.3, ..., 91.38, 93.42, 99.95, 105.13, 167.95",
+            "inferred_semantic_summary": "This field represents the percentage change in stock price for each NIFTY-50 company over the past 365 days, reflecting their annual performance."
+          },
+          {
+            "name": "30 d % chng",
+            "clean_name": "_30_d___chng",
+            "camel_case_name": "30DChng",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "min_value": -22.08,
+            "max_value": 6.36,
+            "mean_value": -5.9968,
+            "median_value": -5.705,
+            "sample_values": "-22.08, -21.49, -17.37, -14.06, -13.69, ..., 1.8, 5.66, 5.7, 6.34, 6.36",
+            "inferred_semantic_summary": "This field represents the percentage change in the stock price of each NIFTY 50 company over the past 30 days, indicating recent performance or returns for each constituent."
+          }
+        ],
+        "formatted_summary": "## Table 1: NIFTY_50_Stocks_Dataset (50 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 25.csv (Dataset: NIFTY-50 Stocks Dataset)\n\n### Schema (13 fields)\n  - Symbol -- type: object, values: ADANIPORTS, ASIANPAINT, AXISBANK, BAJAJ-AUTO, BAJAJFINSV, ..., TECHM, TITAN, ULTRACEMCO, UPL, WIPRO\n  - Open -- type: object, values: \"1,120.00\", \"1,154.00\", \"1,157.90\", \"1,500.00\", \"1,544.00\", ..., 775, 800.2, 885, 892, 951\n  - High -- type: object, values: \"1,126.00\", \"1,154.00\", \"1,159.50\", \"1,506.70\", \"1,550.00\", ..., 798.9, 805, 885, 956.95, 976.05\n  - Low -- type: object, values: \"1,103.30\", \"1,105.25\", \"1,106.25\", \"1,485.00\", \"1,510.15\", ..., 762, 763.15, 843, 890.65, 898\n  - LTP -- type: object, values: \"1,110.25\", \"1,111.65\", \"1,130.85\", \"1,489.50\", \"1,519.00\", ..., 767.25, 769.9, 855.05, 899.95, 965\n  - Chng -- type: float64, values: -770.5, -684.85, -422.5, -345.8, -210.35, ..., -1.75, 65.05, 71.95, 140.2, 158.4\n  - % Chng -- type: float64, values: -7.48, -6.77, -6.57, -6.22, -6.19, ..., -0.19, 0.38, 2.92, 3.45, 7.23\n  - Volume (lacs) -- type: float64, values: 0.3, 0.56, 2.66, 3.42, 3.73, ..., 189.88, 231.36, 263.06, 270.27, 517.88\n  - Turnover (crs.) -- type: object, values: \"1,161.63\", \"1,200.79\", \"1,249.55\", \"1,380.90\", \"1,385.86\", ..., 775.37, 830.06, 840.81, 927.88, 94.57\n  - 52w H -- type: object, values: \"1,005.00\", \"1,242.00\", \"1,273.90\", \"1,377.75\", \"1,534.50\", ..., 866.9, 867, 889, 901, 979\n  - 52w L -- type: object, values: \"1,091.00\", \"1,092.00\", \"1,300.35\", \"1,342.00\", \"1,626.00\", ..., 825.2, 84, 840.05, 846.7, 88.15\n  - 365 d % chng -- type: float64, values: -16.02, -5.95, -1.22, -1.17, 0.3, ..., 91.38, 93.42, 99.95, 105.13, 167.95\n  - 30 d % chng -- type: float64, values: -22.08, -21.49, -17.37, -14.06, -13.69, ..., 1.8, 5.66, 5.7, 6.34, 6.36\n\n### Sample Data (first 5 rows)\n```\n       Symbol       Open       High        Low        LTP    Chng  % Chng  Volume (lacs) Turnover (crs.)      52w H     52w L  365 d % chng  30 d % chng\n0  ADANIPORTS        750        766     713.25        715  -47.45   -6.22          72.20          532.63        901     384.4         79.22        -4.65\n1  ASIANPAINT   3,101.00   3,167.35   3,091.00   3,138.00   -6.25   -0.20          10.29          322.53   3,505.00  2,117.15         45.66         5.66\n2    AXISBANK        669      674.9     660.45        661  -18.90   -2.78         102.53             684      866.9     568.4         10.19       -21.49\n3  BAJAJ-AUTO   3,370.00   3,383.50   3,320.00   3,335.00  -56.70   -1.67           3.42          114.59   4,361.40  3,041.00          9.30       -12.05\n4  BAJAJFINSV  17,200.00  17,237.20  16,610.00  16,684.00 -684.85   -3.94           3.42          576.79  19,325.00  8,273.70         91.38        -9.10\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

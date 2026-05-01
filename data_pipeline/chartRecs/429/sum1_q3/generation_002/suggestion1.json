@@ -1,0 +1,40 @@
+{
+  "table_name": "429",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any states or countries where the total volume of dogs is significantly higher or lower than the average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar chart with highlight (State/Country vs Total Volume)",
+      "design_rationale": "A bar chart provides a clear, comparative view of total dog volumes per state and country. Highlighting bars above and below the average visually emphasizes which locations have significantly higher or lower total volumes. Since 'location' has 90 unique values, horizontal bars allow easy viewing of all entities. Using a color break at the mean answers the question directly and is highly intuitive.",
+      "target_insight": "Quick visual identification of states/countries with dog trade volumes much above or below the average, and overall distribution of total volumes.",
+      "output_fields": [
+        "location",
+        "total"
+      ],
+      "chart_encodings": {
+        "x": "total",
+        "y": "location",
+        "color": "above/below mean (custom, two colors)",
+        "size": null,
+        "other_aesthetics": "Horizontal bars, sorted by total descending; mean included as reference line"
+      }
+    },
+    "transformations": [
+      "Remove rows where df['total'] is null to ensure each bar represents actual data",
+      "Sort df by df['total'] descending to prioritize high-impact locations",
+      "Create a boolean column 'above_mean' indicating if df['total'] > df['total'].mean()"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['total'])",
+      "df = df.sort_values(by='total', ascending=False)",
+      "mean_total = df['total'].mean()",
+      "df['above_mean'] = df['total'] > mean_total"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\429.csv')\ndf = df.dropna(subset=['total'])\ndf = df.sort_values(by='total', ascending=False)\nmean_total = df['total'].mean()\ndf['above_mean'] = df['total'] > mean_total\ncolors = np.where(df['above_mean'], '#2579e2', '#db3d13')\nfig, ax = plt.subplots(figsize=(10, 16))\nbars = ax.barh(df['location'], df['total'], color=colors, edgecolor='black', alpha=0.85)\nax.axvline(mean_total, color='gray', linestyle='--', linewidth=2, label='Mean')\nax.set_xlabel('Total Number of Dogs Imported or Exported')\nax.set_ylabel('Location')\nax.set_title('Total Dog Import/Export Volume by State/Country\\nHighlighted relative to Average')\nlegend_handles = [mpl.patches.Patch(color='#2579e2', label='Above Mean'), mpl.patches.Patch(color='#db3d13', label='Below Mean'), mpl.lines.Line2D([0], [0], color='gray', linestyle='--', linewidth=2, label='Mean')]\nax.legend(handles=legend_handles, loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

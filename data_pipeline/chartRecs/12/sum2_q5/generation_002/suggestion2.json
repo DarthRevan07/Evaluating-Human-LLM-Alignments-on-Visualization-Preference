@@ -1,0 +1,39 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How do Abstract Reasoning scores compare between managerial and creative job roles?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violinplot with swarm overlay",
+      "design_rationale": "A violinplot shows not only quartiles but also the full distribution (including multimodality and kurtosis) of Abstract Reasoning scores. Using a swarm overlay (actual points shown in non-overlapping arrangement) exposes detailed score patterns, revealing if scores in one group cluster tightly or are dispersed, providing nuanced comparison. This is especially insightful given wide score range and modest row count (105).",
+      "target_insight": "Does the overall distribution shape of Abstract Reasoning scores differ between managerial and creative roles (e.g., is one more skewed, bimodal, or concentrated)?",
+      "output_fields": [
+        "Career",
+        "Abstract Reasoning"
+      ],
+      "chart_encodings": {
+        "x": "Career Group",
+        "y": "Abstract Reasoning",
+        "color": "Career Group",
+        "size": null,
+        "other_aesthetics": "Distribution curves (violin shape); each data point visible as distinct dot"
+      }
+    },
+    "transformations": [
+      "Create 'Career Group' using same categorization method as previous suggestion",
+      "Filter to rows with valid 'Career Group' values ('Managerial', 'Creative')",
+      "Aggregate and plot score distributions per group"
+    ],
+    "data_preparation_steps": [
+      "Use string pattern matching as in Suggestion 1 to mark 'Career Group' for each row",
+      "Select only rows with 'Career Group' as 'Managerial' or 'Creative'",
+      "Prepare arrays of Abstract Reasoning scores per group"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\nmanagerial_keywords = [\"Manager\", \"Director\", \"Supervisor\", \"Administrator\", \"Executive\", \"Lead\", \"Chief\", \"Head\", \"Coordinator\"]\ncreative_keywords = [\"Designer\", \"Artist\", \"Writer\", \"Editor\", \"Composer\", \"Producer\", \"Creative\", \"Illustrator\", \"Photographer\", \"Animator\", \"Musician\", \"Fashion\", \"Media\", \"Marketing\", \"Advertising\", \"Brand\", \"Art\"]\ndef get_career_group(career):\n    if any(k in career for k in managerial_keywords):\n        return \"Managerial\"\n    elif any(k in career for k in creative_keywords):\n        return \"Creative\"\n    else:\n        return np.nan\ndf[\"Career Group\"] = df[\"Career\"].apply(get_career_group)\ndf_plot = df[df[\"Career Group\"].notna()]\ndata_mgr = df_plot[df_plot[\"Career Group\"] == \"Managerial\"][\"Abstract Reasoning\"].values\ndata_crea = df_plot[df_plot[\"Career Group\"] == \"Creative\"][\"Abstract Reasoning\"].values\nfig, ax = plt.subplots(figsize=(7, 5))\nparts = ax.violinplot([data_mgr, data_crea], positions=[0, 1], widths=0.7, showmeans=False, showmedians=True, showextrema=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor([\"#56b4e9\", \"#e7706a\"][i])\n    pc.set_edgecolor(\"#252525\")\n    pc.set_alpha(0.3)\nmeans = [np.mean(data_mgr), np.mean(data_crea)]\nax.scatter([0, 1], means, s=65, color=\"#252525\", marker=\"D\", zorder=5, label=\"Mean\")\n# Swarm overlay\nfor x, data, col in zip([0, 1], [data_mgr, data_crea], [\"#377eb8\", \"#e41a1c\"]):\n    y = np.array(data)\n    n = len(y)\n    sort_idx = np.argsort(y)\n    y_sorted = y[sort_idx]\n    jitter = np.linspace(-0.2, 0.2, n)\n    ax.scatter(np.full(n, x) + jitter, y_sorted, color=col, edgecolor=\"#252525\", s=28, alpha=0.9, label=None)\nax.set_xticks([0, 1])\nax.set_xticklabels([\"Managerial\", \"Creative\"], fontsize=13)\nax.set_ylabel(\"Abstract Reasoning\", fontsize=13)\nax.set_title(\"Distribution of Abstract Reasoning Scores \\n Managerial vs Creative Roles\", fontsize=15)\nax.legend([\"Mean\"], loc=\"upper right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

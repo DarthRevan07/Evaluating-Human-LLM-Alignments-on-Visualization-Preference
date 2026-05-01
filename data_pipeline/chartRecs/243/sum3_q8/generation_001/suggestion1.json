@@ -1,0 +1,41 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Do higher Wind Speed (kph) values correspond with lower Visibility (km) at certain times of day?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Faceted Scatter Plot",
+      "design_rationale": "A faceted scatter plot segmented by 'Observation Time' provides a clear visual to examine the relationship between 'Wind Speed (kph)' and 'Visibility (km)' at different times of day. By plotting each time slot separately, viewers can see if correlation patterns change throughout the day, supporting the question's focus on temporal variation. Using color to encode 'Weather Condition' offers supplementary context for interpreting anomalies or patterns.",
+      "target_insight": "This visualization reveals whether the association between high wind speed and low visibility changes across observation time, and highlights any outlier behaviors or shifts in correlation linked to weather events.",
+      "output_fields": [
+        "Wind Speed (kph)",
+        "Visibility (km)",
+        "Observation Time",
+        "Weather Condition"
+      ],
+      "chart_encodings": {
+        "x": "Wind Speed (kph)",
+        "y": "Visibility (km)",
+        "color": "Weather Condition",
+        "size": null,
+        "other_aesthetics": "Facets by Observation Time; alpha=0.7; discrete color palette for Weather Condition"
+      }
+    },
+    "transformations": [
+      "Group data by 'Observation Time'",
+      "Plot points in each group: x -> 'Wind Speed (kph)', y -> 'Visibility (km)', color -> 'Weather Condition'",
+      "Set facet grid (subplot) for each unique 'Observation Time'"
+    ],
+    "data_preparation_steps": [
+      "Load data from csv_c_squared\\243.csv as df",
+      "Identify unique values in df['Observation Time']",
+      "For each unique Observation Time, filter df to get rows for that time"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\nobs_times = df['Observation Time'].unique()\nweather_conditions = df['Weather Condition'].unique()\ncolors_dict = {'clear':'#1f77b4', 'cloudy':'#ff7f0e', 'rain':'#2ca02c'}\nif len(weather_conditions) == 3:\n    colors = [colors_dict[w] for w in weather_conditions]\nelse:\n    cmap = mpl.colormaps['tab10']\n    colors = [cmap(i) for i in range(len(weather_conditions))]\ncolor_map = dict(zip(weather_conditions, colors))\nncols = int(np.ceil(np.sqrt(len(obs_times))))\nnrows = int(np.ceil(len(obs_times)/ncols))\nfig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(5*ncols, 4*nrows), squeeze=False)\nfor idx, obs_time in enumerate(obs_times):\n    row = idx // ncols\n    col = idx % ncols\n    ax = axes[row][col]\n    df_sub = df[df['Observation Time'] == obs_time]\n    for w_cond in weather_conditions:\n        df_wc = df_sub[df_sub['Weather Condition'] == w_cond]\n        ax.scatter(df_wc['Wind Speed (kph)'], df_wc['Visibility (km)'], color=color_map[w_cond], alpha=0.7, label=w_cond, edgecolor='k', s=40)\n    ax.set_title('Observation Time: ' + str(obs_time), fontsize=13)\n    ax.set_xlabel('Wind Speed (kph)', fontsize=11)\n    ax.set_ylabel('Visibility (km)', fontsize=11)\n    ax.set_xlim(df['Wind Speed (kph)'].min()-2, df['Wind Speed (kph)'].max()+2)\n    ax.set_ylim(df['Visibility (km)'].min()-1, df['Visibility (km)'].max()+1)\n    ax.legend(loc='best')\nfor idx in range(nrows*ncols):\n    if idx >= len(obs_times):\n        row = idx // ncols\n        col = idx % ncols\n        fig.delaxes(axes[row][col])\nplt.tight_layout()\nplt.suptitle('Wind Speed vs Visibility Faceted by Observation Time\\nColor = Weather Condition', fontsize=16, y=1.03)\nplt.show()"
+  },
+  "schema_based": true
+}

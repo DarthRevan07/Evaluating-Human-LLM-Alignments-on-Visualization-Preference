@@ -1,0 +1,40 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does car price differ across various carbody types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar Chart (Mean Price with Error Bars)",
+      "design_rationale": "A bar chart aggregating mean prices with overlaid error bars (standard deviation) for each carbody type provides a clear, quantitative comparison of central tendency across the categories, and also conveys variability. This design is suitable for conveying summary statistics to quickly identify which carbody type is the most (or least) expensive on average, and how consistent those prices are within each group. The approach invites direct, actionable interpretation and is an industry-standard for categorical versus numeric comparison.",
+      "target_insight": "This visualization immediately reveals which carbody types have the highest or lowest average prices, and how much variation exists within each category, supporting decisions about value perception tied to design.",
+      "output_fields": [
+        "carbody",
+        "Mean Price",
+        "Std Price"
+      ],
+      "chart_encodings": {
+        "x": "carbody",
+        "y": "Mean Price",
+        "color": "carbody (category-specific colors)",
+        "size": null,
+        "other_aesthetics": "error bars (vertical, reflecting Std Price), slight bar padding, text annotation of highest/lowest bar"
+      }
+    },
+    "transformations": [
+      "Group df by 'carbody', calculate mean and standard deviation of 'price' for each category",
+      "Sort resulting summary by mean price descending for chart ordering, optional"
+    ],
+    "data_preparation_steps": [
+      "summary = df.groupby('carbody')['price'].agg(['mean','std']).reset_index()",
+      "carbody_categories = summary['carbody']",
+      "mean_prices = summary['mean']",
+      "std_prices = summary['std']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Data loading\n df = pd.read_csv('csv_c_squared\\22.csv')\n\n# Group by carbody to get mean and std price\nsummary = df.groupby('carbody')['price'].agg(['mean','std']).reset_index()\ncarbody_categories = summary['carbody']\nmean_prices = summary['mean']\nstd_prices = summary['std']\n\n# Generate category colors\nimport matplotlib as mpl\ncmap = mpl.colormaps['tab20']\ncolors = [cmap(i) for i in range(len(carbody_categories))]\n\nfig, ax = plt.subplots(figsize=(9,6))\nbar_containers = ax.bar(carbody_categories, mean_prices, yerr=std_prices, color=colors, capsize=8, alpha=0.9)\n\nax.set_xlabel('carbody', fontsize=12)\nax.set_ylabel('Mean price', fontsize=12)\nax.set_title('Mean Car Price by Carbody Type\\n(with Standard Deviation Error Bars)', fontsize=14)\nax.grid(True, axis='y', linestyle='--', linewidth=0.7, alpha=0.6)\n\n# Annotate highest and lowest mean price bars\nmax_idx = mean_prices.idxmax()\nmin_idx = mean_prices.idxmin()\nax.text(max_idx, mean_prices[max_idx]+std_prices[max_idx]+1000, 'Highest', fontsize=11, color='green', ha='center')\nax.text(min_idx, mean_prices[min_idx]-std_prices[min_idx]-1000, 'Lowest', fontsize=11, color='red', ha='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

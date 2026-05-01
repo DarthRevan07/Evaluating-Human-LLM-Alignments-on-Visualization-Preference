@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Are there any epochs or periods that feature an unusually high diversity of genres?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (genre-period matrix)",
+      "design_rationale": "A heatmap shows the distribution of each genre across periods, revealing if some epochs are unusually rich or concentrated in genre diversity. Each cell shows the count of artworks of a genre in a period. The 'years' field is binned to periods (as above), and the 'genre' field is exploded so every genre for multi-genre artworks is counted. A heatmap is more unconventional and provides granular, matrix-style visual evidence for diversity in each period.",
+      "target_insight": "Discover not only which periods have more genres, but which genres are most frequent and how concentration or diversity varies across the matrix.",
+      "output_fields": [
+        "period",
+        "genre"
+      ],
+      "chart_encodings": {
+        "x": "Period (derived from df['years'])",
+        "y": "Genre (from df['genre'])",
+        "color": "Cell shading indicates the count of artworks per genre-period",
+        "size": null,
+        "other_aesthetics": "Colorbar for scale, rotate x-axis tick labels, grid"
+      }
+    },
+    "transformations": [
+      "Extract century from df['years'] and create 'period' variable",
+      "Expand df['genre'] into rows (explode) for artworks with multiple genres",
+      "Group by both 'period' and 'genre', count number of artworks",
+      "Pivot to create genre-period matrix for heatmap"
+    ],
+    "data_preparation_steps": [
+      "Create 'period' column by parsing df['years'] (century)",
+      "Explode df['genre'] for artworks with multi-genre listings",
+      "Build a pivot table: index=genre, columns=period, values=count of artworks",
+      "Fill NaNs (missing genre-period combos) with zero"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndef extract_century(years_str):\n    import re\n    match = re.search(r'(\\d{4})', years_str)\n    if match:\n        year = int(match.group(1))\n        cent = (year - 1) // 100 + 1\n        return str(cent) + 'th century'\n    return 'Unknown'\ndf['period'] = df['years'].apply(extract_century)\ndef explode_genres(series):\n    return series.str.split(',').explode().str.strip()\ndf_exp = df.copy()\ndf_exp['genre'] = explode_genres(df_exp['genre'])\npivot = pd.pivot_table(df_exp, index='genre', columns='period', values='id', aggfunc='count', fill_value=0)\nfig, ax = plt.subplots(figsize=(12,10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels(pivot.columns, rotation=45, ha='right')\nax.set_yticklabels(pivot.index)\nplt.title('Genre vs. Epoch Heatmap\\nPeriods with High Genre Diversity', fontsize=15)\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Number of Artworks', rotation=270, labelpad=15)\nax.set_xlabel('Period (Century)')\nax.set_ylabel('Genre')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

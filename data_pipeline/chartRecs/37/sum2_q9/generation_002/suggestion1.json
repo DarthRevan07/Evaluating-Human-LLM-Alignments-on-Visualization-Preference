@@ -1,0 +1,38 @@
+{
+  "table_name": "37",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "Among young customers, does gender impact spending score differently?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "Boxplots offer a robust visualization for comparing spending score distributions across genders among young customers. By filtering for young customers (e.g., age <= 30), this chart exposes not only median values, but also variation, potential outliers, and spread in spending behavior. Since the question seeks to compare gender impact, boxplots make direct visual comparison easy, especially with relatively small cohort sizes.",
+      "target_insight": "Reveals whether young female and male customers display different median, range, or outlier characteristics in their spending scores, illuminating gender-driven differences in customer value.",
+      "output_fields": [
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (using distinct box colors per group)",
+        "size": "null",
+        "other_aesthetics": "box fill, whisker lines, outlier dots, grouped layout"
+      }
+    },
+    "transformations": [
+      "Filter df to include only young customers (df['Age'] <= 30)",
+      "Group by df['Gender']",
+      "Extract df['Spending Score (1-100)'] distributions for each gender"
+    ],
+    "data_preparation_steps": [
+      "young_df = df[df['Age'] <= 30]",
+      "Prepare list of spending score arrays per gender: [young_df[young_df['Gender'] == g]['Spending Score (1-100)'] for g in ['Female', 'Male']]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\37.csv')\nyoung_df = df[df['Age'] <= 30]\ngenders = ['Female', 'Male']\ndata = [young_df[young_df['Gender'] == gender]['Spending Score (1-100)'].values for gender in genders]\nfig, ax = plt.subplots(figsize=(8, 6))\nbox_colors = [mpl.colormaps['viridis'].resampled(2)(0), mpl.colormaps['viridis'].resampled(2)(1)]\nboxprops = dict(facecolor=box_colors[0], color=box_colors[0])\nbox = ax.boxplot(data, patch_artist=True, boxprops=dict(facecolor=box_colors[0]), medianprops=dict(color='black'), whiskerprops=dict(color='gray'), capprops=dict(color='gray'), flierprops=dict(marker='o', color=box_colors[1], markersize=7))\nfor patch, color in zip(box['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_xticks([1, 2])\nax.set_xticklabels(genders)\nax.set_xlabel('Gender')\nax.set_ylabel('Spending Score (1-100)')\nax.set_title('Distribution of Spending Score by Gender among Young Customers (Age ≤ 30)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

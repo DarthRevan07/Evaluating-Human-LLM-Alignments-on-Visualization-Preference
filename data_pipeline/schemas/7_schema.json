@@ -1,0 +1,70 @@
+{
+  "table_name": "Meat and Dairy Production",
+  "file_path": "csv_c2_sec\\7.csv",
+  "sheet_name": "",
+  "description": "Data loaded from CSV file: 7.csv (Dataset: Meat and Dairy Production)",
+  "original_filename": "7.csv",
+  "dataset_name": "Meat and Dairy Production",
+  "row_count": 14382,
+  "column_count": 4,
+  "table_hash": 3729410396389969237,
+  "fields": [
+    {
+      "name": "Country",
+      "clean_name": "Country",
+      "camel_case_name": "country",
+      "data_type": "object",
+      "inferred_ts_type": "string",
+      "null_count": 0,
+      "non_null_count": 14382,
+      "unique_values": 254,
+      "sample_values": "Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe",
+      "inferred_semantic_summary": "This field identifies the geographic entity (country or region) for which meat and dairy production statistics are reported, encompassing individual nations, aggregated regions, and global totals."
+    },
+    {
+      "name": "Code",
+      "clean_name": "Code",
+      "camel_case_name": "code",
+      "data_type": "object",
+      "inferred_ts_type": "string",
+      "null_count": 0,
+      "non_null_count": 14382,
+      "unique_values": 211,
+      "sample_values": "0, AFG, AGO, ALB, ARE, ..., WSM, YEM, ZAF, ZMB, ZWE",
+      "inferred_semantic_summary": "This field represents country or regional codes, likely standardized identifiers (such as ISO-3 country codes), used to distinguish geographic entities in global meat and dairy production data."
+    },
+    {
+      "name": "Year",
+      "clean_name": "Year",
+      "camel_case_name": "year",
+      "data_type": "int64",
+      "inferred_ts_type": "number",
+      "null_count": 0,
+      "non_null_count": 14382,
+      "unique_values": 62,
+      "min_value": 1961.0,
+      "max_value": 2022.0,
+      "mean_value": 1992.2083854818522,
+      "median_value": 1993.0,
+      "sample_values": "1961, 1962, 1963, 1964, 1965, ..., 2018, 2019, 2020, 2021, 2022",
+      "inferred_semantic_summary": "This field represents the calendar year in which meat and dairy production data was recorded, indicating the temporal context for annual production statistics from 1961 to 2022."
+    },
+    {
+      "name": "Meat, total | 00001765 || Production | 005510 || tonnes",
+      "clean_name": "Meat__total___00001765____Production___005510____tonnes",
+      "camel_case_name": "meatTotal00001765Production005510Tonnes",
+      "data_type": "float64",
+      "inferred_ts_type": "number",
+      "null_count": 0,
+      "non_null_count": 14382,
+      "unique_values": 14062,
+      "min_value": 0.0,
+      "max_value": 360617700.0,
+      "mean_value": 5721289.074532053,
+      "median_value": 219173.25,
+      "sample_values": "0.0, 5.11, 5.86, 6.02, 14.92, ..., 338109200.0, 338912200.0, 341013630.0, 354536580.0, 360617700.0",
+      "inferred_semantic_summary": "This field represents the total annual amount of meat produced, measured in tonnes, likely by country or region, within the context of agricultural or food production statistics."
+    }
+  ],
+  "formatted_summary": "## Table 1: Meat_and_Dairy_Production (14,382 rows × 4 columns)\n\n### Description\nData loaded from CSV file: 7.csv (Dataset: Meat and Dairy Production)\n\n### Schema (4 fields)\n  - Country -- type: object, values: Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe\n  - Code -- type: object, values: 0, AFG, AGO, ALB, ARE, ..., WSM, YEM, ZAF, ZMB, ZWE\n  - Year -- type: int64, values: 1961, 1962, 1963, 1964, 1965, ..., 2018, 2019, 2020, 2021, 2022\n  - Meat, total | 00001765 || Production | 005510 || tonnes -- type: float64, values: 0.0, 5.11, 5.86, 6.02, 14.92, ..., 338109200.0, 338912200.0, 341013630.0, 354536580.0, 360617700.0\n\n### Sample Data (first 5 rows)\n```\n         Country Code  Year  Meat, total | 00001765 || Production | 005510 || tonnes\n0        Bahamas  BHS  1961                                                   1260.7\n1         Brunei  BRN  1961                                                   1289.8\n2          Qatar  QAT  1961                                                   1769.2\n3  Faroe Islands  FRO  1961                                                      0.0\n4         Tuvalu  TUV  1961                                                     30.0\n```\n"
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Are there any outliers or anomalies in the 365-day % change or 30-day % change values that stand out when compared across all stock symbols?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (with strip plot overlay)",
+      "design_rationale": "A boxplot is ideal for visualizing the distribution and identifying outliers in numeric columns, especially for a dataset of modest size (50 rows). Overlaying a strip plot shows each stock's % change, allowing viewers to see both summary statistics and individual outlier stocks clearly. It gives a direct comparison of the spread and outlier stocks for both the 365-day % change and the 30-day % change side by side.",
+      "target_insight": "Quick identification of stocks that have anomalously high/low % changes, and comparison of distribution and outliers between yearly and monthly returns.",
+      "output_fields": [
+        "365 d % chng",
+        "30 d % chng",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "boxplot categories for '365 d % chng' and '30 d % chng'",
+        "y": "percent change values from '365 d % chng' and '30 d % chng'",
+        "color": "null (default stripplot color for visibility)",
+        "size": "null",
+        "other_aesthetics": "boxplot for core distribution, stripplot overlay for outlier identity, title with dataset name"
+      }
+    },
+    "transformations": [
+      "Transform data to float for '365 d % chng' and '30 d % chng' if needed",
+      "Reshape data for plotting: stack values from both columns for side-by-side boxplots",
+      "Overlay stripplot with 'Symbol' labels on extreme outliers"
+    ],
+    "data_preparation_steps": [
+      "Ensure '365 d % chng' and '30 d % chng' are numeric (float)",
+      "Prepare DataFrame in long format with fields: ['value', 'period', 'Symbol']",
+      "Identify outliers using IQR method for both columns"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\25.csv')\n# Ensure numeric\nfor col in ['365 d % chng', '30 d % chng']:\n    df[col] = pd.to_numeric(df[col], errors='coerce')\n# Stack for long format\ndf_long = pd.concat([\n    pd.DataFrame({'value': df['365 d % chng'], 'period': ['365 d % chng']*len(df), 'Symbol': df['Symbol']}),\n    pd.DataFrame({'value': df['30 d % chng'], 'period': ['30 d % chng']*len(df), 'Symbol': df['Symbol']})\n], ignore_index=True)\n# Outlier detection (IQR)\ndef get_outliers(series):\n    q1 = series.quantile(0.25)\n    q3 = series.quantile(0.75)\n    iqr = q3 - q1\n    lower = q1 - 1.5 * iqr\n    upper = q3 + 1.5 * iqr\n    return (series < lower) | (series > upper)\noutlier_mask_365 = get_outliers(df['365 d % chng'])\noutlier_mask_30 = get_outliers(df['30 d % chng'])\n# Plot\nfig, ax = plt.subplots(figsize=(9,6))\nbox_data = [df['365 d % chng'], df['30 d % chng']]\nax.boxplot(box_data, vert=True, labels=['365 d % chng', '30 d % chng'], patch_artist=True, boxprops=dict(facecolor='#e0e0e0'))\n# Overlay strip plot\nfor idx, period in enumerate(['365 d % chng', '30 d % chng']):\n    y = df[period]\n    x = np.random.normal(idx+1, 0.08, size=len(y))\n    ax.scatter(x, y, color='#3f51b5', alpha=0.6, s=50, edgecolors='k', linewidths=0.5)\n# Annotate outliers\nfor period, outlier_mask in zip(['365 d % chng','30 d % chng'], [outlier_mask_365,outlier_mask_30]):\n    y = df[period][outlier_mask]\n    x = np.ones(len(y)) * (1 if period=='365 d % chng' else 2)\n    symbols = df['Symbol'][outlier_mask]\n    for xi, yi, sym in zip(x, y, symbols):\n        ax.text(xi+0.15, yi, sym, fontsize=9, color='red')\nplt.title('Distribution of 365-day and 30-day % Changes for NIFTY-50 Stocks\\nBoxplot with Outlier Annotations', fontsize=13)\nplt.ylabel('Percent Change')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

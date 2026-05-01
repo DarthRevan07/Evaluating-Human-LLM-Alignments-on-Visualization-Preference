@@ -1,0 +1,45 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "How does the proportion of manual versus automatic gear box types change over production years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Area Chart",
+      "design_rationale": "A stacked area chart visually demonstrates changes in proportions of manual and automatic gear box types across production years. With 'Prod. year' on the x-axis and proportion on the y-axis, viewers can discern shifts in transmission popularity over time, especially among newer versus older vehicles. This chart type is effective because it allows simultaneous trend comparison and highlights which gear box types dominate each era. Using the schema, the relevant field for gear type ('Gear box type') is categorical, and 'Prod. year' is numeric, making this encoding optimal.",
+      "target_insight": "Viewers can quickly see the temporal evolution and relative share of 'Manual' vs 'Automatic' gear box types in the total vehicle pool for each production year.",
+      "output_fields": [
+        "Prod. year",
+        "Gear box type",
+        "ID"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Proportion of cars per gear box type",
+        "color": "Gear box type (Manual vs Automatic)",
+        "size": null,
+        "other_aesthetics": "Stacked fill, alpha=0.8, legends, grid"
+      }
+    },
+    "transformations": [
+      "Filter df['Gear box type'] to include only 'Manual' and 'Automatic' values, excluding other transmission types.",
+      "Group by df['Prod. year'] and df['Gear box type'], count df['ID'] for each group.",
+      "Compute the total car count per df['Prod. year'].",
+      "Calculate the proportion for each gear box type by dividing count by total for that year.",
+      "Pivot table so each gear box type ('Manual','Automatic') is a column, indexed by 'Prod. year', with proportions as values."
+    ],
+    "data_preparation_steps": [
+      "Filter df to rows where df['Gear box type'] is 'Manual' or 'Automatic'.",
+      "Group df by ['Prod. year', 'Gear box type'], aggregate count of 'ID'.",
+      "Group df by 'Prod. year' and aggregate total count of all gear box types for each year.",
+      "Merge counts and totals, compute proportion for each gear box type per year.",
+      "Pivot so index is 'Prod. year', columns are 'Gear box type', values are proportion.",
+      "Sort by 'Prod. year' ascending."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_filtered = df[df['Gear box type'].isin(['Manual', 'Automatic'])]\ngb_counts = df_filtered.groupby(['Prod. year', 'Gear box type'])['ID'].count().reset_index()\ntotals = df_filtered.groupby('Prod. year')['ID'].count().reset_index().rename(columns={'ID': 'Total'})\ngb_counts = gb_counts.merge(totals, on='Prod. year')\ngb_counts['Proportion'] = gb_counts['ID'] / gb_counts['Total']\npivot = gb_counts.pivot(index='Prod. year', columns='Gear box type', values='Proportion').fillna(0)\npivot = pivot.sort_index()\nx = pivot.index.values\nmanual = pivot['Manual'].values if 'Manual' in pivot.columns else np.zeros_like(x)\nauto = pivot['Automatic'].values if 'Automatic' in pivot.columns else np.zeros_like(x)\nfig, ax = plt.subplots(figsize=(12,6))\nax.stackplot(x, manual, auto, labels=['Manual', 'Automatic'], colors=['#335b8e', '#e58606'], alpha=0.8)\nax.set_xlabel(\"Prod. year\")\nax.set_ylabel(\"Proportion of cars\")\nax.set_title(\"Proportion of Manual vs Automatic Gear Box Types by Production Year\")\nax.legend(loc=\"upper left\")\nax.grid(True, linestyle=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

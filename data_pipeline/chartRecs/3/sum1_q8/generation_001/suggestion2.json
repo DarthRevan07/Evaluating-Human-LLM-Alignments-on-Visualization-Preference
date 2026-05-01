@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "What are the top five countries for rice yield per hectare, and what are their corresponding ranks in rice acreage and total production?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Rank Heatmap Matrix",
+      "design_rationale": "This approach visualizes the relative standing of each top-yield country in three ranking categories ('Rank of Rice Yield', 'Rank of Rice Acreage', 'Rank of Rice Production') as a heatmap matrix, with each cell color reflecting the rank (darker = higher rank). This method offers a compact, at-a-glance comparison highlighting where the top yielders excel or lag in acreage and production, supporting advanced cross-rank analysis. The categorical axis (Country) and three numeric ranks allow a heatmap as the optimal encoding, revealing patterns and exceptions. The display is enriched with direct numerical rank labels inside each cell.",
+      "target_insight": "Provides a visual matrix of the top yield countries’ standing in three global rice rank categories, allowing identification of agricultural efficiency leaders and outliers.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Yield",
+        "Rank of Rice Acreage",
+        "Rank of Rice Production"
+      ],
+      "chart_encodings": {
+        "x": "Rank Type (custom order: ['Yield', 'Acreage', 'Production'])",
+        "y": "Country",
+        "color": "Rank value (darker for lower/better ranks, lighter for higher/worse ranks)",
+        "size": "none",
+        "other_aesthetics": "Cell text annotations with numeric rank; custom colormap for high-contrast; axis labels set with clear rank type; sorted y-axis for best yield rank"
+      }
+    },
+    "transformations": [
+      "Sort dataframe by 'Rank of Rice Yield', select top 5 countries",
+      "Extract 'Rank of Rice Yield', 'Rank of Rice Acreage', 'Rank of Rice Production' for those countries as numeric values",
+      "Build 5x3 numeric matrix (countries x rank categories)",
+      "Ensure lowest rank is darkest color for visual hierarchy"
+    ],
+    "data_preparation_steps": [
+      "df_top5 = df.sort_values('Rank of Rice Yield').head(5)",
+      "rank_types = ['Rank of Rice Yield', 'Rank of Rice Acreage', 'Rank of Rice Production']",
+      "country_labels = df_top5['Country'].tolist()",
+      "rank_matrix = df_top5[rank_types].to_numpy(dtype=float)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf_top5 = df.sort_values('Rank of Rice Yield').head(5)\nrank_types = ['Rank of Rice Yield', 'Rank of Rice Acreage', 'Rank of Rice Production']\ncountry_labels = df_top5['Country'].tolist()\nrank_matrix = df_top5[rank_types].to_numpy(dtype=float)\n\nfig, ax = plt.subplots(figsize=(8, 5))\ncmap = mpl.colormaps['YlGnBu'].resampled(20)\nnorm = mpl.colors.Normalize(vmin=1, vmax=118)\nimg = ax.imshow(rank_matrix, aspect='auto', cmap=cmap, norm=norm)\n\nfor y in range(rank_matrix.shape[0]):\n    for x in range(rank_matrix.shape[1]):\n        val = int(rank_matrix[y, x])\n        color = '#202134' if val < 40 else '#fff'\n        ax.text(x, y, f'{val}', ha='center', va='center', fontsize=13, fontweight='bold', color=color)\n\nax.set_xticks(np.arange(len(rank_types)))\nax.set_yticks(np.arange(len(country_labels)))\nax.set_xticklabels(['Yield Rank', 'Acreage Rank', 'Production Rank'], fontsize=12)\nax.set_yticklabels(country_labels, fontsize=12)\nplt.title('Top 5 Rice Yield Countries\\nRank Comparison Heatmap: Yield, Acreage, Production', fontsize=15, fontweight='bold')\nplt.colorbar(img, ax=ax, label='Ranking (1 = Best)', shrink=0.8)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

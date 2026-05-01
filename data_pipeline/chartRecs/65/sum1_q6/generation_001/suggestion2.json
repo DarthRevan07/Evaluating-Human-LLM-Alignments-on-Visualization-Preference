@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there any relationship between Consumer Demographics (College students, Families, Seniors, Young adults) and Sales Volume for promoted products?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Clustered Bar Chart (faceted by Product Category)",
+      "design_rationale": "A clustered bar chart lets us compare average Sales Volume for each demographic group, with a separate cluster of bars shown for each Product Category. By focusing only on promoted products, and faceting (using groups of bars) by product type, we reveal whether the demographic-sales relationship is robust across all product classes or specific to some. This faceted approach adds a multidimensional view and enables actionable segmentation strategies by product line.",
+      "target_insight": "Which consumer segments generate the most (or least) sales when promoted, within each product category? Does the pattern of demographic response to promotion differ by product type?",
+      "output_fields": [
+        "Consumer Demographics",
+        "Sales Volume",
+        "Product Category"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics (grouped/bar clusters)",
+        "y": "Mean Sales Volume",
+        "color": "Product Category (bar fill color)",
+        "size": null,
+        "other_aesthetics": "Group bars by Consumer Demographics; color-code by Product Category; display value labels for clarity"
+      }
+    },
+    "transformations": [
+      "Filter for promoted products where df['Promotion'] == 'Yes'",
+      "Group by df['Consumer Demographics'] and df['Product Category'], aggregate mean of df['Sales Volume']"
+    ],
+    "data_preparation_steps": [
+      "df_prom = df[df['Promotion'] == 'Yes']",
+      "grouped = df_prom.groupby(['Consumer Demographics','Product Category'])['Sales Volume'].mean().unstack('Product Category')",
+      "Order index as demographics_order; handle any missing data with np.nan or zeros for complete bar display"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndemographics_order = ['College students','Families','Seniors','Young adults']\ndf_prom = df[df['Promotion'] == 'Yes']\ngrouped = df_prom.groupby(['Consumer Demographics','Product Category'])['Sales Volume'].mean().unstack('Product Category')\ngrouped = grouped.reindex(demographics_order)\ncategories = grouped.columns.tolist()\nn_demographics = len(demographics_order)\nn_categories = len(categories)\nind = np.arange(n_demographics)\nwidth = 0.20\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['Set2']\nfor i, cat in enumerate(categories):\n    vals = grouped[cat].values\n    bars = ax.bar(ind + i*width, vals, width=width, label=cat, color=cmap(i))\n    for bar in bars:\n        h = bar.get_height()\n        ax.annotate(f'{h:.0f}', xy=(bar.get_x() + bar.get_width()/2, h), xytext=(0,3), textcoords='offset points', ha='center', va='bottom', fontsize=8)\nax.set_xlabel('Consumer Demographics')\nax.set_ylabel('Mean Sales Volume')\nax.set_title('Average Sales Volume by Consumer Demographics\\nfor Each Product Category (Promoted Products Only)')\nax.set_xticks(ind + width*(n_categories-1)/2)\nax.set_xticklabels(demographics_order)\nax.legend(title='Product Category')\nax.yaxis.grid(True, linestyle=':')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

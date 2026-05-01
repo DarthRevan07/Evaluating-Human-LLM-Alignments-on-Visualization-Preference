@@ -1,0 +1,40 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there noticeable differences in medical charges between males and females across various age ranges?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Mean Charges by Age Bin and Sex)",
+      "design_rationale": "A heatmap gives a bird's-eye overview of aggregated differences: by grouping age into bins and calculating mean charges for each sex per age bin, we encode relative charge level directly as color intensity. This is highly effective for highlighting broad patterns and subtle shifts in average charges due to sex and age without being distracted by outliers or distribution tails.",
+      "target_insight": "Visualizes how average medical charges for males and females change across age bins; easily reveals whether there's a consistent difference, as well as any age-related shifts.",
+      "output_fields": [
+        "age",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "df['age_bin'] (5 bins)",
+        "y": "df['sex']",
+        "color": "mean(df['charges']) by (age_bin, sex), mapped to heatmap intensity",
+        "size": null,
+        "other_aesthetics": "Annotate mean values, discrete colormap for clarity"
+      }
+    },
+    "transformations": [
+      "Bin df['age'] into 5 age ranges (same as chart 1 for comparability)",
+      "Calculate mean df['charges'] for each (age_bin, sex) pair"
+    ],
+    "data_preparation_steps": [
+      "Create 'age_bin' column as before",
+      "Group df by ['sex', 'age_bin'], aggregate mean charges",
+      "Pivot to create matrix: rows=sex, columns=age_bin, values=mean charges",
+      "Prepare colormap and annotation values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\nbins = [18, 25, 32, 39, 48, 64]\nlabels = ['18-25', '26-32', '33-39', '40-48', '49-64']\ndf['age_bin'] = pd.cut(df['age'], bins=bins, labels=labels, include_lowest=True)\ngb = df.groupby(['sex', 'age_bin'])['charges'].mean().reset_index()\n# Pivot for heatmap\nheatmap_df = gb.pivot(index='sex', columns='age_bin', values='charges').reindex(['female', 'male'])\nheatmap_vals = heatmap_df.values\nfig, ax = plt.subplots(figsize=(10, 3.7))\ncmap = mpl.colormaps['YlGnBu'].resampled(16)\n# Normalize color scale to min/max mean values\nvmin, vmax = np.nanmin(heatmap_vals), np.nanmax(heatmap_vals)\nim = ax.imshow(heatmap_vals, cmap=cmap, vmin=vmin, vmax=vmax, aspect='auto')\n# X/Y labels\nax.set_xticks(np.arange(len(labels)))\nax.set_xticklabels(labels)\nax.set_yticks([0,1])\nax.set_yticklabels(['Female', 'Male'])\nax.set_xlabel('Age Range')\nax.set_ylabel('Sex')\n# Value annotation\nfor i in range(heatmap_vals.shape[0]):\n    for j in range(heatmap_vals.shape[1]):\n        val = heatmap_vals[i, j]\n        if not np.isnan(val):\n            txt = f'${val:.0f}'\n            ax.text(j, i, txt, ha='center', va='center', color='k', fontsize=11, fontweight='bold')\ncb = fig.colorbar(im, ax=ax, orientation='vertical', shrink=0.73, pad=0.09)\ncb.set_label('Mean Medical Charges ($)', fontsize=12)\nax.set_title('Mean Medical Charges Across Age Ranges and Sex\\nHeatmap Summary')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

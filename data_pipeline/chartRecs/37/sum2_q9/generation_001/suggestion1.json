@@ -1,0 +1,37 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "Among young customers, does gender impact spending score differently?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot efficiently compares the distribution of spending scores between genders among young customers. This direct visual summary reveals not only differences in central tendency (median) but also spread, outliers, and overall distribution, making it ideal for highlighting nuanced gender differences in spending score among the young segment.",
+      "target_insight": "Shows if the spending score (median, spread, outliers) differs systematically between Female and Male young customers.",
+      "output_fields": [
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Spending Score (1-100)",
+        "color": "Gender",
+        "size": null,
+        "other_aesthetics": "box width, median line, outlier points, grid lines"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Age'] <= 30 (define 'young' as age 30 or below)",
+      "Select columns df['Gender'] and df['Spending Score (1-100)'] for plotting"
+    ],
+    "data_preparation_steps": [
+      "Create df_young = df[df['Age'] <= 30]",
+      "Extract values of df_young['Gender'] and df_young['Spending Score (1-100)']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\37.csv\")\ndf_young = df[df['Age'] <= 30]\nfig, ax = plt.subplots(figsize=(6, 5))\ngender_order = ['Female', 'Male']\ndata = [df_young[df_young['Gender'] == g]['Spending Score (1-100)'] for g in gender_order]\nbox = ax.boxplot(data, labels=gender_order, patch_artist=True, boxprops=dict(facecolor='lightblue', alpha=0.7), medianprops=dict(color='navy', linewidth=2), flierprops=dict(marker='o', markerfacecolor='red', markersize=6, alpha=0.6))\nax.set_xlabel('Gender')\nax.set_ylabel('Spending Score (1-100)')\nax.set_title('Spending Score Distribution in Young Customers (Age ≤ 30) by Gender')\nax.grid(axis='y', linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

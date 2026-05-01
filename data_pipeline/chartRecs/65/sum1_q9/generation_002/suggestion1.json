@@ -1,0 +1,37 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "Which Consumer Demographic group is associated with the highest Sales Volume for each Product Category?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart provides a clear, side-by-side comparison of aggregate Sales Volume for each Consumer Demographic group across all Product Categories. By stacking the demographic groups within each Product Category, the visualization makes it easy to spot which demographic leads in Sales Volume for each product type, as well as the overall distribution of sales among demographic groups. The use of color for demographic categories enhances legibility.",
+      "target_insight": "Highlights the leading Consumer Demographic group (by aggregate sales) for each Product Category, while showing the comparative performance of all groups within each category.",
+      "output_fields": [
+        "Product Category",
+        "Consumer Demographics",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category",
+        "y": "Sales Volume (aggregate, grouped by Consumer Demographics)",
+        "color": "Consumer Demographics",
+        "size": null,
+        "other_aesthetics": "Grouped bars by Consumer Demographics within each Product Category; legend for demographics"
+      }
+    },
+    "transformations": [
+      "Group df by ['Product Category', 'Consumer Demographics'] and sum 'Sales Volume'.",
+      "Reset the index to flatten the grouped DataFrame."
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Product Category', 'Consumer Demographics'], as_index=False)['Sales Volume'].sum()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_grouped = df.groupby(['Product Category', 'Consumer Demographics'], as_index=False)['Sales Volume'].sum()\ncategories = df_grouped['Product Category'].unique()\ndemographics = df_grouped['Consumer Demographics'].unique()\nn_cats = len(categories)\nn_dems = len(demographics)\nbar_width = 0.8 / n_dems\nx = np.arange(n_cats)\nfig, ax = plt.subplots(figsize=(10,6))\nimport matplotlib as mpl\ncmap = mpl.colormaps['tab10'].resampled(n_dems)\nfor idx, dem in enumerate(demographics):\n    sales = []\n    for cat in categories:\n        val = df_grouped[(df_grouped['Product Category'] == cat) & (df_grouped['Consumer Demographics'] == dem)]['Sales Volume']\n        sales.append(val.values[0] if len(val) > 0 else 0)\n    ax.bar(x + idx * bar_width, sales, bar_width, label=dem, color=cmap(idx))\nax.set_xticks(x + bar_width * (n_dems-1) / 2)\nax.set_xticklabels(categories)\nax.set_xlabel('Product Category')\nax.set_ylabel('Total Sales Volume')\nax.set_title('Sales Volume by Consumer Demographics Group for Each Product Category')\nax.legend(title='Consumer Demographics')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

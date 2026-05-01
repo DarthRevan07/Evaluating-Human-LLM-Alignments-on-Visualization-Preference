@@ -1,0 +1,75 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which sectors contribute the most to total methane emissions in a specific country, and how has this changed from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "100% Stacked Area Chart",
+      "design_rationale": "A 100% stacked area chart clearly displays the proportion of methane emissions contributed by each sector in a selected country over time, from 1990 to 2018. By normalizing each year's emissions, we reveal changes in the relative contributions of sectors regardless of total emission growth. This emphasizes shifts in sectoral responsibility, matching the question's focus on changes in contribution—rather than just total volume—and supports easy comparison across time. The area chart provides an intuitive, flowing visual for how sectoral shares expand or contract.",
+      "target_insight": "How the relative (percentage) contributions of different sectors to total methane emissions in a selected country have changed from 1990 to 2018.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (mapped from columns '1990' to '2018')",
+        "y": "Proportion of total methane emissions (from normalization of sector values per year)",
+        "color": "Sector",
+        "size": null,
+        "other_aesthetics": "alpha=0.8; legend: Sector; title with dynamic country name"
+      }
+    },
+    "transformations": [
+      "Filter df to the specific country of interest using df['Country']",
+      "Select sector rows for that country",
+      "Reshape the yearly columns ('1990'-'2018') to long format with 'Year' and 'Emissions'",
+      "Group by 'Year' and sum emissions for each sector (in case there are sub-sector breakdowns, but usually there is one row per sector per country)",
+      "For each year, sum all sector emissions to compute the year's total",
+      "For each sector, divide annual sector emission by that year's total to get the percent (proportion) share"
+    ],
+    "data_preparation_steps": [
+      "country = 'United States' # or prompt user for a specific country",
+      "df_country = df[df['Country'] == country]",
+      "years = [str(y) for y in range(1990, 2019)]",
+      "df_long = df_country.melt(id_vars=['Sector'], value_vars=years, var_name='Year', value_name='Emissions')",
+      "df_long['Year'] = df_long['Year'].astype(int)",
+      "pivot = df_long.pivot(index='Year', columns='Sector', values='Emissions')",
+      "pivot_pct = pivot.div(pivot.sum(axis=1), axis=0).fillna(0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ncountry = 'United States'  # Change as desired\nyears = [str(y) for y in range(1990, 2019)]\ndf_country = df[df['Country'] == country]\ndf_long = df_country.melt(id_vars=['Sector'], value_vars=years, var_name='Year', value_name='Emissions')\ndf_long['Year'] = df_long['Year'].astype(int)\npivot = df_long.pivot(index='Year', columns='Sector', values='Emissions')\npivot = pivot.fillna(0)\ntotals = pivot.sum(axis=1)\npivot_pct = pivot.div(totals, axis=0)\nsector_order = sorted(pivot_pct.columns)\ncmap = mpl.colormaps['tab10'].resampled(len(sector_order))\ncolors = cmap(np.linspace(0, 1, len(sector_order)))\nfig, ax = plt.subplots(figsize=(12,6))\nax.stackplot(pivot_pct.index, [pivot_pct[s] for s in sector_order], labels=sector_order, colors=colors, alpha=0.8)\nax.set_title('Methane Sectoral Share (Percent) in ' + country + ' (1990-2018)\\nEach sector\\'s area = its percent share per year', loc='center')\nax.set_xlabel('Year')\nax.set_ylabel('Percent of Total Methane Emissions')\nax.set_ylim(0,1)\nax.yaxis.set_major_formatter(mpl.ticker.PercentFormatter(1.0))\nax.legend(loc='upper left', bbox_to_anchor=(1,1))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

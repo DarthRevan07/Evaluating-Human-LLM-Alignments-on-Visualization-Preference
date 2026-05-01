@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there countries that rank highly in rice production but have relatively low rice yield per hectare, and what might explain these discrepancies?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot (Bubble plot)",
+      "design_rationale": "A scatter (bubble) plot visually analyzes the relationship between global rice production rank and rice yield rank, with bubble size encoding rice acreage and color encoding rice production tonnage. This allows immediate identification of countries that produce a large quantity of rice (high production, low rank number), but have relatively low yield per hectare (low yield ranking, high rank number). Including acreage (size) and production (color) showcases the scale differences and makes outlier countries stand out.",
+      "target_insight": "Direct identification of countries that rank highly in rice production (Rank of Rice Production close to 1), but have relatively lower rice yield (Rank of Rice Yield much larger), revealing scale-driven discrepancies between volume and efficiency.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield",
+        "Rice Acreage (Hectare)",
+        "Rice Production (Tons)"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Yield",
+        "color": "Rice Production (Tons)",
+        "size": "Rice Acreage (Hectare)",
+        "other_aesthetics": "Bubble labels for major outliers (annotate top producers with low yield), viridis colormap, alpha=0.7"
+      }
+    },
+    "transformations": [
+      "Filter: Keep only rows where Rank of Rice Production <= 20 (top producers)",
+      "Convert: Rice Production (Tons) and Rice Acreage (Hectare) from shorthand string ('K', 'M') to numeric values",
+      "Sort: Order by Rank of Rice Production ascending"
+    ],
+    "data_preparation_steps": [
+      "df = df[df['Rank of Rice Production'] <= 20]",
+      "df['Rice Production (Tons)_num'] = df['Rice Production (Tons)'].str.replace('M','e6').str.replace('K','e3').map(lambda x: eval(x))",
+      "df['Rice Acreage (Hectare)_num'] = df['Rice Acreage (Hectare)'].str.replace('M','e6').str.replace('K','e3').map(lambda x: eval(x))",
+      "df = df.sort_values('Rank of Rice Production')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf_top = df[df['Rank of Rice Production'] <= 20].copy()\ndf_top['Rice Production (Tons)_num'] = df_top['Rice Production (Tons)'].str.replace('M','e6').str.replace('K','e3').map(lambda x: eval(x))\ndf_top['Rice Acreage (Hectare)_num'] = df_top['Rice Acreage (Hectare)'].str.replace('M','e6').str.replace('K','e3').map(lambda x: eval(x))\ndf_top = df_top.sort_values('Rank of Rice Production')\nfig, ax = plt.subplots(figsize=(12,8))\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df_top['Rice Production (Tons)_num'].min(), vmax=df_top['Rice Production (Tons)_num'].max())\nsc = ax.scatter(df_top['Rank of Rice Production'], df_top['Rank of Rice Yield'], s=(df_top['Rice Acreage (Hectare)_num']/df_top['Rice Acreage (Hectare)_num'].max())*1000, c=df_top['Rice Production (Tons)_num'], cmap=cmap, norm=norm, alpha=0.7, edgecolor='k')\nfor idx, row in df_top.iterrows():\n    if row['Rank of Rice Yield'] > 40:\n        ax.text(row['Rank of Rice Production'], row['Rank of Rice Yield']+1, row['Country'], fontsize=10, ha='center', va='bottom')\ncbar = plt.colorbar(sc, ax=ax)\ncbar.set_label('Rice Production (Tons)')\nax.set_xlabel('Rank of Rice Production (1=Top Producer)')\nax.set_ylabel('Rank of Rice Yield (1=Highest Yield)')\nax.set_title('Bubble Plot: Top 20 Rice Producers\\nDiscrepancy Between Production Rank and Yield Rank')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

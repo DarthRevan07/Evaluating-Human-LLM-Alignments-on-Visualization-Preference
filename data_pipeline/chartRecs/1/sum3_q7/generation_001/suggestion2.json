@@ -1,0 +1,48 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "What is the relationship between the year of GDP measurement and the sectoral composition (agriculture, industry, services) in a given country?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "heatmap",
+      "design_rationale": "A heatmap facilitates comparison of sectoral % shares across years for a single country, where each cell shows the sector's percentage for that year, visually encoding values by color. This approach is unconventional and spatially compact, and it allows spotting abrupt transitions, persistence, or convergence/divergence among sectors within a country. The design leverages schema's per-country granularity and multiple years for sectoral data.",
+      "target_insight": "How a selected country's sectoral composition pattern changes (or remains stable) across different years, highlighting periods of structural economic shifts.",
+      "output_fields": [
+        "Country/Economy",
+        "Year GDP ",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "sector type",
+        "color": "sector % share (continuous color scale)",
+        "size": null,
+        "other_aesthetics": "annotate cells, colorbar, highlight max/min"
+      }
+    },
+    "transformations": [
+      "Prompt user for target country; filter to rows with that 'Country/Economy'",
+      "Clean sector % fields: convert to numeric, handle missing values",
+      "Pivot data: rows=sector, columns=Year GDP , values=sector %"
+    ],
+    "data_preparation_steps": [
+      "country = \"United States\" # (example; replace or prompt as appropriate)",
+      "df_country = df[df['Country/Economy'] == country]",
+      "df_country['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df_country['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df_country['Industry%ofGDP'] = pd.to_numeric(df_country['Industry%ofGDP'], errors='coerce')",
+      "df_country['Services%ofGDP'] = pd.to_numeric(df_country['Services%ofGDP'], errors='coerce')",
+      "sector_map = {'Agriculture Sector GDP of % Contribution': 'Agriculture', 'Industry%ofGDP': 'Industry', 'Services%ofGDP': 'Services'}",
+      "dfmelt = df_country.melt(id_vars=['Year GDP '], value_vars=['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP'], var_name='Sector', value_name='Percent')",
+      "dfmelt['Sector'] = dfmelt['Sector'].map(sector_map)",
+      "heatmap_data = dfmelt.pivot(index='Sector', columns='Year GDP ', values='Percent')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\1.csv\")\ncountry = \"United States\" # Replace as needed\nsector_map = {'Agriculture Sector GDP of % Contribution': 'Agriculture', 'Industry%ofGDP': 'Industry', 'Services%ofGDP': 'Services'}\ndf_country = df[df['Country/Economy'] == country]\ndf_country['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df_country['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf_country['Industry%ofGDP'] = pd.to_numeric(df_country['Industry%ofGDP'], errors='coerce')\ndf_country['Services%ofGDP'] = pd.to_numeric(df_country['Services%ofGDP'], errors='coerce')\ndfmelt = df_country.melt(id_vars=[\"Year GDP \"], value_vars=[\"Agriculture Sector GDP of % Contribution\",\"Industry%ofGDP\",\"Services%ofGDP\"], var_name=\"Sector\", value_name=\"Percent\")\ndfmelt['Sector'] = dfmelt['Sector'].map(sector_map)\nheatmap_data = dfmelt.pivot(index=\"Sector\", columns=\"Year GDP \", values=\"Percent\")\nfig, ax = plt.subplots(figsize=(10, 3))\ncmap = mpl.colormaps['YlGnBu']\nim = ax.imshow(heatmap_data, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels(heatmap_data.columns)\nax.set_yticklabels(heatmap_data.index)\nfor i in range(len(heatmap_data.index)):\n    for j in range(len(heatmap_data.columns)):\n        val = heatmap_data.iloc[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f\"{val:.1f}\", ha=\"center\", va=\"center\", color=\"black\")\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', fraction=0.04, pad=0.04)\ncbar.set_label(\"Sector % of GDP\")\nax.set_xlabel(\"Year of GDP Measurement\")\nax.set_ylabel(\"Sector\")\nax.set_title(\"GDP Sector Composition Over Years for \" + country + \"\\nAgriculture, Industry, Services (% of GDP)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

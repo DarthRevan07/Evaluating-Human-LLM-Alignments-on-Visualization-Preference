@@ -1,0 +1,37 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable difference in medical charges for males versus females within each region?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of Mean Charges",
+      "design_rationale": "A heatmap of mean medical charges across region and sex distills the question into a concise, instantly interpretable matrix. Rows are regions, columns are sex, cell color encodes mean charge. This systematically reveals magnitude and patterns—whether differences are pronounced, subtle, or region-specific. The grid format enables rapid comparison across all categories. The use of color accentuates disparities, making exceptional cases easy to spot.",
+      "target_insight": "Quantifies the average medical charge for males vs females in each region, highlighting where differences are most or least prominent.",
+      "output_fields": [
+        "region",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "sex",
+        "y": "region",
+        "color": "mean('charges')",
+        "size": null,
+        "other_aesthetics": "Colorbar for quantitative interpretation; annotations of mean values in cells"
+      }
+    },
+    "transformations": [
+      "Group df by 'region' and 'sex', compute mean of 'charges' for each combination"
+    ],
+    "data_preparation_steps": [
+      "Pivot table: index='region', columns='sex', values=mean('charges')",
+      "Arrange resulting matrix to have regions as rows, sex as columns"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\npivot = df.groupby(['region','sex'])['charges'].mean().unstack()\nregions = pivot.index.tolist()\nsexes = pivot.columns.tolist()\nvalues = pivot.values\nfig, ax = plt.subplots(figsize=(6,5))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(values, cmap=cmap, aspect='auto')\nfor i in range(values.shape[0]):\n    for j in range(values.shape[1]):\n        text = ax.text(j, i, f'{values[i,j]:.0f}', va='center', ha='center', color='white' if values[i,j]>np.nanmean(values) else 'black', fontsize=12)\nax.set_xticks(np.arange(len(sexes)))\nax.set_xticklabels(sexes)\nax.set_yticks(np.arange(len(regions)))\nax.set_yticklabels(regions)\nax.set_xlabel('sex')\nax.set_ylabel('region')\nax.set_title('Mean Medical Charges by Region and Sex')\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Mean charges')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

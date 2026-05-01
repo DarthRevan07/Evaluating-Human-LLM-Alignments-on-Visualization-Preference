@@ -1,0 +1,43 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which artists have both a high number of paintings and biographies that emphasize innovation or major influence on artistic movements?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Artist by Genre)",
+      "design_rationale": "A heatmap cross-referencing artist names (rows) and their genres (columns) visually encodes both productivity (number of paintings, via cell intensity) and innovation/major influence (bio flag, via special cell color or border). This allows users to see not only prolific and innovative artists, but also how their influence maps across genres—important for understanding impact on artistic movements.",
+      "target_insight": "Reveals which genres are most associated with high-output, innovative/influential artists, and which artists dominate genre spaces while being recognized for innovation or major impact.",
+      "output_fields": [
+        "name",
+        "genre",
+        "paintings",
+        "bio"
+      ],
+      "chart_encodings": {
+        "x": "genre",
+        "y": "name",
+        "color": "paintings (intensity/heatmap)",
+        "size": null,
+        "other_aesthetics": "Cell border or highlight for innovation/influence (bio flag); genres expanded so each artist can appear in multiple genre columns"
+      }
+    },
+    "transformations": [
+      "Create 'Bio Flag' as in Suggestion 1",
+      "Expand df so each row corresponds to one artist-genre combo (explode genre if multiple genres listed)",
+      "Pivot table: index='name', columns='genre', values='paintings' (fill missing values with 0)",
+      "Create an overlay mask to highlight cells for artists with 'Bio Flag'=1"
+    ],
+    "data_preparation_steps": [
+      "Create 'Bio Flag' using innovation/influence keywords",
+      "Split df['genre'] by commas and explode to long format",
+      "Pivot the dataframe to make a matrix of artists (rows) vs genres (columns), painting counts as values",
+      "Overlay mask for innovation/influence, to highlight relevant cells"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\20.csv')\n# Flag innovation/influence\nkeywords = ['innovation', 'innovative', 'influence', 'influential', 'founder', 'movement']\ndf['Bio Flag'] = df['bio'].str.lower().apply(lambda b: int(any(k in b for k in keywords)))\n# Explode genres (handling multi-genre)\ndf_exploded = df.copy()\ndf_exploded['genre'] = df_exploded['genre'].str.split(', ')\ndf_exploded = df_exploded.explode('genre')\n# Pivot for heatmap\npivot = df_exploded.pivot_table(index='name', columns='genre', values='paintings', fill_value=0)\nbio_flag_map = df.groupby('name')['Bio Flag'].max()\nfig, ax = plt.subplots(figsize=(14,10))\ncmap = mpl.colormaps['YlGnBu']\nimg = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_xticklabels(pivot.columns, rotation=45, ha='right')\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_yticklabels(pivot.index)\n# Highlight rows (artists) with innovation/influence\nfor i, artist in enumerate(pivot.index):\n    if bio_flag_map[artist]==1:\n        ax.axhline(i-0.5, color='#FF5733', linewidth=2, alpha=0.8)\ncb = plt.colorbar(img, ax=ax, shrink=0.85, pad=0.02, label='paintings')\nax.set_title('Artist-Genre Heatmap\\nCell intensity = Number of Paintings\\nRows Highlighted = Innovation/Influence in Biography')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

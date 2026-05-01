@@ -1,0 +1,71 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How have methane emissions in the Agriculture sector changed across different countries from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot (temporal trends across multiple countries)",
+      "design_rationale": "This visualization shows agriculture methane emission time series for the top emitting countries, allowing a comparative view of how each country's emission trend has evolved from 1990 to 2018. Line plots are ideal for displaying temporal trends. Using color to distinguish countries accentuates differences and patterns. Filtering to 'Sector' == 'Agriculture' ensures focused insight on the sector of interest.",
+      "target_insight": "Reveals which countries have the largest agriculture methane emissions, and whether their emissions are rising, stable, or declining over the period.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (from 1990 to 2018)",
+        "y": "Methane Emissions (from 1990 to 2018 columns)",
+        "color": "Country (top N countries by 2018 emissions)",
+        "size": null,
+        "other_aesthetics": "Legend for countries; lines for each country; muted gridlines"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Sector'] == 'Agriculture'",
+      "Identify top 5 countries with highest df['2018'] emissions",
+      "Subset data for these countries",
+      "Reshape data to long format with 'Country', 'Year', 'Emissions' columns"
+    ],
+    "data_preparation_steps": [
+      "df_agri = df[df['Sector'] == 'Agriculture']",
+      "top_countries = df_agri.groupby('Country')['2018'].max().nlargest(5).index.tolist()",
+      "df_agri_top = df_agri[df_agri['Country'].isin(top_countries)]",
+      "years = [str(y) for y in range(1990, 2019)]",
+      "df_agri_long = pd.melt(df_agri_top, id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emissions')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_agri = df[df['Sector'] == 'Agriculture']\ntop_countries = df_agri.groupby('Country')['2018'].max().nlargest(5).index.tolist()\ndf_agri_top = df_agri[df_agri['Country'].isin(top_countries)]\nyears = [str(y) for y in range(1990, 2019)]\ndf_agri_long = pd.melt(df_agri_top, id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emissions')\nfig, ax = plt.subplots(figsize=(11,7))\ncountries = df_agri_long['Country'].unique()\ncmap = plt.cm.get_cmap('tab10', len(countries))\nfor i, country in enumerate(countries):\n    df_plot = df_agri_long[df_agri_long['Country'] == country]\n    ax.plot(df_plot['Year'], df_plot['Emissions'], label=country, color=cmap(i))\nax.set_xlabel('Year')\nax.set_ylabel('Methane Emissions (MTCO2e)')\nax.set_title('Temporal Trends of Agriculture Methane Emissions\\nTop 5 Countries (1990-2018)')\nax.legend(title='Country', bbox_to_anchor=(1.04, 1), loc='upper left')\nax.grid(True, linestyle='--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

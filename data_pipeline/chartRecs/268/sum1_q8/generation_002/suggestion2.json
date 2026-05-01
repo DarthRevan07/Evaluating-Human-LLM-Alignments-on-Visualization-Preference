@@ -1,0 +1,48 @@
+{
+  "table_name": "268",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which districts show accelerated population growth between the last two census periods (2011 and 2022)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Division-colored Scatter Plot (Bubble Plot)",
+      "design_rationale": "A scatter (bubble) plot shows each district as a point, simultaneously visualizing its total population change and area, with point color representing Division. Bubble size indicates the degree of acceleration, and outlier bubbles are easily seen for districts showing most rapid growth. This encoding allows exploration of the interplay between area, division, and population acceleration – engaging for regional comparison, spatial intuition, and potential national policy insights.",
+      "target_insight": "Identifies not just which districts have accelerated, but their spatial and area context, and division grouping, highlighting regional population dynamics.",
+      "output_fields": [
+        "Name",
+        "Division",
+        "Area (km2)",
+        "Population_2011",
+        "Population_2022"
+      ],
+      "chart_encodings": {
+        "x": "Area (km2)",
+        "y": "Population_2022 minus Population_2011 (absolute population increment)",
+        "color": "Division",
+        "size": "Population growth acceleration (scaled)",
+        "other_aesthetics": "Districts labeled if acceleration above threshold; legend for Division"
+      }
+    },
+    "transformations": [
+      "Calculate population increment: Population_2022 - Population_2011",
+      "Calculate acceleration as before",
+      "Assign Division as categorical color",
+      "Scale bubble size by acceleration (only positive, min=20, max=400)",
+      "Optionally annotate outliers with high acceleration"
+    ],
+    "data_preparation_steps": [
+      "df[\"pop_increment\"] = df[\"Population_2022\"] - df[\"Population_2011\"]",
+      "df[\"growth_2001_2011\"] = (df[\"Population_2011\"] - df[\"Population_2001\"]) / df[\"Population_2001\"]",
+      "df[\"growth_2011_2022\"] = (df[\"Population_2022\"] - df[\"Population_2011\"]) / df[\"Population_2011\"]",
+      "df[\"acceleration\"] = df[\"growth_2011_2022\"] - df[\"growth_2001_2011\"]",
+      "divisions = df[\"Division\"].unique().tolist()",
+      "division_colors = dict(zip(divisions, plt.cm.tab20(np.linspace(0, 1, len(divisions)))))",
+      "size_scaled = 20 + 380 * (df[\"acceleration\"] - df[\"acceleration\"].min()) / (df[\"acceleration\"].max() - df[\"acceleration\"].min())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Load data\ndf = pd.read_csv(\"csv_c_squared\\268.csv\")\n\n# Compute population increment and acceleration\ndf[\"pop_increment\"] = df[\"Population_2022\"] - df[\"Population_2011\"]\ndf[\"growth_2001_2011\"] = (df[\"Population_2011\"] - df[\"Population_2001\"]) / df[\"Population_2001\"]\ndf[\"growth_2011_2022\"] = (df[\"Population_2022\"] - df[\"Population_2011\"]) / df[\"Population_2011\"]\ndf[\"acceleration\"] = df[\"growth_2011_2022\"] - df[\"growth_2001_2011\"]\n\n# Prepare division color mapping\ndivisions = df[\"Division\"].unique().tolist()\ndivision_colors = dict(zip(divisions, plt.cm.tab20(np.linspace(0, 1, len(divisions)))) )\ncolors = df[\"Division\"].map(division_colors)\n\n# Bubble size scaling\nsize_scaled = 20 + 380 * (df[\"acceleration\"] - df[\"acceleration\"].min()) / (df[\"acceleration\"].max() - df[\"acceleration\"].min())\n\nfig, ax = plt.subplots(figsize=(11, 8))\nscatter = ax.scatter(df[\"Area (km2)\"], df[\"pop_increment\"], s=size_scaled, c=colors, edgecolor=\"black\", alpha=0.7)\n\nax.set_xlabel(\"Area (km2)\")\nax.set_ylabel(\"Population Increase (2011-2022)\")\nax.set_title(\"Population Growth Acceleration by District Area and Division\\nBubble size = acceleration, color = Division\", fontsize=15)\n\n# Add legend for Division\nhandles = [plt.Line2D([0], [0], marker=\"o\", color=\"w\", markerfacecolor=division_colors[d], markersize=10, label=d) for d in divisions]\nax.legend(handles, divisions, title=\"Division\", bbox_to_anchor=(1.05, 1), loc=\"upper left\")\n\n# Annotate districts with high acceleration\nthreshold = df[\"acceleration\"].quantile(0.90)\nfor idx, row in df[df[\"acceleration\"] >= threshold].iterrows():\n    ax.text(row[\"Area (km2)\"], row[\"pop_increment\"] + 15000, row[\"Name\"], fontsize=9, color=\"black\", ha=\"center\", va=\"bottom\")\n\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

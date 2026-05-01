@@ -1,0 +1,38 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there noticeable differences in spending behavior between genders?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot of 'Spending Score (1-100)' grouped by 'Gender' directly compares the distribution, central tendency, and spread of spending scores between female and male customers. This is ideal for visualizing differences in spending behavior, including medians, quartiles, and outliers, enabling quick assessment of gender-based variation. Utilizing a categorical grouping (gender) with a numeric variable (spending score) provides clear insight given the question.",
+      "target_insight": "Whether female and male customers differ in their typical and extreme spending behaviors, including median, variability, and presence of outliers.",
+      "output_fields": [
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (categorical color palette)",
+        "size": null,
+        "other_aesthetics": "box width, marker alpha for outliers, custom colors for each gender"
+      }
+    },
+    "transformations": [
+      "No aggregation: plot raw 'Spending Score (1-100)' values for each gender.",
+      "Assign distinct colors for each gender (e.g. blue for Male, pink for Female)."
+    ],
+    "data_preparation_steps": [
+      "Extract 'Gender' and 'Spending Score (1-100)' columns from df.",
+      "Prepare a list of spending scores for each gender using groupby.",
+      "Define color palette for boxplot based on gender categories."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\37.csv')\ngender_order = ['Female', 'Male']\ngender_colors = ['#e75480', '#3b75c1']  # Pink for Female, Blue for Male\nscore_data = [df[df['Gender']==gender]['Spending Score (1-100)'] for gender in gender_order]\nfig, ax = plt.subplots(figsize=(7,5))\nbox = ax.boxplot(score_data, patch_artist=True, labels=gender_order, widths=0.5)\nfor patch, color in zip(box['boxes'], gender_colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_color('black')\nfor flier, color in zip(box['fliers'], gender_colors):\n    flier.set(marker='o', color=color, alpha=0.5)\nax.set_ylabel('Spending Score (1-100)')\nax.set_xlabel('Gender')\nax.set_title('Distribution of Spending Scores by Gender\\nMall Customer Segmentation Data')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

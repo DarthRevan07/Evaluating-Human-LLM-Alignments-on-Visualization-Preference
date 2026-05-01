@@ -1,0 +1,46 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Are there significant anomalies or spikes in methane emissions for any country-sector combination in a given year?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap (country-sector anomalous year detection)",
+      "design_rationale": "A heatmap effectively visualizes anomalies or spikes across many categorical combinations (Country-Sector vs. Year). By encoding emission deviations (z-score or min-max normalized) by color, major anomalies (spikes) within each country-sector row stand out. This makes it easy to visually scan many combinations and years for significant spikes or outlier years, addressing the analytical focus across the full table. The structure (195 countries x 9 sectors) means a heatmap allows a dense, high-level overview while preserving the ability to inspect granular spikes.",
+      "target_insight": "Which country-sector combinations saw major year-over-year emission spikes, pinpointed by visually prominent color shifts on specific years.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "Year (columns 1990-2018)",
+        "Emission deviation"
+      ],
+      "chart_encodings": {
+        "x": "Year (columns 1990-2018)",
+        "y": "Country-Sector (as row index: grouped by 'Country', 'Sector')",
+        "color": "Normalized deviation in emission (per country-sector row, per year)",
+        "size": null,
+        "other_aesthetics": "Colorbar for emission anomaly scale; sort rows descending by max deviation; axis tick trimming for large row count"
+      }
+    },
+    "transformations": [
+      "Unpivot year columns from '1990' to '2018' into a single 'Year' column with emissions as value",
+      "Group by ['Country', 'Sector'] to create a panel with emission time-series per combination",
+      "For each ['Country', 'Sector'], compute per-year z-score/deviation from its own mean to identify spikes",
+      "Reshape (pivot) so that rows are ['Country', 'Sector'], columns are 'Year', and values are normalized deviation",
+      "Sort rows by maximum emission deviation to highlight the most anomalous combinations"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\2.csv')",
+      "years = [str(y) for y in range(1990, 2019)]",
+      "df_melt = df.melt(id_vars=['Country','Sector'], value_vars=years, var_name='Year', value_name='Emissions')",
+      "df_melt['Emissions_z'] = df_melt.groupby(['Country','Sector'])['Emissions'].transform(lambda x: (x-x.mean())/x.std(ddof=0))",
+      "heatmap_data = df_melt.pivot_table(index=['Country','Sector'], columns='Year', values='Emissions_z')",
+      "heatmap_data = heatmap_data.loc[heatmap_data.max(axis=1).sort_values(ascending=False).index]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nyears = [str(y) for y in range(1990, 2019)]\ndf_melt = df.melt(id_vars=['Country','Sector'], value_vars=years, var_name='Year', value_name='Emissions')\ndf_melt['Emissions_z'] = df_melt.groupby(['Country','Sector'])['Emissions'].transform(lambda x: (x-x.mean())/x.std(ddof=0))\nheatmap_data = df_melt.pivot_table(index=['Country','Sector'], columns='Year', values='Emissions_z')\nheatmap_data = heatmap_data.loc[heatmap_data.max(axis=1).sort_values(ascending=False).index]\nplt.figure(figsize=(16, 14))\ncmap = mpl.colormaps['viridis']\nim = plt.imshow(heatmap_data.values, aspect='auto', cmap=cmap, vmin=-3, vmax=3)\nplt.colorbar(im, label='Emission spike z-score')\nplt.xticks(np.arange(len(years)), years, rotation=90)\ntop_rows = heatmap_data.index[:30]\nplt.yticks(np.arange(len(heatmap_data)), [f'{c} ({s})' for c,s in heatmap_data.index])\nplt.title('Methane Emissions Anomalies\\nCountry-Sector vs. Year (Normalized z-score)')\nplt.xlabel('Year')\nplt.ylabel('Country (Sector)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

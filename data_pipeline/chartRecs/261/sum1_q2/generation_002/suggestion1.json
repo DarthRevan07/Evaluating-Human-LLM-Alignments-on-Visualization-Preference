@@ -1,0 +1,43 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Which undergraduate majors are most common among astronauts, and how does this distribution differ by gender?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Bar Chart",
+      "design_rationale": "A stacked bar chart provides a clear, comparative overview of the most common undergraduate majors among NASA astronauts, while simultaneously breaking out the distribution by gender. This approach enables users to instantly grasp both the overall prevalence of majors and how representation may differ between men and women. By limiting the majors to those most frequently chosen (e.g., top 10), clutter is reduced and the focus remains on meaningful differences. Categorical data ('Undergraduate Major', 'Gender') is well suited for this format.",
+      "target_insight": "Identifies the most common undergraduate majors among astronauts and highlights gender disparities or patterns within each major.",
+      "output_fields": [
+        "Undergraduate Major",
+        "Gender",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Undergraduate Major",
+        "y": "Number of astronauts (count of Name)",
+        "color": "Gender",
+        "size": null,
+        "other_aesthetics": "Stacked bars; legend for Gender; rotate x-axis labels for readability"
+      }
+    },
+    "transformations": [
+      "Drop rows with nulls in 'Undergraduate Major' or 'Gender'",
+      "Group by ['Undergraduate Major', 'Gender'] and count 'Name'",
+      "Aggregate counts to get total per major, then select top 10 majors with highest total counts",
+      "Filter grouped data to include only the top 10 majors"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Undergraduate Major', 'Gender'])",
+      "major_gender_counts = df.groupby(['Undergraduate Major', 'Gender'])['Name'].count().reset_index()",
+      "total_major_counts = major_gender_counts.groupby('Undergraduate Major')['Name'].sum().sort_values(ascending=False)",
+      "top_majors = total_major_counts.head(10).index.tolist()",
+      "top_major_gender_counts = major_gender_counts[major_gender_counts['Undergraduate Major'].isin(top_majors)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf = df.dropna(subset=['Undergraduate Major', 'Gender'])\nmajor_gender_counts = df.groupby(['Undergraduate Major', 'Gender'])['Name'].count().reset_index()\ntotal_major_counts = major_gender_counts.groupby('Undergraduate Major')['Name'].sum().sort_values(ascending=False)\ntop_majors = total_major_counts.head(10).index.tolist()\ntop_major_gender_counts = major_gender_counts[major_gender_counts['Undergraduate Major'].isin(top_majors)]\ngenders = top_major_gender_counts['Gender'].unique()\nmajors = top_majors\nind = np.arange(len(majors))\nwidth = 0.8\n# Prepare bottom array for stacking\nbottom = np.zeros(len(majors))\nfig, ax = plt.subplots(figsize=(13,7))\nfor gender in genders:\n    vals = []\n    for major in majors:\n        sub = top_major_gender_counts[(top_major_gender_counts['Undergraduate Major']==major) & (top_major_gender_counts['Gender']==gender)]\n        if not sub.empty:\n            vals.append(int(sub['Name'].values[0]))\n        else:\n            vals.append(0)\n    ax.bar(ind, vals, width, label=gender, bottom=bottom)\n    bottom += np.array(vals)\nax.set_xticks(ind)\nax.set_xticklabels(majors, rotation=40, ha='right')\nax.set_ylabel('Number of astronauts')\nax.set_title('Top 10 Undergraduate Majors among NASA Astronauts\\nStacked by Gender')\nax.legend(title='Gender')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

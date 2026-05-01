@@ -1,0 +1,38 @@
+{
+  "table_name": "39",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Are there any glass types where the range of magnesium (Mg) is unusually broad or narrow compared to others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "Boxplots are ideal for visualizing distributions and spotting outliers or differences in spread across categories. Here, plotting 'Mg' for each 'Type' side by side reveals the range and variability within each glass type, instantly providing a clear comparative view of broad or narrow ranges. Outliers and the interquartile range are visually encoded, making unusual spread patterns easy to spot.",
+      "target_insight": "Which glass types have the broadest and narrowest distributions of magnesium content, and which (if any) contain extreme values or outliers.",
+      "output_fields": [
+        "Mg",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "Mg",
+        "color": "Type (categorical colormap)",
+        "size": null,
+        "other_aesthetics": "Boxplot width, outlier marker, legend for Type"
+      }
+    },
+    "transformations": [
+      "Group df by 'Type'",
+      "Extract 'Mg' values for each 'Type' group"
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c_squared\\39.csv",
+      "Sort 'Type' for visually consistent order",
+      "For each 'Type', extract list of 'Mg' values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\39.csv')\ntypes_sorted = sorted(df['Type'].unique())\ndata = [df[df['Type'] == t]['Mg'].values for t in types_sorted]\ncmap = mpl.colormaps['tab10']\nplt.figure(figsize=(10,6))\nbp = plt.boxplot(data, patch_artist=True, widths=0.6, showfliers=True)\nfor patch, t in zip(bp['boxes'], types_sorted):\n    color = cmap(t % 10)\n    patch.set_facecolor(color)\nplt.xticks(range(1, len(types_sorted)+1), [str(t) for t in types_sorted])\nplt.xlabel('Type')\nplt.ylabel('Mg')\nplt.title('Distribution of Magnesium (Mg) by Glass Type\\nComparing Range and Outliers Across Classes')\nfrom matplotlib.lines import Line2D\nhandles = [Line2D([0], [0], color=cmap(t % 10), lw=8) for t in types_sorted]\nplt.legend(handles, [f'Type {t}' for t in types_sorted], bbox_to_anchor=(1.02, 1), loc='upper left', borderaxespad=0)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

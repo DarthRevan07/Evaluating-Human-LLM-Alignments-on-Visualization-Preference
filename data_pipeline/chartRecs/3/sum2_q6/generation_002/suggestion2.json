@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Which countries have the lowest rice production per person despite having large rice acreage?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Rank-Heatmap Table",
+      "design_rationale": "This approach delivers a country-by-country heatmap ranking where only nations with large rice acreage (top 25%) are compared. Countries (rows) are sorted by increasing 'Rice Production Per Person (Kg)' for clear visibility of underperformers. For these, we color map the ranks of acreage, per capita, and yield (three critical measures). This allows analysts to clearly compare not only which countries are underperforming per capita despite huge land use, but also inspect whether their poor efficiency stems from low yield or simply large populations.",
+      "target_insight": "This table highlights, among large-acreage countries, those with the worst per capita rice output and their comparative standing in acreage and yield (spot patterns of low yield as contributing factor, or just high population).",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Acreage",
+        "Rank of Rice Production Per Person",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "['Rank of Rice Acreage', 'Rank of Rice Production Per Person', 'Rank of Rice Yield'] (columns of heatmap)",
+        "y": "Country",
+        "color": "Cell background color represents rank (darker = higher/better, lighter = lower/worse)",
+        "size": "null",
+        "other_aesthetics": "Rows (countries) sorted by increasing 'Rice Production Per Person (Kg)'; colorbar denotes rank; annotations show exact rank value"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Acreage (Hectare)' to float for filtering",
+      "Select only countries in top quartile for 'Rice Acreage (Hectare)'",
+      "Sort these countries by 'Rice Production Per Person (Kg)' ascending (lowest per person first)",
+      "Extract 'Country', 'Rank of Rice Acreage', 'Rank of Rice Production Per Person', 'Rank of Rice Yield' for heatmap"
+    ],
+    "data_preparation_steps": [
+      "Parse 'Rice Acreage (Hectare)' as numeric for filtering",
+      "Parse 'Rice Production Per Person (Kg)' as numeric for sorting",
+      "Filter to large-acreage countries (top 25%)",
+      "Build a DataFrame with country + 3 rank fields for heatmap",
+      "Sort by 'Rice Production Per Person (Kg)' ascending"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndef parse_number(x):\n    if isinstance(x, str):\n        x = x.replace(',', '').replace(' ', '')\n        if x.endswith('M'):\n            return float(x[:-1]) * 1e6\n        if x.endswith('K'):\n            return float(x[:-1]) * 1e3\n        try:\n            return float(x)\n        except:\n            return np.nan\n    return np.nan\n\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf[\"Rice Acreage (Hectare)_num\"] = df[\"Rice Acreage (Hectare)\"].apply(parse_number)\ndf[\"Rice Production Per Person (Kg)_num\"] = df[\"Rice Production Per Person (Kg)\"].apply(parse_number)\ntop_acreage_thresh = df[\"Rice Acreage (Hectare)_num\"].quantile(0.75)\ndf_large = df[df[\"Rice Acreage (Hectare)_num\"] >= top_acreage_thresh].copy()\ndf_large = df_large.sort_values(\"Rice Production Per Person (Kg)_num\", ascending=True)\nrank_fields = [\"Rank of Rice Acreage\", \"Rank of Rice Production Per Person\", \"Rank of Rice Yield\"]\ndf_heat = df_large[[\"Country\"] + rank_fields].reset_index(drop=True)\n\n# Normalize each rank column for heat color (1=best, max=worst)\narr = df_heat[rank_fields].values.astype(float)\nminv, maxv = np.nanmin(arr), np.nanmax(arr)\narr_norm = (arr-minv) / (maxv-minv)\n\nfig, ax = plt.subplots(figsize=(7, 0.35*arr.shape[0] + 2))\ncmap = mpl.colormaps[\"YlOrRd\"]\nim = ax.imshow(arr_norm, aspect=\"auto\", cmap=cmap)\n\n# Annotate rank numbers\nfor i in range(arr.shape[0]):\n    for j in range(arr.shape[1]):\n        text = str(int(arr[i, j]))\n        ax.text(j, i, text, ha=\"center\", va=\"center\", color=\"black\", fontsize=10)\n\nax.set_yticks(np.arange(len(df_heat)))\nax.set_yticklabels(df_heat[\"Country\"], fontsize=10)\nax.set_xticks(np.arange(len(rank_fields)))\nax.set_xticklabels(rank_fields, fontsize=11, rotation=30, ha='right')\n\nax.set_title(\n    \"Rank Comparison: Countries with Largest Rice Acreage, Sorted by Per Capita Production\\n\"\n    + \"(Darker=higher rank (better); Lower per person at top)\"\n)\n\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Normalized Rank (1=Best)')\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

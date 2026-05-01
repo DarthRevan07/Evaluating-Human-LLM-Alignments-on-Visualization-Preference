@@ -1,0 +1,40 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How do the highest temperatures in the winter months (e.g., January, February) compare to those in the summer months (e.g., July, August) for each year?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Diverging Dot Plot",
+      "design_rationale": "A diverging dot plot visually emphasizes the difference between highest summer and winter temperatures for each year as a deviation from a centerline. The difference is encoded as position, making the comparison visually striking. This approach is less conventional, but highly effective for highlighting season-to-season contrasts.",
+      "target_insight": "This visualization quantifies and visually showcases the temperature gap between summer and winter for each year, including whether the gap is increasing or decreasing, drawing attention to year-over-year changes.",
+      "output_fields": [
+        "Year",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Difference between Summer and Winter mean Temperature",
+        "y": "Year",
+        "color": "Magnitude and sign of difference (diverging colormap)",
+        "size": null,
+        "other_aesthetics": "Vertical reference line at zero, color gradient, annotation of extreme values"
+      }
+    },
+    "transformations": [
+      "Create 'Season' column as above ('Winter' for 'January', 'February'; 'Summer' for 'July', 'August')",
+      "Group by df['Year'] and Season, aggregate mean Temperature for each segment",
+      "Calculate 'Difference' = Summer mean - Winter mean for each year"
+    ],
+    "data_preparation_steps": [
+      "Extract month from df['Date'], map to 'Season', drop nulls",
+      "Group by ['Year','Season'], mean aggregation on Temperature",
+      "Pivot so each year has 'Winter' and 'Summer' mean Temperature",
+      "Compute difference, assign to dataframe for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\nmonth_map = {'January':'Winter','February':'Winter','July':'Summer','August':'Summer'}\ndf['Month'] = df['Date'].str.split(' ').str[0]\ndf['Season'] = df['Month'].map(month_map)\ndf_season = df.dropna(subset=['Season'])\ngrouped = df_season.groupby(['Year','Season'])['Temperature'].mean().unstack()\nyears = grouped.index.astype(int)\ndiff = grouped['Summer'] - grouped['Winter']\ndiff_vals = diff.values\ndiff_min = diff.min()\ndiff_max = diff.max()\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.Normalize(vmin=diff_min, vmax=diff_max)\nscat = ax.scatter(diff_vals, years, c=diff_vals, cmap=cmap, norm=norm, s=120, edgecolor='black')\nax.axvline(0, color='grey', linestyle='--', linewidth=1)\nfor i, (d, y) in enumerate(zip(diff_vals, years)):\n    if d == diff_max:\n        ax.text(d+0.5, y, 'Max Gap', va='center', ha='left', fontsize=9, color='black')\n    elif d == diff_min:\n        ax.text(d-0.5, y, 'Min Gap', va='center', ha='right', fontsize=9, color='black')\nax.set_xlabel('Difference: Summer mean - Winter mean (°F)')\nax.set_ylabel('Year')\nax.set_yticks(years)\nax.set_title('Yearly Difference between Highest Summer and Winter Temperatures\\nAmherst')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', label='Temperature Gap (°F)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

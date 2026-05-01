@@ -1,0 +1,41 @@
+{
+  "table_name": "268",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which districts in each division experienced the highest population growth rates from 1991 to 2022?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Division-faceted heatmap (district vs growth rate, top-ranked highlighted)",
+      "design_rationale": "A heatmap provides a visual matrix of growth rates for all districts, with divisions separated as facets to enable intra-division comparison. Highlighting the top district per division with a bold border or marker makes standout growth easily identified. This method leverages both categorical and quantitative data, and is scalable to all 64 districts without clutter.",
+      "target_insight": "Shows distribution and ranking of growth rates for all districts, and visually emphasizes divisional leaders; also reveals high/low clusters in each division.",
+      "output_fields": [
+        "Division",
+        "Name",
+        "Population Growth Rate (1991-2022)"
+      ],
+      "chart_encodings": {
+        "x": "Name (districts within division)",
+        "y": "Division (as facet rows)",
+        "color": "Population Growth Rate (1991-2022) (continuous color scale)",
+        "size": null,
+        "other_aesthetics": "Highlight cell of top district in each division (bold edge/marker), district names annotated"
+      }
+    },
+    "transformations": [
+      "Calculate 'Population Growth Rate (1991-2022)' for each district as ((df['Population_2022'] - df['Population_1991']) / df['Population_1991']) * 100",
+      "Create wide-format (pivot) for heatmap: rows=Division, columns=Name, values=Growth Rate",
+      "Identify and mark top-growth district cell in each division"
+    ],
+    "data_preparation_steps": [
+      "Add new column 'Population Growth Rate (1991-2022)' to df",
+      "For each division, determine top-growth district",
+      "Pivot df to Division x Name matrix for heatmap",
+      "Prepare mask (or overlay) to highlight top-growth cells"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['Population Growth Rate (1991-2022)'] = ((df['Population_2022'] - df['Population_1991']) / df['Population_1991']) * 100\ndivisions = sorted(df['Division'].unique())\ndistricts = sorted(df['Name'].unique())\npivot = df.pivot(index='Division', columns='Name', values='Population Growth Rate (1991-2022)')\nfig, ax = plt.subplots(figsize=(18,6))\ncmap = mpl.colormaps['YlGnBu']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\nax.set_yticks(np.arange(len(divisions)))\nax.set_yticklabels(divisions)\nax.set_xticks(np.arange(len(districts)))\nax.set_xticklabels(districts, rotation=90, fontsize=8)\nfor i, division in enumerate(divisions):\n    division_data = df[df['Division'] == division]\n    top_idx = division_data['Population Growth Rate (1991-2022)'].idxmax()\n    top_district = df.loc[top_idx, 'Name']\n    j = districts.index(top_district)\n    rect = plt.Rectangle((j-0.5, i-0.5), 1, 1, edgecolor='red', linewidth=3, facecolor='none')\n    ax.add_patch(rect)\n    ax.text(j, i, top_district, ha='center', va='center', color='black', fontsize=9, fontweight='bold')\ncbar = fig.colorbar(im, ax=ax, orientation='vertical')\ncbar.set_label('Population Growth Rate (1991-2022) (%)')\nax.set_title('Population Growth Rate (1991-2022) for Districts in Each Division\\nTop District Highlighted')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

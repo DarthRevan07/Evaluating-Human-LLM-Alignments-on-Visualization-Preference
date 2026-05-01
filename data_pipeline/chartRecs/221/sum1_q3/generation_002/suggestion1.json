@@ -1,0 +1,38 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Is there a relationship between traveler age and accommodation type preference?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Violin Plot",
+      "design_rationale": "A violin plot provides a nuanced visualization of age distributions for each accommodation type. Since 'Traveler age' is a continuous variable and 'Accommodation type' is categorical with 8 unique values, plotting their distribution per category reveals if certain types are preferred by specific age groups, highlighting both central tendency and spread. This approach allows us to visually compare which accommodation types are most popular among older, younger, or mixed-age travelers.",
+      "target_insight": "How traveler age distributions differ across accommodation types, indicating age-group preferences for lodging.",
+      "output_fields": [
+        "Accommodation type",
+        "Traveler age"
+      ],
+      "chart_encodings": {
+        "x": "Accommodation type",
+        "y": "Traveler age",
+        "color": "Accommodation type (distinct color per category)",
+        "size": "null",
+        "other_aesthetics": "alpha=0.6 for violin fill; edge-color for contrast"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Accommodation type' or 'Traveler age'",
+      "For each 'Accommodation type', collect all 'Traveler age' values"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Accommodation type', 'Traveler age'])",
+      "accommodation_types = df['Accommodation type'].unique()",
+      "data_per_type = [df[df['Accommodation type'] == t]['Traveler age'].values for t in accommodation_types]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf = df.dropna(subset=['Accommodation type', 'Traveler age'])\naccommodation_types = df['Accommodation type'].unique()\ndata_per_type = [df[df['Accommodation type'] == t]['Traveler age'].values for t in accommodation_types]\nfig, ax = plt.subplots(figsize=(10, 6))\ncmap = mpl.colormaps['viridis'].resampled(len(accommodation_types))\nparts = ax.violinplot(data_per_type, showmeans=True, showmedians=True, showextrema=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(cmap(i))\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.6)\nfor key in ['cbars', 'cmedians', 'cmeans']:\n    parts[key].set_edgecolor('black')\n    parts[key].set_linewidth(1)\nax.set_xticks(np.arange(1, len(accommodation_types) + 1))\nax.set_xticklabels(accommodation_types, rotation=30, ha='right')\nax.set_xlabel('Accommodation type')\nax.set_ylabel('Traveler age')\nplt.title('Age distributions per accommodation type\\nShows which types attract younger or older travelers')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

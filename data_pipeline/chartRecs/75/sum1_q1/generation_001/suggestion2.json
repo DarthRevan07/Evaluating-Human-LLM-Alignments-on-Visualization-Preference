@@ -1,0 +1,38 @@
+{
+  "table_name": "75",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do average math scores differ between students who completed the test preparation course versus those who did not?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Distribution View)",
+      "design_rationale": "A boxplot allows for the comparison of the full distribution of math scores for each 'test preparation course' group, not just their averages. This approach is insightful for revealing variability, potential outliers, and whether test preparation impacts not just the mean but also the spread and extremes of exam scores. The categorical grouping of 'test preparation course' fits the boxplot paradigm well, and the visual can also highlight overlapping or distinct ranges between groups.",
+      "target_insight": "Shows both the central tendency and spread of math scores for each group, exposing any differences in variability or upper/lower quartiles, and if test preparation shifts score distributions as well as averages.",
+      "output_fields": [
+        "test preparation course",
+        "math score"
+      ],
+      "chart_encodings": {
+        "x": "test preparation course (categorical grouping)",
+        "y": "math score (score distribution)",
+        "color": "test preparation course (different box colors)",
+        "size": null,
+        "other_aesthetics": "box width, median marker, outlier dots"
+      }
+    },
+    "transformations": [
+      "Split df into two groups based on 'test preparation course'",
+      "Extract 'math score' arrays for both groups"
+    ],
+    "data_preparation_steps": [
+      "scores_completed = df[df['test preparation course']=='completed']['math score']",
+      "scores_none = df[df['test preparation course']=='none']['math score']",
+      "data_to_plot = [scores_completed, scores_none]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\75.csv')\nscores_completed = df[df['test preparation course']=='completed']['math score']\nscores_none = df[df['test preparation course']=='none']['math score']\ndata_to_plot = [scores_completed, scores_none]\nfig, ax = plt.subplots(figsize=(8, 5))\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=['completed', 'none'], widths=0.5)\ncolors = ['#76b041', '#ffab40']\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_color('black')\n    median.set_linewidth(2.5)\nax.set_ylabel('Math score', fontsize=13)\nax.set_xlabel('Test preparation course', fontsize=13)\nax.set_title('Distribution of Math Scores by Test Preparation Course\\n', fontsize=15, fontweight='bold')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

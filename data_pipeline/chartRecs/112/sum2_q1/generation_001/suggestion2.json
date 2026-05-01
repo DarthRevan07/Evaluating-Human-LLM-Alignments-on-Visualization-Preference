@@ -1,0 +1,43 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do caffeine levels vary among different drink types, such as coffee, tea, energy drinks, and soft drinks?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with Size and Color Encoding",
+      "design_rationale": "A scatterplot enables a multidimensional exploration of individual beverages—visualizing caffeine content versus serving volume, with points colored by drink type. By further sizing points by calorie count and coloring by 'type', it shows how caffeine concentration relates to both serving size and calorie, and which drink categories dominate at higher caffeine values. This is ideal for a detailed, granular view leveraging the large number of distinct beverages in the dataset.",
+      "target_insight": "This plot reveals the relationship between serving volume and caffeine amount, showing which types cluster at high or low caffeine per serving, as well as the energy (calorie) content linked with these drinks. It surfaces outliers and provides a holistic, beverage-level comparison.",
+      "output_fields": [
+        "Volume (ml)",
+        "Caffeine (mg)",
+        "type",
+        "Calories"
+      ],
+      "chart_encodings": {
+        "x": "Volume (ml)",
+        "y": "Caffeine (mg)",
+        "color": "type (distinct color per drink category)",
+        "size": "Calories (circle area relative to caloric content)",
+        "other_aesthetics": "alpha for scatter, legend for type, color range, s scaling"
+      }
+    },
+    "transformations": [
+      "Exclude drinks with zero caffeine for relevance (optional)",
+      "Normalize 'Calories' for visual scaling of scatterpoint size",
+      "Map each drink's 'type' to a unique color"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df[df['Caffeine (mg)'] > 0].copy()",
+      "type_list = sorted(df_plot['type'].unique())",
+      "colors_dict = dict(zip(type_list, mpl.colormaps['tab10'].colors[:len(type_list)]))",
+      "df_plot['color'] = df_plot['type'].map(colors_dict)",
+      "df_plot['size'] = 40 + 160 * (df_plot['Calories'] - df_plot['Calories'].min()) / (df_plot['Calories'].max() - df_plot['Calories'].min())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_plot = df[df['Caffeine (mg)'] > 0].copy()\ntype_list = sorted(df_plot['type'].unique())\ncolors_dict = dict(zip(type_list, mpl.colormaps['tab10'].colors[:len(type_list)]))\ndf_plot['color'] = df_plot['type'].map(colors_dict)\ndf_plot['size'] = 40 + 160 * (df_plot['Calories'] - df_plot['Calories'].min()) / (df_plot['Calories'].max() - df_plot['Calories'].min())\nplt.figure(figsize=(10,6))\nfor t in type_list:\n    df_t = df_plot[df_plot['type'] == t]\n    plt.scatter(df_t['Volume (ml)'], df_t['Caffeine (mg)'], s=df_t['size'], c=[colors_dict[t]], label=t, alpha=0.7, edgecolor='black', linewidth=0.5)\nplt.xlabel('Volume (ml)')\nplt.ylabel('Caffeine (mg)')\nplt.title('Caffeine vs Volume by Drink Type\\n(Point size shows Calories)')\nplt.legend(title='type', loc='upper right')\nplt.grid('--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

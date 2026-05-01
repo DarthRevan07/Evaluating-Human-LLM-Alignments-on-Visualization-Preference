@@ -1,0 +1,48 @@
+{
+  "table_name": "269",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How has the population of each continent changed from 1970 to 2023?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart (Multi-series, Trend Over Time by Continent)",
+      "design_rationale": "A line chart is ideal for visualizing the change in total population by continent across several decades. By aggregating country-level data by continent for each year, it shows both the absolute and relative change in population for each continent from 1970 to 2023. Six distinct colored lines map continent population trends and allow direct comparison of growth trajectories and inflection points. By using years as the x-axis and continent totals as y-axis, we yield a clear, intuitive answer to the question and facilitate visual comparison.",
+      "target_insight": "Which continents experienced the greatest and least population growth, plus change patterns for all continents over time.",
+      "output_fields": [
+        "continent",
+        "1970 population",
+        "1980 population",
+        "1990 population",
+        "2000 population",
+        "2010 population",
+        "2015 population",
+        "2020 population",
+        "2022 population",
+        "2023 population"
+      ],
+      "chart_encodings": {
+        "x": "Year (derived from population columns)",
+        "y": "Total Continent Population (aggregated)",
+        "color": "continent",
+        "size": null,
+        "other_aesthetics": "Line style distinct for each continent"
+      }
+    },
+    "transformations": [
+      "For each record, extract population values for years: 1970, 1980, 1990, 2000, 2010, 2015, 2020, 2022, 2023",
+      "Group data by df['continent']",
+      "Sum population columns per continent",
+      "Reshape such that row = continent, columns = population per year"
+    ],
+    "data_preparation_steps": [
+      "Select columns: df['continent'], df['1970 population'], df['1980 population'], df['1990 population'], df['2000 population'], df['2010 population'], df['2015 population'], df['2020 population'], df['2022 population'], df['2023 population']",
+      "Group by df['continent'], aggregate sum for each population column",
+      "Unpivot to long format: columns 'Year' and 'Population'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\269.csv\")\npop_cols = [\"1970 population\", \"1980 population\", \"1990 population\", \"2000 population\", \"2010 population\", \"2015 population\", \"2020 population\", \"2022 population\", \"2023 population\"]\ndf_group = df.groupby(\"continent\")[pop_cols].sum().reset_index()\ndf_long = df_group.melt(id_vars=[\"continent\"], value_vars=pop_cols, var_name=\"Year\", value_name=\"Population\")\ndf_long[\"Year_num\"] = df_long[\"Year\"].str.extract(r'(\\d{4})').astype(int)\ncontinents = df_long[\"continent\"].unique()\ncmap = mpl.colormaps[\"tab10\"].resampled(len(continents))\nfig, ax = plt.subplots(figsize=(12,6))\nfor i, cont in enumerate(continents):\n    d = df_long[df_long[\"continent\"] == cont]\n    ax.plot(d[\"Year_num\"], d[\"Population\"], label=cont, color=cmap(i), linewidth=2)\nax.set_xlabel(\"Year\")\nax.set_ylabel(\"Total Population\")\nax.set_title(\"Population Growth by Continent, 1970-2023\\nSumming all countries for each continent\")\nax.legend(title=\"Continent\", loc=\"upper left\")\nax.grid(True, linestyle=\"--\", alpha=0.5)\nax.set_xticks([1970,1980,1990,2000,2010,2015,2020,2022,2023])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

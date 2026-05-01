@@ -1,0 +1,40 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which combination of enginetype and enginesize consistently leads to higher car prices?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap enables a clear view of the relationship between two categorical variables (enginetype and enginesize binned) and their association with car prices. By aggregating prices and displaying them in a matrix format, we can quickly identify combinations that consistently yield higher prices, leveraging both the categorical (enginetype) and quantitative (enginesize) features.",
+      "target_insight": "Reveals which binned ranges of enginesize, within each enginetype, are associated with the highest average car prices.",
+      "output_fields": [
+        "enginetype",
+        "enginesize",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginesize (binned into categorical ranges)",
+        "y": "enginetype",
+        "color": "mean price",
+        "size": null,
+        "other_aesthetics": "colorbar for price; axes labels with rotated x-tick labels for readability"
+      }
+    },
+    "transformations": [
+      "Bin df['enginesize'] into 6 equal-width categorical intervals called 'enginesize_bin'",
+      "Group by df['enginetype'] and 'enginesize_bin', calculating mean of df['price']",
+      "Pivot the grouped results into a matrix with enginetype as rows and enginesize_bin as columns"
+    ],
+    "data_preparation_steps": [
+      "Create enginesize_bin column in df with pd.cut on df['enginesize']",
+      "Group by df['enginetype'] and enginesize_bin, aggregate mean price",
+      "Pivot into matrix for heatmap plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\ndf['enginesize_bin'] = pd.cut(df['enginesize'], bins=6, labels=[\"XS\",\"S\",\"M\",\"L\",\"XL\",\"XXL\"])\ndf_grouped = df.groupby(['enginetype','enginesize_bin'])['price'].mean().reset_index()\ndf_pivot = df_grouped.pivot(index='enginetype', columns='enginesize_bin', values='price')\nfig, ax = plt.subplots(figsize=(9, 6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(df_pivot.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_xticklabels(df_pivot.columns)\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_yticklabels(df_pivot.index)\nplt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')\nfor i in range(len(df_pivot.index)):\n    for j in range(len(df_pivot.columns)):\n        value = df_pivot.values[i, j]\n        if not np.isnan(value):\n            ax.text(j, i, f\"{int(value)}\", ha='center', va='center', color='w')\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label(\"Mean price (USD)\")\nax.set_xlabel(\"enginesize_bin\")\nax.set_ylabel(\"enginetype\")\nax.set_title(\"Mean Car Price by Enginetype and Enginesize Bin\\n(Which combinations consistently lead to higher prices)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

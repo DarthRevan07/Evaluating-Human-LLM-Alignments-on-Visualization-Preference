@@ -1,0 +1,42 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do car prices vary between different CarName brands, and are certain brands consistently in higher or lower price ranges?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Brand Model count vs Average price)",
+      "design_rationale": "A heatmap enables cross-comparison between average prices and brand popularity (number of distinct models per brand). By extracting the brand (first word from CarName) and count of unique CarName (model variants) per brand, then computing mean price per brand, we can use the axes to show #models and mean price, with color intensity representing the price (or vice versa). This provides a macro-level view of which brands have many models and whether their average price is high, low, or moderate -- revealing if luxury brands offer limited selection, or if popular brands span price segments.",
+      "target_insight": "How brand market breadth (variety of models) relates to price positioning; identification of volume brands versus boutique/luxury brands, and where their price points lie.",
+      "output_fields": [
+        "CarName",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "brand (categorical, sorted by number of models)",
+        "y": "number of unique CarName (models) per brand (numeric)",
+        "color": "Average price per brand (continuous colormap: brighter/higher = more expensive)",
+        "size": "null",
+        "other_aesthetics": "x-axis: brands; y-axis: count; cell color encodes mean price; colorbar included"
+      }
+    },
+    "transformations": [
+      "Extract brand name from CarName (first token).",
+      "Group data by brand, count unique CarName values (model count by brand).",
+      "Group data by brand, compute mean price per brand.",
+      "Construct a 1D heatmap (brands on x-axis, model count on y, color for mean price)."
+    ],
+    "data_preparation_steps": [
+      "df['brand'] = df['CarName'].str.split(' ').str[0]",
+      "model_counts = df.groupby('brand')['CarName'].nunique()",
+      "mean_prices = df.groupby('brand')['price'].mean()",
+      "brands_sorted = model_counts.sort_values(ascending=False).index.tolist()",
+      "Prepare matrix: each column is a brand, y-value is model count, color is mean price"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf['brand'] = df['CarName'].str.split(' ').str[0]\nmodel_counts = df.groupby('brand')['CarName'].nunique()\nmean_prices = df.groupby('brand')['price'].mean()\nbrands_sorted = model_counts.sort_values(ascending=False).index.tolist()\ncounts_sorted = model_counts[brands_sorted].values\nmeans_sorted = mean_prices[brands_sorted].values\nfig, ax = plt.subplots(figsize=(15,3))\ncmap = mpl.colormaps['viridis']\nscatter = ax.scatter(range(len(brands_sorted)), counts_sorted, c=means_sorted, cmap=cmap, s=200, edgecolor='k')\nfor i, brand in enumerate(brands_sorted):\n    ax.text(i, counts_sorted[i]+0.2, brand, rotation=90, ha='center', va='bottom', fontsize=9)\nax.set_xticks([])\nax.set_ylabel('Number of unique models')\nax.set_xlabel('brand (labels above dots)')\ncbar = plt.colorbar(scatter, ax=ax)\ncbar.set_label('Mean price per brand')\nax.set_title('Brands: Number of Models vs Average Price\\nDot color shows mean price; position shows market breadth')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

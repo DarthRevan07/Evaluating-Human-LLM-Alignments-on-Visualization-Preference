@@ -1,0 +1,38 @@
+{
+  "table_name": "39",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "How does the ratio of K (potassium) to Ca (calcium) differ among the identified glass Types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot provides a clear visualization of the distribution and spread of the K/Ca ratio within each glass Type. It highlights both median differences and variation, helping to compare how consistent or varied the K/Ca ratio is across Types. With 214 samples and 6 identified Types, boxplots are effective for comparing both aggregate statistics and outliers in ratios for categorical groups. This directly answers how the ratio differs structurally across Types.",
+      "target_insight": "Lets the user visually compare central tendency, variation, and potential outliers of the K/Ca ratio in each glass Type. Reveals if some Types have systematically higher ratios, more variability, or distinct outlier patterns.",
+      "output_fields": [
+        "K",
+        "Ca",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "K/Ca ratio",
+        "color": "Type",
+        "size": null,
+        "other_aesthetics": "show mean marker, adjust notch, set palette for distinct Type color"
+      }
+    },
+    "transformations": [
+      "Calculate new column 'K_Ca_ratio' as df['K'] / df['Ca']",
+      "Group data by df['Type'] to prepare for boxplot aggregation"
+    ],
+    "data_preparation_steps": [
+      "df['K_Ca_ratio'] = df['K'] / df['Ca']",
+      "Prepare list of K_Ca_ratio arrays for each unique value in df['Type'] for boxplot plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\39.csv')\ndf['K_Ca_ratio'] = df['K'] / df['Ca']\ntypes_sorted = np.sort(df['Type'].unique())\nboxplot_data = [df[df['Type'] == t]['K_Ca_ratio'].values for t in types_sorted]\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(types_sorted))]\nfig, ax = plt.subplots(figsize=(9,6))\nbox = ax.boxplot(boxplot_data, notch=True, patch_artist=True, showmeans=True)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor mean, color in zip(box['means'], colors):\n    mean.set_marker('o')\n    mean.set_markerfacecolor('white')\n    mean.set_markeredgecolor(color)\n    mean.set_markersize(8)\nax.set_xticklabels([str(t) for t in types_sorted], fontsize=12)\nax.set_xlabel('Type', fontsize=14)\nax.set_ylabel('K/Ca ratio', fontsize=14)\nax.set_title('Distribution of Potassium to Calcium Ratio (K/Ca)\\nAcross Glass Types', fontsize=16)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nfor i, t in enumerate(types_sorted):\n    ax.text(i+1, boxplot_data[i].mean(), f'{boxplot_data[i].mean():.2f}', ha='center', va='bottom', fontsize=11, color=colors[i])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

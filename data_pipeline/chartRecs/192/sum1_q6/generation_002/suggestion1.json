@@ -1,0 +1,38 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "How does Star color correlate with Temperature?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot grouped by 'Star color' visually summarizes the distribution of temperature for each star color, making it easy to see central tendencies, variability, and potential outliers. Since 'Star color' is categorical with 19 unique values and 'Temperature (K)' is numeric with a wide range, this approach is ideal for comparing group-level patterns and directly addressing how star color is associated with temperature categories.",
+      "target_insight": "View the temperature ranges and medians for each star color, revealing how specific colors correspond to hotter or cooler stars and highlighting the overall correlation trend.",
+      "output_fields": [
+        "Temperature (K)",
+        "Star color"
+      ],
+      "chart_encodings": {
+        "x": "Star color",
+        "y": "Temperature (K)",
+        "color": "distinct box colors per category using plt.cm.tab20",
+        "size": null,
+        "other_aesthetics": "custom x-axis rotation for readability, gridlines for clarity, outlier points highlighted"
+      }
+    },
+    "transformations": [
+      "Sort 'Star color' categories by median 'Temperature (K)' to reveal ordering in the plot",
+      "Aggregate temperature values into groups by 'Star color' for boxplot"
+    ],
+    "data_preparation_steps": [
+      "Compute median temperature per 'Star color'",
+      "Sort unique colors by median temperature, define plot order",
+      "Create list of temperature arrays for each color in that order"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared/192.csv')\nmedians = df.groupby('Star color')['Temperature (K)'].median()\nsorted_colors = medians.sort_values().index.tolist()\ndata_by_color = [df[df['Star color']==color]['Temperature (K)'].values for color in sorted_colors]\ncmap = mpl.colormaps['tab20']\ncolor_indices = np.arange(len(sorted_colors)) % 20\nbox_colors = [cmap(i) for i in color_indices]\nfig, ax = plt.subplots(figsize=(14,6))\nboxplot = ax.boxplot(data_by_color, patch_artist=True, boxprops=dict(linewidth=1), medianprops=dict(color='black', linewidth=2))\nfor patch, color in zip(boxplot['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_xticks(np.arange(1, len(sorted_colors)+1))\nax.set_xticklabels(sorted_colors, rotation=45, ha='right')\nax.set_xlabel('Star color', fontsize=12)\nax.set_ylabel('Temperature (K)', fontsize=12)\nax.set_title('Temperature Distribution by Star Color\\nSorted by Median Temperature', fontsize=16)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

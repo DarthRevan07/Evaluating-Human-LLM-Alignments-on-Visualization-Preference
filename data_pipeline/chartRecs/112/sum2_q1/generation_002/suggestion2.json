@@ -1,0 +1,41 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do caffeine levels vary among different drink types, such as coffee, tea, energy drinks, and soft drinks?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot (normalized caffeine per ml vs volume)",
+      "design_rationale": "A scatter plot mapping 'Volume (ml)' versus 'Caffeine (mg) per ml', colored by drink type, provides insight into how caffeine concentration and serving size interplay across beverage categories. This is unconventional, revealing how some drinks pack intense caffeine in smaller volumes, while others deliver milder doses by serving size. It allows the viewer to see both the spread and clustering of types, and compare high-concentration drinks to large-serving beverages; this approach bridges nutritional and practical consumption contexts.",
+      "target_insight": "Reveals which drink types offer the highest caffeine concentration and how serving size correlates with caffeine potency, uncovering standout drinks and hidden clustering among types.",
+      "output_fields": [
+        "type",
+        "Volume (ml)",
+        "Caffeine (mg)"
+      ],
+      "chart_encodings": {
+        "x": "Volume (ml)",
+        "y": "Caffeine (mg) per ml (computed)",
+        "color": "type (distinct color per category)",
+        "size": null,
+        "other_aesthetics": "alpha=0.65 for overlap, legend for type"
+      }
+    },
+    "transformations": [
+      "Create new column: 'Caffeine (mg) per ml' = df['Caffeine (mg)'] / df['Volume (ml)']",
+      "Filter: Exclude drinks with zero caffeine or volume where appropriate",
+      "Subset to relevant drink types (coffee, tea, energy drink, soft drink)"
+    ],
+    "data_preparation_steps": [
+      "Compute caffeine concentration for every entry",
+      "Exclude null or zero values in 'Caffeine (mg)', 'Volume (ml)'",
+      "Filter df to only include relevant drink types for comparison",
+      "Assign color mapping for each type"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\112.csv')\n# Compute caffeine concentration per ml\nmask = (df['Volume (ml)'] > 0) & (df['Caffeine (mg)'] > 0)\ndf_plot = df[mask].copy()\ndf_plot['Caffeine (mg) per ml'] = df_plot['Caffeine (mg)'] / df_plot['Volume (ml)']\nrelevant_types = ['Coffee', 'Tea', 'Energy Drink', 'Soft Drink']\ndf_plot = df_plot[df_plot['type'].isin(relevant_types)]\n# Assign colors\ncolor_list = ['#B7791B', '#4B8B3B', '#3366CF', '#E54444']\ncolor_dict = dict(zip(relevant_types, color_list))\nplt.figure(figsize=(8, 6))\nfor t in relevant_types:\n    subset = df_plot[df_plot['type'] == t]\n    plt.scatter(subset['Volume (ml)'], subset['Caffeine (mg) per ml'], \n                color=color_dict[t], label=t, alpha=0.65, s=45)\nplt.xlabel('Volume (ml)', fontsize=12)\nplt.ylabel('Caffeine (mg) per ml', fontsize=12)\nplt.title('Caffeine Concentration vs. Volume\\nColored by Drink Type', fontsize=14)\nplt.legend(title='Drink Type')\nplt.grid(True, linestyle='--', alpha=0.4)\nplt.xticks(fontsize=11)\nplt.yticks(fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,45 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there any notable patterns in transportation cost associated with specific destinations?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Destination vs Transportation Type)",
+      "design_rationale": "A heatmap of median transportation costs for each combination of destination and transportation type directly reveals associations between destinations and cost patterns for different travel modes. This unconventional approach cross-tabulates two categorical fields (Destination and Transportation type) with numeric cost, uncovering if certain destinations stand out due to specific transportation choices or unusually high costs. Focusing on top 10 destinations and top 5 transportation types keeps the heatmap readable given the dataset size.",
+      "target_insight": "This visualization shows whether some destinations are systematically more expensive for particular transport modes, and allows comparison across destinations simultaneously.",
+      "output_fields": [
+        "Destination",
+        "Transportation type",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "Transportation type",
+        "y": "Destination",
+        "color": "Median Transportation cost (using color intensity — viridis colormap)",
+        "size": "null",
+        "other_aesthetics": "Grid lines for readability; cost values annotated inside cells"
+      }
+    },
+    "transformations": [
+      "Remove rows where 'Destination', 'Transportation type', or 'Transportation cost' is null",
+      "Convert 'Transportation cost' strings to float (strip currency symbols etc.)",
+      "Select top 10 destinations by trip count; top 5 transportation types by frequency",
+      "Compute median transportation cost for each destination and transportation type"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Destination', 'Transportation type', 'Transportation cost'])",
+      "df_clean['Transportation cost'] = df_clean['Transportation cost'].replace('[^0-9\\.]', '', regex=True)",
+      "df_clean['Transportation cost'] = pd.to_numeric(df_clean['Transportation cost'], errors='coerce')",
+      "top_dest = df_clean['Destination'].value_counts().head(10).index.tolist()",
+      "top_ttype = df_clean['Transportation type'].value_counts().head(5).index.tolist()",
+      "df_plot = df_clean[(df_clean['Destination'].isin(top_dest)) & (df_clean['Transportation type'].isin(top_ttype))]",
+      "pivot = df_plot.pivot_table(index='Destination', columns='Transportation type', values='Transportation cost', aggfunc='median')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Transportation type', 'Transportation cost'])\ndf_clean['Transportation cost'] = df_clean['Transportation cost'].replace('[^0-9\\.]', '', regex=True)\ndf_clean['Transportation cost'] = pd.to_numeric(df_clean['Transportation cost'], errors='coerce')\ntop_dest = df_clean['Destination'].value_counts().head(10).index.tolist()\ntop_ttype = df_clean['Transportation type'].value_counts().head(5).index.tolist()\ndf_plot = df_clean[(df_clean['Destination'].isin(top_dest)) & (df_clean['Transportation type'].isin(top_ttype))]\npivot = df_plot.pivot_table(index='Destination', columns='Transportation type', values='Transportation cost', aggfunc='median').fillna(0)\nfig, ax = plt.subplots(figsize=(9,6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, cmap=cmap, aspect='auto')\nfor i in range(pivot.shape[0]):\n    for j in range(pivot.shape[1]):\n        val = pivot.values[i,j]\n        ax.text(j, i, '{:.0f}'.format(val) if val > 0 else '', ha='center', va='center', color='white' if val > np.nanmax(pivot.values)/2 else 'black', fontsize=10)\nax.set_xticks(np.arange(pivot.shape[1]))\nax.set_yticks(np.arange(pivot.shape[0]))\nax.set_xticklabels(pivot.columns, rotation=35, ha='right')\nax.set_yticklabels(pivot.index)\nax.set_xlabel('Transportation type', fontsize=12)\nax.set_ylabel('Destination', fontsize=12)\nax.set_title('Median Transportation Cost by Destination and Type\\n(Top 10 Destinations, Top 5 Modes)', fontsize=14)\ncbar = plt.colorbar(im, ax=ax, label='Median Transportation Cost (USD)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

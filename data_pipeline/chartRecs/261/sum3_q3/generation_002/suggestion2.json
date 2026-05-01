@@ -1,0 +1,41 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "What patterns can be observed in the number of space flights across different military ranks?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Bar Chart (Count of Astronauts by Number of Flights, Faceted by Rank)",
+      "design_rationale": "A stacked bar chart (histogram per rank) showcases how the frequency of astronauts with 0, 1, 2, ... flights varies by military rank, allowing comparison of not just means or medians but the entire distribution shape for each rank. This gives both an overview (do some ranks have a higher share of very experienced astronauts?) and detail (is any rank over- or under-represented in super frequent fliers or single-mission astronauts?). It is effective for categorical (military rank) versus discrete numeric (flight counts) and visualizes both the frequency structure and rank hierarchy.",
+      "target_insight": "Easily reveal which ranks are more likely to have multiple flights, and which create first/solo flyers. Compare the ranks' frequency and flight accomplishment profiles.",
+      "output_fields": [
+        "Military Rank",
+        "Space Flights",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Military Rank",
+        "y": "Astronaut count (stacked per 'Space Flights')",
+        "color": "Space Flights (discrete; e.g. 0,1,...,7)",
+        "size": null,
+        "other_aesthetics": "Vertical legend ordering; x-axis sorted by average flights per rank for behavioral insight"
+      }
+    },
+    "transformations": [
+      "Filter to astronauts with 'Military Rank' not null (ignore civilians/unknowns)",
+      "Count astronauts grouped by 'Military Rank' and 'Space Flights' (i.e. frequency per combination)",
+      "Sort 'Military Rank' values by average 'Space Flights' descending"
+    ],
+    "data_preparation_steps": [
+      "df_bar = df.loc[df['Military Rank'].notnull()]",
+      "pivot = df_bar.groupby(['Military Rank','Space Flights'])['Name'].nunique().unstack(fill_value=0)",
+      "order = df_bar.groupby('Military Rank')['Space Flights'].mean().sort_values(ascending=False).index.tolist()",
+      "pivot = pivot.loc[order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf_bar = df.loc[df['Military Rank'].notnull()]\npivot = df_bar.groupby(['Military Rank','Space Flights'])['Name'].nunique().unstack(fill_value=0)\norder = df_bar.groupby('Military Rank')['Space Flights'].mean().sort_values(ascending=False).index.tolist()\npivot = pivot.loc[order]\nnum_flights = sorted(pivot.columns)\ncmap = mpl.colormaps['viridis'].resampled(len(num_flights))\ncolors = [cmap(i) for i in range(len(num_flights))]\nfig, ax = plt.subplots(figsize=(13,7))\nbottom = np.zeros(len(pivot))\nfor i, flights in enumerate(num_flights):\n    values = pivot[flights].values\n    ax.bar(pivot.index, values, bottom=bottom, label=str(flights), color=colors[i], edgecolor='black', linewidth=0.7)\n    bottom += values\nax.set_xlabel('Military Rank')\nax.set_ylabel('Number of Astronauts (Stacked by Flights)')\ntitle = 'Space Flight Count Profiles by Military Rank\\n(NASA Astronauts, 1959-Present)'\nax.set_title(title)\nax.legend(title='Number of Flights', title_fontsize=11)\nax.set_xticklabels(pivot.index, rotation=30, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

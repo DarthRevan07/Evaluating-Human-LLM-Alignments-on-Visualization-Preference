@@ -1,0 +1,40 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does the distribution of Star types relate to their Luminosity levels?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Histogram (Luminosity by Star type)",
+      "design_rationale": "A stacked histogram offers an overview of the frequency distribution of luminosity values, split and color-coded by Star type. This approach answers the analytical question by decoding where (in the range of luminosity) each Star type is concentrated, visually revealing overlaps and exclusivity in luminosity levels among types. Suitable for a dataset of this size (240 rows), this chart can show both aggregate and segregated patterns in a single view.",
+      "target_insight": "The chart illuminates which Star types dominate specific luminosity regions, shows the proportion of the population per luminosity band, and indicates if certain types only appear at extreme or average luminosity values.",
+      "output_fields": [
+        "Luminosity(L/Lo)",
+        "Star type"
+      ],
+      "chart_encodings": {
+        "x": "Luminosity(L/Lo) (log scale)",
+        "y": "Count of stars (stacked)",
+        "color": "Star type (discrete color mapping)",
+        "size": null,
+        "other_aesthetics": "Legend, transparent stack, grid, log-scaled x-axis, bin count=18"
+      }
+    },
+    "transformations": [
+      "Apply log transformation to 'Luminosity(L/Lo)' to reduce skew and make binning meaningful.",
+      "Choose bin ranges uniformly covering the log scale.",
+      "Pivot data so that each Star type forms a separate stack in the histogram."
+    ],
+    "data_preparation_steps": [
+      "Import necessary libraries and load data.",
+      "Create 'Luminosity_log' column as log10 of 'Luminosity(L/Lo)'.",
+      "Set up bins covering the entire log-luminosity range (from log10(min) to log10(max)).",
+      "Prepare color map for discrete Star type values."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\192.csv')\ndf['Luminosity_log'] = np.log10(df['Luminosity(L/Lo)'])\nstar_types = sorted(df['Star type'].unique())\ncolors = mpl.colormaps['plasma'].resampled(len(star_types)).colors\nbins = np.linspace(df['Luminosity_log'].min(), df['Luminosity_log'].max(), 18)\ncounts = [np.histogram(df[df['Star type'] == st]['Luminosity_log'], bins=bins)[0] for st in star_types]\nfig, ax = plt.subplots(figsize=(11, 6))\nbottom = np.zeros(len(bins)-1)\nfor idx, st in enumerate(star_types):\n    ax.bar(bins[:-1], counts[idx], width=np.diff(bins), color=colors[idx], alpha=0.65, bottom=bottom, label='Star type ' + str(st), align='edge', edgecolor='black', linewidth=0.7)\n    bottom += counts[idx]\nxlabel = 'Luminosity (log$_{10}$ L/Lo)'\nax.set_xlabel(xlabel, fontsize=13)\nax.set_ylabel('Number of stars', fontsize=13)\nax.set_title('Stacked Histogram: Luminosity Distribution Split by Star type', fontsize=15)\nax.grid(axis='y', linestyle=':', alpha=0.3)\nax.legend(title='Star type', fontsize=10)\nax.set_xlim(bins[0], bins[-1])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

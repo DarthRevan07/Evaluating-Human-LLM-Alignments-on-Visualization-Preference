@@ -1,0 +1,38 @@
+{
+  "table_name": "192",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "How does Star color correlate with Temperature?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot with Overlayed Means",
+      "design_rationale": "A violin plot gives a visual representation of the full distribution shape of Temperature (K) for each Star color, showing density differences and multimodality. Overlaying mean values per color provides an immediate sense of centration and spread, capturing subtle correlations between color and temperature groupings.",
+      "target_insight": "Viewers can see both the average and distribution (including peaks or broadness) of Temperatures for each Star color, highlighting how colors relate to temperature ranges and possible multimodal behavior.",
+      "output_fields": [
+        "Temperature (K)",
+        "Star color"
+      ],
+      "chart_encodings": {
+        "x": "Star color",
+        "y": "Temperature (K)",
+        "color": "Star color category (for violin body)",
+        "size": null,
+        "other_aesthetics": "Overlay mean values with distinct markers, extended violin plot width for visual clarity, rotated x-ticks"
+      }
+    },
+    "transformations": [
+      "Sort Star color categories by mean Temperature (K) for logical order",
+      "Group Temperature (K) by Star color"
+    ],
+    "data_preparation_steps": [
+      "Calculate mean Temperature (K) per Star color",
+      "Sort Star color categories ascending by mean temperature",
+      "Prepare list of Temperature (K) values for each Star color"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\192.csv\")\nmeans = df.groupby(\"Star color\")['Temperature (K)'].mean().sort_values()\ncolor_order = means.index.tolist()\nviolin_data = [df[df['Star color'] == c]['Temperature (K)'].values for c in color_order]\ncmap = mpl.colormaps['Set3']\nfig, ax = plt.subplots(figsize=(13,7))\nvp = ax.violinplot(violin_data, positions=np.arange(len(color_order)) + 1, widths=0.9, showmeans=False, showmedians=False, showextrema=False)\nfor i, body in enumerate(vp['bodies']):\n    body.set_facecolor(cmap(i/len(color_order)))\n    body.set_edgecolor('k')\n    body.set_alpha(0.75)\nmeans_per_color = [np.mean(vals) for vals in violin_data]\nax.scatter(np.arange(1, len(color_order)+1), means_per_color, color='red', marker='o', s=60, label='Mean Temperature')\nax.set_xticks(np.arange(1, len(color_order)+1))\nax.set_xticklabels(color_order, rotation=45, ha='right')\nax.set_ylabel('Temperature (K)')\nax.set_xlabel('Star color')\nax.set_title('Temperature (K) Distribution for Each Star color\\nViolin shapes with mean overlays', fontsize=14)\nax.legend(loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

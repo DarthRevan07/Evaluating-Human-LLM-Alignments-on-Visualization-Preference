@@ -1,0 +1,394 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "generation_dir": "secondIter\\chartRecs\\65\\sum1_q10\\generation_001",
+  "schema_context": "Table: Impact of Product Positioning on Sales\nRows: 1000\nColumns: 10\n\nFIELD INFORMATION:\nField: Product ID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 989\n  - Semantic Meaning: Product ID is a unique numerical identifier assigned to individual products in a retail or sales environment, used to track and analyze product-specific sales and positioning impacts.\n  - Value Range: 110033.0 to 199976.0\n  - Mean: 154899.86\n\nField: Product Position\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the specific location within a retail store (e.g., aisle, end-cap, front of store) where a product is displayed, reflecting its placement strategy to influence sales.\n\nField: Price\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 897\n  - Semantic Meaning: Price represents the actual selling price of individual products in U.S. dollars within a retail sales dataset, reflecting varying product values likely influenced by their positioning.\n  - Value Range: 5.06 to 49.98\n  - Mean: 28.02\n\nField: Competitor's Price\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 915\n  - Semantic Meaning: This field represents the retail selling price of a competing product in the market, measured in monetary units, used to analyze how competitor pricing affects sales outcomes.\n  - Value Range: 0.72 to 49.85\n  - Mean: 25.55\n\nField: Promotion\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a product was actively promoted (e.g., through marketing or discounts) during the sales period, with \"Yes\" showing promotion activity and \"No\" showing none.\n\nField: Foot Traffic\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the qualitative level of customer visits or movement within a store or sales area, categorized as High, Medium, or Low.\n\nField: Consumer Demographics\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field categorizes customers by their demographic group, indicating the target segments (e.g., college students, families, seniors, young adults) relevant to marketing and sales analysis of product positioning.\n\nField: Product Category\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the classification of products being sold, specifying their general type (e.g., Clothing, Electronics, Food) in the context of retail or sales analysis.\n\nField: Seasonal\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a product is affected by seasonality (\"Yes\" for seasonal products, \"No\" for non-seasonal), helping businesses analyze sales patterns based on time of year.\n\nField: Sales Volume\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 811\n  - Semantic Meaning: Sales Volume represents the number of product units sold during a specific period or for a specific product, indicating overall sales performance in a retail or merchandising context.\n  - Value Range: 507.0 to 2999.0\n  - Mean: 1769.31\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Product ID\"\n  2. \"Product Position\"\n  3. \"Price\"\n  4. \"Competitor's Price\"\n  5. \"Promotion\"\n  6. \"Foot Traffic\"\n  7. \"Consumer Demographics\"\n  8. \"Product Category\"\n  9. \"Seasonal\"\n  10. \"Sales Volume\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Product ID'], df['Product Position']",
+  "table_metadata": {
+    "table_name": "Impact of Product Positioning on Sales",
+    "file_path": "csv_c2_sec\\65.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 65.csv (Dataset: Impact of Product Positioning on Sales)",
+    "original_filename": "65.csv",
+    "dataset_name": "Impact of Product Positioning on Sales",
+    "row_count": 1000,
+    "column_count": 10,
+    "table_hash": -8639065583860003312,
+    "fields": [
+      {
+        "name": "Product ID",
+        "clean_name": "Product_ID",
+        "camel_case_name": "productId",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 989,
+        "min_value": 110033.0,
+        "max_value": 199976.0,
+        "mean_value": 154899.862,
+        "median_value": 154694.5,
+        "sample_values": "110033, 110075, 110220, 110241, 110276, ..., 199631, 199673, 199735, 199887, 199976",
+        "inferred_semantic_summary": "Product ID is a unique numerical identifier assigned to individual products in a retail or sales environment, used to track and analyze product-specific sales and positioning impacts."
+      },
+      {
+        "name": "Product Position",
+        "clean_name": "Product_Position",
+        "camel_case_name": "productPosition",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 3,
+        "sample_values": "Aisle, End-cap, Front of Store",
+        "inferred_semantic_summary": "This field indicates the specific location within a retail store (e.g., aisle, end-cap, front of store) where a product is displayed, reflecting its placement strategy to influence sales."
+      },
+      {
+        "name": "Price",
+        "clean_name": "Price",
+        "camel_case_name": "price",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 897,
+        "min_value": 5.06,
+        "max_value": 49.98,
+        "mean_value": 28.02001,
+        "median_value": 28.68,
+        "sample_values": "5.06, 5.08, 5.11, 5.14, 5.15, ..., 49.8, 49.94, 49.95, 49.97, 49.98",
+        "inferred_semantic_summary": "Price represents the actual selling price of individual products in U.S. dollars within a retail sales dataset, reflecting varying product values likely influenced by their positioning."
+      },
+      {
+        "name": "Competitor's Price",
+        "clean_name": "Competitor_s_Price",
+        "camel_case_name": "competitorSPrice",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 915,
+        "min_value": 0.72,
+        "max_value": 49.85,
+        "mean_value": 25.55011,
+        "median_value": 26.145,
+        "sample_values": "0.72, 1.11, 1.25, 1.28, 1.5, ..., 48.76, 48.84, 49.1, 49.66, 49.85",
+        "inferred_semantic_summary": "This field represents the retail selling price of a competing product in the market, measured in monetary units, used to analyze how competitor pricing affects sales outcomes."
+      },
+      {
+        "name": "Promotion",
+        "clean_name": "Promotion",
+        "camel_case_name": "promotion",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 2,
+        "sample_values": "No, Yes",
+        "inferred_semantic_summary": "Indicates whether a product was actively promoted (e.g., through marketing or discounts) during the sales period, with \"Yes\" showing promotion activity and \"No\" showing none."
+      },
+      {
+        "name": "Foot Traffic",
+        "clean_name": "Foot_Traffic",
+        "camel_case_name": "footTraffic",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 3,
+        "sample_values": "High, Low, Medium",
+        "inferred_semantic_summary": "This field indicates the qualitative level of customer visits or movement within a store or sales area, categorized as High, Medium, or Low."
+      },
+      {
+        "name": "Consumer Demographics",
+        "clean_name": "Consumer_Demographics",
+        "camel_case_name": "consumerDemographics",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 4,
+        "sample_values": "College students, Families, Seniors, Young adults",
+        "inferred_semantic_summary": "This field categorizes customers by their demographic group, indicating the target segments (e.g., college students, families, seniors, young adults) relevant to marketing and sales analysis of product positioning."
+      },
+      {
+        "name": "Product Category",
+        "clean_name": "Product_Category",
+        "camel_case_name": "productCategory",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 3,
+        "sample_values": "Clothing, Electronics, Food",
+        "inferred_semantic_summary": "This field indicates the classification of products being sold, specifying their general type (e.g., Clothing, Electronics, Food) in the context of retail or sales analysis."
+      },
+      {
+        "name": "Seasonal",
+        "clean_name": "Seasonal",
+        "camel_case_name": "seasonal",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 2,
+        "sample_values": "No, Yes",
+        "inferred_semantic_summary": "This field indicates whether a product is affected by seasonality (\"Yes\" for seasonal products, \"No\" for non-seasonal), helping businesses analyze sales patterns based on time of year."
+      },
+      {
+        "name": "Sales Volume",
+        "clean_name": "Sales_Volume",
+        "camel_case_name": "salesVolume",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 811,
+        "min_value": 507.0,
+        "max_value": 2999.0,
+        "mean_value": 1769.311,
+        "median_value": 1791.5,
+        "sample_values": "507, 509, 511, 519, 521, ..., 2985, 2987, 2989, 2990, 2999",
+        "inferred_semantic_summary": "Sales Volume represents the number of product units sold during a specific period or for a specific product, indicating overall sales performance in a retail or merchandising context."
+      }
+    ],
+    "formatted_summary": "## Table 1: Impact_of_Product_Positioning_on_Sales (1,000 rows × 10 columns)\n\n### Description\nData loaded from CSV file: 65.csv (Dataset: Impact of Product Positioning on Sales)\n\n### Schema (10 fields)\n  - Product ID -- type: int64, values: 110033, 110075, 110220, 110241, 110276, ..., 199631, 199673, 199735, 199887, 199976\n  - Product Position -- type: object, values: Aisle, End-cap, Front of Store\n  - Price -- type: float64, values: 5.06, 5.08, 5.11, 5.14, 5.15, ..., 49.8, 49.94, 49.95, 49.97, 49.98\n  - Competitor's Price -- type: float64, values: 0.72, 1.11, 1.25, 1.28, 1.5, ..., 48.76, 48.84, 49.1, 49.66, 49.85\n  - Promotion -- type: object, values: No, Yes\n  - Foot Traffic -- type: object, values: High, Low, Medium\n  - Consumer Demographics -- type: object, values: College students, Families, Seniors, Young adults\n  - Product Category -- type: object, values: Clothing, Electronics, Food\n  - Seasonal -- type: object, values: No, Yes\n  - Sales Volume -- type: int64, values: 507, 509, 511, 519, 521, ..., 2985, 2987, 2989, 2990, 2999\n\n### Sample Data (first 5 rows)\n```\n   Product ID Product Position  Price  Competitor's Price Promotion Foot Traffic Consumer Demographics Product Category Seasonal  Sales Volume\n0      185102            Aisle  17.07               16.16        No       Medium              Families         Clothing       No          2823\n1      188771            Aisle  17.41               13.13        No          Low               Seniors         Clothing       No           654\n2      180176          End-cap  43.16               38.37       Yes       Medium          Young adults      Electronics      Yes          2220\n3      112917            Aisle  42.26               38.98       Yes          Low              Families         Clothing      Yes          1568\n4      192936          End-cap  47.94               45.59        No       Medium      College students         Clothing      Yes          2942\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "65",
+      "summary_idx": 1,
+      "question_idx": 10,
+      "question": "Are certain Product Positions more effective in boosting Sales Volume during seasonal periods compared to others?",
+      "column_combination": [
+        "Product ID",
+        "Product Position",
+        "Price",
+        "Competitor's Price",
+        "Promotion",
+        "Foot Traffic",
+        "Consumer Demographics",
+        "Product Category",
+        "Seasonal",
+        "Sales Volume"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Grouped Bar Chart (Conventional)",
+            "design_rationale": "A grouped bar chart is ideal for comparing average Sales Volume between different Product Positions under seasonal and non-seasonal contexts. By grouping bars by 'Product Position' and using different colors for 'Seasonal' status, this chart provides a clear, side-by-side comparison of the effectiveness of each position for seasonal versus non-seasonal products, highlighting whether certain product placements provide a significant sales boost during seasonal periods.",
+            "target_insight": "Shows whether specific Product Positions outperform others in driving Sales Volume during seasonal periods, by contrasting average sales for seasonal and non-seasonal items within each positioning strategy.",
+            "output_fields": [
+              "Product Position",
+              "Seasonal",
+              "Sales Volume"
+            ],
+            "chart_encodings": {
+              "x": "Product Position",
+              "y": "Average Sales Volume",
+              "color": "Seasonal",
+              "size": null,
+              "other_aesthetics": "Legend for Seasonal, side-by-side bar arrangement, gridlines, value annotation"
+            }
+          },
+          "transformations": [
+            "Filter df to rows where 'Sales Volume' is not null (all in this case, per schema but ensures robustness).",
+            "Group by 'Product Position' and 'Seasonal', aggregate by mean 'Sales Volume'.",
+            "Pivot the table so 'Seasonal' (Yes/No) becomes columns for grouped bar arrangement."
+          ],
+          "data_preparation_steps": [
+            "df_grouped = df.groupby(['Product Position', 'Seasonal'], as_index=False)['Sales Volume'].mean()",
+            "df_pivot = df_grouped.pivot(index='Product Position', columns='Seasonal', values='Sales Volume').reset_index()"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ndf_grouped = df.groupby(['Product Position', 'Seasonal'], as_index=False)['Sales Volume'].mean()\ndf_pivot = df_grouped.pivot(index='Product Position', columns='Seasonal', values='Sales Volume').reset_index()\npositions = df_pivot['Product Position']\nbar_width = 0.35\nx = np.arange(len(positions))\nfig, ax = plt.subplots(figsize=(8,5))\ncolors = {\"Yes\": \"#1f77b4\", \"No\": \"#ff7f0e\"}\nb1 = ax.bar(x - bar_width/2, df_pivot[\"Yes\"], width=bar_width, label=\"Seasonal: Yes\", color=colors[\"Yes\"])\nb2 = ax.bar(x + bar_width/2, df_pivot[\"No\"], width=bar_width, label=\"Seasonal: No\", color=colors[\"No\"])\nax.set_xlabel(\"Product Position\")\nax.set_ylabel(\"Average Sales Volume\")\nax.set_title(\"Average Sales Volume by Product Position\\nSeasonal vs. Non-Seasonal Items\")\nax.set_xticks(x)\nax.set_xticklabels(positions)\nax.legend(title=\"Seasonal\")\nax.grid(axis=\"y\", linestyle=\"--\", alpha=0.5)\nfor rects in [b1, b2]:\n    for rect in rects:\n        height = rect.get_height()\n        ax.annotate(f\"{height:,.0f}\",\n                    xy=(rect.get_x() + rect.get_width()/2, height),\n                    xytext=(0,3),\n                    textcoords=\"offset points\",\n                    ha=\"center\", va=\"bottom\", fontsize=9)\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Violin Plot (Unconventional)",
+            "design_rationale": "A violin plot is chosen for its ability to reveal the full distribution (including spread, outliers, and multimodality) of Sales Volume for each Product Position during the seasonal period. By restricting to only seasonal ('Yes') items and plotting violins for each Product Position, this visualization conveys not just typical (median) performance but also the variability and consistency of sales outcomes between positions, which is critical for understanding the potential pay-off and risk associated with each product placement during peak times.",
+            "target_insight": "Illustrates whether certain Product Positions consistently drive higher or more reliable sales for seasonal products, or if some positions have more volatile sales performance during these key periods.",
+            "output_fields": [
+              "Product Position",
+              "Sales Volume"
+            ],
+            "chart_encodings": {
+              "x": "Product Position",
+              "y": "Sales Volume",
+              "color": "Product Position (distinct color per category)",
+              "size": null,
+              "other_aesthetics": "Symmetrical violin shapes, median/mode indicator, labeled axes, gridlines"
+            }
+          },
+          "transformations": [
+            "Filter df to rows where 'Seasonal' == 'Yes' (only seasonal products).",
+            "Extract 'Sales Volume' for each 'Product Position' as lists to feed into violinplot."
+          ],
+          "data_preparation_steps": [
+            "df_seasonal = df[df['Seasonal'] == 'Yes']",
+            "positions = df_seasonal['Product Position'].unique()",
+            "position_sales = [df_seasonal[df_seasonal['Product Position'] == pos]['Sales Volume'] for pos in positions]"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ndf_seasonal = df[df['Seasonal'] == 'Yes']\npositions = df_seasonal['Product Position'].unique()\npositions_sorted = sorted(positions)\nposition_sales = [df_seasonal[df_seasonal['Product Position'] == pos]['Sales Volume'] for pos in positions_sorted]\ncmap = mpl.colormaps['viridis'].resampled(len(positions_sorted))\ncolors = [cmap(i) for i in range(len(positions_sorted))]\nfig, ax = plt.subplots(figsize=(8,5))\nparts = ax.violinplot(position_sales, showmeans=False, showmedians=True, showextrema=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.8)\nfor partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):\n    vp = parts[partname]\n    vp.set_edgecolor('black')\n    vp.set_linewidth(1.2)\nax.set_xticks(np.arange(1, len(positions_sorted)+1))\nax.set_xticklabels(positions_sorted)\nax.set_xlabel(\"Product Position\")\nax.set_ylabel(\"Sales Volume\")\nax.set_title(\"Distribution of Sales Volume by Product Position\\n(Seasonal Products Only)\")\nfrom matplotlib.patches import Patch\nlegend_patches = [Patch(facecolor=colors[i], edgecolor='black', label=positions_sorted[i], alpha=0.8) for i in range(len(positions_sorted))]\nax.legend(handles=legend_patches, title=\"Product Position\")\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T14:05:34.929211",
+      "schema_context": "Table: Impact of Product Positioning on Sales\nRows: 1000\nColumns: 10\n\nFIELD INFORMATION:\nField: Product ID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 989\n  - Semantic Meaning: Product ID is a unique numerical identifier assigned to individual products in a retail or sales environment, used to track and analyze product-specific sales and positioning impacts.\n  - Value Range: 110033.0 to 199976.0\n  - Mean: 154899.86\n\nField: Product Position\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the specific location within a retail store (e.g., aisle, end-cap, front of store) where a product is displayed, reflecting its placement strategy to influence sales.\n\nField: Price\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 897\n  - Semantic Meaning: Price represents the actual selling price of individual products in U.S. dollars within a retail sales dataset, reflecting varying product values likely influenced by their positioning.\n  - Value Range: 5.06 to 49.98\n  - Mean: 28.02\n\nField: Competitor's Price\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 915\n  - Semantic Meaning: This field represents the retail selling price of a competing product in the market, measured in monetary units, used to analyze how competitor pricing affects sales outcomes.\n  - Value Range: 0.72 to 49.85\n  - Mean: 25.55\n\nField: Promotion\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a product was actively promoted (e.g., through marketing or discounts) during the sales period, with \"Yes\" showing promotion activity and \"No\" showing none.\n\nField: Foot Traffic\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the qualitative level of customer visits or movement within a store or sales area, categorized as High, Medium, or Low.\n\nField: Consumer Demographics\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field categorizes customers by their demographic group, indicating the target segments (e.g., college students, families, seniors, young adults) relevant to marketing and sales analysis of product positioning.\n\nField: Product Category\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the classification of products being sold, specifying their general type (e.g., Clothing, Electronics, Food) in the context of retail or sales analysis.\n\nField: Seasonal\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a product is affected by seasonality (\"Yes\" for seasonal products, \"No\" for non-seasonal), helping businesses analyze sales patterns based on time of year.\n\nField: Sales Volume\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 811\n  - Semantic Meaning: Sales Volume represents the number of product units sold during a specific period or for a specific product, indicating overall sales performance in a retail or merchandising context.\n  - Value Range: 507.0 to 2999.0\n  - Mean: 1769.31\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Product ID\"\n  2. \"Product Position\"\n  3. \"Price\"\n  4. \"Competitor's Price\"\n  5. \"Promotion\"\n  6. \"Foot Traffic\"\n  7. \"Consumer Demographics\"\n  8. \"Product Category\"\n  9. \"Seasonal\"\n  10. \"Sales Volume\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Product ID'], df['Product Position']",
+      "table_metadata": {
+        "table_name": "Impact of Product Positioning on Sales",
+        "file_path": "csv_c2_sec\\65.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 65.csv (Dataset: Impact of Product Positioning on Sales)",
+        "original_filename": "65.csv",
+        "dataset_name": "Impact of Product Positioning on Sales",
+        "row_count": 1000,
+        "column_count": 10,
+        "table_hash": -8639065583860003312,
+        "fields": [
+          {
+            "name": "Product ID",
+            "clean_name": "Product_ID",
+            "camel_case_name": "productId",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 989,
+            "min_value": 110033.0,
+            "max_value": 199976.0,
+            "mean_value": 154899.862,
+            "median_value": 154694.5,
+            "sample_values": "110033, 110075, 110220, 110241, 110276, ..., 199631, 199673, 199735, 199887, 199976",
+            "inferred_semantic_summary": "Product ID is a unique numerical identifier assigned to individual products in a retail or sales environment, used to track and analyze product-specific sales and positioning impacts."
+          },
+          {
+            "name": "Product Position",
+            "clean_name": "Product_Position",
+            "camel_case_name": "productPosition",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 3,
+            "sample_values": "Aisle, End-cap, Front of Store",
+            "inferred_semantic_summary": "This field indicates the specific location within a retail store (e.g., aisle, end-cap, front of store) where a product is displayed, reflecting its placement strategy to influence sales."
+          },
+          {
+            "name": "Price",
+            "clean_name": "Price",
+            "camel_case_name": "price",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 897,
+            "min_value": 5.06,
+            "max_value": 49.98,
+            "mean_value": 28.02001,
+            "median_value": 28.68,
+            "sample_values": "5.06, 5.08, 5.11, 5.14, 5.15, ..., 49.8, 49.94, 49.95, 49.97, 49.98",
+            "inferred_semantic_summary": "Price represents the actual selling price of individual products in U.S. dollars within a retail sales dataset, reflecting varying product values likely influenced by their positioning."
+          },
+          {
+            "name": "Competitor's Price",
+            "clean_name": "Competitor_s_Price",
+            "camel_case_name": "competitorSPrice",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 915,
+            "min_value": 0.72,
+            "max_value": 49.85,
+            "mean_value": 25.55011,
+            "median_value": 26.145,
+            "sample_values": "0.72, 1.11, 1.25, 1.28, 1.5, ..., 48.76, 48.84, 49.1, 49.66, 49.85",
+            "inferred_semantic_summary": "This field represents the retail selling price of a competing product in the market, measured in monetary units, used to analyze how competitor pricing affects sales outcomes."
+          },
+          {
+            "name": "Promotion",
+            "clean_name": "Promotion",
+            "camel_case_name": "promotion",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 2,
+            "sample_values": "No, Yes",
+            "inferred_semantic_summary": "Indicates whether a product was actively promoted (e.g., through marketing or discounts) during the sales period, with \"Yes\" showing promotion activity and \"No\" showing none."
+          },
+          {
+            "name": "Foot Traffic",
+            "clean_name": "Foot_Traffic",
+            "camel_case_name": "footTraffic",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 3,
+            "sample_values": "High, Low, Medium",
+            "inferred_semantic_summary": "This field indicates the qualitative level of customer visits or movement within a store or sales area, categorized as High, Medium, or Low."
+          },
+          {
+            "name": "Consumer Demographics",
+            "clean_name": "Consumer_Demographics",
+            "camel_case_name": "consumerDemographics",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 4,
+            "sample_values": "College students, Families, Seniors, Young adults",
+            "inferred_semantic_summary": "This field categorizes customers by their demographic group, indicating the target segments (e.g., college students, families, seniors, young adults) relevant to marketing and sales analysis of product positioning."
+          },
+          {
+            "name": "Product Category",
+            "clean_name": "Product_Category",
+            "camel_case_name": "productCategory",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 3,
+            "sample_values": "Clothing, Electronics, Food",
+            "inferred_semantic_summary": "This field indicates the classification of products being sold, specifying their general type (e.g., Clothing, Electronics, Food) in the context of retail or sales analysis."
+          },
+          {
+            "name": "Seasonal",
+            "clean_name": "Seasonal",
+            "camel_case_name": "seasonal",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 2,
+            "sample_values": "No, Yes",
+            "inferred_semantic_summary": "This field indicates whether a product is affected by seasonality (\"Yes\" for seasonal products, \"No\" for non-seasonal), helping businesses analyze sales patterns based on time of year."
+          },
+          {
+            "name": "Sales Volume",
+            "clean_name": "Sales_Volume",
+            "camel_case_name": "salesVolume",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 811,
+            "min_value": 507.0,
+            "max_value": 2999.0,
+            "mean_value": 1769.311,
+            "median_value": 1791.5,
+            "sample_values": "507, 509, 511, 519, 521, ..., 2985, 2987, 2989, 2990, 2999",
+            "inferred_semantic_summary": "Sales Volume represents the number of product units sold during a specific period or for a specific product, indicating overall sales performance in a retail or merchandising context."
+          }
+        ],
+        "formatted_summary": "## Table 1: Impact_of_Product_Positioning_on_Sales (1,000 rows × 10 columns)\n\n### Description\nData loaded from CSV file: 65.csv (Dataset: Impact of Product Positioning on Sales)\n\n### Schema (10 fields)\n  - Product ID -- type: int64, values: 110033, 110075, 110220, 110241, 110276, ..., 199631, 199673, 199735, 199887, 199976\n  - Product Position -- type: object, values: Aisle, End-cap, Front of Store\n  - Price -- type: float64, values: 5.06, 5.08, 5.11, 5.14, 5.15, ..., 49.8, 49.94, 49.95, 49.97, 49.98\n  - Competitor's Price -- type: float64, values: 0.72, 1.11, 1.25, 1.28, 1.5, ..., 48.76, 48.84, 49.1, 49.66, 49.85\n  - Promotion -- type: object, values: No, Yes\n  - Foot Traffic -- type: object, values: High, Low, Medium\n  - Consumer Demographics -- type: object, values: College students, Families, Seniors, Young adults\n  - Product Category -- type: object, values: Clothing, Electronics, Food\n  - Seasonal -- type: object, values: No, Yes\n  - Sales Volume -- type: int64, values: 507, 509, 511, 519, 521, ..., 2985, 2987, 2989, 2990, 2999\n\n### Sample Data (first 5 rows)\n```\n   Product ID Product Position  Price  Competitor's Price Promotion Foot Traffic Consumer Demographics Product Category Seasonal  Sales Volume\n0      185102            Aisle  17.07               16.16        No       Medium              Families         Clothing       No          2823\n1      188771            Aisle  17.41               13.13        No          Low               Seniors         Clothing       No           654\n2      180176          End-cap  43.16               38.37       Yes       Medium          Young adults      Electronics      Yes          2220\n3      112917            Aisle  42.26               38.98       Yes          Low              Families         Clothing      Yes          1568\n4      192936          End-cap  47.94               45.59        No       Medium      College students         Clothing      Yes          2942\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

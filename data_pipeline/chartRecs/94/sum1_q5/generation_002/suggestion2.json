@@ -1,0 +1,43 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "During which years did the fertility rate experience its most significant decline, and what was the impact on population growth?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Unconventional heatmap (Year vs Fertility Rate change year-on-year, color-coded by Population growth)",
+      "design_rationale": "A heatmap visually encodes the magnitude and timing of fertility rate drops while color-coding the concurrent effect on yearly population increase. Each row is a time interval, cell values are year-on-year fertility rate changes, with the cell color representing the absolute 'Yearly Change' in Population. This approach suits the small data – since population growth values are large, we normalize them for color mapping, making subtle relationships and nonlinearities apparent. It offers a segmentation-by-period perspective, highlighting periods of sharp fertility drop and the actual population growth magnitude, revealing lag effects.",
+      "target_insight": "Spotlights which periods of steep fertility rate decline coincided with high or low population increases, visualizing lag or direct impacts.",
+      "output_fields": [
+        "Year",
+        "Fertility Rate",
+        "Yearly Change"
+      ],
+      "chart_encodings": {
+        "x": "Year (intervals, representing period of change)",
+        "y": "Delta Fertility Rate (change between each interval)",
+        "color": "Yearly Change (normalized to colormap for visual impact)",
+        "size": null,
+        "other_aesthetics": "Annotation for largest fertility drop, colorbar for population change magnitude, bold ticks for most important periods"
+      }
+    },
+    "transformations": [
+      "Compute delta (difference) of 'Fertility Rate' for each interval",
+      "Convert 'Yearly Change' field from string to float (removing commas) for numeric mapping",
+      "Normalize 'Yearly Change' for heatmap colormap",
+      "Construct a new DataFrame with period start year, period end year, fertility delta, yearly change"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly Change'] = df['Yearly Change'].str.replace(',','').astype(float)",
+      "fertility_delta = np.diff(df['Fertility Rate'])",
+      "years_mid = ((df['Year'][:-1].values + df['Year'][1:].values) / 2).astype(int)",
+      "yearly_change_next = df['Yearly Change'][1:].values",
+      "Create df_plot = pd.DataFrame({'Year': years_mid, 'Fertility Rate Change': fertility_delta, 'Yearly Change': yearly_change_next})"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly Change'] = df['Yearly Change'].str.replace(',', '').astype(float)\nfertility_delta = np.diff(df['Fertility Rate'])\nyears_mid = ((df['Year'][:-1].values + df['Year'][1:].values) / 2).astype(int)\nyearly_change_next = df['Yearly Change'][1:].values\ndf_plot = pd.DataFrame({'Year': years_mid, 'Fertility Rate Change': fertility_delta, 'Yearly Change': yearly_change_next})\nmin_c = df_plot['Yearly Change'].min()\nmax_c = df_plot['Yearly Change'].max()\nnorm = mpl.colors.Normalize(vmin=min_c, vmax=max_c)\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(10,5))\nheat_vals = np.array([df_plot['Fertility Rate Change'].values])\ncolors = cmap(norm(df_plot['Yearly Change'].values))\nfor i in range(len(df_plot)):\n    rect = plt.Rectangle((i,0), 1, 1, color=colors[i], edgecolor='black')\n    ax.add_patch(rect)\n    text_val = f'{df_plot[\"Fertility Rate Change\"].iloc[i]:.2f}'\n    ax.text(i+0.5, 0.5, text_val, color='white', fontsize=13, ha='center', va='center', fontweight='bold')\ndrop_idx = np.argmin(df_plot['Fertility Rate Change'])\nax.add_patch(plt.Rectangle((drop_idx,0), 1,1, fill=False, edgecolor='red', linewidth=3))\nax.text(drop_idx+0.5, 1.1, 'Largest drop', color='red', fontsize=12, ha='center')\nax.set_xticks(np.arange(len(df_plot)))\nax.set_xticklabels([f'{start}-{end}' for start,end in zip(df['Year'][:-1], df['Year'][1:])], rotation=45, fontsize=12)\nax.set_yticks([0])\nax.set_yticklabels(['Fertility Rate Change'], fontsize=12)\nax.set_xlim(0, len(df_plot))\nax.set_ylim(-0.5, 1.5)\nsm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)\ncbar = plt.colorbar(sm, ax=ax, pad=0.07)\ncbar.set_label('Yearly Change in Population', fontsize=12)\nplt.title('Year-by-Year Fertility Rate Decline\\nImpact on Population Growth (Heatmap)', fontsize=16)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

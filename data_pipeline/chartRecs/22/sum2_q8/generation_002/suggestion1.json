@@ -1,0 +1,43 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which specific CarName entries stand out for combining high citympg with low price, and what fueltype do they use?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot (Bubble Chart)",
+      "design_rationale": "A scatter/bubble plot enables direct visualization of the relationship between citympg and price for each individual car, with CarName labeled directly or highlighted. By color-coding by fueltype and encoding the citympg as bubble size, we can quickly spot cars that are both high in citympg and low in price, and see their fueltype at a glance. With 205 rows and 147 unique CarNames, a scatter approach with selective annotation is feasible and actionable.",
+      "target_insight": "Immediately identify specific CarName entries that balance high citympg (large bubbles) and low price (bottom of y-axis), with their corresponding fueltype visually encoded. Standout cars are clearly visible and their fueltype is understandable through color.",
+      "output_fields": [
+        "CarName",
+        "citympg",
+        "price",
+        "fueltype"
+      ],
+      "chart_encodings": {
+        "x": "price",
+        "y": "citympg",
+        "color": "fueltype (categorical color mapping)",
+        "size": "citympg (scaled bubble size)",
+        "other_aesthetics": "CarName label for outliers, alpha blending to avoid overplotting, legend for fueltype"
+      }
+    },
+    "transformations": [
+      "Filter to cars in the top quartile of citympg (citympg >= 75th percentile)",
+      "Filter to cars in the bottom quartile of price (price <= 25th percentile)",
+      "Subset data to these standout entries",
+      "Retain relevant fields: CarName, citympg, price, fueltype"
+    ],
+    "data_preparation_steps": [
+      "Compute citympg 75th percentile as high_mpg_thr",
+      "Compute price 25th percentile as low_price_thr",
+      "Filter df to df_selected where df['citympg'] >= high_mpg_thr and df['price'] <= low_price_thr",
+      "Assign color map for fueltype, scale bubble size by citympg"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\22.csv')\n\nhigh_mpg_thr = df['citympg'].quantile(0.75)\nlow_price_thr = df['price'].quantile(0.25)\ndf_selected = df[(df['citympg'] >= high_mpg_thr) & (df['price'] <= low_price_thr)]\n\nfueltype_categories = df_selected['fueltype'].unique()\ncolors = mpl.colormaps['tab10'].colors\nfueltype_color_dict = {ft: colors[i % len(colors)] for i, ft in enumerate(fueltype_categories)}\n\nplt.figure(figsize=(10,6))\nsizes = 50 + 4*(df_selected['citympg'] - df_selected['citympg'].min())\nfor ft in fueltype_categories:\n    subset = df_selected[df_selected['fueltype'] == ft]\n    plt.scatter(subset['price'], subset['citympg'],\n                s=sizes[subset.index],\n                color=fueltype_color_dict[ft],\n                alpha=0.7,\n                label=ft,\n                edgecolor='k')\n# Annotate standout CarNames\nfor idx, row in df_selected.iterrows():\n    plt.text(row['price']+100, row['citympg'], row['CarName'].split(' ')[0],\n             fontsize=8, color='black', alpha=0.9)\nplt.xlabel('price')\nplt.ylabel('citympg')\nplt.title('CarName Standouts: High Citympg & Low Price\\nColored by Fueltype')\nplt.legend(title='fueltype')\nplt.grid(True, alpha=0.2)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

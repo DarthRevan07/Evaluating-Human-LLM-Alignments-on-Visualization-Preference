@@ -1,0 +1,40 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Is there a significant difference in Attack between Pokémon of different primary types (Type 1)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "violin plot with swarm markers",
+      "design_rationale": "A violin plot shows the full probability density and distribution shape of Attack for each Type 1, complementing boxplots with more nuanced information about multimodality or skew. Overlaying swarm (scatter) markers for the Legendary Pokémon further investigates whether Legendaries skew the Attack values in any type. The use of categorical x-axis and numeric y-axis aligns with the schema, and swarm markers (color or shape) encode 'Legendary' status.",
+      "target_insight": "This chart highlights both the detailed density of Attack values per type and pinpoints whether Legendaries are clustered at the top of certain types, helping to clarify their impact in comparing Attack between types.",
+      "output_fields": [
+        "Type 1",
+        "Attack",
+        "Legendary"
+      ],
+      "chart_encodings": {
+        "x": "Type 1",
+        "y": "Attack",
+        "color": "Legendary status (marker color)",
+        "size": "None",
+        "other_aesthetics": "Violin widths; swarm markers for Legendaries"
+      }
+    },
+    "transformations": [
+      "No aggregation; keep each Pokémon as a row",
+      "For each Type 1, show kernel density estimation (violin)",
+      "Mark individual 'Legendary' Pokémon as colored overlay points"
+    ],
+    "data_preparation_steps": [
+      "Load data",
+      "Filter Legendary Pokémon out to plot separately (for overlay markers)",
+      "Determine type order (e.g., by mean Attack for visual aesthetics)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ntype_order = df.groupby('Type 1')['Attack'].mean().sort_values(ascending=False).index.tolist()\nfig, ax = plt.subplots(figsize=(13, 7))\n# Violin plots for each Type 1\nfor idx, t in enumerate(type_order):\n    subset = df[df['Type 1'] == t]['Attack']\n    parts = ax.violinplot(subset, positions=[idx], widths=0.8, showmeans=False, showextrema=False, showmedians=False)\n    for pc in parts['bodies']:\n        pc.set_facecolor('#80BC43')\n        pc.set_alpha(0.6)\n# Overlay swarm markers for Legendaries\nfor idx, t in enumerate(type_order):\n    sub_leg = df[(df['Type 1'] == t) & (df['Legendary']==True)]\n    ax.scatter(np.repeat(idx, len(sub_leg)), sub_leg['Attack'], color='#E17C4A', edgecolor='k', s=90, marker='*', label='Legendary' if idx==0 else None, alpha=0.9)\n# Overlay swarm markers for non-Legendaries (sample down for clarity)\nfor idx, t in enumerate(type_order):\n    sub_nonleg = df[(df['Type 1'] == t) & (df['Legendary']==False)]\n    if len(sub_nonleg) > 50:\n        sub_nonleg = sub_nonleg.sample(50, random_state=42)\n    ax.scatter(np.repeat(idx, len(sub_nonleg)), sub_nonleg['Attack'], color='#367DB7', edgecolor='k', s=30, marker='o', label='Non-Legendary' if idx==0 else None, alpha=0.45)\nax.set_xticks(range(len(type_order)))\nax.set_xticklabels(type_order, rotation=45)\nax.set_xlabel('Type 1')\nax.set_ylabel('Attack')\ntitle_str = 'Attack Stat Distribution by Primary Type with\\nLegendary Pokémon Highlighted'\nax.set_title(title_str)\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

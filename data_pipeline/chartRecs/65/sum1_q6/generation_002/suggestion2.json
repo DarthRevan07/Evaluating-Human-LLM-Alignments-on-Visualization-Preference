@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there any relationship between Consumer Demographics (College students, Families, Seniors, Young adults) and Sales Volume for promoted products?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart (Mean Sales Volume for Promoted Products by Demographic and Product Category)",
+      "design_rationale": "A grouped bar chart lets us examine not only the impact of consumer demographics on promoted products, but also how this relationship differs across product categories (Clothing, Electronics, Food). Including Product Category could reveal sharper patterns or market segment differences, which is especially actionable for retail. Each demographic appears as a group with different color bars for each product category, providing direct side-by-side comparison.",
+      "target_insight": "Identifies if specific demographic-product category combinations, when promoted, have notably higher average sales—potentially targeting future promotions.",
+      "output_fields": [
+        "Consumer Demographics",
+        "Product Category",
+        "Sales Volume (mean)"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics (group axis)",
+        "y": "Mean Sales Volume (aggregated per demographic/category)",
+        "color": "Product Category (distinct color per bar within demographic group)",
+        "size": null,
+        "other_aesthetics": "Bar width, legend for categories"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Promotion'] == 'Yes'",
+      "Group by ['Consumer Demographics', 'Product Category'] and aggregate mean of 'Sales Volume'"
+    ],
+    "data_preparation_steps": [
+      "Create a pivot table or reshape from group aggregation to get mean sales volume for each Consumer Demographics x Product Category combination",
+      "Sort demographic and product category order for consistency: demo_order = ['College students', 'Families', 'Seniors', 'Young adults'], cat_order = ['Clothing', 'Electronics', 'Food']",
+      "Fill missing pairs (demographic-product category without promoted sales) with 0 or NaN as desired"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ndf_promoted = df[df[\"Promotion\"] == \"Yes\"]\ndemo_order = [\"College students\", \"Families\", \"Seniors\", \"Young adults\"]\ncat_order = [\"Clothing\", \"Electronics\", \"Food\"]\ngb = df_promoted.groupby([\"Consumer Demographics\", \"Product Category\"])[\"Sales Volume\"].mean().unstack(fill_value=0).loc[demo_order, cat_order]\nbar_width = 0.22\nx = np.arange(len(demo_order))\nfig, ax = plt.subplots(figsize=(10,6))\ncolors = mpl.colormaps[\"Set2\"].colors[:3]\nfor i, cat in enumerate(cat_order):\n    ax.bar(x + i*bar_width, gb[cat], width=bar_width, label=cat, color=colors[i], alpha=0.9, edgecolor=\"black\")\nax.set_xticks(x + bar_width)\nax.set_xticklabels(demo_order, fontsize=11)\nax.set_xlabel(\"Consumer Demographics\", fontsize=12)\nax.set_ylabel(\"Mean Sales Volume (promoted)\", fontsize=12)\nax.set_title(\"Mean Sales Volume for Promoted Products\\nby Consumer Demographics and Product Category\", fontsize=14)\nax.legend(title=\"Product Category\")\nax.grid(axis=\"y\", linestyle=\":\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

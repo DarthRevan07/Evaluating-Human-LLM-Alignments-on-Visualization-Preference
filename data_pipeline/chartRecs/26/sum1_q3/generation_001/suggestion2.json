@@ -1,0 +1,42 @@
+{
+  "table_name": "26",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "What are the most significant spikes or drops in Tesla's daily price range (the difference between High and Low), and when did they occur?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Calendar Heatmap",
+      "design_rationale": "A calendar heatmap displays the daily price range as color intensity mapped onto a 'year-month-day' grid, revealing not only extreme spikes/drops but also seasonal and temporal patterns (including clustering during earnings, major news, etc). This unconventional chart transforms the time-series into a calendar layout, exploiting the temporal uniqueness of 'Date' (treated as datetime) and the numeric range of price movement ('High' minus 'Low'), making it easy to spot periods of increased volatility.",
+      "target_insight": "Which days and months saw the most pronounced spikes/drops in price range, and whether they cluster in specific years or seasons, allowing visual correlation with possible real-world events.",
+      "output_fields": [
+        "Date",
+        "High",
+        "Low"
+      ],
+      "chart_encodings": {
+        "x": "Day of Month",
+        "y": "Month (as rows per Year)",
+        "color": "Price Range intensity via colormap",
+        "size": "null",
+        "other_aesthetics": "Colorbar for interpreting intensity; blank tiles for missing dates, years as subplots"
+      }
+    },
+    "transformations": [
+      "Calculate daily price range: df['High'] - df['Low']",
+      "Extract Year, Month, and Day from 'Date' (ensure datetime parsing)",
+      "Pivot so each year-month forms a grid of days as columns",
+      "Prepare array for heatmap, handle missing dates as NaN"
+    ],
+    "data_preparation_steps": [
+      "Add columns: 'Year', 'Month', 'Day' from pd.to_datetime(df['Date'])",
+      "Select a sample of 3 representative years, e.g. 2013, 2016, 2020, for manageable heatmaps",
+      "For each selected year, pivot df to create calendar matrix (month rows x day columns)",
+      "Create a 12x31 matrix (months x max 31 days), fill with daily price range, NaN for missing"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\26.csv\")\ndf[\"Price Range\"] = df[\"High\"] - df[\"Low\"]\ndf[\"Date_dt\"] = pd.to_datetime(df[\"Date\"])\ndf[\"Year\"] = df[\"Date_dt\"].dt.year\ndf[\"Month\"] = df[\"Date_dt\"].dt.month\ndf[\"Day\"] = df[\"Date_dt\"].dt.day\nselected_years = [2013, 2016, 2020]\nfig, axes = plt.subplots(len(selected_years), 1, figsize=(16, 4*len(selected_years)), sharex=True)\ncmap = mpl.colormaps[\"viridis\"]\nmax_range = df[\"Price Range\"].max()\nmin_range = df[\"Price Range\"].min()\nfor idx, year in enumerate(selected_years):\n    df_year = df[df[\"Year\"] == year]\n    cal_matrix = np.full((12, 31), np.nan)\n    for m in range(1, 13):\n        df_month = df_year[df_year[\"Month\"] == m]\n        for d in range(1, 32):\n            row = m - 1\n            col = d - 1\n            val = df_month[df_month[\"Day\"] == d][\"Price Range\"]\n            if not val.empty:\n                cal_matrix[row, col] = val.values[0]\n    ax = axes[idx] if len(selected_years) > 1 else axes\n    im = ax.imshow(cal_matrix, aspect=\"auto\", cmap=cmap, vmin=min_range, vmax=max_range)\n    ax.set_yticks(np.arange(12))\n    ax.set_yticklabels([\"Jan\", \"Feb\", \"Mar\", \"Apr\", \"May\", \"Jun\", \"Jul\", \"Aug\", \"Sep\", \"Oct\", \"Nov\", \"Dec\"])\n    ax.set_xticks(np.arange(0, 31, 2))\n    ax.set_xticklabels([str(d+1) for d in np.arange(0, 31, 2)])\n    ax.set_title(\"Tesla Price Range Calendar Heatmap: \" + str(year))\n    for y, m in enumerate(range(1, 13)):\n        df_month = df_year[df_year[\"Month\"] == m]\n        top_spike_idx = df_month[\"Price Range\"].idxmax() if not df_month.empty else None\n        if top_spike_idx:\n            day = int(df.loc[top_spike_idx, \"Day\"]) - 1\n            ax.scatter(day, y, marker=\"o\", s=60, color=\"red\", edgecolor=\"white\", linewidths=2)\n            ax.text(day, y-0.25,\n                    str(df.loc[top_spike_idx, \"Day\"]) + \", \" + str(df.loc[top_spike_idx, \"Month\"]) +\n                        \",\\n\" + str(round(df.loc[top_spike_idx, \"Price Range\"], 1)),\n                    color=\"red\", fontsize=8, ha=\"center\", va=\"top\")\n    cb = fig.colorbar(im, ax=ax, orientation=\"vertical\", pad=0.02)\n    cb.set_label(\"Daily Price Range (High - Low)\")\naxes[-1].set_xlabel(\"Day of Month\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

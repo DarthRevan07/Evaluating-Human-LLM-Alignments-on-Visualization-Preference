@@ -1,0 +1,42 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which specific CarName entries stand out for combining high citympg with low price, and what fueltype do they use?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Highlighting",
+      "design_rationale": "A scatter plot is ideal for visualizing the simultaneous relationship between citympg and price at the individual car level, and makes it easy to spot 'stand out' combos (high citympg, low price). Coloring the points by fueltype further reveals the role of fueltype. Annotating outliers (best performers) gives the user direct names for actionable comparison. This approach leverages both continuous numeric fields ('citympg' and 'price') and categorical ('fueltype'), remaining granular at the CarName level for maximum insight.",
+      "target_insight": "Spot individual cars with highest citympg and lowest price, identify their fueltype, and label these standouts for direct cross-comparison.",
+      "output_fields": [
+        "CarName",
+        "citympg",
+        "price",
+        "fueltype"
+      ],
+      "chart_encodings": {
+        "x": "price",
+        "y": "citympg",
+        "color": "fueltype (categorical palette)",
+        "size": null,
+        "other_aesthetics": "Data point annotation for standouts; alpha for visibility; grid; direct labeling; legend by fueltype"
+      }
+    },
+    "transformations": [
+      "Filter to the lowest price quartile and highest citympg quartile to highlight standouts",
+      "Identify cars in the intersection (those with both high citympg and low price)",
+      "Prepare for annotation of CarNames"
+    ],
+    "data_preparation_steps": [
+      "Compute 75th percentile of citympg ('high') and 25th percentile of price ('low')",
+      "Select rows where df['citympg'] >= high_citympg and df['price'] <= low_price",
+      "Store these as df_standouts",
+      "Prepare color encoding mapping for fueltype"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\n\nhigh_citympg = df['citympg'].quantile(0.75)\nlow_price = df['price'].quantile(0.25)\ndf_standouts = df[(df['citympg'] >= high_citympg) & (df['price'] <= low_price)]\n\nfig, ax = plt.subplots(figsize=(10,6))\nfueltype_list = df['fueltype'].unique()\nfueltype_palette = {'gas': '#1f77b4', 'diesel': '#ff7f0e'}\n# Plot all points faintly\nfor ftype in fueltype_list:\n    df_ftype = df[df['fueltype']==ftype]\n    ax.scatter(df_ftype['price'], df_ftype['citympg'], c=[fueltype_palette[ftype]], label=ftype, alpha=0.2, s=40)\n# Overlay standouts with bold color\nfor idx,row in df_standouts.iterrows():\n    ax.scatter(row['price'], row['citympg'], c=[fueltype_palette[row['fueltype']]], edgecolor='black', s=120, alpha=0.9, marker='o', zorder=5)\n    ax.text(row['price'], row['citympg']+0.8, row['CarName'], fontsize=9, color='black', ha='left', rotation=15)\nax.set_xlabel('price (USD)')\nax.set_ylabel('citympg')\nax.set_title('Cars that Combine High CityMPG and Low Price\\nStandout CarNames Annotated, Color Indicates Fueltype')\nax.grid(True, alpha=0.25)\nhandles = [mpl.lines.Line2D([0],[0], marker='o', color='w', markerfacecolor=fueltype_palette[ftype], label=ftype, markersize=9) for ftype in fueltype_list]\nax.legend(handles=handles, title='fueltype', loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

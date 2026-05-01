@@ -1,0 +1,43 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "What is the relationship between the year of GDP measurement and the sectoral composition (agriculture, industry, services) in a given country?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "stacked area chart",
+      "design_rationale": "A stacked area chart allows for a clear, holistic view of how the GDP sector composition (agriculture, industry, services) changes across years for all countries, capturing both absolute and relative trends. This is effective given the schema's multiple year entries and sectoral percentage columns - the chart displays time on the x-axis and sector shares as stacked colored areas, revealing how countries' economies evolve.",
+      "target_insight": "How the sectoral contributions to GDP (percentage of agriculture, industry, services) shift over different measurement years, showing global or averaged transformation in economic structure.",
+      "output_fields": [
+        "Year GDP ",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "aggregated sector % contributions (stacked)",
+        "color": "sector (agriculture, industry, services)",
+        "size": null,
+        "other_aesthetics": "alpha for distinction, legend for sector mapping"
+      }
+    },
+    "transformations": [
+      "Clean sector % fields: convert 'Agriculture Sector GDP of % Contribution', 'Industry%ofGDP', 'Services%ofGDP' to numeric, handle missing or non-numeric values",
+      "Group data by 'Year GDP ', aggregate each sector's mean % contribution per year",
+      "Sort years in chronological order"
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')",
+      "df_area = df.groupby('Year GDP ').agg({'Agriculture Sector GDP of % Contribution': 'mean', 'Industry%ofGDP': 'mean', 'Services%ofGDP': 'mean'}).reset_index()",
+      "df_area = df_area.sort_values('Year GDP ')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\1.csv\")\ndf['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')\ndf_area = df.groupby('Year GDP ').agg({'Agriculture Sector GDP of % Contribution': 'mean', 'Industry%ofGDP': 'mean', 'Services%ofGDP': 'mean'}).reset_index()\ndf_area = df_area.sort_values('Year GDP ')\nx = df_area['Year GDP ']\nagri = df_area['Agriculture Sector GDP of % Contribution'].fillna(0)\nind = df_area['Industry%ofGDP'].fillna(0)\nserv = df_area['Services%ofGDP'].fillna(0)\nfig, ax = plt.subplots(figsize=(10,6))\nax.stackplot(x, agri, ind, serv, labels=[\"Agriculture\", \"Industry\", \"Services\"], colors=[\"#90d57f\", \"#ffd46b\", \"#62a5dd\"], alpha=0.85)\nax.set_xlabel(\"Year of GDP Measurement\")\nax.set_ylabel(\"Mean % Contribution to GDP\")\nax.legend(loc=\"upper left\")\nax.set_title(\"Global GDP Sector Composition Over Years\\nAggregate Change in Agriculture, Industry, Services (% of GDP)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

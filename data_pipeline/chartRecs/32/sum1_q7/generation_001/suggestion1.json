@@ -1,0 +1,39 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "How do average medical charges vary by age group across different regions?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart allows for a clear comparison of average medical charges across defined age groups, segmented by region. The regions ('region' field, categorical, 4 unique values) show geographic variation, while age groups summarize numeric detail into meaningful segments. This view is explicit and direct for comparing both region and age category effects on charges.",
+      "target_insight": "This visualization reveals which age groups incur higher average charges within each region, clearly showing regional differences in charge patterns by age bracket.",
+      "output_fields": [
+        "age",
+        "region",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age group (binned from 'age')",
+        "y": "average of 'charges'",
+        "color": "'region' (categorical, 4 colors)",
+        "size": null,
+        "other_aesthetics": "bar width, x-axis ticks for age group bins, legend for regions"
+      }
+    },
+    "transformations": [
+      "Bin 'age' into discrete age groups (e.g.: 18-29, 30-39, 40-49, 50-59, 60-64)",
+      "Group by ['age group', 'region'], aggregate mean 'charges'"
+    ],
+    "data_preparation_steps": [
+      "Create 'age group' column from 'age' via pd.cut",
+      "Group df by 'age group' and 'region', compute mean 'charges'",
+      "Reset index for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\32.csv\")\nage_bins = [18, 30, 40, 50, 60, 65]\nage_labels = [\"18-29\", \"30-39\", \"40-49\", \"50-59\", \"60-64\"]\ndf[\"age group\"] = pd.cut(df[\"age\"], bins=age_bins, right=False, labels=age_labels)\ngb = df.groupby([\"age group\", \"region\"], observed=True)[\"charges\"].mean().reset_index()\nregions = gb[\"region\"].unique()\nage_groups = gb[\"age group\"].unique()\nbar_width = 0.18\nx = np.arange(len(age_groups))\nfig, ax = plt.subplots(figsize=(10, 6))\ncmap = mpl.colormaps[\"tab10\"]\nfor i, region in enumerate(regions):\n    region_mask = gb[\"region\"] == region\n    ax.bar(x + i*bar_width, gb.loc[region_mask, \"charges\"], width=bar_width, color=cmap(i), label=region)\nax.set_xticks(x + bar_width*1.5)\nax.set_xticklabels(age_labels)\nax.set_xlabel(\"Age Group\")\nax.set_ylabel(\"Average Medical Charges ($)\")\nax.set_title(\"Average Medical Charges by Age Group Across Regions\")\nax.legend(title=\"Region\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

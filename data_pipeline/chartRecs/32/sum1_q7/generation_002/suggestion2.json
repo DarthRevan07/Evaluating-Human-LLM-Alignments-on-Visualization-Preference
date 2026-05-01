@@ -1,0 +1,41 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "How do average medical charges vary by age group across different regions?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Age Group vs. Region, colored by Average Charges)",
+      "design_rationale": "A heatmap transforms the groupings into a visual matrix, encoding charge magnitude spatially and by color. This approach supports multi-dimensional comparison (age group × region) and makes it easy to spot outliers or high/low average charges. The viewer gets an immediate sense of which age-region combinations are most costly. Given the discrete age-grouping and region categories, this matrix style is ideal for big-picture insights.",
+      "target_insight": "Which age group-region pairs yield highest/lowest average charges, seen by color intensity.",
+      "output_fields": [
+        "age",
+        "region",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "age_group (derived from age)",
+        "color": "charges (averaged per age_group and region)",
+        "size": "null",
+        "other_aesthetics": "colorbar; viridis colormap; square aspect"
+      }
+    },
+    "transformations": [
+      "Bin df['age'] into age groups (same as suggestion 1)",
+      "Group by ['age_group', 'region'] and aggregate mean of df['charges']",
+      "Pivot grouped data to matrix form (age_group x region)"
+    ],
+    "data_preparation_steps": [
+      "Define age bins and labels",
+      "Assign df['age_group'] via pd.cut using bins/labels",
+      "Group df by ['age_group', 'region'] and calculate mean charges",
+      "Pivot to DataFrame with index=age_group, columns=region"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\n# Load data\n df = pd.read_csv('csv_c_squared\\32.csv')\n\n# Define age bins and labels\nage_bins = [18, 25, 35, 45, 55, 65]\nage_labels = ['18-25', '26-35', '36-45', '46-55', '56-64']\ndf['age_group'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, right=False)\n\n# Group & aggregate\ncharge_means = df.groupby(['age_group', 'region'])['charges'].mean().reset_index()\npivoted = charge_means.pivot(index='age_group', columns='region', values='charges')\n\n# Plot\nfig, ax = plt.subplots(figsize=(8, 6))\ncmap = mpl.colormaps['viridis']\nheatmap = ax.imshow(pivoted.values, cmap=cmap, aspect='auto')\n\n# Set ticks and labels\nax.set_xticks(np.arange(len(pivoted.columns)))\nax.set_xticklabels(pivoted.columns)\nax.set_yticks(np.arange(len(pivoted.index)))\nax.set_yticklabels(pivoted.index.astype(str))\n\n# Colorbar\ncbar = plt.colorbar(heatmap, ax=ax)\ncbar.set_label('Average Medical Charges ($)')\n\nax.set_xlabel('Region')\nax.set_ylabel('Age Group')\nax.set_title('Heatmap of Average Medical Charges\\nby Age Group and Region')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

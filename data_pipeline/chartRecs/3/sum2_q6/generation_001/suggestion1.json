@@ -1,0 +1,41 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Which countries have the lowest rice production per person despite having large rice acreage?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot (Bivariate Outlier Highlight)",
+      "design_rationale": "A scatter plot with Rice Acreage (Hectare) on the x-axis and Rice Production Per Person (Kg) on the y-axis highlights countries with large acreage but low per capita production. This makes it easy to spot countries in the bottom-right: large land but low production per person. By annotating the extreme cases, the chart explicitly draws attention to the countries answering the analytical question.",
+      "target_insight": "Visually spot and identify countries that have high total rice-farmed area but strikingly low rice output relative to population.",
+      "output_fields": [
+        "Country",
+        "Rice Acreage (Hectare)",
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Acreage (Hectare)",
+        "y": "Rice Production Per Person (Kg)",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "Highlight and annotate the bottom 5 countries by y among the top 25 by x, alpha=0.7, marker='o', grid for readability."
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Acreage (Hectare)' and 'Rice Production Per Person (Kg)' to numeric values, handling 'K' and 'M' suffixes.",
+      "Select top 25 countries by 'Rice Acreage (Hectare)'.",
+      "Within these, select the bottom 5 by 'Rice Production Per Person (Kg)'."
+    ],
+    "data_preparation_steps": [
+      "df['Rice Acreage (Hectare)_num']: Apply lambda to parse 'K' or 'M' into number.",
+      "df['Rice Production Per Person (Kg)_num']: Convert to numeric, coercing errors.",
+      "Sort df by 'Rice Acreage (Hectare)_num' descending, keep top 25 (df_top_acreage).",
+      "Sort df_top_acreage by 'Rice Production Per Person (Kg)_num' ascending, select bottom 5 (df_highacre_lowprod)."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef parse_abbr(val):\n    if pd.isnull(val):\n        return np.nan\n    val = str(val).replace(',', '').strip()\n    if val.endswith('M'):\n        return float(val[:-1]) * 1e6\n    if val.endswith('K'):\n        return float(val[:-1]) * 1e3\n    return float(val)\ndf['Rice Acreage (Hectare)_num'] = df['Rice Acreage (Hectare)'].apply(parse_abbr)\ndf['Rice Production Per Person (Kg)_num'] = pd.to_numeric(df['Rice Production Per Person (Kg)'].astype(str).str.replace(',', ''), errors='coerce')\ndf_top_acreage = df.sort_values('Rice Acreage (Hectare)_num', ascending=False).head(25)\ndf_highacre_lowprod = df_top_acreage.sort_values('Rice Production Per Person (Kg)_num', ascending=True).head(5)\nfig, ax = plt.subplots(figsize=(10,7))\nax.scatter(df['Rice Acreage (Hectare)_num'], df['Rice Production Per Person (Kg)_num'], alpha=0.7, c='lightgrey', edgecolor='k', label='All countries')\nax.scatter(df_top_acreage['Rice Acreage (Hectare)_num'], df_top_acreage['Rice Production Per Person (Kg)_num'], c='blue', alpha=0.7, label='Top 25 by Acreage')\nax.scatter(df_highacre_lowprod['Rice Acreage (Hectare)_num'], df_highacre_lowprod['Rice Production Per Person (Kg)_num'], c='red', s=90, label='Lowest per person (within top 25)')\nfor idx, row in df_highacre_lowprod.iterrows():\n    ax.text(row['Rice Acreage (Hectare)_num'], row['Rice Production Per Person (Kg)_num'] + 0.03*row['Rice Production Per Person (Kg)_num'], row['Country'], fontsize=10, color='red')\nax.set_xlabel('Rice Acreage (Hectare)')\nax.set_ylabel('Rice Production Per Person (Kg)')\nax.set_title('Countries with Lowest Rice Production Per Person Among Large Rice Acreage\\n(Lowest y among top 25 by x)', fontsize=13)\nax.grid(True, alpha=0.4)\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

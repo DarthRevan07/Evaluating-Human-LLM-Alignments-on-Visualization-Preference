@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Are there any destinations that predominantly attract travelers of a specific nationality?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Clustered Bar Chart (Nationality share per Destination)",
+      "design_rationale": "Bar charts are ideal for categorical comparison and allow clear visualization of dominant nationalities for each destination. This clustered bar chart uses grouped bars (color-coded by nationality) to show, for each destination, the number of trips made by travelers from different nationalities. With 59 unique destinations and 41 nationalities, this chart lets us instantly spot destinations where one nationality heavily dominates, answering the question about ‘predominant attraction’. Nationalities are mapped onto color for each bar within destination clusters.",
+      "target_insight": "Identify destinations where a single nationality constitutes the majority of trips, visually revealing such dominance via largest bars per cluster.",
+      "output_fields": [
+        "Destination",
+        "Traveler nationality",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Count of Trip ID",
+        "color": "Traveler nationality",
+        "size": null,
+        "other_aesthetics": "Clustered/grouped bars per destination; color-coded legend for nationality"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Destination' or 'Traveler nationality' is null",
+      "Group by 'Destination' and 'Traveler nationality' and count 'Trip ID' (number of trips)",
+      "Sort destination clusters by total number of trips descending to visually prioritize popular locations"
+    ],
+    "data_preparation_steps": [
+      "Remove rows with missing values in 'Destination' or 'Traveler nationality'",
+      "Aggregate using df.groupby(['Destination','Traveler nationality'])['Trip ID'].count().reset_index()",
+      "Pivot for plotting: df.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)",
+      "Sort destinations by total trips: sum across nationalities per destination"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf = df.dropna(subset=[\"Destination\", \"Traveler nationality\"])\ngrouped = df.groupby([\"Destination\", \"Traveler nationality\"])['Trip ID'].count().reset_index()\npivot = grouped.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)\npivot['total_trips'] = pivot.sum(axis=1)\npivot = pivot.sort_values('total_trips', ascending=False)\npivot = pivot.drop(columns='total_trips')\nnat_colors = dict()\nnationalities = pivot.columns.tolist()\ncmap = mpl.colormaps['tab20'].resampled(len(nationalities))\nfor idx, nat in enumerate(nationalities):\n    nat_colors[nat] = cmap(idx)\nage = pivot.values\nfig, ax = plt.subplots(figsize=(min(20, 0.25*len(pivot)), 8))\nwidth = 0.7 / len(nationalities)\nx = np.arange(len(pivot))\nfor i, nat in enumerate(nationalities):\n    ax.bar(x + i*width, pivot[nat], width, label=nat, color=nat_colors[nat])\nax.set_xticks(x + width*(len(nationalities)-1)/2)\nax.set_xticklabels(pivot.index, rotation=90)\nax.set_xlabel('Destination')\nax.set_ylabel('Number of Trips')\nax.set_title('Nationality Share per Destination\\n(Clustered Bar: Trips to each destination by nationality)')\nax.legend(title=\"Traveler nationality\", bbox_to_anchor=(1,1), loc='upper left', ncol=2, fontsize=8)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "How do the sales distributions of a single genre differ among platforms, indicating platform-genre strengths or gaps?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Platform-Genre Strengths Heatmap",
+      "design_rationale": "A heatmap aggregates total Global_Sales for a single genre grouped by platform, showing a high-level matrix view of which platforms are strongest or weakest for the genre. This is unconventional but highlights comparative and quantitative strengths/gaps in a single view. Since platform and genre are categorical and Global_Sales is numeric, the approach is effective for big data, reveals patterns in platform-genre relationships, and allows rapid identification of dominant platforms.",
+      "target_insight": "Which platforms are dominant or niche for the selected genre based on total Global_Sales; visually exposes gaps (zero or low sales) and platform-genre strengths.",
+      "output_fields": [
+        "Platform",
+        "Genre",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Platform",
+        "y": "Genre (filtered to single value, so only one row)",
+        "color": "Global_Sales (aggregated sum, color-mapped)",
+        "size": null,
+        "other_aesthetics": "Annotated sales values in each cell, color intensity reflects sales strength"
+      }
+    },
+    "transformations": [
+      "Filter rows to only the desired genre, e.g., 'Action'.",
+      "Group by 'Platform', aggregate sum of 'Global_Sales' for the genre."
+    ],
+    "data_preparation_steps": [
+      "Ask user or set genre='Action' for demonstration.",
+      "filtered_df = df[df['Genre']=='Action']",
+      "df_group = filtered_df.groupby('Platform')['Global_Sales'].sum().reset_index()",
+      "Sort platforms by sales for heatmap clarity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ngenre = 'Action'\nfiltered_df = df[df['Genre']==genre]\ndf_group = filtered_df.groupby('Platform')['Global_Sales'].sum().reset_index()\ndf_group = df_group.sort_values('Global_Sales', ascending=False)\nplatforms = df_group['Platform'].values\nsales = df_group['Global_Sales'].values\narr = sales.reshape(1, -1)\nfig, ax = plt.subplots(figsize=(12,2))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(arr, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(platforms)))\nax.set_xticklabels(platforms, rotation=45, ha='right')\nax.set_yticks([0])\nax.set_yticklabels([genre])\nfor j, val in enumerate(sales):\n    ax.text(j, 0, f'{val:.2f}', ha='center', va='center', color='white', fontsize=11)\nplt.title('Total Global Sales per Platform for ' + genre + ' Games')\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Global_Sales (millions)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

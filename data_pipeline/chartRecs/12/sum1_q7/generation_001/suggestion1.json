@@ -1,0 +1,40 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable difference in Perceptual Aptitude between Careers with strong analytical requirements and those that are more people-oriented?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (side-by-side)",
+      "design_rationale": "Boxplots allow for direct comparison of Perceptual Aptitude distributions between two relevant groups: 'analytical' vs 'people-oriented' careers, capturing median, spread, and outliers. Since the schema provides career as a categorical variable and Perceptual Aptitude as a continuous variable, a boxplot with clear grouping is effective for showing group-level variation and differences. This chart answers the question by focusing on comparison of central tendency and spread.",
+      "target_insight": "Distributional differences and central tendency of Perceptual Aptitude scores for analytical versus people-oriented careers.",
+      "output_fields": [
+        "Career",
+        "Perceptual Aptitude"
+      ],
+      "chart_encodings": {
+        "x": "Career Type Group (analytical vs people-oriented, derived from Career)",
+        "y": "Perceptual Aptitude",
+        "color": "Career Type Group",
+        "size": null,
+        "other_aesthetics": "box width, median and whiskers, alpha=0.8"
+      }
+    },
+    "transformations": [
+      "Create a new column 'Career Type Group' by mapping each Career to either 'Analytical' or 'People-Oriented'",
+      "Filter rows with valid 'Perceptual Aptitude' and non-null 'Career Type Group'",
+      "Aggregate data into two groups: 'Analytical' and 'People-Oriented'"
+    ],
+    "data_preparation_steps": [
+      "Define lists of keywords/titles that indicate analytical or people-oriented careers",
+      "Create 'Career Type Group' column using keyword matching on df['Career']",
+      "Drop rows where 'Career Type Group' is null",
+      "Prepare two arrays for boxplot: Perceptual Aptitude scores for analytical vs people-oriented"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\n\n# Define mapping: (example, actual keywords should be refined for real data)\nanalytical_keywords = [\"Engineer\", \"Analyst\", \"Scientist\", \"Developer\", \"Accountant\", \"Mathematician\", \"Programmer\", \"Research\", \"Technician\"]\npeople_keywords = [\"Teacher\", \"Counselor\", \"Nurse\", \"Social Worker\", \"Manager\", \"HR\", \"Sales\", \"Therapist\", \"Consultant\", \"Coach\"]\n\ndef categorize_career(careers):\n    analytical = set()\n    people = set()\n    for c in careers:\n        for a_k in analytical_keywords:\n            if a_k.lower() in c.lower():\n                analytical.add(c)\n        for p_k in people_keywords:\n            if p_k.lower() in c.lower():\n                people.add(c)\n    return analytical, people\n\nanalytical, people = categorize_career(df[\"Career\"].unique())\n\ndef map_career_type(career):\n    if career in analytical:\n        return \"Analytical\"\n    if career in people:\n        return \"People-Oriented\"\n    return np.nan\n\ndf[\"Career Type Group\"] = df[\"Career\"].apply(map_career_type)\ndf_filtered = df.dropna(subset=[\"Career Type Group\"]) # Only keep mapped rows\n\nanalytical_pa = df_filtered[df_filtered[\"Career Type Group\"] == \"Analytical\"][\"Perceptual Aptitude\"].values\npeople_pa = df_filtered[df_filtered[\"Career Type Group\"] == \"People-Oriented\"][\"Perceptual Aptitude\"].values\n\nfig, ax = plt.subplots(figsize=(7, 5))\nbox = ax.boxplot([analytical_pa, people_pa], labels=[\"Analytical\", \"People-Oriented\"], patch_artist=True, boxprops=dict(alpha=0.8))\ncolors = [\"#3887be\", \"#e05d5d\"]\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_ylabel(\"Perceptual Aptitude\")\nax.set_title(\"Perceptual Aptitude by Career Type Group\\nAnalytical vs People-Oriented\", fontsize=13)\nax.grid(True, axis='y', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

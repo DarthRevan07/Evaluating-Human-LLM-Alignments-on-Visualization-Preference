@@ -1,0 +1,39 @@
+{
+  "table_name": "268",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Which districts in each division experienced the highest population growth rates from 1991 to 2022?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Clustered Bar Chart (Districts per Division)",
+      "design_rationale": "A clustered bar chart enables direct comparison across divisions—each cluster represents a division, and each bar within shows the district with the highest population growth rate from 1991 to 2022 in that division. This approach visually differentiates districts and divisions, making both the 'winner' in each division and regional contrasts easily readable. The use of a bar chart leverages the numeric nature of growth rates while allowing categorical division bands.",
+      "target_insight": "For each division, the district experiencing the highest population growth rate from 1991 to 2022, highlighting inter-divisional and intra-divisional differences in top performers.",
+      "output_fields": [
+        "Division",
+        "Name",
+        "Population Growth Rate 1991-2022"
+      ],
+      "chart_encodings": {
+        "x": "Division",
+        "y": "Population Growth Rate 1991-2022",
+        "color": "Name",
+        "size": null,
+        "other_aesthetics": "Bar labels, legend showing district names, distinct color for each bar (district)"
+      }
+    },
+    "transformations": [
+      "Calculate the population growth rate for each district using: (df['Population_2022'] - df['Population_1991']) / df['Population_1991']",
+      "For each Division, select the district with the maximum population growth rate"
+    ],
+    "data_preparation_steps": [
+      "Create a new column 'GrowthRate_1991_2022' in df: (df['Population_2022'] - df['Population_1991']) / df['Population_1991']",
+      "Group df by 'Division', find district (row) with the max 'GrowthRate_1991_2022' in each group",
+      "Construct a DataFrame with these top districts, their division, and growth rate"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['GrowthRate_1991_2022'] = (df['Population_2022'] - df['Population_1991']) / df['Population_1991']\ndf_top = df.loc[df.groupby('Division')['GrowthRate_1991_2022'].idxmax()]\ndivisions = df_top['Division']\nnames = df_top['Name']\ngrowth_rates = df_top['GrowthRate_1991_2022']\ncmap = mpl.colormaps['tab20']\ncolors = [cmap(i % 20) for i in range(len(names))]\nfig, ax = plt.subplots(figsize=(10,6))\nbars = ax.bar(divisions, growth_rates, color=colors, edgecolor='black')\nfor i, bar in enumerate(bars):\n    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(), names.iloc[i], ha='center', va='bottom', fontsize=10, rotation=40)\nax.set_xlabel('Division')\nax.set_ylabel('Population Growth Rate (1991-2022)')\nax.set_title('Highest District Population Growth Rate per Division (1991-2022)')\nlegend_labels = [name for name in names]\nax.legend(bars, legend_labels, title='District', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

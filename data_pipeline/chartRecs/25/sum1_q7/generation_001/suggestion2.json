@@ -1,0 +1,39 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do stocks with larger intra-day price ranges (difference between High and Low) tend to also have higher trading volumes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "2D Density Heatmap (Hexbin Plot)",
+      "design_rationale": "A hexbin plot aggregates the 50 NIFTY-50 stocks to reveal the density of occurrences for combinations of intra-day price range and trading volume. This visual makes it easy to spot performance 'clusters', showing whether most high-volume trades are associated with high price ranges (or not). The density map is particularly effective for the relatively small but rich dataset and brings out patterns that single points may obscure. Color (intensity) is mapped to count of stocks in a hex, emphasizing concentration areas.",
+      "target_insight": "Whether stocks with high intra-day price ranges tend to cluster with high trading volumes, indicating structural correlation in the dataset, not just individual relationships.",
+      "output_fields": [
+        "High",
+        "Low",
+        "Volume (lacs)"
+      ],
+      "chart_encodings": {
+        "x": "High - Low (calculated intra-day price range)",
+        "y": "Volume (lacs)",
+        "color": "Hexbin density (count of stocks per bin)",
+        "size": "null",
+        "other_aesthetics": "Viridis colormap, colorbar for density, grid"
+      }
+    },
+    "transformations": [
+      "Convert df['High'] and df['Low'] to numeric INR values (if stored as strings with currency formatting)",
+      "Create new column df['Range'] = df['High'] - df['Low']"
+    ],
+    "data_preparation_steps": [
+      "df['High'] = pd.to_numeric(df['High'].str.replace(',', ''))",
+      "df['Low'] = pd.to_numeric(df['Low'].str.replace(',', ''))",
+      "df['Range'] = df['High'] - df['Low']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n# Load data\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\ndf['High'] = pd.to_numeric(df['High'].str.replace(',', ''))\ndf['Low'] = pd.to_numeric(df['Low'].str.replace(',', ''))\ndf['Range'] = df['High'] - df['Low']\nfig, ax = plt.subplots(figsize=(8,6))\ncmap = mpl.colormaps['viridis']\nhb = ax.hexbin(df['Range'], df['Volume (lacs)'], gridsize=12, cmap=cmap, linewidths=0.5, mincnt=1)\ncb = fig.colorbar(hb, ax=ax)\ncb.set_label('Number of Stocks')\nax.set_xlabel(\"Intra-day Price Range (High - Low)\")\nax.set_ylabel(\"Volume (lacs)\")\nax.set_title(\"Stock Density by Intra-day Price Range and Volume\\nNIFTY-50 Hexbin Analysis\")\nax.grid(True)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

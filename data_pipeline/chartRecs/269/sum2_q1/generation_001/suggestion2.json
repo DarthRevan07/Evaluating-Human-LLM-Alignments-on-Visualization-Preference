@@ -1,0 +1,49 @@
+{
+  "table_name": "269",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How has the population of each continent changed from 1970 to 2023?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Area Chart (Cumulative Share of Continental Population Over Time)",
+      "design_rationale": "A stacked area chart offers a powerful visual to show not just the absolute growth of each continent but also how each continent's share has changed in relation to the world total, year-by-year. By stacking continent population totals for each year, the chart communicates the changing distribution and relative contributions of each continent to the global population. This helps identify shifts in global demographic weight and reveals which continents drove the world's population growth. The area encodings make the proportions intuitively visible.",
+      "target_insight": "How the continental population distribution changed and which continents grew or declined in relative global importance.",
+      "output_fields": [
+        "continent",
+        "1970 population",
+        "1980 population",
+        "1990 population",
+        "2000 population",
+        "2010 population",
+        "2015 population",
+        "2020 population",
+        "2022 population",
+        "2023 population"
+      ],
+      "chart_encodings": {
+        "x": "Year (derived from population columns)",
+        "y": "Total Population (stacked per continent)",
+        "color": "continent",
+        "size": null,
+        "other_aesthetics": "Stacked patches for area, alpha for transparency, facet/legend for continent"
+      }
+    },
+    "transformations": [
+      "Aggregate sum of population columns by df['continent']",
+      "Reshape to wide format: row = year, columns = continent, values = total continent population per year",
+      "Sort years ascending for x-axis"
+    ],
+    "data_preparation_steps": [
+      "Select columns: df['continent'], all population columns 1970-2023",
+      "Group by df['continent'], sum population for each year",
+      "Transpose: Create a DataFrame where rows = years, columns = continents, values = population sums",
+      "Sort years in ascending order",
+      "Extract numeric year from population column names for x-axis"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\269.csv\")\npop_cols = [\"1970 population\", \"1980 population\", \"1990 population\", \"2000 population\", \"2010 population\", \"2015 population\", \"2020 population\", \"2022 population\", \"2023 population\"]\ndf_group = df.groupby(\"continent\")[pop_cols].sum()\n# Transpose for stacked area plot\ndata = df_group.transpose()\ndata.index = [int(col.split()[0]) for col in data.index]\ncontinents = data.columns.tolist()\ncmap = mpl.colormaps[\"tab10\"].resampled(len(continents))\ncolors = [cmap(i) for i in range(len(continents))]\nfig, ax = plt.subplots(figsize=(12,7))\nax.stackplot(data.index, [data[cont] for cont in continents], labels=continents, colors=colors, alpha=0.85)\nax.set_xlabel(\"Year\")\nax.set_ylabel(\"Total Population (Stacked)\")\nax.set_title(\"Stacked Area: Continental Population Share, 1970-2023\\nRelative growth and changing demographic distribution\")\nax.legend(loc=\"upper left\", title=\"Continent\")\nax.grid(True, linestyle=\"--\", alpha=0.5)\nax.set_xticks([1970,1980,1990,2000,2010,2015,2020,2022,2023])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

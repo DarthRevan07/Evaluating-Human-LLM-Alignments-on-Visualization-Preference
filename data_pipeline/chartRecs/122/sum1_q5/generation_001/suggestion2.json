@@ -1,0 +1,42 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there genres that dominate global sales in specific years, suggesting shifts in market demand or player preferences?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Genre Market Share by Year)",
+      "design_rationale": "A heatmap offers an effective at-a-glance comparison of genres' relative market share per year. Instead of focusing on raw sales, the heatmap normalizes each year's sales, showing for each year what percentage of total global sales belonged to each genre, making it easy to spot market dominance, emergence, or collapse of genres. The color intensity encodes dominance, helping identify 'hot' years for certain genres.",
+      "target_insight": "We can identify which genres are dominant in which years, track shifts in genre market share, and spot outlier years and trend reversals in player preferences. This format also highlights niche genres that never achieve dominance.",
+      "output_fields": [
+        "Year",
+        "Genre",
+        "Global_Sales (market share %)"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Genre",
+        "color": "Market share (0-100%) of total global sales in that year for each genre",
+        "size": null,
+        "other_aesthetics": "annotated percentages, strong sequential colormap"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Year'] is null",
+      "Group by df['Year'] and df['Genre'], sum df['Global_Sales']",
+      "Pivot to wide format: index 'Genre', columns 'Year', values are summed 'Global_Sales'",
+      "For each column (year), divide each genre's sales by total sales that year to yield market share (proportion), then multiply by 100 for percent"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Year'])",
+      "df_grouped = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()",
+      "df_pivot = df_grouped.pivot(index='Genre', columns='Year', values='Global_Sales').fillna(0)",
+      "df_market_share = df_pivot.div(df_pivot.sum(axis=0), axis=1) * 100"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf = df.dropna(subset=['Year'])\ndf_grouped = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()\ndf_pivot = df_grouped.pivot(index='Genre', columns='Year', values='Global_Sales').fillna(0)\ndf_market_share = df_pivot.div(df_pivot.sum(axis=0), axis=1) * 100\nfig, ax = plt.subplots(figsize=(15,7))\ncmap = mpl.colormaps['YlGnBu']\nim = ax.imshow(df_market_share, aspect='auto', cmap=cmap, interpolation='none', origin='lower')\nax.set_xticks(np.arange(len(df_market_share.columns)))\nax.set_xticklabels([int(y) for y in df_market_share.columns], rotation=45, ha='right', fontsize=9)\nax.set_yticks(np.arange(len(df_market_share.index)))\nax.set_yticklabels(df_market_share.index, fontsize=11)\nax.set_xlabel('Year', fontsize=13)\nax.set_ylabel('Genre', fontsize=13)\nax.set_title('Market Share (%) of Global Video Game Sales by Genre and Year\\nHeatmap Reveals Dominant Genres and Market Shifts', fontsize=16, pad=18, fontweight='bold')\ncbar = plt.colorbar(im, ax=ax, label='Market Share (%)')\nfor i in range(len(df_market_share.index)):\n    for j in range(len(df_market_share.columns)):\n        val = df_market_share.iloc[i, j]\n        if not np.isnan(val) and val > 0:\n            color = 'black' if val < 60 else 'white'\n            ax.text(j, i, f'{val:.1f}', ha='center', va='center', color=color, fontsize=8)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

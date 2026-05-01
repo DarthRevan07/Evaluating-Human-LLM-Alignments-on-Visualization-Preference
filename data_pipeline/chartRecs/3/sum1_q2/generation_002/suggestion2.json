@@ -1,0 +1,40 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "How does rice production per person vary across different countries, and are there any countries where this value significantly exceeds or falls below the global average?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "boxplot with country outliers labeled",
+      "design_rationale": "A boxplot gives a statistical summary of rice production per person globally, emphasizing central tendency and spread, and provides immediate identification of outlier countries. By overlaying country labels for extreme outliers, this visualization conveys both the shape of the distribution and highlights which countries are exceptional, providing an unconventional but effective overview for 119 observations.",
+      "target_insight": "Distribution of global rice production per person, with labeled outliers showing countries significantly above or below the normal range.",
+      "output_fields": [
+        "Country",
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg) (single category at x=0)",
+        "y": "Rice Production Per Person (Kg)",
+        "color": "Box/whiskers (distribution), labeled outliers in red/blue",
+        "size": "null",
+        "other_aesthetics": "Country labels for detected statistical outliers (beyond whiskers)"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Production Per Person (Kg)' to float.",
+      "Identify statistical outliers (values outside boxplot whiskers, typically 1.5*IQR).",
+      "Extract corresponding 'Country' for each outlier."
+    ],
+    "data_preparation_steps": [
+      "Copy df to df_plot.",
+      "Convert 'Rice Production Per Person (Kg)' to float.",
+      "Calculate boxplot statistics: Q1, Q3, IQR.",
+      "Mark countries as outliers if their value is < Q1 - 1.5*IQR or > Q3 + 1.5*IQR."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf_plot = df.copy()\ndf_plot['Rice Production Per Person (Kg)_numeric'] = pd.to_numeric(df_plot['Rice Production Per Person (Kg)'].str.replace(',', ''), errors='coerce')\ndata = df_plot['Rice Production Per Person (Kg)_numeric'].dropna()\nQ1 = data.quantile(0.25)\nQ3 = data.quantile(0.75)\nIQR = Q3 - Q1\nlower_bound = Q1 - 1.5 * IQR\nupper_bound = Q3 + 1.5 * IQR\noutliers = df_plot[(df_plot['Rice Production Per Person (Kg)_numeric'] < lower_bound) | (df_plot['Rice Production Per Person (Kg)_numeric'] > upper_bound)]\ncountry_outliers = outliers[['Country', 'Rice Production Per Person (Kg)_numeric']]\nplt.figure(figsize=(8, 10))\nax = plt.gca()\nbox = ax.boxplot(data, vert=True, patch_artist=True, widths=0.35,\n                 boxprops=dict(facecolor='#D4ECF8', color='#2E86AB'),\n                 whiskerprops=dict(color='gray'),\n                 capprops=dict(color='gray'),\n                 medianprops=dict(color='#E94F37', linewidth=2))\nax.set_ylabel('Rice Production Per Person (Kg)')\nax.set_xticks([1])\nax.set_xticklabels(['Global'])\nax.set_title('Global Rice Production Per Person Distribution\\nStatistical Outliers (Countries) Highlighted')\noutlier_y = country_outliers['Rice Production Per Person (Kg)_numeric'].values\noutlier_x = np.ones_like(outlier_y)  # All belong to 'Global'\nfor i, row in country_outliers.iterrows():\n    color = '#E94F37' if row['Rice Production Per Person (Kg)_numeric'] > upper_bound else '#2E86AB'\n    ax.scatter(1, row['Rice Production Per Person (Kg)_numeric'], color=color, s=60, zorder=5)\n    ax.text(1.05, row['Rice Production Per Person (Kg)_numeric'], row['Country'], color=color, fontsize=8, va='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

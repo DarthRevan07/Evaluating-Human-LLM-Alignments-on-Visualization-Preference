@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "What patterns can be observed in temperature trends for major cities over the series of observation times?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (City x Observation Time Matrix)",
+      "design_rationale": "A heatmap provides an overview by mapping cities (rows) and observation times (columns) with color encoding for temperature. This format highlights cross-city and temporal patterns, such as hot/cool periods, clusters, and synchronized shifts more rapidly than line charts, while facilitating outlier spotting and visual comparison of city behavior during the same period.",
+      "target_insight": "Discover time windows with notable spikes or drops in temperature across cities, and identify if cities share common temperature trends or exhibit unique patterns.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time (column axis)",
+        "y": "Location (row axis)",
+        "color": "Temperature (°C) (cell shading)",
+        "size": null,
+        "other_aesthetics": "Colorbar for temperature, annotation for cell values, axis grid"
+      }
+    },
+    "transformations": [
+      "Convert 'Observation Time' to datetime for correct ordering",
+      "Pivot data into a matrix with 'Location' as rows, 'Observation Time' as columns, values as mean 'Temperature (°C)'",
+      "Sort observation times chronologically"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "df_pivot = df.pivot_table(index='Location', columns='Observation Time', values='Temperature (°C)', aggfunc='mean')",
+      "df_pivot = df_pivot.sort_index(axis=1)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\ndf_pivot = df.pivot_table(index='Location', columns='Observation Time', values='Temperature (°C)', aggfunc='mean')\ndf_pivot = df_pivot.sort_index(axis=1)\n\nfig, ax = plt.subplots(figsize=(9,6))\ncmap = mpl.colormaps['viridis']\nheatmap = ax.imshow(df_pivot.values, cmap=cmap, aspect='auto', vmin=8, vmax=25)\n\n# Set ticks and labels\nax.set_xticks(np.arange(df_pivot.shape[1]))\nax.set_yticks(np.arange(df_pivot.shape[0]))\nax.set_xticklabels([t.strftime('%b %d %H:%M') for t in df_pivot.columns], rotation=45, ha='right')\nax.set_yticklabels(df_pivot.index)\n\n# Annotate each cell with temperature value\nfor i in range(df_pivot.shape[0]):\n    for j in range(df_pivot.shape[1]):\n        val = df_pivot.values[i,j]\n        ax.text(j, i, f'{val:.1f}', ha='center', va='center', color='white' if val > 16 else 'black', fontsize=10)\n\nax.set_title('City Temperature Heatmap Across Observation Times')\ncbar = fig.colorbar(heatmap, ax=ax, label='Temperature (°C)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

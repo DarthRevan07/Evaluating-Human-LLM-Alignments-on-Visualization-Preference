@@ -1,0 +1,47 @@
+{
+  "table_name": "269",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Which countries have experienced a decrease in population between 2020 and 2023, and how do their growth rates compare to the global average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart efficiently highlights which countries experienced population decline by visually ranking them by population change magnitude. Horizontal layout provides clear space for long country names, and using color to encode 'growth rate' reveals how the rate of decline or stagnation compares to global averages. This approach allows sorting, comparison, and rapid identification of outliers and overall trends.",
+      "target_insight": "Identify all countries with negative population change from 2020 to 2023, see which have the most significant decreases, and compare their 'growth rate' values against the global average in one glance.",
+      "output_fields": [
+        "country",
+        "2020 population",
+        "2023 population",
+        "growth rate"
+      ],
+      "chart_encodings": {
+        "x": "2023 population - 2020 population",
+        "y": "country",
+        "color": "growth rate (normalized vs global mean)",
+        "size": null,
+        "other_aesthetics": "Bar: alpha=0.8, Edgecolor='black'; Sorted descending by population change"
+      }
+    },
+    "transformations": [
+      "Compute population change: df['2023 population'] - df['2020 population'] as new column 'pop_change'",
+      "Filter: Keep only rows where 'pop_change' < 0",
+      "Convert 'growth rate' to float for numeric comparison",
+      "Compute global average 'growth rate' (converted to float)",
+      "Create color mapping: values below global mean = blue, above = orange"
+    ],
+    "data_preparation_steps": [
+      "df['pop_change'] = df['2023 population'] - df['2020 population']",
+      "df_neg = df[df['pop_change'] < 0].copy()",
+      "df_neg['growth_rate_num'] = pd.to_numeric(df_neg['growth rate'], errors='coerce')",
+      "df['growth_rate_num'] = pd.to_numeric(df['growth rate'], errors='coerce')",
+      "global_avg = df['growth_rate_num'].mean()",
+      "df_neg['color'] = np.where(df_neg['growth_rate_num'] < global_avg, 'blue', 'orange')",
+      "Sort df_neg by 'pop_change' ascending (most negative first)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf['pop_change'] = df['2023 population'] - df['2020 population']\ndf_neg = df[df['pop_change'] < 0].copy()\ndf_neg['growth_rate_num'] = pd.to_numeric(df_neg['growth rate'], errors='coerce')\ndf['growth_rate_num'] = pd.to_numeric(df['growth rate'], errors='coerce')\nglobal_avg = df['growth_rate_num'].mean()\ndf_neg['color'] = np.where(df_neg['growth_rate_num'] < global_avg, 'blue', 'orange')\ndf_neg_sorted = df_neg.sort_values('pop_change')\nfig, ax = plt.subplots(figsize=(11, max(5,len(df_neg_sorted)*0.3)))\nbars = ax.barh(df_neg_sorted['country'], df_neg_sorted['pop_change'], color=df_neg_sorted['color'], alpha=0.8, edgecolor='black')\nax.set_xlabel('Population Change (2023 - 2020)')\nax.set_title('Countries with Population Decrease 2020-2023\\nBar Color: Growth Rate Relative to Global Average')\nglobal_avg_rounded = round(global_avg,3)\nlegend_handles = [mpl.patches.Patch(color='blue', label='Growth rate below global avg (' + str(global_avg_rounded) + '%)'),\n                  mpl.patches.Patch(color='orange', label='Growth rate above global avg')]\nax.legend(handles=legend_handles, loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

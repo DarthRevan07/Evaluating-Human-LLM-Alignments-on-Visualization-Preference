@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What trends are observed in the number of purchases among customers who are part of the loyalty program compared to those who are not?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is ideal for comparing distributions of 'NumberOfPurchases' between loyalty program members and non-members, as it reveals medians, ranges, and potential outliers. Given the numeric and binary column types, this visualization quickly shows whether loyalty members consistently make more purchases, and highlights natural variability or skew within each group.",
+      "target_insight": "Visually compare the consumption behavior, central tendency, and spread of number of purchases for loyalty program members versus non-members, revealing whether loyalty membership associates with higher purchasing activity.",
+      "output_fields": [
+        "NumberOfPurchases",
+        "LoyaltyProgram"
+      ],
+      "chart_encodings": {
+        "x": "LoyaltyProgram",
+        "y": "NumberOfPurchases",
+        "color": "LoyaltyProgram",
+        "size": null,
+        "other_aesthetics": "box fill; outlier marker; appropriate group labels"
+      }
+    },
+    "transformations": [
+      "Separate the data into two groups based on df['LoyaltyProgram'] (1 for enrolled, 0 for not enrolled)",
+      "Extract and list 'NumberOfPurchases' values for each group"
+    ],
+    "data_preparation_steps": [
+      "Create a list of 'NumberOfPurchases' values for loyalty members: df[df['LoyaltyProgram']==1]['NumberOfPurchases']",
+      "Create a list of 'NumberOfPurchases' values for non-members: df[df['LoyaltyProgram']==0]['NumberOfPurchases']",
+      "Combine these into a list of lists for plotting boxes side by side"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\63.csv')\nloyalty_values = [df[df['LoyaltyProgram']==0]['NumberOfPurchases'].values, df[df['LoyaltyProgram']==1]['NumberOfPurchases'].values]\nplt.figure(figsize=(8,6))\nbox = plt.boxplot(loyalty_values, patch_artist=True, labels=['Not Enrolled', 'Enrolled'])\ncolors = ['#E06666', '#6FA8DC']\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nplt.ylabel('NumberOfPurchases')\nplt.xlabel('LoyaltyProgram')\nplt.title('Distribution of Purchases\\nby Loyalty Program Membership')\nplt.grid(True, axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

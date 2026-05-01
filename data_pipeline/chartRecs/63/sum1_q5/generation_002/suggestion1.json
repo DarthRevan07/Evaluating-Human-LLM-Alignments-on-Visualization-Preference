@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How does time spent on the website correlate with purchase status?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot with overlayed stripplot",
+      "design_rationale": "A boxplot grouped by PurchaseStatus allows for direct comparison of the distribution of 'TimeSpentOnWebsite' for purchasers (1) and non-purchasers (0), revealing central tendency, spread, and outliers. Adding a stripplot overlays individual datapoints, conveying density and possible multimodality, vital due to the continuous variable and large sample size. This approach answers whether time spent differs reliably between those who purchased and those who didn't, and whether there is a visible threshold or overlap.",
+      "target_insight": "Does the distribution of time spent on the website differ significantly between customers who did or did not complete a purchase? Are there clear differences in median or spread that suggest correlation?",
+      "output_fields": [
+        "TimeSpentOnWebsite",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "PurchaseStatus",
+        "y": "TimeSpentOnWebsite",
+        "color": "PurchaseStatus (categorical color palette)",
+        "size": null,
+        "other_aesthetics": "Jittered points overlay (stripplot); box edge color by group"
+      }
+    },
+    "transformations": [
+      "No aggregation needed; but group data by 'PurchaseStatus' for boxplot",
+      "Filter to ensure 'TimeSpentOnWebsite' values are within valid range"
+    ],
+    "data_preparation_steps": [
+      "Divide df into groups based on 'PurchaseStatus'",
+      "Extract 'TimeSpentOnWebsite' values for each group",
+      "Prepare color mapping so boxplots and points are visually separated"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\nstatus_labels = [0,1]\ngrouped = [df[df[\"PurchaseStatus\"]==status][\"TimeSpentOnWebsite\"] for status in status_labels]\ncolors = [\"#4B8BBE\", \"#FFC107\"]\nplt.figure(figsize=(8,5))\nbox = plt.boxplot(grouped, positions=[0,1], patch_artist=True, widths=0.5)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.5)\nfor i, status in enumerate(status_labels):\n    y = grouped[i].values\n    x = np.random.normal(i, 0.1, size=len(y))\n    plt.scatter(x, y, color=colors[i], alpha=0.4, label=\"Purchased\" if status==1 else \"Not Purchased\", edgecolor=\"#222\", s=28)\nplt.xticks([0,1], [\"Not Purchased\", \"Purchased\"])\nplt.ylabel(\"TimeSpentOnWebsite (minutes)\")\nplt.xlabel(\"PurchaseStatus\")\nplt.title(\"Distribution of Time Spent on Website by Purchase Status\")\nplt.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

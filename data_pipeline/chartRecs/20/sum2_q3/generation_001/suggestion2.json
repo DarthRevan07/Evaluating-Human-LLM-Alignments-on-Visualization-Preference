@@ -1,0 +1,43 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there any artists whose biographical narratives suggest periods of intense productivity during specific years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Top Artists with Concentrated Masterpieces by Lifetime Span)",
+      "design_rationale": "To complement the heatmap, this chart summarizes the concentration of masterpieces relative to the artists' lifespans. By extracting birth and death years from 'bio', calculating the total productive span, and dividing their number of artworks ('paintings') by the number of productive years, we can rank artists by 'masterpieces per productive year'. This directly identifies artists whose biographical period was marked by unusually high productivity.",
+      "target_insight": "Artists with the most densely productive years are ranked and easily compared, highlighting those who had intense periods regardless of their total output.",
+      "output_fields": [
+        "name",
+        "bio",
+        "paintings"
+      ],
+      "chart_encodings": {
+        "x": "masterpieces per productive year",
+        "y": "name",
+        "color": "nationality for visual interest",
+        "size": null,
+        "other_aesthetics": "horizontal bars, label top artists, color-coded"
+      }
+    },
+    "transformations": [
+      "Extract birth and death years from df['bio'] using regex",
+      "Calculate productive lifespan as (death year - birth year)",
+      "Compute rate: df['paintings'] / productive lifespan",
+      "Sort artists descending by this rate, select top N (e.g. top 10) for clarity"
+    ],
+    "data_preparation_steps": [
+      "Parse df['bio'] for birth and death years (assuming format contains both)",
+      "Filter out any missing or invalid years",
+      "Calculate productive span for each artist",
+      "Compute painting rate per year and store as new column",
+      "Sort and select top N artists (e.g., 10) with highest productivity rate"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\20.csv\")\nbirth_years = []\ndeath_years = []\n# Extract birth and death years via simple pattern matching\nimport re\nfor bio in df['bio']:\n    # Search for \"YYYY–YYYY\" or \"YYYY-YYYY\" in bio\n    match = re.search(r'(\\d{4})[–-](\\d{4})', bio)\n    if match:\n        birth_years.append(int(match.group(1)))\n        death_years.append(int(match.group(2)))\n    else:\n        birth_years.append(np.nan)\n        death_years.append(np.nan)\ndf['birth'] = birth_years\ndf['death'] = death_years\ndf = df.dropna(subset=['birth', 'death'])\ndf['productive_span'] = df['death'] - df['birth']\ndf['rate'] = df['paintings'] / df['productive_span']\ndf_top = df.sort_values('rate', ascending=False).head(10)\n# Color by nationality\nnats = df_top['nationality'].unique()\ncmap = mpl.colormaps['Set2'].resampled(len(nats))\nnat_map = {nat: idx for idx, nat in enumerate(nats)}\ncolors = [cmap(nat_map[nat]) for nat in df_top['nationality']]\nfig, ax = plt.subplots(figsize=(12, 7))\nbars = ax.barh(df_top['name'], df_top['rate'], color=colors)\nax.set_xlabel('Masterpieces per productive year')\nax.set_ylabel('Artist')\nplt.title('Top 10 Artists by Intensity of Productivity (Masterpieces per Year)')\n# Legend for nationality\nfrom matplotlib.patches import Patch\nlegend_elements = [Patch(facecolor=cmap(nat_map[nat]), label=nat) for nat in nats]\nax.legend(handles=legend_elements, title='Nationality')\n# Label top 3\nfor i in range(3):\n    ax.text(df_top['rate'].iloc[i]+1, i, df_top['name'].iloc[i] + '\\n' + df_top['nationality'].iloc[i], va='center', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

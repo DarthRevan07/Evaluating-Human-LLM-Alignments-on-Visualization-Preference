@@ -1,0 +1,81 @@
+{
+  "table_name": "Meat and Dairy Production",
+  "generation_dir": "secondIter\\summaries\\7_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: Meat_and_Dairy_Production (14,382 rows × 4 columns)\n\n### Description\nData loaded from CSV file: 7.csv (Dataset: Meat and Dairy Production)\n\n### Schema (4 fields)\n  - Country -- type: object, values: Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe\n  - Code -- type: object, values: 0, AFG, AGO, ALB, ARE, ..., WSM, YEM, ZAF, ZMB, ZWE\n  - Year -- type: int64, values: 1961, 1962, 1963, 1964, 1965, ..., 2018, 2019, 2020, 2021, 2022\n  - Meat, total | 00001765 || Production | 005510 || tonnes -- type: float64, values: 0.0, 5.11, 5.86, 6.02, 14.92, ..., 338109200.0, 338912200.0, 341013630.0, 354536580.0, 360617700.0\n\n### Sample Data (first 5 rows)\n```\n         Country Code  Year  Meat, total | 00001765 || Production | 005510 || tonnes\n0        Bahamas  BHS  1961                                                   1260.7\n1         Brunei  BRN  1961                                                   1289.8\n2          Qatar  QAT  1961                                                   1769.2\n3  Faroe Islands  FRO  1961                                                      0.0\n4         Tuvalu  TUV  1961                                                     30.0\n```\n",
+  "table_metadata": {
+    "total_rows": 14382,
+    "total_columns": 4,
+    "source_file": "csv_c2_sec\\7.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Meat_and_Dairy_Production",
+      "summary_idx": 1,
+      "column_combination": [
+        "Country",
+        "Code",
+        "Year",
+        "Meat, total | 00001765 || Production | 005510 || tonnes"
+      ],
+      "questions": [
+        "How has total meat production changed over time for individual countries?",
+        "Which countries have experienced the highest growth rates in meat production over the past six decades?",
+        "Are there notable anomalies in meat production trends for any country or region across the years?",
+        "How does meat production in different countries compare in the most recent year of data?",
+        "Which countries consistently rank highest or lowest in meat production year after year?",
+        "How have regional or continental meat production totals evolved from 1961 to 2022?",
+        "Are there any countries where meat production dropped significantly during a specific period?",
+        "For a given year, which countries contributed most and least to world meat production?",
+        "How do trends in meat production for a specific country align with global patterns over time?",
+        "Which years show the most notable increases or decreases in meat production for any given country?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 14382,
+          "total_columns": 4,
+          "source_file": "csv_c2_sec\\7.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "Meat_and_Dairy_Production",
+      "summary_idx": 2,
+      "column_combination": [
+        "Country",
+        "Code",
+        "Year",
+        "Meat, total | 00001765 || Production | 005510 || tonnes"
+      ],
+      "questions": [
+        "How has meat production in individual countries changed over time from 1961 to 2022?",
+        "Which countries have experienced the largest increases or decreases in meat production during specific decades?",
+        "Are there any countries that consistently produce significantly more meat than others throughout the dataset?",
+        "What global trends can be observed by comparing total meat production values in the 'World' and regional aggregates like 'Africa' across the years?",
+        "Which years show major shifts or anomalies in meat production for specific countries, and what might be causing these changes?",
+        "How is meat production distributed among countries for a selected year, and who are the top producers?",
+        "Are there countries with unexpectedly low or zero meat production in certain years, and are these outliers or part of a trend?",
+        "Does the variability in meat production across countries change over time, indicating shifting hotspots or emerging producers?",
+        "Which countries' meat output displays a distinctly different trajectory compared to global or regional averages?",
+        "How does meat production fluctuate for countries with similar production levels at the start of the dataset, and do their paths diverge or converge over time?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 14382,
+          "total_columns": 4,
+          "source_file": "csv_c2_sec\\7.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there genres that dominate global sales in specific years, suggesting shifts in market demand or player preferences?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Area Chart (Conventional)",
+      "design_rationale": "A stacked area chart is used to visualize how the market share (proportion of total global sales) of each genre evolves over time. This approach provides a comprehensive overview, allowing us to see the rise and fall of genres as dominant contributors to global sales year by year. By showing genre 'layers' for each year, it's easy to spot periods where one or a few genres dominate, suggesting market shifts.",
+      "target_insight": "This visualization reveals when particular genres have been dominant in the global market by year, providing a clear sense of shifts in player preferences and market trends over decades.",
+      "output_fields": [
+        "Year",
+        "Genre",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Proportional Global Sales by Genre",
+        "color": "Genre",
+        "size": null,
+        "other_aesthetics": "Stacked areas, legend by 'Genre', lighter grid for clarity"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Year' is null to ensure all entries map to a specific year.",
+      "Group data by 'Year' and 'Genre', aggregate by summing 'Global_Sales'.",
+      "Pivot the grouped data to have 'Year' as index, 'Genre' as columns, and summed 'Global_Sales' as values.",
+      "Replace missing values in the pivot table with 0 (for years/genres with no sales).",
+      "For each year, calculate the total sales across all genres and divide each genre's sales by the year's total to compute proportions."
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Year'])",
+      "genre_year = df.groupby(['Year','Genre'])['Global_Sales'].sum().reset_index()",
+      "pivot = genre_year.pivot(index='Year', columns='Genre', values='Global_Sales').fillna(0)",
+      "prop = pivot.div(pivot.sum(axis=1), axis=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf = df.dropna(subset=['Year'])\ngenre_year = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()\npivot = genre_year.pivot(index='Year', columns='Genre', values='Global_Sales').fillna(0)\nprop = pivot.div(pivot.sum(axis=1), axis=0)\nfig, ax = plt.subplots(figsize=(15,7))\ngenres = prop.columns\ncmap = mpl.colormaps['tab20'].resampled(len(genres))\ncolors = [cmap(i) for i in range(len(genres))]\nax.stackplot(prop.index, [prop[g] for g in genres], labels=genres, colors=colors, alpha=0.9)\nax.set_xlabel('Year', fontsize=13)\nax.set_ylabel('Proportional Global Sales by Genre', fontsize=13)\nax.set_title('Genre Dominance in Global Video Game Sales by Year\\n(Proportion of Annual Global Sales)', fontsize=16)\nax.legend(loc='center left', bbox_to_anchor=(1,0.5), title='Genre')\nax.set_xlim(prop.index.min(), prop.index.max())\nax.set_ylim(0,1)\nax.grid(axis='y', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

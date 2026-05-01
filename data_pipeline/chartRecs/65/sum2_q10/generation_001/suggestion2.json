@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Are Clothing products more sensitive to Promotion in terms of Sales Volume compared to Food products?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A side-by-side boxplot provides a distributional comparison of Sales Volume for Clothing and Food products, with and without Promotion. By breaking out not just means but the spread and outliers, this visualization exposes whether Promotion not only shifts the average but also reliably boosts Sales Volume among most products (or just a few). It goes beyond summary stats and checks for consistency of promotion sensitivity, answering whether uplifts are universal or variable.",
+      "target_insight": "The boxplots reveal the extent (median, IQR, outliers) of Sales Volume increases for Clothing versus Food products, with and without Promotion, highlighting both magnitude and reliability of promotion effects.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "combined Product Category and Promotion status (e.g., 'Clothing - Yes', 'Clothing - No')",
+        "y": "Sales Volume",
+        "color": "Product Category",
+        "size": null,
+        "other_aesthetics": "boxplots with different fill colors per Product Category, outlier markers, overlayed medians"
+      }
+    },
+    "transformations": [
+      "Filter df to Clothing and Food in df['Product Category']",
+      "Create a combined categorical variable: 'Product Category' + ' - ' + 'Promotion' (e.g., 'Clothing - Yes')"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df[df['Product Category'].isin(['Clothing', 'Food'])].copy()",
+      "df_plot['Category-Promo'] = df_plot['Product Category'] + ' - ' + df_plot['Promotion']",
+      "order = ['Clothing - No', 'Clothing - Yes', 'Food - No', 'Food - Yes']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\nimport matplotlib as mpl\ncmap = mpl.colormaps['Set2'].resampled(2)\n\n\n# Load data\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_plot = df[df['Product Category'].isin(['Clothing', 'Food'])].copy()\ndf_plot['Category-Promo'] = df_plot['Product Category'] + ' - ' + df_plot['Promotion']\norder = ['Clothing - No', 'Clothing - Yes', 'Food - No', 'Food - Yes']\n\ncolors = [cmap(0.25), cmap(0.75), cmap(0.25), cmap(0.75)]\n\nfig, ax = plt.subplots(figsize=(9, 5))\nbox = ax.boxplot([df_plot[df_plot['Category-Promo'] == grp]['Sales Volume'] for grp in order],\n                 patch_artist=True,\n                 showfliers=True,\n                 medianprops={'color': 'black', 'linewidth': 2},\n                 boxprops = dict(linewidth=2))\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.7)\n\nax.set_xticklabels(['Clothing\\nNo Promotion', 'Clothing\\nPromotion', 'Food\\nNo Promotion', 'Food\\nPromotion'], fontsize=11)\nax.set_ylabel('Sales Volume', fontsize=12)\nax.set_title('Distribution of Sales Volume by Promotion\\nfor Clothing and Food Products', fontsize=14)\nlegend_elements = [mpl.patches.Patch(facecolor=cmap(0.25), edgecolor='gray', label='Clothing'),\n                   mpl.patches.Patch(facecolor=cmap(0.75), edgecolor='gray', label='Food')]\nax.legend(handles=legend_elements, title='Product Category', loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,333 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "generation_dir": "secondIter\\chartRecs\\20\\sum1_q6\\generation_002",
+  "schema_context": "Table: Best Artworks of All Time\nRows: 50\nColumns: 8\n\nFIELD INFORMATION:\nField: id\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents a unique identifier assigned to each artwork in the dataset, enabling easy reference and distinction among the 50 listed \"Best Artworks of All Time.\"\n  - Value Range: 0.0 to 49.0\n  - Mean: 24.50\n\nField: name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the names of renowned artists whose works are featured in the \"Best Artworks of All Time\" dataset, identifying the creator of each artwork.\n\nField: years\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the time span (years) during which each listed artwork was created or completed, indicating the period of artistic production for masterpieces in the art history domain.\n\nField: genre\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 31\n  - Semantic Meaning: The \"genre\" field categorizes each artwork by its artistic style or movement, often listing one or more relevant genres to describe the artwork's aesthetic or historical context.\n\nField: nationality\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 17\n  - Semantic Meaning: This field represents the country or countries associated with an artist's origin or cultural background, indicating the national identity relevant to artworks featured in the \"Best Artworks of All Time\" dataset.\n\nField: bio\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field contains biographical summaries of notable artists, including their names, birth and death dates, nationalities, and pronunciation or transliterations, providing contextual background for their artworks in the art history domain.\n\nField: wikipedia\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field contains Wikipedia URLs for artists, providing reference links to biographical information about each artist featured among the best artworks of all time.\n\nField: paintings\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 48\n  - Semantic Meaning: This field likely represents the total number of paintings created or attributed to each artist in the \"Best Artworks of All Time\" dataset.\n  - Value Range: 24.0 to 877.0\n  - Mean: 168.92\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"id\"\n  2. \"name\"\n  3. \"years\"\n  4. \"genre\"\n  5. \"nationality\"\n  6. \"bio\"\n  7. \"wikipedia\"\n  8. \"paintings\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['id'], df['name']",
+  "table_metadata": {
+    "table_name": "Best Artworks of All Time",
+    "file_path": "csv_c2_sec\\20.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 20.csv (Dataset: Best Artworks of All Time)",
+    "original_filename": "20.csv",
+    "dataset_name": "Best Artworks of All Time",
+    "row_count": 50,
+    "column_count": 8,
+    "table_hash": -8935844946972879118,
+    "fields": [
+      {
+        "name": "id",
+        "clean_name": "id",
+        "camel_case_name": "id",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "min_value": 0.0,
+        "max_value": 49.0,
+        "mean_value": 24.5,
+        "median_value": 24.5,
+        "sample_values": "0, 1, 2, 3, 4, ..., 45, 46, 47, 48, 49",
+        "inferred_semantic_summary": "This field represents a unique identifier assigned to each artwork in the dataset, enabling easy reference and distinction among the 50 listed \"Best Artworks of All Time.\""
+      },
+      {
+        "name": "name",
+        "clean_name": "name",
+        "camel_case_name": "name",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "Albrecht Dürer, Alfred Sisley, Amedeo Modigliani, Andrei Rublev, Andy Warhol, ..., Sandro Botticelli, Titian, Vasiliy Kandinskiy, Vincent van Gogh, William Turner",
+        "inferred_semantic_summary": "This field represents the names of renowned artists whose works are featured in the \"Best Artworks of All Time\" dataset, identifying the creator of each artwork."
+      },
+      {
+        "name": "years",
+        "clean_name": "years",
+        "camel_case_name": "years",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "1266 - 1337, 1360 - 1430, 1395 - 1441, 1445 - 1510, 1450 - 1516, ..., 1898 - 1967, 1904 - 1989, 1907 - 1954, 1912 – 1956, 1928 – 1987",
+        "inferred_semantic_summary": "This field represents the time span (years) during which each listed artwork was created or completed, indicating the period of artistic production for masterpieces in the art history domain."
+      },
+      {
+        "name": "genre",
+        "clean_name": "genre",
+        "camel_case_name": "genre",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 31,
+        "sample_values": "Abstract Expressionism, Baroque, Byzantine Art, Cubism, Early Renaissance, ..., \"Surrealism,Impressionism\", Symbolism, \"Symbolism,Art Nouveau\", \"Symbolism,Expressionism\", \"Symbolism,Post-Impressionism\"",
+        "inferred_semantic_summary": "The \"genre\" field categorizes each artwork by its artistic style or movement, often listing one or more relevant genres to describe the artwork's aesthetic or historical context."
+      },
+      {
+        "name": "nationality",
+        "clean_name": "nationality",
+        "camel_case_name": "nationality",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 17,
+        "sample_values": "American, Austrian, Belgian, British, Dutch, ..., Mexican, Norwegian, Russian, Spanish, \"Spanish,Greek\"",
+        "inferred_semantic_summary": "This field represents the country or countries associated with an artist's origin or cultural background, indicating the national identity relevant to artworks featured in the \"Best Artworks of All Time\" dataset."
+      },
+      {
+        "name": "bio",
+        "clean_name": "bio",
+        "camel_case_name": "bio",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "Albrecht Dürer (; German: [ˈʔalbʁɛçt ˈdyːʁɐ]; 21 May 1471 – 6 April 1528) sometimes spelt in English..., \"Alessandro (c. 1445 – May 17, 1510), known as Sandro Botticelli (Italian: [ˈsandro bottiˈtʃɛlli]), w...\", Alfred Sisley (; French: [sislɛ]; 30 October 1839 – 29 January 1899) was an Impressionist landscape ..., Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January..., \"Andrei Rublev (Russian: Андре́й Рублёв, IPA: [ɐnˈdrʲej rʊˈblʲɵf], also transliterated as Andrey Rubl...\", ..., Sir Peter Paul Rubens (; Dutch: [ˈrybə(n)s]; 28 June 1577 – 30 May 1640) was a Flemish artist. He is..., Tiziano Vecelli or Tiziano Vecellio (pronounced [titˈtsjaːno veˈtʃɛlljo]; c. 1488/1490 – 27 August 1..., Vincent Willem van Gogh (Dutch: [ˈvɪnsɛnt ˈʋɪləm vɑŋ ˈɣɔx] (listen); 30 March 1853 – 29 July 1890) w..., \"Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich K...\", Édouard Manet (US: ; UK: ; French: [edwaʁ manɛ]; 23 January 1832 – 30 April 1883) was a French moder...",
+        "inferred_semantic_summary": "This field contains biographical summaries of notable artists, including their names, birth and death dates, nationalities, and pronunciation or transliterations, providing contextual background for their artworks in the art history domain."
+      },
+      {
+        "name": "wikipedia",
+        "clean_name": "wikipedia",
+        "camel_case_name": "wikipedia",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 50,
+        "sample_values": "http://en.wikipedia.org/wiki/Albrecht_Dürer, http://en.wikipedia.org/wiki/Alfred_Sisley, http://en.wikipedia.org/wiki/Amedeo_Modigliani, http://en.wikipedia.org/wiki/Andrei_Rublev, http://en.wikipedia.org/wiki/Caravaggio, ..., https://en.wikipedia.org/wiki/Michelangelo, https://en.wikipedia.org/wiki/Paul_Cézanne, https://en.wikipedia.org/wiki/Paul_Klee, https://en.wikipedia.org/wiki/Piet_Mondrian, https://en.wikipedia.org/wiki/Raphael",
+        "inferred_semantic_summary": "This field contains Wikipedia URLs for artists, providing reference links to biographical information about each artist featured among the best artworks of all time."
+      },
+      {
+        "name": "paintings",
+        "clean_name": "paintings",
+        "camel_case_name": "paintings",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 50,
+        "unique_values": 48,
+        "min_value": 24.0,
+        "max_value": 877.0,
+        "mean_value": 168.92,
+        "median_value": 123.0,
+        "sample_values": "24, 31, 43, 47, 49, ..., 328, 336, 439, 702, 877",
+        "inferred_semantic_summary": "This field likely represents the total number of paintings created or attributed to each artist in the \"Best Artworks of All Time\" dataset."
+      }
+    ],
+    "formatted_summary": "## Table 1: Best_Artworks_of_All_Time (50 rows × 8 columns)\n\n### Description\nData loaded from CSV file: 20.csv (Dataset: Best Artworks of All Time)\n\n### Schema (8 fields)\n  - id -- type: int64, values: 0, 1, 2, 3, 4, ..., 45, 46, 47, 48, 49\n  - name -- type: object, values: Albrecht Dürer, Alfred Sisley, Amedeo Modigliani, Andrei Rublev, Andy Warhol, ..., Sandro Botticelli, Titian, Vasiliy Kandinskiy, Vincent van Gogh, William Turner\n  - years -- type: object, values: 1266 - 1337, 1360 - 1430, 1395 - 1441, 1445 - 1510, 1450 - 1516, ..., 1898 - 1967, 1904 - 1989, 1907 - 1954, 1912 – 1956, 1928 – 1987\n  - genre -- type: object, values: Abstract Expressionism, Baroque, Byzantine Art, Cubism, Early Renaissance, ..., \"Surrealism,Impressionism\", Symbolism, \"Symbolism,Art Nouveau\", \"Symbolism,Expressionism\", \"Symbolism,Post-Impressionism\"\n  - nationality -- type: object, values: American, Austrian, Belgian, British, Dutch, ..., Mexican, Norwegian, Russian, Spanish, \"Spanish,Greek\"\n  - bio -- type: object, values: Albrecht Dürer (; German: [ˈʔalbʁɛçt ˈdyːʁɐ]; 21 May 1471 – 6 April 1528) sometimes spelt in English..., \"Alessandro (c. 1445 – May 17, 1510), known as Sandro Botticelli (Italian: [ˈsandro bottiˈtʃɛlli]), w...\", Alfred Sisley (; French: [sislɛ]; 30 October 1839 – 29 January 1899) was an Impressionist landscape ..., Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January..., \"Andrei Rublev (Russian: Андре́й Рублёв, IPA: [ɐnˈdrʲej rʊˈblʲɵf], also transliterated as Andrey Rubl...\", ..., Sir Peter Paul Rubens (; Dutch: [ˈrybə(n)s]; 28 June 1577 – 30 May 1640) was a Flemish artist. He is..., Tiziano Vecelli or Tiziano Vecellio (pronounced [titˈtsjaːno veˈtʃɛlljo]; c. 1488/1490 – 27 August 1..., Vincent Willem van Gogh (Dutch: [ˈvɪnsɛnt ˈʋɪləm vɑŋ ˈɣɔx] (listen); 30 March 1853 – 29 July 1890) w..., \"Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich K...\", Édouard Manet (US: ; UK: ; French: [edwaʁ manɛ]; 23 January 1832 – 30 April 1883) was a French moder...\n  - wikipedia -- type: object, values: http://en.wikipedia.org/wiki/Albrecht_Dürer, http://en.wikipedia.org/wiki/Alfred_Sisley, http://en.wikipedia.org/wiki/Amedeo_Modigliani, http://en.wikipedia.org/wiki/Andrei_Rublev, http://en.wikipedia.org/wiki/Caravaggio, ..., https://en.wikipedia.org/wiki/Michelangelo, https://en.wikipedia.org/wiki/Paul_Cézanne, https://en.wikipedia.org/wiki/Paul_Klee, https://en.wikipedia.org/wiki/Piet_Mondrian, https://en.wikipedia.org/wiki/Raphael\n  - paintings -- type: int64, values: 24, 31, 43, 47, 49, ..., 328, 336, 439, 702, 877\n\n### Sample Data (first 5 rows)\n```\n   id                name        years                         genre nationality                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       bio                                       wikipedia  paintings\n0   0   Amedeo Modigliani  1884 - 1920                 Expressionism     Italian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January 1920) was an Italian Jewish painter and sculptor who worked mainly in France. He is known for portraits and nudes in a modern style characterized by elongation of faces, necks, and figures that were not received well during his lifetime but later found acceptance. Modigliani spent his youth in Italy, where he studied the art of antiquity and the Renaissance. In 1906 he moved to Paris, where he came into contact with such artists as Pablo Picasso and Constantin Brâncuși. By 1912 Modigliani was exhibiting highly stylized sculptures with Cubists of the Section d'Or group at the Salon d'Automne.  http://en.wikipedia.org/wiki/Amedeo_Modigliani        193\n1   1  Vasiliy Kandinskiy  1866 - 1944  Expressionism,Abstractionism     Russian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich Kandínskiy) (16 December [O.S. 4 December] 1866 – 13 December 1944) was a Russian painter and art theorist.  http://en.wikipedia.org/wiki/Wassily_Kandinsky         88\n2   2        Diego Rivera  1886 - 1957       Social Realism,Muralism     Mexican                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Diego María de la Concepción Juan Nepomuceno Estanislao de la Rivera y Barrientos Acosta y Rodríguez, known as Diego Rivera (Spanish pronunciation: [ˈdjeɣo riˈβeɾa]; December 8, 1886 – November 24, 1957) was a prominent Mexican painter. His large frescoes helped establish the Mexican mural movement in Mexican art. Between 1922 and 1953, Rivera painted murals in, among other places, Mexico City, Chapingo, Cuernavaca, San Francisco, Detroit, and New York City. In 1931, a retrospective exhibition of his works was held at the Museum of Modern Art in New York. Rivera had a volatile marriage with fellow Mexican artist Frida Kahlo.       http://en.wikipedia.org/wiki/Diego_Rivera         70\n3   3        Claude Monet  1840 - 1926                 Impressionism      French  Oscar-Claude Monet (; French: [klod mɔnɛ]; 14 November 1840 – 5 December 1926) was a French painter, a founder of French Impressionist painting and the most consistent and prolific practitioner of the movement's philosophy of expressing one's perceptions before nature, especially as applied to plein air landscape painting. The term \"Impressionism\" is derived from the title of his painting Impression, soleil levant (Impression, Sunrise), which was exhibited in 1874 in the first of the independent exhibitions mounted by Monet and his associates as an alternative to the Salon de Paris.Monet's ambition of documenting the French countryside led him to adopt a method of painting the same scene many times in order to capture the changing of light and the passing of the seasons. From 1883, Monet lived in Giverny, where he purchased a house and property and began a vast landscaping project which included lily ponds that would become the subjects of his best-known works. In 1899, he began painting the water lilies, first in vertical views with a Japanese bridge as a central feature and later in the series of large-scale paintings that was to occupy him continuously for the next 20 years of his life.       http://en.wikipedia.org/wiki/Claude_Monet         73\n4   4       Rene Magritte  1898 - 1967      Surrealism,Impressionism     Belgian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                René François Ghislain Magritte (French: [ʁəne fʁɑ̃swa ɡilɛ̃ maɡʁit]; 21 November 1898 – 15 August 1967) was a Belgian Surrealist artist. He became well known for creating a number of witty and thought-provoking images. Often depicting ordinary objects in an unusual context, his work is known for challenging observers' preconditioned perceptions of reality. His imagery has influenced Pop art, minimalist and conceptual art.      http://en.wikipedia.org/wiki/René_Magritte        194\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "20",
+      "summary_idx": 1,
+      "question_idx": 6,
+      "question": "Are there any epochs or periods that feature an unusually high diversity of genres?",
+      "column_combination": [
+        "id",
+        "name",
+        "years",
+        "genre",
+        "nationality",
+        "bio",
+        "wikipedia",
+        "paintings"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Bar chart (genre diversity per period)",
+            "design_rationale": "A bar chart provides an immediately accessible way to compare genre diversity across epochs. By binning artworks according to their 'years' field into distinct periods (such as centuries or decades), and counting the number of unique genres per period, we make it easy to visually identify periods with unusually high diversity. The schema's 'years' is a text, but can be normalized to periods; 'genre' is categorical with good variety. Color accentuates the bars with highest diversity.",
+            "target_insight": "Spot which periods/epochs have notably higher counts of unique genres, answering if any stand out as being unusually diverse.",
+            "output_fields": [
+              "years",
+              "genre"
+            ],
+            "chart_encodings": {
+              "x": "Period (derived from df['years'])",
+              "y": "Number of unique genres",
+              "color": "bar color highlights periods with max diversity",
+              "size": null,
+              "other_aesthetics": "Annotate highest bars, gridlines"
+            }
+          },
+          "transformations": [
+            "Extract century or decade from df['years'] – parse to create a 'period' column",
+            "Split df['genre'] for artworks listed with multiple genres (if present), so each genre counts separately",
+            "Group artworks by 'period', aggregate unique genres for each",
+            "Count unique genres per period, sort periods chronologically"
+          ],
+          "data_preparation_steps": [
+            "Create a new column 'period' by parsing df['years'] – for consistency, use centuries (e.g., '19th century')",
+            "Expand rows for artworks with multiple genres listed in df['genre'] (split on delimiter, e.g. comma)",
+            "Group by 'period', aggregate unique genres into a set per period",
+            "Count the number of unique genres per period, resulting in a summary DataFrame"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndef extract_century(years_str):\n    import re\n    match = re.search(r'(\\d{4})', years_str)\n    if match:\n        year = int(match.group(1))\n        cent = (year - 1) // 100 + 1\n        return str(cent) + 'th century'\n    return 'Unknown'\ndf['period'] = df['years'].apply(extract_century)\ndef explode_genres(series):\n    return series.str.split(',').explode().str.strip()\ndf_exp = df.copy()\ndf_exp['genre'] = explode_genres(df_exp['genre'])\ngrouped = df_exp.groupby('period')['genre'].nunique().reset_index()\ngrouped = grouped.sort_values('period')\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['viridis']\ncolors = cmap(grouped['genre']/grouped['genre'].max())\nbars = ax.bar(grouped['period'], grouped['genre'], color=colors, edgecolor='black')\nmax_idx = grouped['genre'].idxmax()\nmax_val = grouped['genre'].max()\nmax_period = grouped.iloc[max_idx]['period']\nfor i, rect in enumerate(bars):\n    if grouped.iloc[i]['genre'] == max_val:\n        ax.text(rect.get_x() + rect.get_width()/2, rect.get_height()+0.3, 'Highest', ha='center', va='bottom', fontsize=11, fontweight='bold', color='red')\nax.set_xlabel('Period (Century)')\nax.set_ylabel('Number of Unique Genres')\nax.set_title('Genre Diversity by Epoch\\nPeriods with Highest Artistic Innovation', fontsize=14)\nax.grid(axis='y')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Heatmap (genre-period matrix)",
+            "design_rationale": "A heatmap shows the distribution of each genre across periods, revealing if some epochs are unusually rich or concentrated in genre diversity. Each cell shows the count of artworks of a genre in a period. The 'years' field is binned to periods (as above), and the 'genre' field is exploded so every genre for multi-genre artworks is counted. A heatmap is more unconventional and provides granular, matrix-style visual evidence for diversity in each period.",
+            "target_insight": "Discover not only which periods have more genres, but which genres are most frequent and how concentration or diversity varies across the matrix.",
+            "output_fields": [
+              "period",
+              "genre"
+            ],
+            "chart_encodings": {
+              "x": "Period (derived from df['years'])",
+              "y": "Genre (from df['genre'])",
+              "color": "Cell shading indicates the count of artworks per genre-period",
+              "size": null,
+              "other_aesthetics": "Colorbar for scale, rotate x-axis tick labels, grid"
+            }
+          },
+          "transformations": [
+            "Extract century from df['years'] and create 'period' variable",
+            "Expand df['genre'] into rows (explode) for artworks with multiple genres",
+            "Group by both 'period' and 'genre', count number of artworks",
+            "Pivot to create genre-period matrix for heatmap"
+          ],
+          "data_preparation_steps": [
+            "Create 'period' column by parsing df['years'] (century)",
+            "Explode df['genre'] for artworks with multi-genre listings",
+            "Build a pivot table: index=genre, columns=period, values=count of artworks",
+            "Fill NaNs (missing genre-period combos) with zero"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndef extract_century(years_str):\n    import re\n    match = re.search(r'(\\d{4})', years_str)\n    if match:\n        year = int(match.group(1))\n        cent = (year - 1) // 100 + 1\n        return str(cent) + 'th century'\n    return 'Unknown'\ndf['period'] = df['years'].apply(extract_century)\ndef explode_genres(series):\n    return series.str.split(',').explode().str.strip()\ndf_exp = df.copy()\ndf_exp['genre'] = explode_genres(df_exp['genre'])\npivot = pd.pivot_table(df_exp, index='genre', columns='period', values='id', aggfunc='count', fill_value=0)\nfig, ax = plt.subplots(figsize=(12,10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels(pivot.columns, rotation=45, ha='right')\nax.set_yticklabels(pivot.index)\nplt.title('Genre vs. Epoch Heatmap\\nPeriods with High Genre Diversity', fontsize=15)\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Number of Artworks', rotation=270, labelpad=15)\nax.set_xlabel('Period (Century)')\nax.set_ylabel('Genre')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T13:51:52.944922",
+      "schema_context": "Table: Best Artworks of All Time\nRows: 50\nColumns: 8\n\nFIELD INFORMATION:\nField: id\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents a unique identifier assigned to each artwork in the dataset, enabling easy reference and distinction among the 50 listed \"Best Artworks of All Time.\"\n  - Value Range: 0.0 to 49.0\n  - Mean: 24.50\n\nField: name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the names of renowned artists whose works are featured in the \"Best Artworks of All Time\" dataset, identifying the creator of each artwork.\n\nField: years\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field represents the time span (years) during which each listed artwork was created or completed, indicating the period of artistic production for masterpieces in the art history domain.\n\nField: genre\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 31\n  - Semantic Meaning: The \"genre\" field categorizes each artwork by its artistic style or movement, often listing one or more relevant genres to describe the artwork's aesthetic or historical context.\n\nField: nationality\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 17\n  - Semantic Meaning: This field represents the country or countries associated with an artist's origin or cultural background, indicating the national identity relevant to artworks featured in the \"Best Artworks of All Time\" dataset.\n\nField: bio\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field contains biographical summaries of notable artists, including their names, birth and death dates, nationalities, and pronunciation or transliterations, providing contextual background for their artworks in the art history domain.\n\nField: wikipedia\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field contains Wikipedia URLs for artists, providing reference links to biographical information about each artist featured among the best artworks of all time.\n\nField: paintings\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 48\n  - Semantic Meaning: This field likely represents the total number of paintings created or attributed to each artist in the \"Best Artworks of All Time\" dataset.\n  - Value Range: 24.0 to 877.0\n  - Mean: 168.92\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"id\"\n  2. \"name\"\n  3. \"years\"\n  4. \"genre\"\n  5. \"nationality\"\n  6. \"bio\"\n  7. \"wikipedia\"\n  8. \"paintings\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['id'], df['name']",
+      "table_metadata": {
+        "table_name": "Best Artworks of All Time",
+        "file_path": "csv_c2_sec\\20.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 20.csv (Dataset: Best Artworks of All Time)",
+        "original_filename": "20.csv",
+        "dataset_name": "Best Artworks of All Time",
+        "row_count": 50,
+        "column_count": 8,
+        "table_hash": -8935844946972879118,
+        "fields": [
+          {
+            "name": "id",
+            "clean_name": "id",
+            "camel_case_name": "id",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "min_value": 0.0,
+            "max_value": 49.0,
+            "mean_value": 24.5,
+            "median_value": 24.5,
+            "sample_values": "0, 1, 2, 3, 4, ..., 45, 46, 47, 48, 49",
+            "inferred_semantic_summary": "This field represents a unique identifier assigned to each artwork in the dataset, enabling easy reference and distinction among the 50 listed \"Best Artworks of All Time.\""
+          },
+          {
+            "name": "name",
+            "clean_name": "name",
+            "camel_case_name": "name",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "Albrecht Dürer, Alfred Sisley, Amedeo Modigliani, Andrei Rublev, Andy Warhol, ..., Sandro Botticelli, Titian, Vasiliy Kandinskiy, Vincent van Gogh, William Turner",
+            "inferred_semantic_summary": "This field represents the names of renowned artists whose works are featured in the \"Best Artworks of All Time\" dataset, identifying the creator of each artwork."
+          },
+          {
+            "name": "years",
+            "clean_name": "years",
+            "camel_case_name": "years",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "1266 - 1337, 1360 - 1430, 1395 - 1441, 1445 - 1510, 1450 - 1516, ..., 1898 - 1967, 1904 - 1989, 1907 - 1954, 1912 – 1956, 1928 – 1987",
+            "inferred_semantic_summary": "This field represents the time span (years) during which each listed artwork was created or completed, indicating the period of artistic production for masterpieces in the art history domain."
+          },
+          {
+            "name": "genre",
+            "clean_name": "genre",
+            "camel_case_name": "genre",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 31,
+            "sample_values": "Abstract Expressionism, Baroque, Byzantine Art, Cubism, Early Renaissance, ..., \"Surrealism,Impressionism\", Symbolism, \"Symbolism,Art Nouveau\", \"Symbolism,Expressionism\", \"Symbolism,Post-Impressionism\"",
+            "inferred_semantic_summary": "The \"genre\" field categorizes each artwork by its artistic style or movement, often listing one or more relevant genres to describe the artwork's aesthetic or historical context."
+          },
+          {
+            "name": "nationality",
+            "clean_name": "nationality",
+            "camel_case_name": "nationality",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 17,
+            "sample_values": "American, Austrian, Belgian, British, Dutch, ..., Mexican, Norwegian, Russian, Spanish, \"Spanish,Greek\"",
+            "inferred_semantic_summary": "This field represents the country or countries associated with an artist's origin or cultural background, indicating the national identity relevant to artworks featured in the \"Best Artworks of All Time\" dataset."
+          },
+          {
+            "name": "bio",
+            "clean_name": "bio",
+            "camel_case_name": "bio",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "Albrecht Dürer (; German: [ˈʔalbʁɛçt ˈdyːʁɐ]; 21 May 1471 – 6 April 1528) sometimes spelt in English..., \"Alessandro (c. 1445 – May 17, 1510), known as Sandro Botticelli (Italian: [ˈsandro bottiˈtʃɛlli]), w...\", Alfred Sisley (; French: [sislɛ]; 30 October 1839 – 29 January 1899) was an Impressionist landscape ..., Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January..., \"Andrei Rublev (Russian: Андре́й Рублёв, IPA: [ɐnˈdrʲej rʊˈblʲɵf], also transliterated as Andrey Rubl...\", ..., Sir Peter Paul Rubens (; Dutch: [ˈrybə(n)s]; 28 June 1577 – 30 May 1640) was a Flemish artist. He is..., Tiziano Vecelli or Tiziano Vecellio (pronounced [titˈtsjaːno veˈtʃɛlljo]; c. 1488/1490 – 27 August 1..., Vincent Willem van Gogh (Dutch: [ˈvɪnsɛnt ˈʋɪləm vɑŋ ˈɣɔx] (listen); 30 March 1853 – 29 July 1890) w..., \"Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich K...\", Édouard Manet (US: ; UK: ; French: [edwaʁ manɛ]; 23 January 1832 – 30 April 1883) was a French moder...",
+            "inferred_semantic_summary": "This field contains biographical summaries of notable artists, including their names, birth and death dates, nationalities, and pronunciation or transliterations, providing contextual background for their artworks in the art history domain."
+          },
+          {
+            "name": "wikipedia",
+            "clean_name": "wikipedia",
+            "camel_case_name": "wikipedia",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 50,
+            "sample_values": "http://en.wikipedia.org/wiki/Albrecht_Dürer, http://en.wikipedia.org/wiki/Alfred_Sisley, http://en.wikipedia.org/wiki/Amedeo_Modigliani, http://en.wikipedia.org/wiki/Andrei_Rublev, http://en.wikipedia.org/wiki/Caravaggio, ..., https://en.wikipedia.org/wiki/Michelangelo, https://en.wikipedia.org/wiki/Paul_Cézanne, https://en.wikipedia.org/wiki/Paul_Klee, https://en.wikipedia.org/wiki/Piet_Mondrian, https://en.wikipedia.org/wiki/Raphael",
+            "inferred_semantic_summary": "This field contains Wikipedia URLs for artists, providing reference links to biographical information about each artist featured among the best artworks of all time."
+          },
+          {
+            "name": "paintings",
+            "clean_name": "paintings",
+            "camel_case_name": "paintings",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 50,
+            "unique_values": 48,
+            "min_value": 24.0,
+            "max_value": 877.0,
+            "mean_value": 168.92,
+            "median_value": 123.0,
+            "sample_values": "24, 31, 43, 47, 49, ..., 328, 336, 439, 702, 877",
+            "inferred_semantic_summary": "This field likely represents the total number of paintings created or attributed to each artist in the \"Best Artworks of All Time\" dataset."
+          }
+        ],
+        "formatted_summary": "## Table 1: Best_Artworks_of_All_Time (50 rows × 8 columns)\n\n### Description\nData loaded from CSV file: 20.csv (Dataset: Best Artworks of All Time)\n\n### Schema (8 fields)\n  - id -- type: int64, values: 0, 1, 2, 3, 4, ..., 45, 46, 47, 48, 49\n  - name -- type: object, values: Albrecht Dürer, Alfred Sisley, Amedeo Modigliani, Andrei Rublev, Andy Warhol, ..., Sandro Botticelli, Titian, Vasiliy Kandinskiy, Vincent van Gogh, William Turner\n  - years -- type: object, values: 1266 - 1337, 1360 - 1430, 1395 - 1441, 1445 - 1510, 1450 - 1516, ..., 1898 - 1967, 1904 - 1989, 1907 - 1954, 1912 – 1956, 1928 – 1987\n  - genre -- type: object, values: Abstract Expressionism, Baroque, Byzantine Art, Cubism, Early Renaissance, ..., \"Surrealism,Impressionism\", Symbolism, \"Symbolism,Art Nouveau\", \"Symbolism,Expressionism\", \"Symbolism,Post-Impressionism\"\n  - nationality -- type: object, values: American, Austrian, Belgian, British, Dutch, ..., Mexican, Norwegian, Russian, Spanish, \"Spanish,Greek\"\n  - bio -- type: object, values: Albrecht Dürer (; German: [ˈʔalbʁɛçt ˈdyːʁɐ]; 21 May 1471 – 6 April 1528) sometimes spelt in English..., \"Alessandro (c. 1445 – May 17, 1510), known as Sandro Botticelli (Italian: [ˈsandro bottiˈtʃɛlli]), w...\", Alfred Sisley (; French: [sislɛ]; 30 October 1839 – 29 January 1899) was an Impressionist landscape ..., Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January..., \"Andrei Rublev (Russian: Андре́й Рублёв, IPA: [ɐnˈdrʲej rʊˈblʲɵf], also transliterated as Andrey Rubl...\", ..., Sir Peter Paul Rubens (; Dutch: [ˈrybə(n)s]; 28 June 1577 – 30 May 1640) was a Flemish artist. He is..., Tiziano Vecelli or Tiziano Vecellio (pronounced [titˈtsjaːno veˈtʃɛlljo]; c. 1488/1490 – 27 August 1..., Vincent Willem van Gogh (Dutch: [ˈvɪnsɛnt ˈʋɪləm vɑŋ ˈɣɔx] (listen); 30 March 1853 – 29 July 1890) w..., \"Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich K...\", Édouard Manet (US: ; UK: ; French: [edwaʁ manɛ]; 23 January 1832 – 30 April 1883) was a French moder...\n  - wikipedia -- type: object, values: http://en.wikipedia.org/wiki/Albrecht_Dürer, http://en.wikipedia.org/wiki/Alfred_Sisley, http://en.wikipedia.org/wiki/Amedeo_Modigliani, http://en.wikipedia.org/wiki/Andrei_Rublev, http://en.wikipedia.org/wiki/Caravaggio, ..., https://en.wikipedia.org/wiki/Michelangelo, https://en.wikipedia.org/wiki/Paul_Cézanne, https://en.wikipedia.org/wiki/Paul_Klee, https://en.wikipedia.org/wiki/Piet_Mondrian, https://en.wikipedia.org/wiki/Raphael\n  - paintings -- type: int64, values: 24, 31, 43, 47, 49, ..., 328, 336, 439, 702, 877\n\n### Sample Data (first 5 rows)\n```\n   id                name        years                         genre nationality                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       bio                                       wikipedia  paintings\n0   0   Amedeo Modigliani  1884 - 1920                 Expressionism     Italian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               Amedeo Clemente Modigliani (Italian pronunciation: [ameˈdɛːo modiʎˈʎaːni]; 12 July 1884 – 24 January 1920) was an Italian Jewish painter and sculptor who worked mainly in France. He is known for portraits and nudes in a modern style characterized by elongation of faces, necks, and figures that were not received well during his lifetime but later found acceptance. Modigliani spent his youth in Italy, where he studied the art of antiquity and the Renaissance. In 1906 he moved to Paris, where he came into contact with such artists as Pablo Picasso and Constantin Brâncuși. By 1912 Modigliani was exhibiting highly stylized sculptures with Cubists of the Section d'Or group at the Salon d'Automne.  http://en.wikipedia.org/wiki/Amedeo_Modigliani        193\n1   1  Vasiliy Kandinskiy  1866 - 1944  Expressionism,Abstractionism     Russian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Wassily Wassilyevich Kandinsky (Russian: Васи́лий Васи́льевич Канди́нский, tr. Vasíliy Vasílʹevich Kandínskiy) (16 December [O.S. 4 December] 1866 – 13 December 1944) was a Russian painter and art theorist.  http://en.wikipedia.org/wiki/Wassily_Kandinsky         88\n2   2        Diego Rivera  1886 - 1957       Social Realism,Muralism     Mexican                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  Diego María de la Concepción Juan Nepomuceno Estanislao de la Rivera y Barrientos Acosta y Rodríguez, known as Diego Rivera (Spanish pronunciation: [ˈdjeɣo riˈβeɾa]; December 8, 1886 – November 24, 1957) was a prominent Mexican painter. His large frescoes helped establish the Mexican mural movement in Mexican art. Between 1922 and 1953, Rivera painted murals in, among other places, Mexico City, Chapingo, Cuernavaca, San Francisco, Detroit, and New York City. In 1931, a retrospective exhibition of his works was held at the Museum of Modern Art in New York. Rivera had a volatile marriage with fellow Mexican artist Frida Kahlo.       http://en.wikipedia.org/wiki/Diego_Rivera         70\n3   3        Claude Monet  1840 - 1926                 Impressionism      French  Oscar-Claude Monet (; French: [klod mɔnɛ]; 14 November 1840 – 5 December 1926) was a French painter, a founder of French Impressionist painting and the most consistent and prolific practitioner of the movement's philosophy of expressing one's perceptions before nature, especially as applied to plein air landscape painting. The term \"Impressionism\" is derived from the title of his painting Impression, soleil levant (Impression, Sunrise), which was exhibited in 1874 in the first of the independent exhibitions mounted by Monet and his associates as an alternative to the Salon de Paris.Monet's ambition of documenting the French countryside led him to adopt a method of painting the same scene many times in order to capture the changing of light and the passing of the seasons. From 1883, Monet lived in Giverny, where he purchased a house and property and began a vast landscaping project which included lily ponds that would become the subjects of his best-known works. In 1899, he began painting the water lilies, first in vertical views with a Japanese bridge as a central feature and later in the series of large-scale paintings that was to occupy him continuously for the next 20 years of his life.       http://en.wikipedia.org/wiki/Claude_Monet         73\n4   4       Rene Magritte  1898 - 1967      Surrealism,Impressionism     Belgian                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                René François Ghislain Magritte (French: [ʁəne fʁɑ̃swa ɡilɛ̃ maɡʁit]; 21 November 1898 – 15 August 1967) was a Belgian Surrealist artist. He became well known for creating a number of witty and thought-provoking images. Often depicting ordinary objects in an unusual context, his work is known for challenging observers' preconditioned perceptions of reality. His imagery has influenced Pop art, minimalist and conceptual art.      http://en.wikipedia.org/wiki/René_Magritte        194\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

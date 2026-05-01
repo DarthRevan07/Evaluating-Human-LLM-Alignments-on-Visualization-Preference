@@ -1,0 +1,44 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Which alma maters have produced the highest number of NASA astronauts, and how does their representation vary across decades?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "heatmap",
+      "design_rationale": "A heatmap visually encodes the number of astronauts from each top alma mater across decade bins, blending time and institutional representation. This approach reveals temporal shifts: which universities rose or declined in astronaut production in different eras. Audiences can see whether dominant schools have sustained influence or experienced peak periods, uncovering trends in educational backgrounds of astronauts over time.",
+      "target_insight": "Shows how the representation of top alma maters among NASA astronauts varied across different decades.",
+      "output_fields": [
+        "Alma Mater",
+        "Year"
+      ],
+      "chart_encodings": {
+        "x": "Decade (from df['Year'])",
+        "y": "Alma Mater (top 10 by total astronauts)",
+        "color": "Astronaut count per alma per decade (heatmap cells)",
+        "size": "null",
+        "other_aesthetics": "Color intensity proportional to count; colorbar showing scale; decade labels"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Alma Mater'] or df['Year'] is null",
+      "Create Decade bins from df['Year'] (e.g., 1960s, 1970s, ...)",
+      "Group by df['Alma Mater'] and Decade, aggregate count of df['Name']",
+      "Identify top 10 alma maters by overall astronaut count",
+      "Pivot for heatmap: rows = alma maters, columns = decades, values = astronaut count"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Alma Mater', 'Year'])",
+      "df['Decade'] = (df['Year']//10*10).astype(int).astype(str) + \"s\"",
+      "astronaut_counts = df.groupby(['Alma Mater','Decade'])['Name'].count().reset_index()",
+      "top10_alma = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False).head(10).index",
+      "astronaut_counts_top = astronaut_counts[astronaut_counts['Alma Mater'].isin(top10_alma)]",
+      "heatmap_data = astronaut_counts_top.pivot(index='Alma Mater', columns='Decade', values='Name').fillna(0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf = df.dropna(subset=['Alma Mater', 'Year'])\ndf['Decade'] = (df['Year']//10*10).astype(int).astype(str) + \"s\"\nastronaut_counts = df.groupby(['Alma Mater','Decade'])['Name'].count().reset_index()\ntop10_alma = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False).head(10).index\nastronaut_counts_top = astronaut_counts[astronaut_counts['Alma Mater'].isin(top10_alma)]\nheatmap_data = astronaut_counts_top.pivot(index='Alma Mater', columns='Decade', values='Name').fillna(0)\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps[\"viridis\"]\nim = ax.imshow(heatmap_data, aspect=\"auto\", cmap=cmap)\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels(list(heatmap_data.columns))\nax.set_yticklabels(list(heatmap_data.index))\nfor i in range(len(heatmap_data.index)):\n    for j in range(len(heatmap_data.columns)):\n        val = int(heatmap_data.iloc[i,j])\n        ax.text(j, i, str(val), ha=\"center\", va=\"center\", color=\"white\" if heatmap_data.iloc[i,j]>0.8*heatmap_data.values.max() else \"black\")\nplt.title(\"NASA Astronauts per Top 10 Alma Maters by Decade\")\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label=\"Astronaut Count\")\nplt.xlabel(\"Decade of Selection\")\nplt.ylabel(\"Alma Mater\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

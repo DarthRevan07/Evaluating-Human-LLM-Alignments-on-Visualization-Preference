@@ -1,0 +1,36 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do average medical charges differ between smokers and non-smokers across various regions?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Faceted by Region)",
+      "design_rationale": "Boxplots visualize the distribution of medical charges—showing central tendency, spread, and outliers—between smokers and non-smokers, faceted (split) by region. This design answers the question at both aggregate and granular levels: not only revealing differences in means, but also medians, variability, and the presence of extreme values. Faceting by region allows region-specific comparisons and deeper exploration of charge variability.",
+      "target_insight": "A nuanced view of medical charge distributions for smokers vs non-smokers within each region, revealing if any regions have exceptionally high variability or outliers for smokers, and how charge distributions differ overall.",
+      "output_fields": [
+        "region",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "smoker",
+        "y": "charges",
+        "color": "smoker",
+        "size": null,
+        "other_aesthetics": "Separate subplot for each 'region', box color per smoker status"
+      }
+    },
+    "transformations": [
+      "No aggregation; retain individual-level 'charges' data for each region/smoker combination"
+    ],
+    "data_preparation_steps": [
+      "Split df into separate subsets for each region using df['region']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\32.csv')\nregions = df['region'].unique()\nsmoker_types = ['yes', 'no']\ncolors = {'yes': '#e74c3c', 'no': '#2ecc71'}\nfig, axes = plt.subplots(1, len(regions), figsize=(16,5), sharey=True)\nfor idx, region in enumerate(regions):\n    ax = axes[idx]\n    region_df = df[df['region'] == region]\n    box_data = [region_df[region_df['smoker'] == smoker]['charges'].values for smoker in smoker_types]\n    bp = ax.boxplot(box_data, patch_artist=True, labels=smoker_types)\n    for patch, smoker in zip(bp['boxes'], smoker_types):\n        patch.set_facecolor(colors[smoker])\n        patch.set_alpha(0.7)\n    ax.set_title('Region: ' + region)\n    ax.set_xlabel('Smoker Status')\n    if idx == 0:\n        ax.set_ylabel('Medical Charges ($)')\n    ax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.suptitle('Distribution of Medical Charges for Smokers vs Non-Smokers by Region', fontsize=15)\nplt.tight_layout(rect=[0,0,1,0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

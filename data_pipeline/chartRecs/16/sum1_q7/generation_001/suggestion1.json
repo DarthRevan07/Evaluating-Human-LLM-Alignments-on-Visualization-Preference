@@ -1,0 +1,37 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do Pokémon with a secondary type (Type 2) generally have higher Total statistics than those without?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot provides a clear visual summary of the distribution and central tendency of the 'Total' statistic for Pokémon with versus without a secondary type (Type 2). Given the large row count (800) and categorical distinction based on presence/absence of Type 2, this approach succinctly compares medians, quartiles, and outliers, making it easy to judge whether having a secondary type is generally associated with higher overall stats.",
+      "target_insight": "This visualization reveals if Pokémon with a secondary type have higher median and/or variability in Total statistics compared to those without a secondary type.",
+      "output_fields": [
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "Type 2 status ('Has Type 2' or 'Single Type')",
+        "y": "Total",
+        "color": "category distinction (box color for each)",
+        "size": null,
+        "other_aesthetics": "Box outline, median marker, outlier points"
+      }
+    },
+    "transformations": [
+      "Create a new categorical column indicating presence or absence of 'Type 2' (e.g., 'Has Type 2' or 'Single Type')",
+      "Partition 'Total' values according to this category"
+    ],
+    "data_preparation_steps": [
+      "Define a new column 'Type 2 Status' in df: if df['Type 2'] is null, set to 'Single Type', else 'Has Type 2'",
+      "For plotting, group df['Total'] by 'Type 2 Status' for boxplot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf[\"Type 2 Status\"] = np.where(df[\"Type 2\"].isnull(), \"Single Type\", \"Has Type 2\")\ndata_to_plot = [df[df[\"Type 2 Status\"] == \"Single Type\"][\"Total\"], df[df[\"Type 2 Status\"] == \"Has Type 2\"][\"Total\"]]\nfig, ax = plt.subplots(figsize=(7,5))\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=[\"Single Type\", \"Has Type 2\"])\ncolors = [\"skyblue\", \"lightgreen\"]\nfor patch, color in zip(box[\"boxes\"], colors):\n    patch.set_facecolor(color)\nax.set_xlabel(\"Type 2 Status\")\nax.set_ylabel(\"Total\")\nax.set_title(\"Distribution of Total Stats by Type 2 Status\\nPokémon with Secondary Type vs. Single Type\")\nplt.grid(axis=\"y\", linestyle=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

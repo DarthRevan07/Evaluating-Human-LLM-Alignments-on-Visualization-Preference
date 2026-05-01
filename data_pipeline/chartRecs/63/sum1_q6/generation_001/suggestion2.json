@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Do customers who avail more discounts tend to have higher purchase rates?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot with Stripplot Overlay (NumberOfPurchases by DiscountsAvailed)",
+      "design_rationale": "This visual explores not just if customers with more discounts are more likely to complete a purchase, but whether they are higher-activity customers overall, by visualizing the distribution and spread of 'NumberOfPurchases' within each 'DiscountsAvailed' group. A boxplot is suitable due to the numeric, count-based nature of purchases, and overlaying a stripplot shows distribution density and outlier presence. If higher discounts correlate with overall higher purchasing activity, this will be visually evident in both central tendency and the spread of the data across discount levels.",
+      "target_insight": "Whether customers who avail more discounts make more purchases in general, as shown by the typical and distributional purchase activity for each discounts-availed level.",
+      "output_fields": [
+        "DiscountsAvailed",
+        "NumberOfPurchases"
+      ],
+      "chart_encodings": {
+        "x": "DiscountsAvailed (categorical axis)",
+        "y": "NumberOfPurchases (distribution)",
+        "color": "stripdot color mapped to median purchases per group",
+        "size": null,
+        "other_aesthetics": "Box (IQR), jittered points (stripplot), outlier marker"
+      }
+    },
+    "transformations": [
+      "For each value of 'DiscountsAvailed', collect 'NumberOfPurchases' values (no aggregation, for boxplot/stripplot display)",
+      "Compute median purchases per group for dot coloring"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df.copy()",
+      "medians = df.groupby('DiscountsAvailed')['NumberOfPurchases'].median()",
+      "df_plot = df_plot.merge(medians.rename('median'), left_on='DiscountsAvailed', right_index=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_plot = df.copy()\nmedians = df.groupby('DiscountsAvailed')['NumberOfPurchases'].median()\ndf_plot = df_plot.merge(medians.rename('median'), left_on='DiscountsAvailed', right_index=True)\nunique_discounts = np.sort(df_plot['DiscountsAvailed'].unique())\npositions = np.arange(len(unique_discounts))\nfig, ax = plt.subplots(figsize=(10,6))\nbox_data = [df_plot[df_plot['DiscountsAvailed'] == d]['NumberOfPurchases'].values for d in unique_discounts]\nbox = ax.boxplot(box_data, positions=positions, widths=0.6, patch_artist=True, medianprops={'color': 'red'}, boxprops={'facecolor': 'lightblue'}, showfliers=False)\ncmap = mpl.colormaps['plasma']\ngroup_to_median = dict(zip(unique_discounts, medians[unique_discounts]))\nmedian_min = medians.min(); median_max = medians.max()\nfor i, d in enumerate(unique_discounts):\n    d_vals = df_plot[df_plot['DiscountsAvailed']==d]['NumberOfPurchases'].values\n    y = d_vals\n    x = np.random.normal(loc=positions[i], scale=0.12, size=len(y))\n    cval = group_to_median[d]\n    color = cmap((cval - median_min) / (median_max - median_min + 1e-8))\n    ax.scatter(x, y, color=color, alpha=0.4, edgecolor='grey', linewidth=0.5, s=36, label=None)\nax.set_xlabel('DiscountsAvailed')\nax.set_ylabel('NumberOfPurchases')\nax.set_title('Distribution of Number of Purchases by Discounts Availed')\nax.set_xticks(positions)\nax.set_xticklabels([str(int(d)) for d in unique_discounts])\nnorm = mpl.colors.Normalize(vmin=median_min, vmax=median_max)\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, pad=0.02)\ncbar.set_label('Median Purchases per DiscountsAvailed Group')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

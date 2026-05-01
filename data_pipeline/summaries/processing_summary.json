@@ -1,0 +1,266 @@
+{
+  "status": "complete",
+  "total_schemas": 14,
+  "successful": 14,
+  "failed": 0,
+  "summaries_per_generation": 2,
+  "num_generations_per_schema": 1,
+  "total_successful_generations": 14,
+  "total_summaries_generated": 28,
+  "processed_schemas": {
+    "112": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\112_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 610,
+      "total_columns": 5,
+      "source_file": "csv_c2_sec\\112.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\112_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "12": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\12_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 105,
+      "total_columns": 11,
+      "source_file": "csv_c2_sec\\12.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\12_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "122": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\122_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 16598,
+      "total_columns": 11,
+      "source_file": "csv_c2_sec\\122.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\122_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "16": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\16_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 800,
+      "total_columns": 13,
+      "source_file": "csv_c2_sec\\16.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\16_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "20": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\20_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 50,
+      "total_columns": 8,
+      "source_file": "csv_c2_sec\\20.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\20_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "26": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\26_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 2416,
+      "total_columns": 7,
+      "source_file": "csv_c2_sec\\26.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\26_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "37": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\37_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 200,
+      "total_columns": 5,
+      "source_file": "csv_c2_sec\\37.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\37_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "50": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\50_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1450,
+      "total_columns": 7,
+      "source_file": "csv_c2_sec\\50.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\50_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "53": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\53_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1509,
+      "total_columns": 7,
+      "source_file": "csv_c2_sec\\53.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\53_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "6": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\6_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 13549,
+      "total_columns": 4,
+      "source_file": "csv_c2_sec\\6.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\6_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "65": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\65_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1000,
+      "total_columns": 10,
+      "source_file": "csv_c2_sec\\65.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\65_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "7": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\7_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 14382,
+      "total_columns": 4,
+      "source_file": "csv_c2_sec\\7.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\7_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "75": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\75_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1000,
+      "total_columns": 8,
+      "source_file": "csv_c2_sec\\75.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\75_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "94": {
+      "status": "success",
+      "output_directory": "secondIter\\summaries\\94_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 18,
+      "total_columns": 7,
+      "source_file": "csv_c2_sec\\94.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "secondIter\\summaries\\94_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    }
+  },
+  "schema_directory": "secondIter\\schemas",
+  "output_directory": "secondIter\\summaries"
+}

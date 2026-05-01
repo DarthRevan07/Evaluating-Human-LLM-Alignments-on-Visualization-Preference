@@ -1,0 +1,43 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there any notable patterns in transportation cost associated with specific destinations?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Ordered Bar Chart (Top Destinations by Mean Transportation Cost)",
+      "design_rationale": "An ordered bar chart provides a clear comparative overview of average transportation costs for each destination - a direct and easy-to-understand way to spot patterns and highlight destinations with unusually high or low costs. With 59 unique destinations and 139 trips, the aggregation summarizes cost trends effectively. Sorting bars by descending mean cost lets viewers immediately see 'expensive' and 'affordable' destinations, revealing notable outliers or clusters.",
+      "target_insight": "Identifies destinations with the highest and lowest mean transportation costs, thus illuminating which locations are more costly to travel to, and whether cost is concentrated in a few hotspots.",
+      "output_fields": [
+        "Destination",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Mean Transportation cost",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "bars sorted descending; destination names rotated for clarity"
+      }
+    },
+    "transformations": [
+      "Remove rows where 'Destination' or 'Transportation cost' is null",
+      "Convert 'Transportation cost' (string, may contain currency symbols/words) to numeric (float) values",
+      "Group by 'Destination' and compute mean transportation cost for each destination",
+      "Sort destinations by descending mean transportation cost",
+      "Select top 15 destinations for readability"
+    ],
+    "data_preparation_steps": [
+      "Drop rows where df['Destination'] or df['Transportation cost'] is null",
+      "Strip currency symbols/non-numeric chars from df['Transportation cost'] and convert to float",
+      "Aggregate: df.groupby('Destination')['Transportation cost'].mean()",
+      "Sort values by mean transportation cost descending",
+      "Select top 15 rows for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport re\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\n# Drop nulls\ndf_clean = df.dropna(subset=['Destination', 'Transportation cost'])\n# Clean and convert transportation cost\ncost_pattern = re.compile(r'([\\d,.]+)')\ndef parse_cost(s):\n    m = cost_pattern.search(str(s))\n    return float(m.group(1).replace(',', '')) if m else np.nan\ndf_clean['Transportation cost'] = df_clean['Transportation cost'].apply(parse_cost)\n# Remove invalid\ndf_clean = df_clean.dropna(subset=['Transportation cost'])\n# Compute mean cost by destination\nmean_cost = df_clean.groupby('Destination')['Transportation cost'].mean().sort_values(ascending=False)\n# Select top 15 destinations for readability\ntop_n = 15\nmean_cost_top = mean_cost.iloc[:top_n]\nfig, ax = plt.subplots(figsize=(10,6))\nax.bar(mean_cost_top.index, mean_cost_top.values, color='royalblue')\nax.set_ylabel('Mean Transportation cost (USD)')\nax.set_xlabel('Destination')\nplt.xticks(rotation=45, ha='right')\nplt.title('Top 15 Destinations by Mean Transportation Cost')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

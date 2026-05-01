@@ -1,0 +1,38 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does temperature vary across different metropolitan locations at specific observation times?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides a compact, grid-like visualization to compare the temperatures across different cities ('Location') at various observation times. This is effective given the small number of unique metropolitan locations (8) and timestamps (7), allowing us to show every possible combination in a single chart, facilitating pattern recognition (e.g., time-of-day or location-specific temperature trends). Colors convey magnitude intuitively, supporting rapid comparative analysis.",
+      "target_insight": "Visually compare how temperature changes for each city across all observation times, revealing both temporal and locational temperature patterns.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Location",
+        "color": "Temperature (°C)",
+        "size": null,
+        "other_aesthetics": "Annotate each cell with the temperature value; colorbar for scale"
+      }
+    },
+    "transformations": [
+      "Pivot data so each row represents a Location and each column represents an Observation Time, with cell values as Temperature (°C)",
+      "Aggregate duplicate entries by Location/Observation Time using mean (if necessary)"
+    ],
+    "data_preparation_steps": [
+      "df_pivot = df.pivot_table(index='Location', columns='Observation Time', values='Temperature (°C)', aggfunc='mean')",
+      "Ensure the pivot table is sorted for clarity: df_pivot = df_pivot.sort_index().sort_index(axis=1)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf_pivot = df.pivot_table(index='Location', columns='Observation Time', values='Temperature (°C)', aggfunc='mean')\ndf_pivot = df_pivot.sort_index().sort_index(axis=1)\nfig, ax = plt.subplots(figsize=(11, 6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(df_pivot.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_xticklabels(df_pivot.columns, rotation=45, ha='right')\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_yticklabels(df_pivot.index)\nfor i in range(df_pivot.shape[0]):\n    for j in range(df_pivot.shape[1]):\n        text = f'{df_pivot.values[i,j]:.1f}' if not np.isnan(df_pivot.values[i,j]) else ''\n        ax.text(j, i, text, ha='center', va='center', color='w', fontsize=10)\ncbar = fig.colorbar(im, ax=ax)\ncbar.set_label('Temperature (°C)')\nplt.title('Temperature Variation Across Locations and Observation Times')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

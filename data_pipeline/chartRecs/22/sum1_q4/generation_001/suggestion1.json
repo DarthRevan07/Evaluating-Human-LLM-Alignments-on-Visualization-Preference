@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Among different enginetypes, which are associated with higher average prices?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Vertical Bar Chart (Mean Price by Enginetype)",
+      "design_rationale": "A vertical bar chart is an intuitive way to compare average prices across categorical values like 'enginetype'. It leverages the moderate cardinality (7 unique values) of the 'enginetype' field and the continuous nature of 'price', using aggregation to show clear, actionable ranking. This method emphasizes which enginetypes are linked to higher average car prices at a glance, aligns neatly with the table's size, and supports precise color coding for emphasizing high or low price groups.",
+      "target_insight": "Directly reveals which enginetypes are associated with the highest and lowest average car prices, helping to rank engine types by their market value.",
+      "output_fields": [
+        "enginetype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginetype",
+        "y": "price (mean aggregated)",
+        "color": "enginetype (distinct color per bar)",
+        "size": null,
+        "other_aesthetics": "Sort bars by mean price descending; add value annotations; use grid for readability"
+      }
+    },
+    "transformations": [
+      "Group df by 'enginetype', compute mean of 'price'",
+      "Sort resulting DataFrame by mean price descending"
+    ],
+    "data_preparation_steps": [
+      "df_mean = df.groupby('enginetype')['price'].mean().reset_index()",
+      "df_mean_sorted = df_mean.sort_values('price', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf_mean = df.groupby('enginetype')['price'].mean().reset_index()\ndf_mean_sorted = df_mean.sort_values('price', ascending=False)\nfig, ax = plt.subplots(figsize=(9,6))\ncolors = mpl.colormaps['tab10'](np.linspace(0,1,len(df_mean_sorted)))\nbars = ax.bar(df_mean_sorted['enginetype'], df_mean_sorted['price'], color=colors)\nfor bar, price in zip(bars, df_mean_sorted['price']):\n    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 400, f'{int(price)}', ha='center', va='bottom', fontsize=11)\nax.set_ylabel('Average Price (USD)')\nax.set_xlabel('Enginetype')\nax.set_title('Average Car Price by Enginetype\\n(sorted by price)', fontsize=14)\nax.grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "What trend can be observed in the Price of cars with advanced safety features (more Airbags) across different Production years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap allows for efficient visualization of the relationship between two quantitative variables (number of Airbags and Production year) and their effect on Price. By binning both 'Airbags' and 'Prod. year', we aggregate Price and reveal how combinations of safety features over time correspond to average car prices. This design scales well for large tables and gives an overview of how advanced safety features (more Airbags) are valued in newer models.",
+      "target_insight": "Identifies which Production years and levels of Airbags have the highest average prices, revealing price trends for advanced-safety cars over time, and whether newer cars with more airbags are priced higher.",
+      "output_fields": [
+        "Airbags",
+        "Prod. year",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year (binned)",
+        "y": "Airbags (binned)",
+        "color": "Average Price",
+        "size": null,
+        "other_aesthetics": "Color gradient with value labels; grid lines"
+      }
+    },
+    "transformations": [
+      "Filter df to only include rows with Airbags >= df['Airbags'].mean() to focus on advanced safety cars",
+      "Bin 'Airbags' into 5 quantile groups to reduce heatmap granularity",
+      "Bin 'Prod. year' into 6 equal-width intervals spanning the full range, to group by era",
+      "Group by the binned 'Airbags' and 'Prod. year', aggregate average Price per group"
+    ],
+    "data_preparation_steps": [
+      "Select only rows where df['Airbags'] >= 6.58",
+      "Create Airbags bins using pd.qcut with 5 quantiles",
+      "Create Prod. year bins using pd.cut into 6 intervals",
+      "Group by Airbags_bin and Prod_year_bin, calculate mean of Price for each group",
+      "Pivot grouped data so rows are Airbags_bin, columns are Prod_year_bin, values are mean Price"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\n# Filter for advanced safety: Airbags >= mean\nmean_airbags = df['Airbags'].mean()\ndf_adv = df[df['Airbags'] >= mean_airbags]\n# Bin Airbags into 5 quantiles\nairbags_bins = pd.qcut(df_adv['Airbags'], 5, duplicates='drop')\ndf_adv['Airbags_bin'] = airbags_bins.astype(str)\n# Bin Prod. year into 6 equal-width intervals\nprod_year_bins = pd.cut(df_adv['Prod. year'], 6)\ndf_adv['Prod_year_bin'] = prod_year_bins.astype(str)\n# Group & aggregate\ngrouped = df_adv.groupby(['Airbags_bin', 'Prod_year_bin'])['Price'].mean().reset_index()\npivot = grouped.pivot(index='Airbags_bin', columns='Prod_year_bin', values='Price')\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\n# Set ticks and labels\nax.set_xticks(np.arange(pivot.shape[1]))\nax.set_xticklabels(list(pivot.columns), rotation=45, ha='right')\nax.set_yticks(np.arange(pivot.shape[0]))\nax.set_yticklabels(list(pivot.index))\nax.set_xlabel('Production Year (binned)')\nax.set_ylabel('Number of Airbags (binned quantiles)')\n# Annotate cells\nfor i in range(pivot.shape[0]):\n    for j in range(pivot.shape[1]):\n        val = pivot.values[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f\"{val:.0f}\", ha='center', va='center', color='white', fontsize=9)\nplt.title('Average Price of Advanced-Safety Cars\\nAcross Production Years and Airbag Levels')\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Average Price')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

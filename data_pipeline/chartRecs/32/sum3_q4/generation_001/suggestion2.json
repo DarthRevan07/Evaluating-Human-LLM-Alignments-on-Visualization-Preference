@@ -1,0 +1,43 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there noticeable differences in medical charges between males and females across various age ranges?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Pivot Table Visualization)",
+      "design_rationale": "A pivot-table heatmap of average charges by sex and detailed age (or age bins) gives a rapid overview of how medical expense patterns are distributed for each gender over the full age spectrum. The color intensity provides a strong visual cue for age-sex interactions, leveraging the full granularity of the 'age' column or workable age bins. This approach is unconventional but helps spot nuanced or abrupt changes.",
+      "target_insight": "Visualize which age-sex groups (either specific ages or age bins) have the highest or lowest mean medical charges, highlighting continuous or sudden differences between male and female across age progression.",
+      "output_fields": [
+        "age or age_bin",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age bins (or unique ages if feasible) for chronological continuity",
+        "y": "sex ('male', 'female')",
+        "color": "mean medical charges (color gradient; higher charges = darker)",
+        "size": null,
+        "other_aesthetics": "Colorbar for charge scale, grid lines, readable y-ticks, white edge for clarity"
+      }
+    },
+    "transformations": [
+      "Create age bins for manageable axis density (same as suggestion 1) or use all unique ages if axis space allows",
+      "Group by 'age_bin' and 'sex', calculating mean 'charges'",
+      "Pivot to a matrix where rows are sex, columns are age bins, cells are mean charges",
+      "Visualize using a heatmap with color encoded by mean charges"
+    ],
+    "data_preparation_steps": [
+      "Define age bins: [18, 30, 40, 50, 64] (or all unique ages if axis length permits)",
+      "Assign each row to corresponding age bin using pd.cut",
+      "Group and aggregate: mean 'charges' for each (age_bin, sex)",
+      "Create pivot table with age_bin as columns, sex as index, values as mean charges",
+      "Normalize/scale color mapping for heatmap"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\nage_bins = [18, 30, 40, 50, 64]\nage_labels = ['18-30', '31-40', '41-50', '51-64']\ndf['age_bin'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, include_lowest=True)\npivot = df.groupby(['age_bin', 'sex'])['charges'].mean().reset_index()\npivot_table = pivot.pivot(index='sex', columns='age_bin', values='charges')\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(8, 3))\nim = ax.imshow(pivot_table.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(age_labels)))\nax.set_xticklabels(age_labels)\nax.set_yticks(np.arange(len(pivot_table.index)))\nax.set_yticklabels(pivot_table.index)\nfor i in range(len(pivot_table.index)):\n    for j in range(len(age_labels)):\n        val = pivot_table.iloc[i, j]\n        ax.text(j, i, f'${val:,.0f}', ha='center', va='center', color='white', fontsize=10)\ncbar = fig.colorbar(im, ax=ax)\ncbar.set_label('Mean Medical Charges ($)', rotation=270, labelpad=20)\nax.set_xlabel('Age Range')\nax.set_ylabel('Sex')\nax.set_title('Mean Medical Charges by Sex and Age Range (Heatmap)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

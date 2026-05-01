@@ -1,0 +1,70 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which sectors contribute the most to total methane emissions in a specific country, and how has this changed from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Area Chart",
+      "design_rationale": "A stacked area chart is highly effective in visualizing the contributions of different sectors to total methane emissions over time for a given country. By stacking the sector emissions, we show both the changing relative and absolute contributions of each sector from 1990 to 2018. The color encoding makes each sector's change over time easy to track. This approach offers both an aggregate and comparative view, allowing users to quickly assess shifts and identify the dominant sources by area and height at any given year.",
+      "target_insight": "Reveals the evolution of sector-specific methane emissions in the selected country, showing changes in sector hierarchy and the overall trend in total emissions from 1990 to 2018.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (column label 1990-2018)",
+        "y": "Methane emissions (value from year columns)",
+        "color": "Sector",
+        "size": null,
+        "other_aesthetics": "Stacked area, legend for sectors, one country selected"
+      }
+    },
+    "transformations": [
+      "Filter df to only include rows with the selected 'Country' (e.g., 'United States')",
+      "Sort columns from '1990' to '2018' in chronological order for x-axis",
+      "Pivot so that each Sector is a row; year columns are columns; values are methane emission amounts"
+    ],
+    "data_preparation_steps": [
+      "Select all rows where df['Country'] == 'United States'",
+      "Extract df[['Sector', '1990', '1991', ..., '2018']]",
+      "Sort columns so the years are chronologically ordered",
+      "Set df_plot index to Sector; values across columns '1990' to '2018'",
+      "Prepare sector order for legend if needed"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\2.csv')\ncountry = 'United States'\ndf_country = df[df['Country'] == country]\nyears = [str(y) for y in range(1990, 2019)]\ndf_plot = df_country[['Sector'] + years].set_index('Sector')\ndf_plot = df_plot[years]\nsector_list = df_plot.index.tolist()\ncolors = mpl.colormaps['tab20'].colors\ncolor_map = [colors[i % len(colors)] for i in range(len(sector_list))]\n\nplt.figure(figsize=(14, 7))\nplt.stackplot(years, df_plot, labels=sector_list, colors=color_map, alpha=0.8)\nplt.legend(loc='upper left', title='Sector', bbox_to_anchor=(1,1))\nplt.title(country + ' - Methane Emissions by Sector (1990-2018)')\nplt.xlabel('Year')\nplt.ylabel('Methane Emissions (MTCO2e)')\nplt.grid(alpha=0.2)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

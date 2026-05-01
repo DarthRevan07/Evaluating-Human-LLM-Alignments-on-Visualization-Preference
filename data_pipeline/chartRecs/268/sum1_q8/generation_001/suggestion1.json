@@ -1,0 +1,40 @@
+{
+  "table_name": "268",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which districts show accelerated population growth between the last two census periods (2011 and 2022)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Sorted by 2011-2022 Growth Rate)",
+      "design_rationale": "A horizontal bar chart enables quick visual ranking and direct comparison of population growth rates across districts, leveraging the categorical 'Name' field and numeric difference between 2011 and 2022 census counts. Sorting bars from highest to lowest growth rate allows the viewer to immediately identify which districts experienced accelerated growth, addressing the question directly and leveraging the manageable size (64 rows) of the data.",
+      "target_insight": "Identifies and ranks districts by their relative population growth rate between 2011 and 2022, highlighting those with the most accelerated expansion.",
+      "output_fields": [
+        "Name",
+        "Population_2011",
+        "Population_2022"
+      ],
+      "chart_encodings": {
+        "x": "Growth Rate (computed: (Population_2022 - Population_2011) / Population_2011)",
+        "y": "Name",
+        "color": "Division (used for group coloring with a categorical palette)",
+        "size": null,
+        "other_aesthetics": "Bars sorted descending by growth rate; label top districts; use color to distinguish divisions"
+      }
+    },
+    "transformations": [
+      "Compute growth_rate as (df['Population_2022'] - df['Population_2011']) / df['Population_2011']",
+      "Sort rows by growth_rate descending",
+      "Assign each district's 'Division' to a distinct color for categorical visual separation"
+    ],
+    "data_preparation_steps": [
+      "Add 'growth_rate' column to df using exact Population_2011 and Population_2022 fields",
+      "Sort df by 'growth_rate' in descending order",
+      "Create color mapping for 'Division' categories"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['growth_rate'] = (df['Population_2022'] - df['Population_2011']) / df['Population_2011']\ndf_sorted = df.sort_values('growth_rate', ascending=False).reset_index(drop=True)\ndivisions = df_sorted['Division'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(divisions))\ndiv_color_dict = {div: cmap(i) for i, div in enumerate(divisions)}\nbar_colors = [div_color_dict[div] for div in df_sorted['Division']]\nfig, ax = plt.subplots(figsize=(11, 15))\nax.barh(df_sorted['Name'], df_sorted['growth_rate'], color=bar_colors)\nax.set_xlabel('Growth Rate (Population_2022 - Population_2011) / Population_2011')\nax.set_ylabel('District Name')\nax.set_title('Accelerated Population Growth by District (2011-2022)\\nRanked by Growth Rate')\nfor i in range(5):\n    ax.text(df_sorted['growth_rate'].iloc[i] + 0.005, i, f\"{df_sorted['growth_rate'].iloc[i]:.2%}\", va='center', fontsize=13, color='black')\ndivision_patches = [mpl.patches.Patch(color=div_color_dict[div], label=div) for div in divisions]\nax.legend(handles=division_patches, title='Division', bbox_to_anchor=(1, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "What is the relationship between the year of GDP measurement and the sectoral composition (agriculture, industry, services) in a given country?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Clustered Heatmap (Country-Year-Sector Matrix)",
+      "design_rationale": "A heatmap with countries as rows, 'Year GDP ' as columns, and color mapping to sectoral % (choose a sector, e.g., 'Services%ofGDP', but could rotate for all three) gives fine-grained temporal per-country visibility. Clustering by sector % enables the discovery of temporal shifts for individual countries and highlights whether certain regions/countries see consistent sector dominance across time. With a manageable number of unique years, this matrix is interpretable and reveals country-specific trends.",
+      "target_insight": "Shows which countries increase, decrease, or maintain sector dominance across years. Surface outliers, country-level transitions, and lets viewers visually compare sectoral composition progression for many countries at once.",
+      "output_fields": [
+        "Country/Economy",
+        "Year GDP ",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "Country/Economy",
+        "color": "Services%ofGDP (normalized continuous color)",
+        "size": null,
+        "other_aesthetics": "Clustering/grouping of rows by similar % patterns (optional); Colorbar; Axis labels"
+      }
+    },
+    "transformations": [
+      "Convert 'Services%ofGDP' to numeric",
+      "Pivot DataFrame with 'Country/Economy' as rows and 'Year GDP ' as columns, values = 'Services%ofGDP'",
+      "Drop rows/countries with all nulls",
+      "Optionally cluster or sort countries by mean 'Services%ofGDP' across years for visual order"
+    ],
+    "data_preparation_steps": [
+      "df['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')",
+      "df_heat = df.pivot_table(index='Country/Economy', columns='Year GDP ', values='Services%ofGDP')",
+      "df_heat = df_heat.dropna(how='all')",
+      "row_order = df_heat.mean(axis=1).sort_values(ascending=False).index",
+      "df_heat = df_heat.loc[row_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')\ndf_heat = df.pivot_table(index='Country/Economy', columns='Year GDP ', values='Services%ofGDP')\ndf_heat = df_heat.dropna(how='all')\nrow_order = df_heat.mean(axis=1).sort_values(ascending=False).index\ndf_heat = df_heat.loc[row_order]\nfig, ax = plt.subplots(figsize=(13,14))\ncmap = mpl.colormaps['viridis']\np = ax.imshow(df_heat.values, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(df_heat.columns)), labels=df_heat.columns.astype(str), rotation=45)\nax.set_yticks(np.arange(len(df_heat.index)), labels=df_heat.index)\nax.set_xlabel('Year GDP ')\nax.set_ylabel('Country/Economy')\nax.set_title('Services Sector % of GDP:\\nTemporal Evolution by Country')\ncbar = fig.colorbar(p, ax=ax, orientation='vertical', label='Services%ofGDP')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

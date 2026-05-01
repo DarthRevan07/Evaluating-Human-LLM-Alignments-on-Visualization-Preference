@@ -1,0 +1,42 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How have methane emissions changed in the Energy sector across different countries between 1990 and 2018?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Clustered Heatmap",
+      "design_rationale": "A heatmap provides a matrix overview of temporal emissions trends for all countries in the Energy sector, visually highlighting patterns, similarities, and anomalies between countries and years. By organizing countries as rows and years as columns, using color intensity to encode emission levels, users see both high/low values and can spot sudden shifts, gradual increases, or decreases. With 195 countries and 29 years, this approach condenses complex data into a viewable summary and supports sorting or clustering.",
+      "target_insight": "This visualization helps identify country clusters with similar temporal emission profiles, detect periods with sharp changes (e.g., policy impact), and recognize outlier nations or years within the global Energy methane emissions landscape.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "Year columns (1990-2018)"
+      ],
+      "chart_encodings": {
+        "x": "Year (columns: 1990-2018)",
+        "y": "Country (sorted/clustered by total emissions in Energy sector)",
+        "color": "Methane Emissions (continuous colormap intensity)",
+        "size": null,
+        "other_aesthetics": "Colorbar for emissions scale, country order based on hierarchical or total emissions"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Sector'] == 'Energy'",
+      "Select 'Country' and all year columns ('1990' to '2018')",
+      "Sort countries by their total sum of emissions from 1990 to 2018 (descending)",
+      "Create 2D emissions matrix: countries x years (values: methane emissions)"
+    ],
+    "data_preparation_steps": [
+      "df_energy = df[df['Sector'] == 'Energy']",
+      "year_cols = [str(y) for y in range(1990, 2019)]",
+      "country_order = df_energy.set_index('Country')[year_cols].sum(axis=1).sort_values(ascending=False).index",
+      "df_matrix = df_energy.set_index('Country').loc[country_order, year_cols]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_energy = df[df['Sector'] == 'Energy']\nyear_cols = [str(y) for y in range(1990, 2019)]\ncountry_order = df_energy.set_index('Country')[year_cols].sum(axis=1).sort_values(ascending=False).index\ndf_matrix = df_energy.set_index('Country').loc[country_order, year_cols]\nfig, ax = plt.subplots(figsize=(14, 16))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(df_matrix.values, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(year_cols)))\nax.set_xticklabels(year_cols, rotation=90, fontsize=10)\nax.set_yticks(np.arange(len(df_matrix.index)))\nax.set_yticklabels(df_matrix.index, fontsize=8)\nplt.title('Methane Emissions Heatmap\\nEnergy Sector by Country and Year', fontsize=17)\ncbar = plt.colorbar(im, ax=ax, pad=0.01)\ncbar.set_label('Methane Emissions (MTCO2e)', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

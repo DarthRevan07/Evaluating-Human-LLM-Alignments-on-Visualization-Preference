@@ -1,0 +1,40 @@
+{
+  "table_name": "37",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Among young customers, does gender impact spending score differently?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot with Kernel Density overlay",
+      "design_rationale": "A scatter plot of Age vs Spending Score (for ages ≤30), colored by Gender, allows viewers to see individual behaviors and any clustering. Overlaying gender-specific Kernel Density Estimation reveals not only central tendencies but also patterns in spending activity. The color encoding distinguishes Females and Males, exposing potential differences in how age relates to spending score among young cohorts. This is an unconventional hybrid approach that highlights subtle distributional differences, trend shifts, and high-density regions.",
+      "target_insight": "Shows whether spending scores among young customers are clustered differently by gender, whether there are distinct density peaks, and whether one gender consistently outspends another within the young subgroup.",
+      "output_fields": [
+        "Age",
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Age",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (distinct scatter dot colors + density contours)",
+        "size": "null",
+        "other_aesthetics": "scatter alpha, density contour overlays, legend"
+      }
+    },
+    "transformations": [
+      "Filter df to only young customers (df['Age'] <= 30)",
+      "For each gender, compute 2D kernel density on Age vs Spending Score (1-100)",
+      "Visualize scatter and density overlay per gender"
+    ],
+    "data_preparation_steps": [
+      "young_df = df[df['Age'] <= 30]",
+      "For each gender: extract Age and Spending Score arrays",
+      "Compute 2D kernel density estimates (KDE) for plotting contours"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom scipy.stats import gaussian_kde\ndf = pd.read_csv('csv_c2_sec\\37.csv')\nyoung_df = df[df['Age'] <= 30]\ngenders = ['Female', 'Male']\ngender_colors = {'Female': mpl.colormaps['viridis'].resampled(2)(0), 'Male': mpl.colormaps['viridis'].resampled(2)(1)}\nfig, ax = plt.subplots(figsize=(9, 6))\nfor gender in genders:\n    subdf = young_df[young_df['Gender'] == gender]\n    x = subdf['Age'].values\n    y = subdf['Spending Score (1-100)'].values\n    ax.scatter(x, y, alpha=0.5, label=gender, color=gender_colors[gender], edgecolor='k', s=55)\n    if len(x) >= 5:\n        values = np.vstack([x, y])\n        kde = gaussian_kde(values)\n        xmin, xmax = x.min(), x.max()\n        ymin, ymax = y.min(), y.max()\n        xx, yy = np.meshgrid(np.linspace(xmin, xmax, 100), np.linspace(ymin, ymax, 100))\n        zz = kde(np.vstack([xx.ravel(), yy.ravel()])).reshape(xx.shape)\n        ax.contour(xx, yy, zz, levels=6, linewidths=2, linestyles='solid', colors=[gender_colors[gender]])\nax.set_xlabel('Age')\nax.set_ylabel('Spending Score (1-100)')\nax.set_title('Spending Score vs Age among Young Customers (≤30): Gender Differences')\nax.legend(title='Gender')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

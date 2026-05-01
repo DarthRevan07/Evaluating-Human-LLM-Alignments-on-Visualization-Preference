@@ -1,0 +1,37 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does humidity (%) vary across different locations, and which locations tend to experience higher humidity levels?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Barplot (Mean Humidity by Location)",
+      "design_rationale": "A horizontal barplot of mean humidity per location offers a clear, ranked overview and answers which cities typically have higher humidity levels, ideal for quantitative comparison.",
+      "target_insight": "Highlights average humidity for each city, directly showing which locations have higher or lower mean humidity.",
+      "output_fields": [
+        "Location",
+        "Humidity (%)"
+      ],
+      "chart_encodings": {
+        "x": "Mean Humidity (%)",
+        "y": "Location (sorted by mean)",
+        "color": "Bar color mapped by mean humidity (continuous colormap)",
+        "size": null,
+        "other_aesthetics": "Sort bars descending; label with precise mean value"
+      }
+    },
+    "transformations": [
+      "Group df by 'Location' and calculate mean for 'Humidity (%)'",
+      "Sort the resulting means descending"
+    ],
+    "data_preparation_steps": [
+      "Read CSV into df",
+      "Create new DataFrame: df_mean = df.groupby('Location')['Humidity (%)'].mean().sort_values(ascending=False).reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\ndf_mean = df.groupby('Location')['Humidity (%)'].mean().sort_values(ascending=False).reset_index()\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df_mean['Humidity (%)'].min(), vmax=df_mean['Humidity (%)'].max())\ncolors = [cmap(norm(val)) for val in df_mean['Humidity (%)']]\nfig, ax = plt.subplots(figsize=(9,6))\nax.barh(df_mean['Location'], df_mean['Humidity (%)'], color=colors, edgecolor='grey')\nfor i, (loc, hum) in enumerate(zip(df_mean['Location'], df_mean['Humidity (%)'])):\n    ax.text(hum+1, i, f\"{hum:.1f}%\", va='center', fontsize=10)\nax.set_xlabel(\"Mean Humidity (%)\")\nax.set_ylabel(\"Location\")\nax.set_title(\"Average Humidity (%) by Location\")\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', label=\"Mean Humidity (%)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

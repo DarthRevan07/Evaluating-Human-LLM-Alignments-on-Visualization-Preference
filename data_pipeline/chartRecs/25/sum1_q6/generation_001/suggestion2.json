@@ -1,0 +1,41 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable relationship between a stock’s Open price and its High price in the current period?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Diverging Bar Chart of % Intraday High Move (High minus Open as % of Open)",
+      "design_rationale": "Instead of plotting absolute values, this visualization computes and displays the relative intraday price move against the open, sorted and colored to highlight which symbols had the largest departures from their opening price. This reveals whether some stocks deviate more than others and lets viewers assess if High is systematically close to Open or often meaningfully above.",
+      "target_insight": "Are most High prices just slightly above Open, or do some stocks routinely have large intraday surges? The spread and direction (positive or negative, unexpected) of these bars illustrate the typical magnitude and variation of this relationship across stocks.",
+      "output_fields": [
+        "Symbol",
+        "Open",
+        "High"
+      ],
+      "chart_encodings": {
+        "x": "Percent move from Open to High (computed per stock)",
+        "y": "Symbol",
+        "color": "Direction and magnitude of percent move (sequential diverging colormap)",
+        "size": "null",
+        "other_aesthetics": "Highlight most extreme (positive and negative) moves with bolder color intensity."
+      }
+    },
+    "transformations": [
+      "Convert 'Open' and 'High' fields to floats as in the previous step.",
+      "Compute percent intraday move: ((High - Open) / Open) * 100 for each stock.",
+      "Sort symbols by percent move."
+    ],
+    "data_preparation_steps": [
+      "df['Open'] = df['Open'].replace(',', '', regex=True).astype(float)",
+      "df['High'] = df['High'].replace(',', '', regex=True).astype(float)",
+      "df['%Intraday_High_Move'] = (df['High'] - df['Open']) / df['Open'] * 100",
+      "df_sorted = df.sort_values('%Intraday_High_Move', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\ndf['Open'] = df['Open'].replace(',', '', regex=True).astype(float)\ndf['High'] = df['High'].replace(',', '', regex=True).astype(float)\ndf['%Intraday_High_Move'] = (df['High'] - df['Open']) / df['Open'] * 100\ndf_sorted = df.sort_values('%Intraday_High_Move', ascending=False)\nfig, ax = plt.subplots(figsize=(8,12))\ncmap = mpl.colormaps['coolwarm']\ncolors = cmap((df_sorted['%Intraday_High_Move'] - df_sorted['%Intraday_High_Move'].min()) /\n              (df_sorted['%Intraday_High_Move'].max() - df_sorted['%Intraday_High_Move'].min()))\ny = np.arange(len(df_sorted))\nbars = ax.barh(y, df_sorted['%Intraday_High_Move'], color=colors, edgecolor='k')\nax.set_yticks(y)\nax.set_yticklabels(df_sorted['Symbol'])\nax.axvline(0, color='grey', lw=1)\nax.set_xlabel('% Move from Open to High')\nax.set_ylabel('Symbol')\nax.set_title('Divergence Between Open and High Price for NIFTY-50 Stocks')\n# Highlight top/bottom 3\ntop_idx = list(df_sorted.head(3).index) + list(df_sorted.tail(3).index)\nfor idx in top_idx:\n    ax.barh(list(df_sorted.index).index(idx), df_sorted.loc[idx, '%Intraday_High_Move'], color='gold', edgecolor='black', lw=2)\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=df_sorted['%Intraday_High_Move'].min(), vmax=df_sorted['%Intraday_High_Move'].max()))\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.01, label='% Move from Open to High')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Are there any months or years where the highest temperature appears much higher or lower than the surrounding periods?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot with anomaly highlighting",
+      "design_rationale": "A line plot of monthly highest temperatures over time provides clear visibility of trends, spikes, and dips in the temperature data. By overlaying anomaly detection results (e.g., points where the temperature greatly deviates from the rolling mean of surrounding months), viewers can easily identify periods where highest temperatures are unusually high or low relative to adjacent months. This method visualizes both the temporal progression and contextual deviations, aligning perfectly with the analytical question.",
+      "target_insight": "Reveal months where highest temperatures are significant outliers compared to their immediate temporal context, assisting detection of abnormal climatic events.",
+      "output_fields": [
+        "Date",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Temperature",
+        "color": "Highlight anomalies with color (e.g., red for high, blue for low)",
+        "size": "null",
+        "other_aesthetics": "Line for trend, markers for anomalies, alpha for anomaly points"
+      }
+    },
+    "transformations": [
+      "Convert 'Date' to datetime for temporal sorting",
+      "Sort df by 'Date' ascending",
+      "Compute rolling mean and std over 3 months (centered)",
+      "Identify anomalies where 'Temperature' deviates >1.5 std from rolling mean"
+    ],
+    "data_preparation_steps": [
+      "df['Date'] = pd.to_datetime(df['Date'], format='%b %Y')",
+      "df.sort_values('Date', inplace=True)",
+      "df['rolling_mean'] = df['Temperature'].rolling(window=3, center=True).mean()",
+      "df['rolling_std'] = df['Temperature'].rolling(window=3, center=True).std()",
+      "df['anomaly'] = ((df['Temperature'] - df['rolling_mean']).abs() > 1.5 * df['rolling_std'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Load data\ndf = pd.read_csv('csv_c_squared\\461.csv')\n\n# Data preparation\ndf['Date'] = pd.to_datetime(df['Date'], format='%b %Y')\ndf.sort_values('Date', inplace=True)\ndf['rolling_mean'] = df['Temperature'].rolling(window=3, center=True).mean()\ndf['rolling_std'] = df['Temperature'].rolling(window=3, center=True).std()\ndf['anomaly'] = ((df['Temperature'] - df['rolling_mean']).abs() > 1.5 * df['rolling_std'])\n\n# Plot\nfig, ax = plt.subplots(figsize=(12, 6))\nax.plot(df['Date'], df['Temperature'], color='gray', linewidth=2, label='Monthly Highest Temperature')\n# Mark anomalies (red for above mean, blue for below)\nhigh_anomaly = df[df['anomaly'] & (df['Temperature'] > df['rolling_mean'])]\nlow_anomaly = df[df['anomaly'] & (df['Temperature'] < df['rolling_mean'])]\nax.scatter(high_anomaly['Date'], high_anomaly['Temperature'], color='red', s=50, label='High Anomaly', alpha=0.75, zorder=5)\nax.scatter(low_anomaly['Date'], low_anomaly['Temperature'], color='blue', s=50, label='Low Anomaly', alpha=0.75, zorder=5)\n# Rolling mean for context\nax.plot(df['Date'], df['rolling_mean'], color='black', linestyle='--', linewidth=1.5, label='3-Month Rolling Mean')\n\nax.set_xlabel('Date')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Monthly Highest Temperature in Amherst with Anomalies Highlighted')\nax.legend(loc='best')\nplt.xticks(rotation=45)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

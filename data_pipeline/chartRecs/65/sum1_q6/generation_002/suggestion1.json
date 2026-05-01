@@ -1,0 +1,37 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there any relationship between Consumer Demographics (College students, Families, Seniors, Young adults) and Sales Volume for promoted products?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (Sales Volume by Consumer Demographics for promoted products)",
+      "design_rationale": "A boxplot provides a clear, concise way to compare the distribution (spread, median, outliers) of sales volume across consumer demographic groups for only promoted products. This chart type shows not only the average but also the variability and potential outliers, which is frequently important in sales where certain campaigns or products can produce spikes. Restricting the analysis to promoted products isolates the relationship towards the analytical question.",
+      "target_insight": "How sales volumes vary (in distribution, not just average) for different consumer demographic segments when products are promoted, highlighting which segments respond with higher or more reliable sales.",
+      "output_fields": [
+        "Consumer Demographics",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics",
+        "y": "Sales Volume",
+        "color": "Consumer Demographics (distinct color per group for visual clarity)",
+        "size": null,
+        "other_aesthetics": "Boxplot whiskers/outlier markers, optional datapoint overlay (swarm or strip) for detail"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Promotion'] == 'Yes'"
+    ],
+    "data_preparation_steps": [
+      "Select only ['Consumer Demographics', 'Sales Volume'] columns where df['Promotion'] == 'Yes'",
+      "Remove any missing values, though schema notes no nulls",
+      "Sort consumer demographics as ['College students', 'Families', 'Seniors', 'Young adults'] for consistent display order"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ndf_promoted = df[df[\"Promotion\"] == \"Yes\"]\ndemo_order = [\"College students\", \"Families\", \"Seniors\", \"Young adults\"]\ndf_promoted = df_promoted[df_promoted[\"Consumer Demographics\"].isin(demo_order)]\ndf_promoted[\"Consumer Demographics\"] = pd.Categorical(df_promoted[\"Consumer Demographics\"], categories=demo_order, ordered=True)\nfig, ax = plt.subplots(figsize=(8,6))\ncolors = mpl.colormaps[\"tab10\"].colors[:4]\nbox = ax.boxplot(\n    [df_promoted[df_promoted[\"Consumer Demographics\"] == g][\"Sales Volume\"] for g in demo_order],\n    labels=demo_order,\n    patch_artist=True,\n    medianprops={\"color\": \"black\"}\n)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.75)\n    patch.set_edgecolor(\"black\")\nax.set_xlabel(\"Consumer Demographics\", fontsize=12)\nax.set_ylabel(\"Sales Volume\", fontsize=12)\nax.set_title(\"Distribution of Sales Volume by Consumer Demographics\\nfor Promoted Products\", fontsize=14)\nax.grid(axis=\"y\", linestyle=\":\", alpha=0.5)\n# Optional: overlay all data points as a stripplot for detail\nfor i, g in enumerate(demo_order):\n    vals = df_promoted[df_promoted[\"Consumer Demographics\"] == g][\"Sales Volume\"]\n    x = np.random.normal(i+1, 0.06, size=len(vals))\n    ax.scatter(x, vals, alpha=0.28, color=\"gray\", s=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

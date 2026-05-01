@@ -1,0 +1,81 @@
+{
+  "table_name": "world’s wildlife?",
+  "generation_dir": "secondIter\\summaries\\6_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: world_s_wildlife_ (13,549 rows × 4 columns)\n\n### Description\nData loaded from CSV file: 6.csv (Dataset: world’s wildlife?)\n\n### Schema (4 fields)\n  - country -- type: object, values: Afghanistan, Africa, Africa (FAO), Albania, Algeria, ..., World, Yemen, Yugoslavia, Zambia, Zimbabwe\n  - code country -- type: object, values: 0, AFG, AGO, ALB, ARE, ..., VUT, YEM, ZAF, ZMB, ZWE\n  - Year -- type: int64, values: 1275, 1305, 1355, 1405, 1455, ..., 2019, 2020, 2021, 2022, 2023\n  - Maize yield -- type: object, values: 1.41, 46.507.044, 11.136.999, 3.6474, 198.092, ..., 2.1945, 3.5105, 1.2398, 7.509, 5.6183\n\n### Sample Data (first 5 rows)\n```\n          country code country  Year Maize yield\n0  United Kingdom          GBR  1275           0\n1  United Kingdom          GBR  1305           0\n2  United Kingdom          GBR  1355           0\n3  United Kingdom          GBR  1405           0\n4  United Kingdom          GBR  1455           0\n```\n",
+  "table_metadata": {
+    "total_rows": 13549,
+    "total_columns": 4,
+    "source_file": "csv_c2_sec\\6.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "world_s_wildlife_",
+      "summary_idx": 1,
+      "column_combination": [
+        "country",
+        "code country",
+        "Year",
+        "Maize yield"
+      ],
+      "questions": [
+        "How has maize yield changed over time within individual countries?",
+        "Are there countries that show significant increases or decreases in maize yield during specific historical periods?",
+        "Which countries have the highest and lowest maize yields in recent years?",
+        "How do maize yield patterns compare across different geographic regions or groups of countries?",
+        "Are there years where multiple countries experienced notable fluctuations or anomalies in maize yield?",
+        "Which countries have shown the most consistent maize yield growth over time?",
+        "Is there a relationship between country code groupings and maize yield distributions?",
+        "Which countries consistently rank as outliers in maize yield, either positively or negatively?",
+        "How do maize yields in one country compare to its regional neighbors across key periods?",
+        "Are there any clear periods during which maize yield trends shifted across several countries, and which countries were most affected?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 13549,
+          "total_columns": 4,
+          "source_file": "csv_c2_sec\\6.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "world_s_wildlife_",
+      "summary_idx": 2,
+      "column_combination": [
+        "country",
+        "code country",
+        "Year",
+        "Maize yield"
+      ],
+      "questions": [
+        "How have maize yields changed over time in specific countries, and are there periods of significant increase or decrease?",
+        "Are there any countries where maize yields display notable anomalies or outliers compared to overall historical trends?",
+        "How do maize yields in different countries compare in the most recent years available?",
+        "Are certain countries consistently high or low in maize yields across the centuries recorded?",
+        "Do yield patterns show evidence of cyclic changes or recurring trends within individual countries over time?",
+        "Does the distribution of maize yield values vary significantly between countries or regions?",
+        "Are there years where maize yields drop or spike across multiple countries, potentially coinciding with known environmental events?",
+        "How does maize yield correlate with country code groupings (e.g., regional similarities or differences)?",
+        "Which countries experienced the most drastic fluctuations in maize yield values across the dataset?",
+        "Are there periods where maize yield stagnates or declines in several countries, indicating possible environmental stress?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 13549,
+          "total_columns": 4,
+          "source_file": "csv_c2_sec\\6.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

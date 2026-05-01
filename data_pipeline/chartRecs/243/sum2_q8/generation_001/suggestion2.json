@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "What trends can be observed in wind speed over time for each location?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Pivot Table Visualization)",
+      "design_rationale": "A heatmap allows quick visual comparison of wind speed intensity across cities and observation times. By placing cities on one axis and observation timestamps on the other, and using color to encode wind speed, viewers instantly see temporal and spatial wind speed patterns, including anomalies or clusters. This chart brings attention to periods of high or low wind across all cities and enables pattern recognition across the matrix.",
+      "target_insight": "Spot which cities and time points have unusually high or low wind speed; discover synchronous wind speed patterns or outliers among the global metropolises.",
+      "output_fields": [
+        "Observation Time",
+        "Location",
+        "Wind Speed (kph)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Location",
+        "color": "Wind Speed (kph)",
+        "size": null,
+        "other_aesthetics": "Colorbar to quantify intensity, clear tick labels, viridis colormap for contrast"
+      }
+    },
+    "transformations": [
+      "Convert df['Observation Time'] to pandas datetime for accurate ordering",
+      "Pivot dataframe: rows=df['Location'], columns=df['Observation Time'], values=df['Wind Speed (kph)']",
+      "Sort both axes for chronological and alphabetical order"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "pivot = df.pivot(index='Location', columns='Observation Time', values='Wind Speed (kph)')",
+      "pivot = pivot.loc[sorted(pivot.index), sorted(pivot.columns)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\npivot = df.pivot(index='Location', columns='Observation Time', values='Wind Speed (kph)')\npivot = pivot.loc[sorted(pivot.index), sorted(pivot.columns)]\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['viridis']\nm = ax.imshow(pivot.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels([t.strftime('%Y-%m-%d %H:%M') for t in pivot.columns], rotation=45, ha='right', fontsize=10)\nax.set_yticklabels(pivot.index, fontsize=11)\nax.set_xlabel(\"Observation Time\", fontsize=13)\nax.set_ylabel(\"Location\", fontsize=13)\nax.set_title(\"Wind Speed Across Cities and Time Points (Heatmap)\", fontsize=15)\ncbar = plt.colorbar(m, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label(\"Wind Speed (kph)\", fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

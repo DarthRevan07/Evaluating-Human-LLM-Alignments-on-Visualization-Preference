@@ -1,0 +1,42 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Compare the frequency and timing of astronaut fatalities (Death Date) with their mission involvement (Death Mission).",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar Plot (Mission Fatalities vs. Year of Selection)",
+      "design_rationale": "This bar chart aligns the count of fatal mission incidents per astronaut selection 'Year', overlaying non-mission deaths for comparison. By aggregating deaths by 'Year' and separating those related to 'Death Mission', the visualization uncovers whether certain astronaut cohorts faced higher risk or if deaths cluster around early or later years. This brings demographic and temporal context—important as 'Year' ranges over 20 distinct values and relates to the astronauts' entry period, which may align with riskier mission eras.",
+      "target_insight": "Reveals patterns and cohorts in fatal outcomes, comparing the timing and frequency of mission-related and non-mission deaths among astronaut classes.",
+      "output_fields": [
+        "Year",
+        "Death Mission",
+        "Death Date"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Count of fatalities (stacked: mission-related and non-mission deaths)",
+        "color": "Mission vs Non-Mission Death (distinct color)",
+        "size": "null",
+        "other_aesthetics": "stacked bars for easy cohort comparison"
+      }
+    },
+    "transformations": [
+      "Filter rows where 'Death Date' is not null.",
+      "Group by 'Year' and 'Death Mission Flag' (mission-related or not), counting fatalities.",
+      "Replace missing values in 'Year' (if needed) with most common value or drop if not relevant.",
+      "Prepare stacked counts for each 'Year'."
+    ],
+    "data_preparation_steps": [
+      "df_death = df[df['Death Date'].notnull()].copy()",
+      "df_death['Death Mission Flag'] = df_death['Death Mission'].notnull()",
+      "df_death = df_death[df_death['Year'].notnull()]",
+      "fatal_counts = df_death.groupby(['Year','Death Mission Flag']).size().unstack(fill_value=0).sort_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf_death = df[df['Death Date'].notnull()].copy()\ndf_death['Death Mission Flag'] = df_death['Death Mission'].notnull()\ndf_death = df_death[df_death['Year'].notnull()]\nfatal_counts = df_death.groupby(['Year','Death Mission Flag']).size().unstack(fill_value=0).sort_index()\ncmap = mpl.colormaps['tab10']\nplt.figure(figsize=(10,5))\nyears = fatal_counts.index.astype(int)\nplt.bar(years, fatal_counts[False], color=cmap(1), label='Non-Mission Fatalities')\nplt.bar(years, fatal_counts[True], bottom=fatal_counts[False], color=cmap(0), label='Mission Fatalities')\nplt.xlabel('Astronaut Selection Year')\nplt.ylabel('Number of Astronaut Fatalities')\nplt.title('Astronaut Fatalities by Selection Year\\nMission vs Non-Mission Deaths')\nplt.legend()\nplt.grid(axis='y', linestyle='--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

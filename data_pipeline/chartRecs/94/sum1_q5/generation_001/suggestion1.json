@@ -1,0 +1,42 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "During which years did the fertility rate experience its most significant decline, and what was the impact on population growth?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Dual Line/Area Chart",
+      "design_rationale": "This chart overlays the trend of Fertility Rate (average children per woman) with Yearly % Change in Population across years. Using a dual-axis format, the viewer can directly compare how steep declines in fertility rate are related to changes in annual population growth rates. The area plot highlights the cumulative effect on population growth, while the line plot accentuates the steep drops in fertility.",
+      "target_insight": "Highlights the periods when fertility rate dropped most sharply and visually links these changes to corresponding declines in population growth rates—allowing easy identification of causative trends.",
+      "output_fields": [
+        "Year",
+        "Fertility Rate",
+        "Yearly % Change"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": {
+          "primary": "Fertility Rate",
+          "secondary": "Yearly % Change"
+        },
+        "color": "Distinct color for each y-axis: Fertility Rate (blue), Yearly % Change (orange)",
+        "size": null,
+        "other_aesthetics": "Primary y-axis: Fertility Rate (bold line). Secondary y-axis: Yearly % Change (filled area). Axis labels, gridlines, and title."
+      }
+    },
+    "transformations": [
+      "Convert 'Yearly % Change' from string to float for plotting.",
+      "Ensure 'Fertility Rate' and 'Year' are float/int for plotting.",
+      "Order data by 'Year' ascending."
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "df.sort_values('Year', inplace=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\94.csv\")\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\ndf.sort_values('Year', inplace=True)\nfig, ax1 = plt.subplots(figsize=(10,6))\nax1.plot(df['Year'], df['Fertility Rate'], color='royalblue', marker='o', linewidth=2, label='Fertility Rate')\nax1.set_xlabel('Year', fontsize=12)\nax1.set_ylabel('Fertility Rate', fontsize=12, color='royalblue')\nax1.tick_params(axis='y', labelcolor='royalblue')\nax2 = ax1.twinx()\nax2.fill_between(df['Year'], df['Yearly % Change'], color='orange', alpha=0.3, label='Yearly % Change')\nax2.set_ylabel('Yearly % Change', fontsize=12, color='orange')\nax2.tick_params(axis='y', labelcolor='orange')\nax1.grid(True, linestyle='--', alpha=0.5)\nplt.title('Fertility Rate and Population Growth: 1955-2024\\nMajor Declines and Their Impact', fontsize=14)\nlines, labels = ax1.get_legend_handles_labels()\nlines2, labels2 = ax2.get_legend_handles_labels()\nplt.legend(lines + lines2, labels + labels2, loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

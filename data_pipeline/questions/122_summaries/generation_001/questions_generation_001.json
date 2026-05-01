@@ -1,0 +1,95 @@
+{
+  "table_name": "Video Game Sales",
+  "generation_dir": "secondIter\\summaries\\122_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: Video_Game_Sales (16,598 rows × 11 columns)\n\n### Description\nData loaded from CSV file: 122.csv (Dataset: Video Game Sales)\n\n### Schema (11 fields)\n  - Rank -- type: int64, values: 1, 2, 3, 4, 5, ..., 16596, 16597, 16598, 16599, 16600\n  - Name -- type: object, values: '98 Koshien, .hack//G.U. Vol.1//Rebirth, .hack//G.U. Vol.2//Reminisce, .hack//G.U. Vol.2//Reminisce (jp sales), .hack//G.U. Vol.3//Redemption, ..., thinkSMART: Chess for Kids, uDraw Studio, uDraw Studio: Instant Artist, wwe Smackdown vs. Raw 2006, ¡Shin Chan Flipa en colores!\n  - Platform -- type: object, values: 2600, 3DO, 3DS, DC, DS, ..., Wii, WiiU, X360, XB, XOne\n  - Year -- type: float64, values: nan, nan, nan, nan, nan, ..., nan, nan, nan, nan, nan\n  - Genre -- type: object, values: Action, Adventure, Fighting, Misc, Platform, ..., Role-Playing, Shooter, Simulation, Sports, Strategy\n  - Publisher -- type: object, values: RED Entertainment, Cygames, Performance Designed Products, Angel Studios, ArtDink, ..., Focus Home Interactive, NCS, MLB.com, Nippon Ichi Software, Microids\n  - NA_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 15.85, 23.2, 26.93, 29.08, 41.49\n  - EU_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 9.27, 11.0, 11.01, 12.88, 29.02\n  - JP_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 6.04, 6.5, 6.81, 7.2, 10.22\n  - Other_Sales -- type: float64, values: 0.0, 0.01, 0.02, 0.03, 0.04, ..., 3.31, 4.14, 7.53, 8.46, 10.57\n  - Global_Sales -- type: float64, values: 0.01, 0.02, 0.03, 0.04, 0.05, ..., 31.37, 33.0, 35.82, 40.24, 82.74\n\n### Sample Data (first 5 rows)\n```\n   Rank                      Name Platform    Year         Genre Publisher  NA_Sales  EU_Sales  JP_Sales  Other_Sales  Global_Sales\n0     1                Wii Sports      Wii  2006.0        Sports  Nintendo     41.49     29.02      3.77         8.46         82.74\n1     2         Super Mario Bros.      NES  1985.0      Platform  Nintendo     29.08      3.58      6.81         0.77         40.24\n2     3            Mario Kart Wii      Wii  2008.0        Racing  Nintendo     15.85     12.88      3.79         3.31         35.82\n3     4         Wii Sports Resort      Wii  2009.0        Sports  Nintendo     15.75     11.01      3.28         2.96         33.00\n4     5  Pokemon Red/Pokemon Blue       GB  1996.0  Role-Playing  Nintendo     11.27      8.89     10.22         1.00         31.37\n```\n",
+  "table_metadata": {
+    "total_rows": 16598,
+    "total_columns": 11,
+    "source_file": "csv_c2_sec\\122.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Video_Game_Sales",
+      "summary_idx": 1,
+      "column_combination": [
+        "Rank",
+        "Name",
+        "Platform",
+        "Year",
+        "Genre",
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales",
+        "Global_Sales"
+      ],
+      "questions": [
+        "How do global sales differ across platforms, and which platforms consistently lead in overall sales?",
+        "What sales patterns are visible across genres in different sales regions, such as NA_Sales versus JP_Sales?",
+        "Which publishers have the highest concentration of top-ranked games, and how does their global sales performance compare?",
+        "How have platform-specific sales changed over time, especially highlighting any emerging or declining platforms?",
+        "Are there genres that dominate global sales in specific years, suggesting shifts in market demand or player preferences?",
+        "What is the relationship between publisher activity and global sales success for genres like Action or Sports?",
+        "Which region (NA, EU, JP, Other) shows the greatest variation in sales across major publishers?",
+        "How do the sales distributions of a single genre differ among platforms, indicating platform-genre strengths or gaps?",
+        "Are there significant outliers in global sales within certain genres that suggest unique successes or anomalies?",
+        "What are the top games by global sales for each platform, and how do their rankings differ across sales regions?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 16598,
+          "total_columns": 11,
+          "source_file": "csv_c2_sec\\122.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "Video_Game_Sales",
+      "summary_idx": 2,
+      "column_combination": [
+        "Rank",
+        "Name",
+        "Platform",
+        "Year",
+        "Genre",
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales",
+        "Global_Sales"
+      ],
+      "questions": [
+        "How does the popularity of different game genres change across regions such as North America, Europe, and Japan?",
+        "What trends can be observed in overall sales for specific genres over time?",
+        "Are there any publishers whose games consistently perform well in a particular region compared to others?",
+        "Which platforms have the highest global sales for action games, and do these preferences differ by region?",
+        "How do sales in Japan for role-playing games compare to sales in North America for the same genre?",
+        "What are the top selling games in Europe, and what genres do they belong to?",
+        "Are there any years where certain genres experience a significant spike or drop in global sales?",
+        "Does the distribution of sales for sports games in North America differ from that in other regions?",
+        "Are there any outliers in genre sales within specific markets, such as unusually high sales figures?",
+        "How does the regional sales performance of games published by major publishers compare to those published by smaller companies?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 16598,
+          "total_columns": 11,
+          "source_file": "csv_c2_sec\\122.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

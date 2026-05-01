@@ -1,0 +1,38 @@
+{
+  "table_name": "269",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which countries rank in the top 10 for 2023 population, and on which continents are they located?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar chart with continent-based color coding",
+      "design_rationale": "A horizontal bar chart provides an immediate visual ranking of the top 10 most populous countries. Coloring bars by continent offers at-a-glance understanding of which continents dominate global population rankings, while keeping the chart uncluttered for the overview-style data. The distinct color mapping by 'continent' encodes geographic information directly, supporting categorical visual comparison.",
+      "target_insight": "Which countries have the highest 2023 population, and which continents those countries represent.",
+      "output_fields": [
+        "country",
+        "2023 population",
+        "continent"
+      ],
+      "chart_encodings": {
+        "x": "'2023 population'",
+        "y": "'country'",
+        "color": "'continent' (discrete colors)",
+        "size": null,
+        "other_aesthetics": "Sort bars by population descending, annotate population values at end of bars"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['rank'] <= 10",
+      "Sort rows by df['2023 population'] descending"
+    ],
+    "data_preparation_steps": [
+      "df_top10 = df[df['rank'] <= 10]",
+      "df_top10 = df_top10.sort_values(by='2023 population', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf_top10 = df[df['rank'] <= 10]\ndf_top10 = df_top10.sort_values(by='2023 population', ascending=False)\ncontinent_order = df_top10['continent'].unique()\ncontinent_lut = {c: i for i, c in enumerate(continent_order)}\ncolors = mpl.colormaps['tab10'].resampled(len(continent_order)).colors\nbar_colors = [colors[continent_lut[cont]] for cont in df_top10['continent']]\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(df_top10['country'], df_top10['2023 population'], color=bar_colors, edgecolor='black')\nfor i, (bar, value) in enumerate(zip(bars, df_top10['2023 population'])):\n    ax.text(value + max(df_top10['2023 population']) * 0.01, bar.get_y() + bar.get_height()/2,\n            f'{value:,}', va='center', ha='left', fontsize=10)\nhandles = [mpl.patches.Patch(color=colors[continent_lut[cont]], label=cont) for cont in continent_order]\nax.legend(handles=handles, title='Continent', loc='lower right', frameon=False)\nax.set_xlabel('2023 Population')\nax.set_ylabel('Country')\nax.set_title('Top 10 Countries by 2023 Population\\nColored by Continent')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

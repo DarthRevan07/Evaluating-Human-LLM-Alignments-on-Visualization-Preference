@@ -1,0 +1,36 @@
+{
+  "table_name": "75",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do average math scores differ between students who completed the test preparation course versus those who did not?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart (Grouped Mean Comparison)",
+      "design_rationale": "A grouped bar chart is a direct and visually effective way to compare the average math scores between students who completed the test preparation course and those who did not. Because 'test preparation course' has only two unique values, a bar chart provides strong clarity for this binary comparison. This chart succinctly answers the question while making the difference in means immediately perceptible. The approach leverages the numeric nature of 'math score' and uses aggregation for robust summary.",
+      "target_insight": "Visual comparison of the average math scores between the two test preparation groups; highlights the absolute difference and whether test preparation corresponds to higher math scores.",
+      "output_fields": [
+        "test preparation course",
+        "math score"
+      ],
+      "chart_encodings": {
+        "x": "test preparation course",
+        "y": "mean math score",
+        "color": "test preparation course (distinct colors for each bar)",
+        "size": null,
+        "other_aesthetics": "value labels above bars, gridlines for readability"
+      }
+    },
+    "transformations": [
+      "Group df by 'test preparation course'",
+      "Aggregate mean of 'math score' for each group"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('test preparation course')['math score'].mean().reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ndf_grouped = df.groupby('test preparation course')['math score'].mean().reset_index()\ncolors = ['#4f81bd', '#c0504d']\nfig, ax = plt.subplots(figsize=(7, 5))\nbars = ax.bar(df_grouped['test preparation course'], df_grouped['math score'], color=colors)\nfor idx, bar in enumerate(bars):\n    height = bar.get_height()\n    ax.text(bar.get_x() + bar.get_width()/2, height + 1, f'{height:.1f}', ha='center', va='bottom', fontsize=12)\nax.set_ylabel('Average math score', fontsize=13)\nax.set_xlabel('Test preparation course', fontsize=13)\nax.set_title('Average Math Score by Test Preparation Course\\n', fontsize=15, fontweight='bold')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

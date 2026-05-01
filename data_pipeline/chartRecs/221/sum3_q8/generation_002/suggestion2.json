@@ -1,0 +1,42 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Are there any destinations that predominantly attract travelers of a specific nationality?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides a compact overview of all destinations and nationalities. It visually encodes the intensity of traveler counts for each nationality-destination pair, so destinations highly concentrated with one nationality appear as bright blocks along rows. This approach leverages the categorical and moderate cardinality structure, and enables spotting predominance patterns across the whole dataset.",
+      "target_insight": "Sharp, bright squares reveal destinations with overwhelming representation from a single nationality.",
+      "output_fields": [
+        "Destination",
+        "Traveler nationality",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Traveler nationality",
+        "y": "Destination",
+        "color": "Count of 'Trip ID' (color intensity)",
+        "size": null,
+        "other_aesthetics": "Colormap (Sequential), colorbar for scale"
+      }
+    },
+    "transformations": [
+      "Drop rows with null values in 'Destination' or 'Traveler nationality'",
+      "Count trips grouped by both 'Destination' and 'Traveler nationality'",
+      "Pivot to create a matrix with destinations as rows and nationalities as columns (counts as values)"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Destination', 'Traveler nationality'])",
+      "df_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()",
+      "df_matrix = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)",
+      "Select top 15 destinations by total number of travelers for clarity",
+      "df_heat = df_matrix.loc[df_matrix.sum(axis=1).nlargest(15).index]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Traveler nationality'])\ndf_group = df_clean.groupby(['Destination', 'Traveler nationality'])['Trip ID'].count().reset_index()\ndf_matrix = df_group.pivot(index='Destination', columns='Traveler nationality', values='Trip ID').fillna(0)\ndest_top15 = df_matrix.sum(axis=1).nlargest(15).index\ndf_heat = df_matrix.loc[dest_top15]\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(14, 9))\nheatmap = ax.imshow(df_heat.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(df_heat.columns)))\nax.set_yticks(np.arange(len(df_heat.index)))\nax.set_xticklabels(df_heat.columns, rotation=45, ha='right')\nax.set_yticklabels(df_heat.index)\nax.set_xlabel('Traveler nationality')\nax.set_ylabel('Destination')\nax.set_title('Traveler Nationality Heatmap Across Destinations\\n(Intensity = Number of Travelers)')\ncbar = fig.colorbar(heatmap, ax=ax, label='Number of Travelers')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

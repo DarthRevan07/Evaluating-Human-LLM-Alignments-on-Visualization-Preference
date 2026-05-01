@@ -1,0 +1,39 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Is there a significant difference in Attack between Pokémon of different primary types (Type 1)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "Boxplots are ideal for visualizing the spread and distribution of a numerical variable across distinct categories. With 18 categorical types in 'Type 1', this approach makes it easy to visually compare the typical range, median, and outliers in Attack values for each primary type, highlighting if certain types have significantly higher or lower Attack stats. Unlike bar charts, boxplots reveal not only averages but also variability and the presence of extreme values, crucial for understanding 'significance' in statistical distributions.",
+      "target_insight": "Which primary types have higher median and spread in Attack, and whether there are types with unusually high or low Attack distributions or notable outliers.",
+      "output_fields": [
+        "Type 1",
+        "Attack"
+      ],
+      "chart_encodings": {
+        "x": "Type 1 (categorical, sorted by median Attack descending)",
+        "y": "Attack (numeric stat distribution)",
+        "color": "Type 1 (distinct color per box, using categorical palette)",
+        "size": "null",
+        "other_aesthetics": "Show outliers, grid lines, rotated x axis labels for readability, adjust box width, set title and subtitle"
+      }
+    },
+    "transformations": [
+      "Group by 'Type 1' and extract all 'Attack' values for each group",
+      "Sort 'Type 1' categories by the median 'Attack' statistic in descending order"
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c2_sec\\16.csv",
+      "For each 'Type 1' value, retrieve all corresponding 'Attack' values",
+      "Order the 'Type 1' categories by their median 'Attack', descending",
+      "Build a list of lists for boxplot input ordered by sorted categories"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ngroups = df.groupby(\"Type 1\")\nmedians = groups[\"Attack\"].median().sort_values(ascending=False)\ntype1_order = medians.index.tolist()\ndata = [df[df[\"Type 1\"] == t][\"Attack\"].values for t in type1_order]\nplt.figure(figsize=(15, 7))\ncmap = mpl.colormaps[\"tab20\"]\nbox_colors = [cmap(i) for i in range(len(type1_order))]\nbox = plt.boxplot(data, patch_artist=True, labels=type1_order, showfliers=True, boxprops=dict(linewidth=1.2))\nfor patch, color in zip(box[\"boxes\"], box_colors):\n    patch.set_facecolor(color)\nplt.xticks(rotation=45, ha=\"right\")\nplt.ylabel(\"Attack\")\nplt.xlabel(\"Type 1\")\nplt.title(\"Distribution of Attack Stats by Primary Pokémon Type\\nSorted by Median Attack\")\nplt.grid(axis=\"y\", ls=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

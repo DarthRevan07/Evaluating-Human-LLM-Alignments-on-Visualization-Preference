@@ -1,0 +1,43 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there any countries where the agriculture, industry, and services sectors contribute almost equally to GDP, based on their % contributions?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter plot with color encoding",
+      "design_rationale": "A scatter plot can visually depict, for each country, the three sector % contributions. By plotting the difference between the maximum and minimum sector % contributions on the y-axis versus countries (as discrete points on x), we can highlight those countries where contributions are closest (i.e., the smallest difference) and thus nearly equal. Color intensity can encode how close to equality the sectors are, aiding rapid identification across the set of 230 countries. This approach is scalable and compares all countries at a glance.",
+      "target_insight": "Identifies countries where the GDP sector contributions are nearly equal, by visualizing the spread and coloring based on lowest maximum-minimum difference.",
+      "output_fields": [
+        "Country/Economy",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Country/Economy",
+        "y": "max-min difference between sector % contributions",
+        "color": "max-min difference (continuous colormap as indicator of equality)",
+        "size": null,
+        "other_aesthetics": "y axis sorted ascending; labels for countries with particularly low difference"
+      }
+    },
+    "transformations": [
+      "Convert 'Agriculture Sector GDP of % Contribution', 'Industry%ofGDP', and 'Services%ofGDP' to numeric values (handling '%' and missing values).",
+      "For each country, compute the maximum and minimum sector % contribution and calculate their difference.",
+      "Filter out countries with missing or invalid sector % contributions.",
+      "Sort countries by this max-min difference ascending for visual focus on those closest to equality."
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'], df['Industry%ofGDP'], and df['Services%ofGDP'] are cleaned and converted to float.",
+      "For each row, difference = max([Agriculture, Industry, Services]) - min([Agriculture, Industry, Services])",
+      "Create a new dataframe with country name and difference, dropping rows with NaN values.",
+      "Sort the dataframe ascending by difference; reset index for plotting."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\1.csv\")\ndef parse_percent(s):\n    try:\n        return float(str(s).replace('%',''))\n    except:\n        return np.nan\ndf['Agriculture_pct'] = df['Agriculture Sector GDP of % Contribution'].apply(parse_percent)\ndf['Industry_pct'] = df['Industry%ofGDP'].apply(parse_percent)\ndf['Services_pct'] = df['Services%ofGDP'].apply(parse_percent)\ndf['sector_diff'] = df[['Agriculture_pct','Industry_pct','Services_pct']].apply(lambda row: np.nan if row.isnull().any() else np.max(row)-np.min(row), axis=1)\ndf_plot = df[['Country/Economy','sector_diff']].dropna().sort_values('sector_diff').reset_index(drop=True)\nfig, ax = plt.subplots(figsize=(12, 6))\ncmap = mpl.colormaps['viridis']\ncolors = cmap(df_plot['sector_diff'] / df_plot['sector_diff'].max())\nscatter = ax.scatter(range(len(df_plot)), df_plot['sector_diff'], c=df_plot['sector_diff'], cmap=cmap, edgecolors='black', s=60)\nax.set_xticks(np.arange(0,len(df_plot),10))\nax.set_xticklabels(df_plot['Country/Economy'][::10], rotation=45, ha='right')\nax.set_ylabel('Max-Min Sector % Contribution')\nax.set_xlabel('Country/Economy')\nax.set_title('Countries by Equality of Agriculture, Industry, and Services GDP Sector %\\nDarker color = more equal sector contributions')\ncbar = plt.colorbar(scatter, ax=ax)\ncbar.set_label('Max-Min Sector % Difference')\nfor i in df_plot.index[:5]:\n    ax.text(i, df_plot['sector_diff'][i]+0.5, df_plot['Country/Economy'][i], fontsize=9, color='black', ha='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

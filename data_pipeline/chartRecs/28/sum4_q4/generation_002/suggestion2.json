@@ -1,0 +1,39 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Do certain car colors command higher prices compared to others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Price Distribution by Color)",
+      "design_rationale": "The boxplot visualizes the spread and skewness of prices for each color, revealing not just central tendency but also variation and presence of outliers. This approach leverages both numeric ('Price') and categorical ('Color') features and is robust to non-normality. It offers a richer answer: Do certain car colors have consistently higher prices, or are they simply more volatile? Outlier visualization helps identify colors tied to luxury markets versus common segments.",
+      "target_insight": "Exposes the price range, the presence of luxury outliers, and distribution for each car color, not just the mean, probing deeper into whether certain colors consistently command higher prices or only do so occasionally.",
+      "output_fields": [
+        "Color",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Color",
+        "y": "Price (distribution per color)",
+        "color": "Color (distinct for each boxplot box)",
+        "size": null,
+        "other_aesthetics": "Show outlier points, customize box face color, rotate x tick labels for readability"
+      }
+    },
+    "transformations": [
+      "Filter extreme price outliers for meaningful visualization (optional, e.g., exclude top 1% of prices)",
+      "Sort colors by median price for clean ordering",
+      "Prepare price lists per color for boxplot input"
+    ],
+    "data_preparation_steps": [
+      "price_limit = np.percentile(df['Price'], 99)\ndf_filtered = df[df['Price'] <= price_limit]",
+      "color_order = df_filtered.groupby('Color')['Price'].median().sort_values(ascending=False).index.tolist()",
+      "price_data = [df_filtered[df_filtered['Color']==col]['Price'].values for col in color_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\nprice_limit = np.percentile(df['Price'], 99)\ndf_filtered = df[df['Price'] <= price_limit]\ncolor_order = df_filtered.groupby('Color')['Price'].median().sort_values(ascending=False).index.tolist()\nprice_data = [df_filtered[df_filtered['Color']==col]['Price'].values for col in color_order]\ncmap = mpl.colormaps['tab20'].resampled(len(color_order))\nfig, ax = plt.subplots(figsize=(12,7))\nbox = ax.boxplot(price_data, patch_artist=True, labels=color_order, showfliers=True)\nfor patch, i in zip(box['boxes'], range(len(color_order))):\n    patch.set_facecolor(cmap(i))\nax.set_xlabel('Color', fontsize=12)\nax.set_ylabel('Price', fontsize=12)\nax.set_title('Car Price Distribution by Color\\nAre some colors consistently more expensive?', fontsize=14)\nplt.xticks(rotation=45, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

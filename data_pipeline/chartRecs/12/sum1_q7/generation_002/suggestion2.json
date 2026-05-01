@@ -1,0 +1,40 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable difference in Perceptual Aptitude between Careers with strong analytical requirements and those that are more people-oriented?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot (facet by group with embedded density)",
+      "design_rationale": "Violin plots display the distribution shape and density of Perceptual Aptitude for each group, which highlights differences not just in summary statistics but in how scores cluster, skew, or spread. Faceting enhances clarity and exposes subtle comparative trends in distributions. This is more unconventional, and density curves can accentuate group-level tendencies.",
+      "target_insight": "Reveal whether analytical or people-oriented careers attract systematically higher or lower Perceptual Aptitude, or if distributions are similar, by visualizing the full score density for both groups.",
+      "output_fields": [
+        "Perceptual Aptitude",
+        "Career Group",
+        "Career"
+      ],
+      "chart_encodings": {
+        "x": "Career Group (Analytical / People-Oriented)",
+        "y": "Perceptual Aptitude (distribution)",
+        "color": "Group color (same as boxplot for comparison)",
+        "size": null,
+        "other_aesthetics": "Density curves, facet arrangement, grid"
+      }
+    },
+    "transformations": [
+      "Reuse or create 'Career Group' column by thresholds of 'Numerical Aptitude' and/or 'Abstract Reasoning' for 'Analytical'; otherwise 'People-Oriented'",
+      "Select 'Perceptual Aptitude' scores for each group to plot",
+      "No aggregation; plot the full distribution of scores for each group"
+    ],
+    "data_preparation_steps": [
+      "Ensure df['Career Group'] is present (from previous assignment using thresholds)",
+      "Extract Perceptual Aptitude for each group",
+      "Arrange the data as [analytical_values, people_oriented_values] for violin plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\12.csv')\n\nanalytical_cond = (df['Numerical Aptitude'] >= df['Numerical Aptitude'].mean()) | (df['Abstract Reasoning'] >= df['Abstract Reasoning'].mean())\ndf['Career Group'] = np.where(analytical_cond, 'Analytical', 'People-Oriented')\n\nperceptual_analytical = df[df['Career Group'] == 'Analytical']['Perceptual Aptitude']\nperceptual_people = df[df['Career Group'] == 'People-Oriented']['Perceptual Aptitude']\ndata_to_plot = [perceptual_analytical, perceptual_people]\n\nfig, ax = plt.subplots(figsize=(7,5))\nparts = ax.violinplot(data_to_plot, positions=[1,2], showextrema=True, showmeans=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(['#1f77b4', '#ff7f0e'][i])\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.7)\n\nax.set_xticks([1,2])\nax.set_xticklabels(['Analytical', 'People-Oriented'])\nax.set_ylabel('Perceptual Aptitude')\nax.set_xlabel('Career Group')\nax.set_title('Distribution of Perceptual Aptitude in Analytical vs People-Oriented Careers\\nViolin Plot with Density Representation')\nax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do stocks with larger intra-day price ranges (difference between High and Low) tend to also have higher trading volumes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Hexbin/2D density plot",
+      "design_rationale": "A hexbin plot visualizes the density and distribution of points in the (Range, Volume) space, ideal for small-medium datasets. This allows us to see clusters of stocks with similar trading activity and volatility, as well as outliers (e.g. extremely high range or volume). The grid approach emphasizes patterns, making it easier to spot concentration zones or whether higher price ranges coincide with high volume 'hotspots'. Color shows count per bin, highlighting the frequency of stock occurrences.",
+      "target_insight": "Uncovers whether high-range/high-volume stocks form dense clusters or are rare outliers, providing a broader statistical context of the relationship.",
+      "output_fields": [
+        "Symbol",
+        "High",
+        "Low",
+        "Volume (lacs)"
+      ],
+      "chart_encodings": {
+        "x": "'High' - 'Low'",
+        "y": "Volume (lacs)",
+        "color": "Count per hexbin",
+        "size": "null",
+        "other_aesthetics": "Hexbin grid, colorbar for bin frequency"
+      }
+    },
+    "transformations": [
+      "Convert df['High'] and df['Low'] to float",
+      "Compute intra-day price range as df['Range'] = df['High'] - df['Low']"
+    ],
+    "data_preparation_steps": [
+      "df['High'] = pd.to_numeric(df['High'], errors='coerce')",
+      "df['Low'] = pd.to_numeric(df['Low'], errors='coerce')",
+      "df['Range'] = df['High'] - df['Low']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['High'] = pd.to_numeric(df['High'], errors='coerce')\ndf['Low'] = pd.to_numeric(df['Low'], errors='coerce')\ndf['Range'] = df['High'] - df['Low']\ncmap = mpl.colormaps['plasma']\nfig, ax = plt.subplots(figsize=(8,6))\nhexplot = ax.hexbin(df['Range'], df['Volume (lacs)'], gridsize=15, cmap=cmap, mincnt=1)\nax.set_xlabel('Intra-Day Price Range (High - Low)')\nax.set_ylabel('Trading Volume (lacs)')\ntitle_text = 'Hexbin Density of NIFTY-50 Stocks\\n'\nsubtitle_text = '(How intra-day price swings relate to trading activity: frequency per bin)'\nax.set_title(title_text + subtitle_text)\ncbar = plt.colorbar(hexplot, ax=ax)\ncbar.set_label('Number of stocks per hexbin')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

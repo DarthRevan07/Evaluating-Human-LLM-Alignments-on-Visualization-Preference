@@ -1,0 +1,38 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable trend in property prices based on the number of stories?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot visualizes the distribution of property prices for each unique 'stories' value. This approach exposes not only the central tendency (median) but also variability, outliers, and skew for each story group, allowing an immediate and nuanced comparison across property vertical sizes. Given that 'stories' is discrete (1-4) and 'price' spans a wide range, boxplots are effective for showing both trend and spread.",
+      "target_insight": "Are higher-story homes significantly more expensive, and is there a consistent or variable price premium as the number of stories increases?",
+      "output_fields": [
+        "stories",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "stories",
+        "y": "price",
+        "color": "stories (distinct colors per box)",
+        "size": null,
+        "other_aesthetics": "box fill by stories; alpha=0.8; show median, quartiles, whiskers, and outliers"
+      }
+    },
+    "transformations": [
+      "Group df by 'stories', collect 'price' into arrays",
+      "Sort 'stories' for consistent box order"
+    ],
+    "data_preparation_steps": [
+      "Extract unique sorted values of df['stories']",
+      "For each 'stories' value, extract df['price']",
+      "Arrange price arrays per stories for boxplot input"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\206.csv')\nstory_groups = sorted(df['stories'].unique())\nprice_data = [df[df['stories'] == s]['price'].values for s in story_groups]\nfig, ax = plt.subplots(figsize=(8,6))\ncmap = mpl.colormaps['viridis'].resampled(len(story_groups))\nbox = ax.boxplot(price_data, patch_artist=True, labels=story_groups)\nfor patch, color in zip(box['boxes'], cmap.colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.8)\nax.set_xlabel('stories')\nax.set_ylabel('price')\nax.set_title('Distribution of Property Prices by Number of Stories')\nax.grid(axis='y', linestyle='--', alpha=0.4)\nfor median in box['medians']:\n    median.set_color('black')\nax.set_xticks(np.arange(1, len(story_groups)+1))\nax.set_xticklabels([str(s) for s in story_groups])\ncbar_ax = fig.add_axes([0.82, 0.37, 0.03, 0.26])\nnorm = mpl.colors.Normalize(vmin=min(story_groups), vmax=max(story_groups))\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = fig.colorbar(sm, cax=cbar_ax, ticks=story_groups)\ncbar_ax.set_yticklabels([str(s) for s in story_groups])\ncbar.set_label('stories', rotation=90)\nplt.tight_layout(rect=(0,0,0.8,1))\nplt.show()"
+  },
+  "schema_based": true
+}

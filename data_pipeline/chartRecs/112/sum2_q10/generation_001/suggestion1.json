@@ -1,0 +1,37 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "How do average caffeine contents compare across drink types, and what might this indicate about consumer preferences?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Mean Caffeine per Drink Type)",
+      "design_rationale": "A horizontal bar chart quickly reveals which drink types have the highest average caffeine contents, utilizing 'type' (categorical, few unique values) for direct comparison. This approach provides a clear overview, leveraging the summary power of bar charts while maximizing legibility. By sorting bars from highest to lowest, we make evident any outliers and facilitate direct interpretation. Color accentuates caffeine level, linking aesthetic elements to stimulant potency.",
+      "target_insight": "Which drink types deliver the most caffeine on average, highlighting consumer preference patterns for stimulants and potential health-related choices.",
+      "output_fields": [
+        "type",
+        "Caffeine (mg)"
+      ],
+      "chart_encodings": {
+        "x": "Mean Caffeine (mg) per type",
+        "y": "type",
+        "color": "Caffeine level (continuous, mapped by mean)",
+        "size": null,
+        "other_aesthetics": "Bars sorted descending, colorbar shows caffeine magnitude"
+      }
+    },
+    "transformations": [
+      "Group by df['type'] and compute mean of df['Caffeine (mg)']",
+      "Sort the resulting means in descending order"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('type')['Caffeine (mg)'].mean().sort_values(ascending=False).reset_index()",
+      "Assign caffeine_mean = df_grouped['Caffeine (mg)'] and types = df_grouped['type']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_grouped = df.groupby('type')['Caffeine (mg)'].mean().sort_values(ascending=False).reset_index()\ncaffeine_mean = df_grouped['Caffeine (mg)']\ntypes = df_grouped['type']\ncmap = mpl.colormaps['viridis']\nnorm = plt.Normalize(caffeine_mean.min(), caffeine_mean.max())\nfig, ax = plt.subplots(figsize=(8, 5))\nbar_colors = cmap(norm(caffeine_mean))\nax.barh(types, caffeine_mean, color=bar_colors, edgecolor='black')\nax.set_xlabel('Mean Caffeine (mg)')\nax.set_ylabel('Drink Type')\nax.set_title('Average Caffeine Content by Drink Type\\n(Bar length and color represent stimulant potency)')\nax.invert_yaxis()\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\ncbar = fig.colorbar(sm, ax=ax, orientation='vertical', label='Mean Caffeine (mg)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,46 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which countries had the highest total methane emissions in 2018, and how does this compare to their values in 1990?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Slopegraph (Line Chart for Top Countries)",
+      "design_rationale": "A slopegraph displays the 1990 and 2018 methane emissions for each of the highest emitters as paired dots connected by lines. The slope (direction and length) clearly shows which countries increased or decreased, and the absolute values/order at both time points. Labels on both ends ensure interpretability; thin colored lines per country keep it uncluttered. This leverages the limited years to maximize comparative visual storytelling.",
+      "target_insight": "Directly compares starting and ending emissions for each top emitter, making increases/decreases immediately visible, and allows for quick ranking and change magnitude assessment.",
+      "output_fields": [
+        "Country",
+        "1990",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (two points: 1990, 2018)",
+        "y": "Methane emissions (MTCO2e) value",
+        "color": "Unique color per country",
+        "size": null,
+        "other_aesthetics": "Line connects country values; country name labels at both endpoints"
+      }
+    },
+    "transformations": [
+      "Aggregate to one row per country summing '1990' and '2018' (if necessary; or filter to 'Total' sector)",
+      "Drop rows where 'Country' is a region/global/aggregate and where '1990' is null",
+      "Select top 8 countries by 2018 totals, to avoid clutter",
+      "Transform dataframe to long format: one row per country per year",
+      "Sort for visual clarity by 2018 value"
+    ],
+    "data_preparation_steps": [
+      "df_total = df.copy()",
+      "If 'Sector' has 'Total', filter to just those rows; else groupby 'Country' and sum '1990' and '2018'",
+      "Filter out region/global/aggregate entries from 'Country' using similar logic as suggestion 1",
+      "Drop rows where '1990' is null",
+      "Get top 8 countries by '2018' value",
+      "melt dataframe so 'year' is a variable and 'value' is emission",
+      "Sort for visual clarity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nif 'Total' in [x.lower() for x in df['Sector'].unique()]:\n    df_total = df[df['Sector'].str.lower() == 'total'].copy()\nelse:\n    df_total = df.groupby('Country', as_index=False)[['2018','1990']].sum()\nglob_region_keywords = ['world', 'europe', 'asia', 'africa', 'america', 'oceania', 'income', 'union', 'caribbean', 'pacific']\ncountry_mask = df_total['Country'].apply(lambda x: all(k not in x.lower() for k in glob_region_keywords))\ndf_total = df_total[country_mask]\ndf_total = df_total[df_total['1990'].notnull()]\ndf_top = df_total.sort_values('2018', ascending=False).head(8)\ndf_melt = df_top.melt(id_vars=['Country'], value_vars=['1990','2018'], var_name='Year', value_name='Emissions')\nyears = ['1990', '2018']\ncountries = df_top.sort_values('2018', ascending=False)['Country'].values\nfig, ax = plt.subplots(figsize=(7,6))\ncmap = mpl.colormaps['tab10']\ncountry_colors = {c: cmap(i) for i, c in enumerate(countries)}\nfor country in countries:\n    data = df_melt[df_melt['Country'] == country]\n    xs = [0,1]\n    ys = [data[data['Year'] == y]['Emissions'].values[0] for y in years]\n    ax.plot(xs, ys, marker='o', label=country, color=country_colors[country], linewidth=2, alpha=0.9)\n    ax.text(-0.05, ys[0], f\"{country} {ys[0]:.1f}\", ha='right', va='center', color=country_colors[country], fontsize=10)\n    ax.text(1.05, ys[1], f\"{ys[1]:.1f}\", ha='left', va='center', color=country_colors[country], fontsize=10)\nax.set_xlim(-0.2,1.2)\nax.set_xticks([0,1], years)\nax.set_ylabel('Methane emissions (MTCO2e)')\nax.set_title('Change in Methane Emissions (Top 8 Countries)\\n1990 vs 2018', fontsize=14)\nax.grid(axis='y', alpha=0.4, linestyle='--')\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nax.legend(loc='center left', bbox_to_anchor=(1.01, 0.5), frameon=False, title='Country')\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

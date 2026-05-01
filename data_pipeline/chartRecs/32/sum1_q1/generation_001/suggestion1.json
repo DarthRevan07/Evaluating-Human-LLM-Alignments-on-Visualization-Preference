@@ -1,0 +1,38 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do average medical charges differ between smokers and non-smokers across various regions?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart gives a concise comparative overview of mean medical charges, separating smokers and non-smokers for each region. It leverages the categorical structure of 'region' and 'smoker', as well as the numeric aggregation of 'charges'. By displaying bars side-by-side, viewers instantly grasp charge differences within regions and across smoking status—making regional and lifestyle cost discrepancies easily interpretable.",
+      "target_insight": "This visualization reveals how medical charges for smokers and non-smokers compare within each region, showcasing both absolute and relative cost gaps across geographical areas.",
+      "output_fields": [
+        "region",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "charges (mean)",
+        "color": "smoker (smoker='yes' vs smoker='no')",
+        "size": null,
+        "other_aesthetics": "grouped bars, legend for smoker status, error bars for standard error"
+      }
+    },
+    "transformations": [
+      "Group df by 'region' and 'smoker', then compute mean and standard error of 'charges'",
+      "Reshape aggregated groups so smoker groups ('yes', 'no') are side-by-side for each region"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['region', 'smoker'])['charges'].agg(['mean', 'sem']).reset_index()",
+      "Pivot df_grouped to have 'smoker' columns (yes, no) for each region"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\32.csv')\ndf_grouped = df.groupby(['region', 'smoker'])['charges'].agg(['mean', 'sem']).reset_index()\npivot_df = df_grouped.pivot(index='region', columns='smoker', values='mean')\npivot_sem = df_grouped.pivot(index='region', columns='smoker', values='sem')\nregions = pivot_df.index.tolist()\nsmoker_types = ['no', 'yes']\nbar_width = 0.40\nx = np.arange(len(regions))\nfig, ax = plt.subplots(figsize=(9,6))\ncolors = ['#4C72B0', '#C7254E']\nfor idx, smoker_val in enumerate(smoker_types):\n    bar_pos = x + idx * bar_width\n    means = pivot_df[smoker_val].values\n    errors = pivot_sem[smoker_val].values\n    ax.bar(bar_pos, means, width=bar_width, label=f'Smoker: {smoker_val}', color=colors[idx], yerr=errors, capsize=6)\nax.set_xticks(x + bar_width/2)\nax.set_xticklabels(regions)\nax.set_xlabel('region')\nax.set_ylabel('mean charges')\nax.set_title('Average Medical Charges by Smoking Status Across Regions')\nax.legend(title='smoker')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,47 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Which alma maters have produced the highest number of NASA astronauts, and how does their representation vary across decades?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Matrix of Decade vs. Alma Mater)",
+      "design_rationale": "A heatmap enables visualization of representation across two dimensions—decades and alma maters—revealing temporal trends in astronaut selection from different institutions. By focusing on the top-producing alma maters (e.g. top 10), the matrix avoids clutter while showing not just overall magnitude but the evolution of institutional contribution over time. The decade binning leverages the wide range of years, and the intensity of each square encodes the count of astronauts, making patterns and shifts instantly visible. Color intensity helps direct the viewer’s attention to the most active periods for each institution.",
+      "target_insight": "How the representation of leading alma maters among NASA astronauts has changed and shifted across different decades, revealing trends and surges in institutional impact.",
+      "output_fields": [
+        "Alma Mater",
+        "Year",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Decade (derived from 'Year')",
+        "y": "Alma Mater (top 10 by total count)",
+        "color": "Count of astronauts (intensity per cell)",
+        "size": "null",
+        "other_aesthetics": "Colorbar, annotated counts per cell, grid lines for clarity"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing 'Alma Mater' or 'Year'",
+      "Convert 'Year' to integer, then bin into decades",
+      "Aggregate by both 'Alma Mater' and decade, counting astronauts selected per institution per decade",
+      "Identify top 10 alma maters by total representation",
+      "Pivot table to create matrix with alma maters as rows and decades as columns"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Alma Mater', 'Year'])",
+      "df['Year'] = df['Year'].astype(int)",
+      "df['Decade'] = (df['Year']//10)*10",
+      "alma_counts_total = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)",
+      "top10_alma = alma_counts_total.head(10).index.tolist()",
+      "df_top = df[df['Alma Mater'].isin(top10_alma)]",
+      "df_matrix = df_top.groupby(['Alma Mater', 'Decade'])['Name'].count().reset_index()",
+      "matrix = df_matrix.pivot(index='Alma Mater', columns='Decade', values='Name').fillna(0).astype(int)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf = df.dropna(subset=['Alma Mater', 'Year'])\ndf['Year'] = df['Year'].astype(int)\ndf['Decade'] = (df['Year']//10)*10\nalma_counts_total = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)\ntop10_alma = alma_counts_total.head(10).index.tolist()\ndf_top = df[df['Alma Mater'].isin(top10_alma)]\ndf_matrix = df_top.groupby(['Alma Mater', 'Decade'])['Name'].count().reset_index()\nmatrix = df_matrix.pivot(index='Alma Mater', columns='Decade', values='Name').fillna(0).astype(int)\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(matrix.values, aspect='auto', cmap=cmap)\ndecades = matrix.columns.tolist()\nalmas = matrix.index.tolist()\nax.set_xticks(np.arange(len(decades)))\nax.set_yticks(np.arange(len(almas)))\nax.set_xticklabels([str(dec) for dec in decades])\nax.set_yticklabels(almas)\nplt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')\nfor i in range(len(almas)):\n    for j in range(len(decades)):\n        count = matrix.values[i, j]\n        if count > 0:\n            ax.text(j, i, str(count), ha='center', va='center', color='white', fontsize=10)\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Astronaut Count per Decade')\nax.set_xlabel('Decade')\nax.set_ylabel('Alma Mater')\nax.set_title('NASA Astronaut Representation by Top Alma Maters Across Decades')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

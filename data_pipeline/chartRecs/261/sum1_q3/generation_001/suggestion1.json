@@ -1,0 +1,39 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Which alma maters have produced the highest number of NASA astronauts, and how does their representation vary across decades?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar chart",
+      "design_rationale": "A horizontal bar chart enables clear ranking of alma maters by their total count of NASA astronauts. With hundreds of unique institutions, it's efficient to spotlight those with the strongest representation and compare counts side-by-side. This chart provides an overview of the top-producing schools, allowing the audience to instantly gauge which alma maters dominate NASA astronaut alumni, and highlights concentration among elite institutions.",
+      "target_insight": "Identifies the schools that have produced the most NASA astronauts overall and quantifies their dominance.",
+      "output_fields": [
+        "Alma Mater",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Count of astronauts (computed from df['Name'])",
+        "y": "Alma Mater",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bars sorted by value descending; prominent axis labels; tight layout"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Alma Mater'] is null",
+      "Group by df['Alma Mater'], aggregate count of df['Name'], sort descending",
+      "Select top 15 alma maters for chart clarity"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Alma Mater'])",
+      "count_by_alma = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)",
+      "count_by_alma_top15 = count_by_alma.head(15)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf = df.dropna(subset=['Alma Mater'])\ncount_by_alma = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)\ncount_by_alma_top15 = count_by_alma.head(15)\nfig, ax = plt.subplots(figsize=(9,6))\nax.barh(count_by_alma_top15.index[::-1], count_by_alma_top15.values[::-1], color=\"royalblue\")\nax.set_xlabel(\"Number of NASA Astronauts\")\nax.set_ylabel(\"Alma Mater (Top 15)\")\nax.set_title(\"Top 15 Alma Maters Producing NASA Astronauts (1959-Present)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

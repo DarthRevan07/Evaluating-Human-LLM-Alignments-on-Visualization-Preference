@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does citympg differ across the various fueltype categories?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot with Individual Data Points Overlay",
+      "design_rationale": "Violin plots show the kernel density estimation of citympg for each fueltype, giving a richer view of the distribution's shape (potential bimodality, skew, etc.), while overlaying individual data points offers insight into the spread and concentration. This unconventional chart highlights distributional differences, clustering of citympg values, and potential outlier structures more effectively than simple summary charts.",
+      "target_insight": "This visualization reveals the full distribution of citympg for each fueltype, including density, central tendency, and spread, as well as the location of each individual car within those distributions.",
+      "output_fields": [
+        "fueltype",
+        "citympg"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "citympg",
+        "color": "fueltype (discrete palette)",
+        "size": null,
+        "other_aesthetics": "violin shape, alpha blending on scatter, points jittered for visibility"
+      }
+    },
+    "transformations": [
+      "No aggregation; raw citympg values for each fueltype",
+      "Jitter individual points on x-axis for clarity"
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c_squared\\22.csv",
+      "Assign each car to its fueltype",
+      "Jitter individual points on x for scatter"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\nfueltypes = sorted(df[\"fueltype\"].unique())\ndata_to_plot = [df[df[\"fueltype\"] == ft][\"citympg\"].values for ft in fueltypes]\nfig, ax = plt.subplots(figsize=(8, 6))\nax.violinplot(data_to_plot, positions=[0, 1], widths=0.6, showmeans=False, showmedians=True, showextrema=True)\ncolors = [\"#006d2c\", \"#41b6c4\"]\nfor i, ft in enumerate(fueltypes):\n    y = df[df[\"fueltype\"] == ft][\"citympg\"].values\n    x = np.random.normal(loc=i, scale=0.08, size=len(y))\n    ax.scatter(x, y, alpha=0.35, color=colors[i], edgecolor=\"none\", s=40, label=ft)\nax.set_xticks([0, 1])\nax.set_xticklabels(fueltypes)\nax.set_xlabel(\"fueltype\")\nax.set_ylabel(\"citympg\")\nax.set_title(\"citympg Distribution and Raw Values by fueltype\\n(Violin Plot + Points)\")\nplt.legend(title=\"fueltype\", loc=\"upper right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

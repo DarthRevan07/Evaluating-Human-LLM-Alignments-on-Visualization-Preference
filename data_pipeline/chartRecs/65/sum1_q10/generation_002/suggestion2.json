@@ -1,0 +1,41 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Are certain Product Positions more effective in boosting Sales Volume during seasonal periods compared to others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot Heatmap (Hybrid Heatmap of Medians)",
+      "design_rationale": "This unconventional hybrid design gives a rich, high-density overview of both distribution and magnitude of Sales Volume, simultaneously revealing: (A) how spread out sales outcomes are (boxplots per cell) and (B) which Product Positions are most effective for each Product Category during seasonal periods. We combine boxplots and a color heatmap overlay to convey median Sales Volumes, focusing exclusively on rows where Seasonal='Yes'. This approach brings both distributional insight (variance, skew, outliers) AND highlights best pairings of category+position for seasonality-driven campaigns.",
+      "target_insight": "Which Product Positions within each Product Category deliver higher (and/or more consistent) Sales Volume for seasonal products, aiding merchandising and planning.",
+      "output_fields": [
+        "Product Position",
+        "Product Category",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Position",
+        "y": "Product Category",
+        "color": "Median Sales Volume (heatmap intensity per cell)",
+        "size": null,
+        "other_aesthetics": "Boxplots per cell, cell-spanning axes, annotated medians"
+      }
+    },
+    "transformations": [
+      "Filter data to only rows where Seasonal is 'Yes'",
+      "For each Product Category and Product Position, gather Sales Volume values",
+      "Compute group median Sales Volume for color intensity encoding"
+    ],
+    "data_preparation_steps": [
+      "df_seasonal = df[df['Seasonal'] == 'Yes']",
+      "grouped = df_seasonal.groupby(['Product Category', 'Product Position'])",
+      "box_data = grouped['Sales Volume'].apply(list).unstack()",
+      "medians = grouped['Sales Volume'].median().unstack()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport matplotlib as mpl\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\65.csv\")\ndf_seasonal = df[df['Seasonal'] == 'Yes']\ngrouped = df_seasonal.groupby(['Product Category', 'Product Position'])\nbox_data = grouped['Sales Volume'].apply(list).unstack()\nmedians = grouped['Sales Volume'].median().unstack()\ncategories = box_data.index.tolist()\npositions = box_data.columns.tolist()\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['viridis']\nmin_median = medians.min().min()\nmax_median = medians.max().max()\nfor i, cat in enumerate(categories):\n    for j, pos in enumerate(positions):\n        left = j - 0.4\n        bottom = i - 0.4\n        width = 0.8\n        height = 0.8\n        color_val = (medians.loc[cat, pos]-min_median)/(max_median-min_median) if max_median > min_median else 0.5\n        ax.add_patch(plt.Rectangle((left, bottom), width, height, color=cmap(color_val), zorder=0, alpha=0.5))\n        vals = box_data.loc[cat, pos]\n        if vals and len(vals)>0:\n            box = ax.boxplot(vals, positions=[j], widths=0.5, patch_artist=True, boxprops=dict(facecolor='w',alpha=0.7), medianprops=dict(color='black', linewidth=2), whis=[5,95], showfliers=False, manage_ticks=False)\n            for item in ['medians', 'boxes', 'whiskers', 'caps']:\n                for patch in box[item]:\n                    patch.set_ydata(patch.get_ydata() + i)\n            ax.text(j, i+0.34, int(medians.loc[cat,pos]), ha='center', va='bottom', color='black', fontsize=10, fontweight='bold')\nax.set_xticks(range(len(positions)))\nax.set_xticklabels(positions)\nax.set_yticks(range(len(categories)))\nax.set_yticklabels(categories)\nax.set_xlabel('Product Position')\nax.set_ylabel('Product Category')\nax.set_title('Sales Volume Spread and Medians per Product Position\\nfor Seasonal Products by Category')\nnorm = mpl.colors.Normalize(vmin=min_median, vmax=max_median)\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.02, aspect=30)\ncbar.set_label('Median Sales Volume')\nax.set_xlim(-0.5, len(positions)-0.5)\nax.set_ylim(-0.5, len(categories)-0.5)\nax.invert_yaxis()\nax.spines['top'].set_visible(False)\nax.spines['right'].set_visible(False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

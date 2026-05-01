@@ -1,0 +1,37 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Plot with Decadal Highlighting",
+      "design_rationale": "A line plot efficiently shows the evolution of the global population over time, revealing both long-term growth and periods of accelerated or slowed change. Highlighting decades with color bands allows us to visually segment temporal patterns and identify shifts across eras. This approach leverages the continuous numeric 'Year' and 'Population' fields, using every row for maximal fidelity. Since 'Population' is stored as string, conversion to integer is performed for correct plotting.",
+      "target_insight": "Shows global population growth trajectory, pinpoints steeper or flatter decades, and helps identify visually the transition points (e.g., when growth rate changes or accelerates).",
+      "output_fields": [
+        "Year",
+        "Population"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Population",
+        "color": "Decadal segmentation via background bands",
+        "size": "null",
+        "other_aesthetics": "Text annotations for key years, grid, decade highlights"
+      }
+    },
+    "transformations": [
+      "Convert df['Population'] from string to integer for plotting",
+      "Assign each df['Year'] to a 'Decade' category (e.g. 1950s, 1960s, etc.)"
+    ],
+    "data_preparation_steps": [
+      "df['Population'] = df['Population'].str.replace(',', '').astype(int)",
+      "df['Decade'] = (df['Year']//10*10).astype(str) + 's'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Population'] = df['Population'].str.replace(',', '').astype(int)\ndf['Decade'] = (df['Year']//10*10).astype(str) + 's'\nfig, ax = plt.subplots(figsize=(10,6))\ndecades = sorted(df['Decade'].unique())\nband_colors = mpl.colormaps['Pastel2'].resampled(len(decades)).colors\nfor i, decade in enumerate(decades):\n    years_in_decade = df.loc[df['Decade']==decade, 'Year']\n    if not years_in_decade.empty:\n        min_year = years_in_decade.min()\n        max_year = years_in_decade.max()\n        ax.axvspan(min_year-2, max_year+2, color=band_colors[i], alpha=0.18)\nax.plot(df['Year'], df['Population'], color='midnightblue', linewidth=2, marker='o', label='Global Population')\nfor idx in [0, -1]:\n    year = df['Year'].iloc[idx]\n    pop = df['Population'].iloc[idx]\n    ax.text(year, pop, str(year)+':\\n'+f'{pop:,}', fontsize=11, color='black', va='bottom' if idx==0 else 'top', fontweight='bold')\nax.set_xlabel('Year')\nax.set_ylabel('Population')\nax.set_title('Global Population Growth\\n1955-2024 (Decadal Highlights)', fontsize=16)\nax.grid(True, linestyle='--', alpha=0.6)\ndec_legend = [mpl.patches.Patch(color=band_colors[i], alpha=0.18, label=decades[i]) for i in range(len(decades))]\nax.legend(handles=dec_legend+[mpl.lines.Line2D([], [], color='midnightblue', marker='o', label='Population')], loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

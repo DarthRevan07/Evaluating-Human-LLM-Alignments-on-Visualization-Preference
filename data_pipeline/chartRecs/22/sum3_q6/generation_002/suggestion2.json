@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "What is the distribution of horsepower across different fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot with overlaid KDE",
+      "design_rationale": "A violin plot visualizes the full shape of the horsepower distribution for each fueltype using kernel density estimation, providing insight into modality and skewness in addition to summary statistics. Overlaying individual KDE lines allows detailed comparison between gas and diesel, revealing whether their distributions have similar shapes, peaks, or spread. This unconventional chart type surfaces more nuanced distributional patterns and works well given the numeric/categorical data structure and the moderate number of rows.",
+      "target_insight": "Comparison of the entire distribution shape of horsepower for gas vs diesel, not just summary stats, revealing any multimodality or skew.",
+      "output_fields": [
+        "fueltype",
+        "horsepower"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "horsepower",
+        "color": "fueltype",
+        "size": null,
+        "other_aesthetics": "violin fill color, KDE line color for each fueltype, alpha for KDE overlay, legend for KDE lines, y-grid"
+      }
+    },
+    "transformations": [
+      "Filter records to include only rows where 'fueltype' is 'gas' or 'diesel'",
+      "Prepare horsepower values grouped by 'fueltype' for plotting violins and KDEs"
+    ],
+    "data_preparation_steps": [
+      "df_violin = df[['fueltype', 'horsepower']].copy()",
+      "Create list of 'horsepower' values for each 'fueltype' in order ['gas', 'diesel']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\nfuel_order = ['gas', 'diesel']\ndf_violin = df[['fueltype', 'horsepower']].copy()\ndata_to_plot = [df_violin[df_violin['fueltype']==ft]['horsepower'].values for ft in fuel_order]\ncmap = mpl.colormaps['cool'].resampled(len(fuel_order))\nfig, ax = plt.subplots(figsize=(8,6))\nparts = ax.violinplot(data_to_plot, positions=np.arange(len(fuel_order)), showmeans=False, showmedians=True, showextrema=False)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(cmap.colors[i])\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.5)\nfor i, ft in enumerate(fuel_order):\n    values = data_to_plot[i]\n    kde_x = np.linspace(np.min(values), np.max(values), 100)\n    from scipy.stats import gaussian_kde\n    kde = gaussian_kde(values)\n    ax.plot([i]*len(kde_x), kde_x, color=cmap.colors[i], alpha=0.3, lw=1)\n    ax.plot(i + np.zeros_like(kde_x), kde_x, color=cmap.colors[i], alpha=0.8)\nax.set_xticks(np.arange(len(fuel_order)))\nax.set_xticklabels(fuel_order)\nax.set_xlabel(\"fueltype\")\nax.set_ylabel(\"horsepower\")\nax.set_title(\"Distribution Shape of Horsepower by Fuel Type\\n(Violin Plot + KDE)\")\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

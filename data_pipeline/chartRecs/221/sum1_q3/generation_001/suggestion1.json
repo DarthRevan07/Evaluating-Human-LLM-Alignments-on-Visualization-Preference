@@ -1,0 +1,37 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Is there a relationship between traveler age and accommodation type preference?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot grouped by Accommodation type",
+      "design_rationale": "A boxplot enables comparison of the distribution of traveler ages within each accommodation type. Since 'Accommodation type' is categorical (with 8 unique values) and 'Traveler age' is numeric, a grouped boxplot will visually reveal differences in age preferences across accommodation types. This approach is effective for showing whether certain accommodation types are preferred by younger or older travelers, and for highlighting outliers or age variability within each group. It is a classic visualization for analyzing demographic preferences for categorical choices.",
+      "target_insight": "Which accommodation types are favored by younger vs older travelers; overall age distribution for each type; presence of outliers or skewness in age by accommodation.",
+      "output_fields": [
+        "Accommodation type",
+        "Traveler age"
+      ],
+      "chart_encodings": {
+        "x": "Accommodation type",
+        "y": "Traveler age",
+        "color": "Accommodation type (for box coloring for clarity)",
+        "size": null,
+        "other_aesthetics": "Gridlines, rotated tick labels for accommodation type, median line emphasis"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Accommodation type' or 'Traveler age'",
+      "Group data by 'Accommodation type' and collate 'Traveler age' values into lists (for boxplot input)"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=[\"Accommodation type\", \"Traveler age\"])",
+      "Prepare list of traveler ages for each accommodation type using groupby"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf_clean = df.dropna(subset=[\"Accommodation type\", \"Traveler age\"])\naccom_types = df_clean[\"Accommodation type\"].unique()\naccom_types_sorted = sorted(accom_types)\nage_data = [df_clean.loc[df_clean[\"Accommodation type\"] == accom_type, \"Traveler age\"].values for accom_type in accom_types_sorted]\ncmap = mpl.colormaps[\"Set2\"].resampled(len(accom_types_sorted))\nbox_colors = [cmap(i) for i in range(len(accom_types_sorted))]\nfig, ax = plt.subplots(figsize=(11,6))\nboxprops = dict(linewidth=1.6, color=\"black\")\nmedianprops = dict(linewidth=2, color=\"red\")\nbplot = ax.boxplot(age_data, patch_artist=True, labels=accom_types_sorted, boxprops=boxprops, medianprops=medianprops)\nfor patch, color in zip(bplot[\"boxes\"], box_colors):\n    patch.set_facecolor(color)\nax.set_xlabel(\"Accommodation type\", fontsize=14)\nax.set_ylabel(\"Traveler age\", fontsize=14)\nax.set_title(\"Traveler age distribution by accommodation type preferences\\n(Boxplot)\", fontsize=16)\nax.grid(True, axis=\"y\", linestyle=\"--\", alpha=0.5)\nplt.xticks(rotation=30, ha=\"right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

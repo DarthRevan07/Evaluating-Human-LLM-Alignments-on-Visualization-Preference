@@ -1,0 +1,39 @@
+{
+  "generation_number": 1,
+  "table_name": "META Stock Historical Prices & Data",
+  "total_rows": 1509,
+  "total_columns": 7,
+  "column_names": [
+    "Date",
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Adj Close",
+    "Volume"
+  ],
+  "summaries_per_generation": 2,
+  "schema_context": "## Table 1: META_Stock_Historical_Prices___Data (1,509 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 53.csv (Dataset: META Stock Historical Prices & Data)\n\n### Schema (7 fields)\n  - Date -- type: object, values: 2018-01-03, 2018-01-04, 2018-01-05, 2018-01-08, 2018-01-09, ..., 2023-12-26, 2023-12-27, 2023-12-28, 2023-12-29, 2024-01-02\n  - Open -- type: float64, values: 90.080002, 90.349998, 94.209999, 94.330002, 94.779999, ..., 379.950012, 380.160004, 381.359985, 381.5, 381.679993\n  - High -- type: float64, values: 90.459999, 91.389999, 95.199997, 96.879997, 97.489998, ..., 381.75, 382.76001, 382.959991, 383.790009, 384.329987\n  - Low -- type: float64, values: 88.089996, 88.410004, 90.480003, 92.599998, 93.099998, ..., 375.109985, 376.570007, 378.26001, 378.799988, 378.809998\n  - Close -- type: float64, values: 88.910004, 90.540001, 90.790001, 93.160004, 95.199997, ..., 378.690002, 379.380005, 380.660004, 382.049988, 382.179993\n  - Adj Close -- type: float64, values: 88.910004, 90.540001, 90.790001, 93.160004, 95.199997, ..., 378.690002, 379.380005, 380.660004, 382.049988, 382.179993\n  - Volume -- type: int64, values: 5467500, 6046300, 6702000, 7006000, 7170700, ..., 129851800, 150475700, 169803700, 188119900, 232316600\n\n### Sample Data (first 5 rows)\n```\n         Date        Open        High         Low       Close   Adj Close    Volume\n0  2018-01-03  181.880005  184.779999  181.330002  184.669998  184.669998  16886600\n1  2018-01-04  184.899994  186.210007  184.100006  184.330002  184.330002  13880900\n2  2018-01-05  185.589996  186.899994  184.929993  186.850006  186.850006  13574500\n3  2018-01-08  187.199997  188.899994  186.330002  188.279999  188.279999  17994700\n4  2018-01-09  188.699997  188.800003  187.100006  187.869995  187.869995  12393100\n```\n",
+  "source_file": "csv_c2_sec\\53.csv",
+  "sheet_name": "",
+  "summaries": [
+    {
+      "idx": 1,
+      "chain_of_thought": {
+        "target_audience": "Financial analysts and institutional investors focused on market performance and volatility analysis",
+        "curator_intention": "Enable the audience to accept historical price movements, explore stock volatility patterns using numerical fields, and establish understanding of trading volume dynamics with price fluctuations",
+        "common_ground": "Both the curator and the target audience are interested in uncovering price trends and their relationship with trading volumes over time to assess risk, forecast behavior, and inform investment decisions"
+      },
+      "narrative_summary": "This table equips financial analysts and institutional investors with historical price and volume data for the META stock, providing the structural basis for visualizations such as daily price trends, volatility overlays, and volume-price correlation analysis. By integrating Open, High, Low, Close, Adj Close, and Volume fields against the Date dimension, users can identify long-term and short-term trends, spot periods of heightened volatility, and examine how trading volumes correspond to price changes. The schema encourages exploration of aggregate statistics, seasonal effects, and price distribution patterns to derive actionable insights for trading strategies, risk evaluation, and portfolio optimization."
+    },
+    {
+      "idx": 2,
+      "chain_of_thought": {
+        "target_audience": "Business executives and strategic planners seeking evidence of company performance and external impact factors",
+        "curator_intention": "Encourage audience members to agree on the importance of temporal price movements, establish awareness of market responsiveness to external events, and accept the validity of historical data for performance benchmarking",
+        "common_ground": "Executives and curators both aim to leverage historical price data as a foundation for strategic business evaluation, performance benchmarking, and identification of critical event-driven impacts"
+      },
+      "narrative_summary": "For business executives and strategic planners, this schema highlights how the daily historical prices and volume records of META serve as benchmarks for evaluating company performance and market response. Visual exploration of temporal trends using Date in conjunction with price and volume fields can reveal periods of significant change, attract attention to outlier events, and enable actionable comparisons with business milestones or external influences. The curated structure supports strategic analyses such as identifying optimal periods for corporate actions, analyzing response to external news, and quantifying market confidence, facilitating informed decision-making rooted in comprehensive historical evidence."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Are there any months or years where the highest temperature appears much higher or lower than the surrounding periods?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line chart with highlighted anomalies",
+      "design_rationale": "A line chart details monthly highest temperatures across time, making it easy to spot spikes or dips in the data. By overlaying markers for periods where the temperature deviates strongly from the local median (using a rolling window), viewers can instantly identify unusual months or years. This technique is effective given the schema's monthly granularity and clear temporal ordering.",
+      "target_insight": "Visual identification of months where the highest temperature is an outlier relative to surrounding months, highlighting abnormal climate events.",
+      "output_fields": [
+        "Date",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Temperature",
+        "color": "Highlight points where deviation from local rolling median exceeds threshold",
+        "size": "null",
+        "other_aesthetics": "Anomaly points use red color; normal points use blue; line is gray; anomaly threshold set at 1.5 times the rolling median absolute deviation"
+      }
+    },
+    "transformations": [
+      "Sort df by 'Date' chronologically to preserve temporal order",
+      "Compute 3-month rolling median of 'Temperature' using 'Date' order",
+      "Calculate rolling median absolute deviation (MAD) for each month",
+      "Identify months where 'Temperature' deviates by more than 1.5 times local MAD from the rolling median"
+    ],
+    "data_preparation_steps": [
+      "Convert df['Date'] to pandas datetime to ensure correct sorting",
+      "Sort dataframe by df['Date'] ascending for chronological order",
+      "Calculate rolling median and rolling MAD of df['Temperature'] (window=3)",
+      "Create a boolean 'anomaly' mask for months with 'Temperature' exceeding threshold",
+      "Separate normal and anomaly data points for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')\ndf = df.sort_values('Date')\nwindow = 3\nrolling_median = df['Temperature'].rolling(window=window, center=True).median()\nmad = df['Temperature'].rolling(window=window, center=True).apply(lambda x: np.median(np.abs(x - np.median(x))), raw=True)\nthresh = 1.5\nanomaly_mask = np.abs(df['Temperature'] - rolling_median) > thresh * mad\nfig, ax = plt.subplots(figsize=(12,6))\nax.plot(df['Date'], df['Temperature'], color='gray', linewidth=1.5, label='Monthly Highest Temp')\nax.scatter(df.loc[~anomaly_mask, 'Date'], df.loc[~anomaly_mask, 'Temperature'], color='blue', s=40, label='Normal')\nax.scatter(df.loc[anomaly_mask, 'Date'], df.loc[anomaly_mask, 'Temperature'], color='red', s=80, marker='o', label='Anomaly')\nax.set_xlabel('Date')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Monthly Highest Temperatures in Amherst\\nAnomalies Highlighted (vs. Local Median)')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

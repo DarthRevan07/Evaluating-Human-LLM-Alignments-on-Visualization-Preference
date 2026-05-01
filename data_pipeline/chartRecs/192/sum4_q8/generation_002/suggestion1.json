@@ -1,0 +1,39 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What is the association between Radius(R/Ro) and Temperature (K) for stars of the same Star type?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Faceted Scatter Plots (one per Star type)",
+      "design_rationale": "To give a clear, direct view of the relationship between Radius(R/Ro) and Temperature (K) for each star class, facet the data into small multiples where each subplot shows a star type. This reduces overplotting, enables detection of differing associations, and encourages comparison of pattern shape and spread. All points are shown, making use of the sufficient table size. Using a scatter plot allows visualizing individual stars, and faceting by Star type addresses the question directly. Axes can be held constant across facets for easy comparison.",
+      "target_insight": "Reveals whether the Radius-Temperature relationship varies by Star type, enabling comparison of trends, clusters, or outliers within and across star types.",
+      "output_fields": [
+        "Temperature (K)",
+        "Radius(R/Ro)",
+        "Star type"
+      ],
+      "chart_encodings": {
+        "x": "Temperature (K)",
+        "y": "Radius(R/Ro)",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Facet (subplot) per Star type; shared x/y axes; minimal point alpha for overplotting"
+      }
+    },
+    "transformations": [
+      "No aggregation: Show all stars as individual data points",
+      "Facet (split) the scatter plot into separate subplots (one per unique value of df['Star type'])"
+    ],
+    "data_preparation_steps": [
+      "Read df from csv_c_squared\\192.csv",
+      "For each unique Star type (0-5), filter df to create a subplot containing only that type's data",
+      "Layout subplots in a 2x3 grid"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\192.csv')\nstar_types = sorted(df['Star type'].unique())\nn_types = len(star_types)\nfig, axes = plt.subplots(2, 3, figsize=(18, 10), sharex=True, sharey=True)\naxes = axes.flatten()\nfor i, t in enumerate(star_types):\n    df_type = df[df['Star type'] == t]\n    axes[i].scatter(df_type['Temperature (K)'], df_type['Radius(R/Ro)'], s=30, alpha=0.65)\n    axes[i].set_title('Star type ' + str(t))\n    axes[i].set_xlabel('Temperature (K)')\n    axes[i].set_ylabel('Radius(R/Ro)')\nfor j in range(i+1, len(axes)):\n    fig.delaxes(axes[j])\nfig.suptitle('Radius vs Temperature (K) by Star type', fontsize=18, fontweight='bold')\nfig.tight_layout(rect=[0,0,1,0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

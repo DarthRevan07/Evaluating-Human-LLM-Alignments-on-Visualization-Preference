@@ -1,0 +1,40 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Does the presence of a guestroom influence the price for homes with similar area?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot with Binned Area",
+      "design_rationale": "To compare home prices for properties with and without a guestroom, it's most equitable to compare within bins of similar 'area' (size). This chart divides homes into area bins (e.g., Low, Medium, High, Very High) and shows boxplots of price for 'guestroom = yes' and 'guestroom = no' within each bin. This allows easy comparison of the central tendency (median) and spread of prices, and directly illustrates the price premium, if any, associated with a guestroom for comparable floor area ranges. Boxplots are intuitive for showing distribution differences between groups.",
+      "target_insight": "This visualization reveals whether the presence of a guestroom raises the price for homes with similar area, and whether the effect is consistent across different size categories.",
+      "output_fields": [
+        "price",
+        "area",
+        "guestroom"
+      ],
+      "chart_encodings": {
+        "x": "area_bin (categorical bin of 'area')",
+        "y": "price",
+        "color": "guestroom ('yes'=blue, 'no'=orange)",
+        "size": null,
+        "other_aesthetics": "boxplot grouping and legend by guestroom"
+      }
+    },
+    "transformations": [
+      "Bin 'area' into 4 quantile-based categories (e.g., Low, Med, High, Very High)",
+      "Group data by both area_bin and guestroom",
+      "For each area_bin/guestroom group, extract all price values for boxplots"
+    ],
+    "data_preparation_steps": [
+      "Read csv_c_squared\\206.csv into df",
+      "Create new column 'area_bin' using pd.qcut on df['area'] with 4 bins labeled 'Low', 'Medium', 'High', 'Very High'",
+      "Ensure 'guestroom' column values are clean and categorical"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\n\n# Bin 'area' into 4 quantiles\narea_labels = [\"Low\", \"Medium\", \"High\", \"Very High\"]\ndf[\"area_bin\"] = pd.qcut(df[\"area\"], q=4, labels=area_labels)\n\nguestroom_categories = [\"yes\", \"no\"]\nboxplot_data = {}\nfor area_bin in area_labels:\n    boxplot_data[area_bin] = []\n    for guestroom in guestroom_categories:\n        prices = df[(df[\"area_bin\"] == area_bin) & (df[\"guestroom\"] == guestroom)][\"price\"].values\n        boxplot_data[area_bin].append(prices)\n\n# Arrange boxplot data for grouped boxplot\nall_data = []\nfor area_bin in area_labels:\n    for idx in range(2):\n        all_data.append(boxplot_data[area_bin][idx])\n\npositions = []\ngroups_per_bin = 2\nwidth = 0.35\nfor i in range(len(area_labels)):\n    positions.append(i - width/2)\n    positions.append(i + width/2)\n\nfig, ax = plt.subplots(figsize=(10,6))\ncolors = [\"#3498db\", \"#e67e22\"]  # blue for yes, orange for no\nlabels = []\nfor area_bin in area_labels:\n    for guestroom in guestroom_categories:\n        labels.append(area_bin + \"\\n(\" + guestroom + \")\")\n\nbp = ax.boxplot(all_data, positions=positions, widths=width, patch_artist=True, manage_ticks=False)\n# Color boxes by guestroom\nfor i, patch in enumerate(bp['boxes']):\n    patch.set_facecolor(colors[i%2])\n# Draw legend\nlegend_patches = [plt.Line2D([0],[0], color=colors[0], lw=8), plt.Line2D([0],[0], color=colors[1], lw=8)]\nax.legend(legend_patches, ['Guestroom: Yes', 'Guestroom: No'], title=\"Guestroom\", loc=\"upper left\")\nax.set_xticks([i for i in range(len(area_labels))])\nax.set_xticklabels(area_labels)\nax.set_xlabel(\"Area Bin (Square Feet)\")\nax.set_ylabel(\"Price\")\ntitle = \"Distribution of Home Prices by Area Bin and Guestroom Presence\"\nsubtitle = \"Boxplots compare prices for homes with ('yes') and without ('no') a guestroom\\nwithin each area range (Low to Very High)\"\nax.set_title(title + \"\\n\" + subtitle, fontsize=13)\nax.grid(axis=\"y\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

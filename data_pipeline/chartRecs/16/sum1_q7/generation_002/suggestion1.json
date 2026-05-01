@@ -1,0 +1,37 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do Pokémon with a secondary type (Type 2) generally have higher Total statistics than those without?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "To compare the distributions of 'Total' statistics between Pokémon with and without a secondary type, a boxplot provides a clear visualization of median, spread, and outliers for each group. Given the numeric variable ('Total') and categorical grouping ('Type 2' presence), boxplots offer a concise summary for large datasets and directly address the question.",
+      "target_insight": "Whether Pokémon with a secondary type typically have higher, lower, or similar total statistics compared to single-type Pokémon, visualized through central tendency and spread.",
+      "output_fields": [
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "Type 2 presence ('Has Type 2' category)",
+        "y": "Total",
+        "color": "Group separation (distinct box colors for groups)",
+        "size": null,
+        "other_aesthetics": "Box width, outlier marker, grid lines"
+      }
+    },
+    "transformations": [
+      "Create a new categorical column 'Has Type 2' in the DataFrame: Value is 'Yes' if 'Type 2' is not null, 'No' if null",
+      "Group data by 'Has Type 2' and plot distribution of 'Total'"
+    ],
+    "data_preparation_steps": [
+      "df['Has Type 2'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')",
+      "Prepare boxplot data by collecting 'Total' values for each 'Has Type 2' group"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf['Has Type 2'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')\nbox_data = [df[df['Has Type 2'] == 'No']['Total'], df[df['Has Type 2'] == 'Yes']['Total']]\nfig, ax = plt.subplots(figsize=(8, 6))\nbox_colors = ['#87CEEB', '#FFA07A']\nbp = ax.boxplot(box_data, labels=['No', 'Yes'], patch_artist=True)\nfor patch, color in zip(bp['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_ylabel('Total')\nax.set_xlabel('Has Type 2')\nax.set_title('Distribution of Total Stats\\nfor Pokémon With vs Without Secondary Type')\nax.grid(axis='y', linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

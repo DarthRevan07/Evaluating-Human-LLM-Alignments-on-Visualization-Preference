@@ -1,0 +1,417 @@
+{
+  "table_name": "268",
+  "generation_id": 1,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\268\\sum1_q8\\generation_001",
+  "schema_context": "Table: Bangladesh Districts wise population\nRows: 64\nColumns: 10\n\nFIELD INFORMATION:\nField: Name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field lists the names of administrative districts in Bangladesh, identifying each district for population-related analysis within the country's geographic domain.\n\nField: Abbr.\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field contains standardized three-letter abbreviations for each of Bangladesh's 64 districts, used to uniquely identify them in population or geographic datasets.\n\nField: Division\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 8\n  - Semantic Meaning: This field indicates the administrative division within Bangladesh to which each district belongs, grouping districts by major regional territories for demographic or organizational analysis.\n\nField: Established\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the year in which each administrative district in Bangladesh was officially established or formed.\n  - Value Range: 1666.0 to 1984.0\n  - Mean: 1937.70\n\nField: Native\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the names of administrative districts in Bangladesh, with each string indicating a specific district written in Bengali.\n\nField: Area (km2)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 62\n  - Semantic Meaning: This field represents the total land area, measured in square kilometers, of each administrative district in Bangladesh.\n  - Value Range: 684.0 to 6116.0\n  - Mean: 2306.00\n\nField: Population_1991\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the total number of people living in each district of Bangladesh, as recorded in the 1991 national census.\n  - Value Range: 246000.0 to 6164000.0\n  - Mean: 1741500.00\n\nField: Population_2001\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: Population_2001 represents the total number of people living in each district of Bangladesh as recorded in the year 2001 census.\n  - Value Range: 311741.0 to 9151343.0\n  - Mean: 2039415.59\n\nField: Population_2011\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the total number of people living in each district of Bangladesh according to the 2011 national census.\n  - Value Range: 404091.0 to 12517360.0\n  - Mean: 2340193.00\n\nField: Population_2022\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: Population_2022 represents the total number of residents in each of Bangladesh’s 64 districts as counted or estimated for the year 2022.\n  - Value Range: 495252.0 to 15210851.0\n  - Mean: 2653576.77\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Name\"\n  2. \"Abbr.\"\n  3. \"Division\"\n  4. \"Established\"\n  5. \"Native\"\n  6. \"Area (km2)\"\n  7. \"Population_1991\"\n  8. \"Population_2001\"\n  9. \"Population_2011\"\n  10. \"Population_2022\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Name'], df['Abbr.']",
+  "table_metadata": {
+    "table_name": "Bangladesh Districts wise population",
+    "file_path": "csv_c_squared\\268.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 268.csv (Dataset: Bangladesh Districts wise population)",
+    "original_filename": "268.csv",
+    "dataset_name": "Bangladesh Districts wise population",
+    "row_count": 64,
+    "column_count": 10,
+    "table_hash": -3457392543521715489,
+    "fields": [
+      {
+        "name": "Name",
+        "clean_name": "Name",
+        "camel_case_name": "name",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "sample_values": "Bagerhat, Bandarban, Barguna, Barishal, Bhola, ..., Sirajganj, Sunamganj, Sylhet, Tangail, Thakurgaon",
+        "inferred_semantic_summary": "This field lists the names of administrative districts in Bangladesh, identifying each district for population-related analysis within the country's geographic domain."
+      },
+      {
+        "name": "Abbr.",
+        "clean_name": "Abbr_",
+        "camel_case_name": "abbr",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "sample_values": "BAG, BAN, BBA, BHO, BOG, ..., SIR, SUN, SYL, TAN, THA",
+        "inferred_semantic_summary": "This field contains standardized three-letter abbreviations for each of Bangladesh's 64 districts, used to uniquely identify them in population or geographic datasets."
+      },
+      {
+        "name": "Division",
+        "clean_name": "Division",
+        "camel_case_name": "division",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 8,
+        "sample_values": "Barisal, Chattogram, Dhaka, Khulna, Mymensingh, Rajshahi, Rangpur, Sylhet",
+        "inferred_semantic_summary": "This field indicates the administrative division within Bangladesh to which each district belongs, grouping districts by major regional territories for demographic or organizational analysis."
+      },
+      {
+        "name": "Established",
+        "clean_name": "Established",
+        "camel_case_name": "established",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 18,
+        "min_value": 1666.0,
+        "max_value": 1984.0,
+        "mean_value": 1937.703125,
+        "median_value": 1984.0,
+        "sample_values": "1666, 1772, 1781, 1782, 1786, ..., 1969, 1978, 1981, 1983, 1984",
+        "inferred_semantic_summary": "This field represents the year in which each administrative district in Bangladesh was officially established or formed."
+      },
+      {
+        "name": "Native",
+        "clean_name": "Native",
+        "camel_case_name": "native",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "sample_values": "কক্সবাজার জেলা, কিশোরগঞ্জ জেলা, কুড়িগ্রাম জেলা, কুমিল্লা জেলা, কুষ্টিয়া জেলা, ..., সাতক্ষীরা জেলা, সিরাজগঞ্জ জেলা, সিলেট জেলা, সুনামগঞ্জ জেলা, হবিগঞ্জ জেলা",
+        "inferred_semantic_summary": "This field represents the names of administrative districts in Bangladesh, with each string indicating a specific district written in Bengali."
+      },
+      {
+        "name": "Area (km2)",
+        "clean_name": "Area__km2_",
+        "camel_case_name": "areaKm2",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 62,
+        "min_value": 684.0,
+        "max_value": 6116.0,
+        "mean_value": 2306.0,
+        "median_value": 2084.0,
+        "sample_values": "684, 707, 752, 968, 990, ..., 4394, 4395, 4496, 5282, 6116",
+        "inferred_semantic_summary": "This field represents the total land area, measured in square kilometers, of each administrative district in Bangladesh."
+      },
+      {
+        "name": "Population_1991",
+        "clean_name": "Population_1991",
+        "camel_case_name": "population1991",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "min_value": 246000.0,
+        "max_value": 6164000.0,
+        "mean_value": 1741500.0,
+        "median_value": 1545500.0,
+        "sample_values": "246000, 366000, 430000, 511000, 682000, ..., 3108000, 4097000, 4264000, 5744000, 6164000",
+        "inferred_semantic_summary": "This field represents the total number of people living in each district of Bangladesh, as recorded in the 1991 national census."
+      },
+      {
+        "name": "Population_2001",
+        "clean_name": "Population_2001",
+        "camel_case_name": "population2001",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "min_value": 311741.0,
+        "max_value": 9151343.0,
+        "mean_value": 2039415.59375,
+        "median_value": 1829092.5,
+        "sample_values": "311741, 531489, 549134, 618466, 726182, ..., 3443497, 4696966, 4807649, 7009504, 9151343",
+        "inferred_semantic_summary": "Population_2001 represents the total number of people living in each district of Bangladesh as recorded in the year 2001 census."
+      },
+      {
+        "name": "Population_2011",
+        "clean_name": "Population_2011",
+        "camel_case_name": "population2011",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "min_value": 404091.0,
+        "max_value": 12517360.0,
+        "mean_value": 2340193.0,
+        "median_value": 2008954.5,
+        "sample_values": "404091, 620215, 638967, 681331, 709914, ..., 3749086, 5313163, 5602624, 7913366, 12517360",
+        "inferred_semantic_summary": "This field represents the total number of people living in each district of Bangladesh according to the 2011 national census."
+      },
+      {
+        "name": "Population_2022",
+        "clean_name": "Population_2022",
+        "camel_case_name": "population2022",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 64,
+        "unique_values": 64,
+        "min_value": 495252.0,
+        "max_value": 15210851.0,
+        "mean_value": 2653576.765625,
+        "median_value": 2215751.5,
+        "sample_values": "495252, 666627, 677559, 721447, 735116, ..., 5433538, 6097814, 6394875, 9439076, 15210851",
+        "inferred_semantic_summary": "Population_2022 represents the total number of residents in each of Bangladesh’s 64 districts as counted or estimated for the year 2022."
+      }
+    ],
+    "formatted_summary": "## Table 1: Bangladesh_Districts_wise_population (64 rows × 10 columns)\n\n### Description\nData loaded from CSV file: 268.csv (Dataset: Bangladesh Districts wise population)\n\n### Schema (10 fields)\n  - Name -- type: object, values: Bagerhat, Bandarban, Barguna, Barishal, Bhola, ..., Sirajganj, Sunamganj, Sylhet, Tangail, Thakurgaon\n  - Abbr. -- type: object, values: BAG, BAN, BBA, BHO, BOG, ..., SIR, SUN, SYL, TAN, THA\n  - Division -- type: object, values: Barisal, Chattogram, Dhaka, Khulna, Mymensingh, Rajshahi, Rangpur, Sylhet\n  - Established -- type: int64, values: 1666, 1772, 1781, 1782, 1786, ..., 1969, 1978, 1981, 1983, 1984\n  - Native -- type: object, values: কক্সবাজার জেলা, কিশোরগঞ্জ জেলা, কুড়িগ্রাম জেলা, কুমিল্লা জেলা, কুষ্টিয়া জেলা, ..., সাতক্ষীরা জেলা, সিরাজগঞ্জ জেলা, সিলেট জেলা, সুনামগঞ্জ জেলা, হবিগঞ্জ জেলা\n  - Area (km2) -- type: int64, values: 684, 707, 752, 968, 990, ..., 4394, 4395, 4496, 5282, 6116\n  - Population_1991 -- type: int64, values: 246000, 366000, 430000, 511000, 682000, ..., 3108000, 4097000, 4264000, 5744000, 6164000\n  - Population_2001 -- type: int64, values: 311741, 531489, 549134, 618466, 726182, ..., 3443497, 4696966, 4807649, 7009504, 9151343\n  - Population_2011 -- type: int64, values: 404091, 620215, 638967, 681331, 709914, ..., 3749086, 5313163, 5602624, 7913366, 12517360\n  - Population_2022 -- type: int64, values: 495252, 666627, 677559, 721447, 735116, ..., 5433538, 6097814, 6394875, 9439076, 15210851\n\n### Sample Data (first 5 rows)\n```\n         Name Abbr. Division  Established           Native  Area (km2)  Population_1991  Population_2001  Population_2011  Population_2022\n0     Barguna   BRG  Barisal         1984      বরগুনা জেলা        1831           805000           887376           927889          1035596\n1    Barishal   BRS  Barisal         1797      বরিশাল জেলা        2785          2299000          2465249          2414729          2634203\n2       Bhola   BHO  Barisal         1984        ভোলা জেলা        3403          1532000          1781043          1846351          1980452\n3   Jhalokati   JHA  Barisal         1984     ঝালকাঠি জেলা         707           694000           726182           709914           677559\n4  Patuakhali   PAT  Barisal         1969  পটুয়াখালী জেলা        3221          1323000          1527628          1596223          1770096\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "268",
+      "summary_idx": 1,
+      "question_idx": 8,
+      "question": "Which districts show accelerated population growth between the last two census periods (2011 and 2022)?",
+      "column_combination": [
+        "Name",
+        "Abbr.",
+        "Division",
+        "Established",
+        "Native",
+        "Area (km2)",
+        "Population_1991",
+        "Population_2001",
+        "Population_2011",
+        "Population_2022"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Horizontal Bar Chart (Sorted by 2011-2022 Growth Rate)",
+            "design_rationale": "A horizontal bar chart enables quick visual ranking and direct comparison of population growth rates across districts, leveraging the categorical 'Name' field and numeric difference between 2011 and 2022 census counts. Sorting bars from highest to lowest growth rate allows the viewer to immediately identify which districts experienced accelerated growth, addressing the question directly and leveraging the manageable size (64 rows) of the data.",
+            "target_insight": "Identifies and ranks districts by their relative population growth rate between 2011 and 2022, highlighting those with the most accelerated expansion.",
+            "output_fields": [
+              "Name",
+              "Population_2011",
+              "Population_2022"
+            ],
+            "chart_encodings": {
+              "x": "Growth Rate (computed: (Population_2022 - Population_2011) / Population_2011)",
+              "y": "Name",
+              "color": "Division (used for group coloring with a categorical palette)",
+              "size": null,
+              "other_aesthetics": "Bars sorted descending by growth rate; label top districts; use color to distinguish divisions"
+            }
+          },
+          "transformations": [
+            "Compute growth_rate as (df['Population_2022'] - df['Population_2011']) / df['Population_2011']",
+            "Sort rows by growth_rate descending",
+            "Assign each district's 'Division' to a distinct color for categorical visual separation"
+          ],
+          "data_preparation_steps": [
+            "Add 'growth_rate' column to df using exact Population_2011 and Population_2022 fields",
+            "Sort df by 'growth_rate' in descending order",
+            "Create color mapping for 'Division' categories"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['growth_rate'] = (df['Population_2022'] - df['Population_2011']) / df['Population_2011']\ndf_sorted = df.sort_values('growth_rate', ascending=False).reset_index(drop=True)\ndivisions = df_sorted['Division'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(divisions))\ndiv_color_dict = {div: cmap(i) for i, div in enumerate(divisions)}\nbar_colors = [div_color_dict[div] for div in df_sorted['Division']]\nfig, ax = plt.subplots(figsize=(11, 15))\nax.barh(df_sorted['Name'], df_sorted['growth_rate'], color=bar_colors)\nax.set_xlabel('Growth Rate (Population_2022 - Population_2011) / Population_2011')\nax.set_ylabel('District Name')\nax.set_title('Accelerated Population Growth by District (2011-2022)\\nRanked by Growth Rate')\nfor i in range(5):\n    ax.text(df_sorted['growth_rate'].iloc[i] + 0.005, i, f\"{df_sorted['growth_rate'].iloc[i]:.2%}\", va='center', fontsize=13, color='black')\ndivision_patches = [mpl.patches.Patch(color=div_color_dict[div], label=div) for div in divisions]\nax.legend(handles=division_patches, title='Division', bbox_to_anchor=(1, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Districts Scatter Plot: Growth Rates 2001-2011 vs 2011-2022",
+            "design_rationale": "A scatter plot that compares population growth rates across two consecutive census periods for each district is a powerful way to visually identify districts with accelerated growth. Points above the diagonal line indicate districts whose growth rate increased from 2011-2022 vs. 2001-2011, directly visualizing acceleration. Coloring by Division reveals regional clustering of this trend. Districts with both high rates and acceleration will be visually isolated in the upper-right corner, providing instant identification.",
+            "target_insight": "Highlights which districts experienced higher growth rate in the latest census period versus the previous, and reveals regional acceleration patterns.",
+            "output_fields": [
+              "Name",
+              "Division",
+              "Population_2001",
+              "Population_2011",
+              "Population_2022"
+            ],
+            "chart_encodings": {
+              "x": "Growth Rate 2001-2011 (computed: (Population_2011 - Population_2001) / Population_2001)",
+              "y": "Growth Rate 2011-2022 (computed: (Population_2022 - Population_2011) / Population_2011)",
+              "color": "Division (categorical)",
+              "size": "Area (km2) (optional: scale point size for district area)",
+              "other_aesthetics": "Diagonal reference line; top 5 accelerated-growth districts labeled; alpha for clarity"
+            }
+          },
+          "transformations": [
+            "Compute gr_2001_2011: (df['Population_2011'] - df['Population_2001']) / df['Population_2001']",
+            "Compute gr_2011_2022: (df['Population_2022'] - df['Population_2011']) / df['Population_2011']",
+            "Identify districts where gr_2011_2022 > gr_2001_2011 for acceleration",
+            "Assign colors by 'Division', size by 'Area (km2)'"
+          ],
+          "data_preparation_steps": [
+            "Add 'gr_2001_2011' and 'gr_2011_2022' columns to df",
+            "Create boolean 'accelerated' column for gr_2011_2022 > gr_2001_2011",
+            "Map colors for Divisions using categorical palette",
+            "Scale point sizes from 'Area (km2)' (normalize for display)"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\268.csv')\ndf['gr_2001_2011'] = (df['Population_2011'] - df['Population_2001']) / df['Population_2001']\ndf['gr_2011_2022'] = (df['Population_2022'] - df['Population_2011']) / df['Population_2011']\ndf['accelerated'] = df['gr_2011_2022'] > df['gr_2001_2011']\ndivisions = df['Division'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(divisions))\ndiv_color_dict = {div: cmap(i) for i, div in enumerate(divisions)}\ncolors = [div_color_dict[div] for div in df['Division']]\narea_min = df['Area (km2)'].min()\narea_max = df['Area (km2)'].max()\nsizes = 200 * (df['Area (km2)'] - area_min) / (area_max - area_min) + 50\nfig, ax = plt.subplots(figsize=(10, 8))\nax.scatter(df['gr_2001_2011'], df['gr_2011_2022'], c=colors, s=sizes, alpha=0.6, edgecolor='black')\nax.plot([df['gr_2001_2011'].min(), df['gr_2001_2011'].max()], [df['gr_2001_2011'].min(), df['gr_2001_2011'].max()], color='gray', linestyle='--', linewidth=2, label='No Acceleration')\nfor idx in df.nlargest(5, 'gr_2011_2022') .index:\n    ax.text(df['gr_2001_2011'][idx], df['gr_2011_2022'][idx]+0.01, df['Name'][idx], fontsize=12, color='black')\nax.set_xlabel('Population Growth Rate (2001-2011)')\nax.set_ylabel('Population Growth Rate (2011-2022)')\nax.set_title('District Population Growth Acceleration\\n2001-2011 vs 2011-2022')\ndivision_patches = [mpl.patches.Patch(color=div_color_dict[div], label=div) for div in divisions]\nax.legend(handles=division_patches, title='Division', bbox_to_anchor=(1, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:36:25.212328",
+      "schema_context": "Table: Bangladesh Districts wise population\nRows: 64\nColumns: 10\n\nFIELD INFORMATION:\nField: Name\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field lists the names of administrative districts in Bangladesh, identifying each district for population-related analysis within the country's geographic domain.\n\nField: Abbr.\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field contains standardized three-letter abbreviations for each of Bangladesh's 64 districts, used to uniquely identify them in population or geographic datasets.\n\nField: Division\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 8\n  - Semantic Meaning: This field indicates the administrative division within Bangladesh to which each district belongs, grouping districts by major regional territories for demographic or organizational analysis.\n\nField: Established\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 18\n  - Semantic Meaning: This field represents the year in which each administrative district in Bangladesh was officially established or formed.\n  - Value Range: 1666.0 to 1984.0\n  - Mean: 1937.70\n\nField: Native\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the names of administrative districts in Bangladesh, with each string indicating a specific district written in Bengali.\n\nField: Area (km2)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 62\n  - Semantic Meaning: This field represents the total land area, measured in square kilometers, of each administrative district in Bangladesh.\n  - Value Range: 684.0 to 6116.0\n  - Mean: 2306.00\n\nField: Population_1991\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the total number of people living in each district of Bangladesh, as recorded in the 1991 national census.\n  - Value Range: 246000.0 to 6164000.0\n  - Mean: 1741500.00\n\nField: Population_2001\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: Population_2001 represents the total number of people living in each district of Bangladesh as recorded in the year 2001 census.\n  - Value Range: 311741.0 to 9151343.0\n  - Mean: 2039415.59\n\nField: Population_2011\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the total number of people living in each district of Bangladesh according to the 2011 national census.\n  - Value Range: 404091.0 to 12517360.0\n  - Mean: 2340193.00\n\nField: Population_2022\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: Population_2022 represents the total number of residents in each of Bangladesh’s 64 districts as counted or estimated for the year 2022.\n  - Value Range: 495252.0 to 15210851.0\n  - Mean: 2653576.77\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Name\"\n  2. \"Abbr.\"\n  3. \"Division\"\n  4. \"Established\"\n  5. \"Native\"\n  6. \"Area (km2)\"\n  7. \"Population_1991\"\n  8. \"Population_2001\"\n  9. \"Population_2011\"\n  10. \"Population_2022\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Name'], df['Abbr.']",
+      "table_metadata": {
+        "table_name": "Bangladesh Districts wise population",
+        "file_path": "csv_c_squared\\268.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 268.csv (Dataset: Bangladesh Districts wise population)",
+        "original_filename": "268.csv",
+        "dataset_name": "Bangladesh Districts wise population",
+        "row_count": 64,
+        "column_count": 10,
+        "table_hash": -3457392543521715489,
+        "fields": [
+          {
+            "name": "Name",
+            "clean_name": "Name",
+            "camel_case_name": "name",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "sample_values": "Bagerhat, Bandarban, Barguna, Barishal, Bhola, ..., Sirajganj, Sunamganj, Sylhet, Tangail, Thakurgaon",
+            "inferred_semantic_summary": "This field lists the names of administrative districts in Bangladesh, identifying each district for population-related analysis within the country's geographic domain."
+          },
+          {
+            "name": "Abbr.",
+            "clean_name": "Abbr_",
+            "camel_case_name": "abbr",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "sample_values": "BAG, BAN, BBA, BHO, BOG, ..., SIR, SUN, SYL, TAN, THA",
+            "inferred_semantic_summary": "This field contains standardized three-letter abbreviations for each of Bangladesh's 64 districts, used to uniquely identify them in population or geographic datasets."
+          },
+          {
+            "name": "Division",
+            "clean_name": "Division",
+            "camel_case_name": "division",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 8,
+            "sample_values": "Barisal, Chattogram, Dhaka, Khulna, Mymensingh, Rajshahi, Rangpur, Sylhet",
+            "inferred_semantic_summary": "This field indicates the administrative division within Bangladesh to which each district belongs, grouping districts by major regional territories for demographic or organizational analysis."
+          },
+          {
+            "name": "Established",
+            "clean_name": "Established",
+            "camel_case_name": "established",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 18,
+            "min_value": 1666.0,
+            "max_value": 1984.0,
+            "mean_value": 1937.703125,
+            "median_value": 1984.0,
+            "sample_values": "1666, 1772, 1781, 1782, 1786, ..., 1969, 1978, 1981, 1983, 1984",
+            "inferred_semantic_summary": "This field represents the year in which each administrative district in Bangladesh was officially established or formed."
+          },
+          {
+            "name": "Native",
+            "clean_name": "Native",
+            "camel_case_name": "native",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "sample_values": "কক্সবাজার জেলা, কিশোরগঞ্জ জেলা, কুড়িগ্রাম জেলা, কুমিল্লা জেলা, কুষ্টিয়া জেলা, ..., সাতক্ষীরা জেলা, সিরাজগঞ্জ জেলা, সিলেট জেলা, সুনামগঞ্জ জেলা, হবিগঞ্জ জেলা",
+            "inferred_semantic_summary": "This field represents the names of administrative districts in Bangladesh, with each string indicating a specific district written in Bengali."
+          },
+          {
+            "name": "Area (km2)",
+            "clean_name": "Area__km2_",
+            "camel_case_name": "areaKm2",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 62,
+            "min_value": 684.0,
+            "max_value": 6116.0,
+            "mean_value": 2306.0,
+            "median_value": 2084.0,
+            "sample_values": "684, 707, 752, 968, 990, ..., 4394, 4395, 4496, 5282, 6116",
+            "inferred_semantic_summary": "This field represents the total land area, measured in square kilometers, of each administrative district in Bangladesh."
+          },
+          {
+            "name": "Population_1991",
+            "clean_name": "Population_1991",
+            "camel_case_name": "population1991",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "min_value": 246000.0,
+            "max_value": 6164000.0,
+            "mean_value": 1741500.0,
+            "median_value": 1545500.0,
+            "sample_values": "246000, 366000, 430000, 511000, 682000, ..., 3108000, 4097000, 4264000, 5744000, 6164000",
+            "inferred_semantic_summary": "This field represents the total number of people living in each district of Bangladesh, as recorded in the 1991 national census."
+          },
+          {
+            "name": "Population_2001",
+            "clean_name": "Population_2001",
+            "camel_case_name": "population2001",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "min_value": 311741.0,
+            "max_value": 9151343.0,
+            "mean_value": 2039415.59375,
+            "median_value": 1829092.5,
+            "sample_values": "311741, 531489, 549134, 618466, 726182, ..., 3443497, 4696966, 4807649, 7009504, 9151343",
+            "inferred_semantic_summary": "Population_2001 represents the total number of people living in each district of Bangladesh as recorded in the year 2001 census."
+          },
+          {
+            "name": "Population_2011",
+            "clean_name": "Population_2011",
+            "camel_case_name": "population2011",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "min_value": 404091.0,
+            "max_value": 12517360.0,
+            "mean_value": 2340193.0,
+            "median_value": 2008954.5,
+            "sample_values": "404091, 620215, 638967, 681331, 709914, ..., 3749086, 5313163, 5602624, 7913366, 12517360",
+            "inferred_semantic_summary": "This field represents the total number of people living in each district of Bangladesh according to the 2011 national census."
+          },
+          {
+            "name": "Population_2022",
+            "clean_name": "Population_2022",
+            "camel_case_name": "population2022",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 64,
+            "unique_values": 64,
+            "min_value": 495252.0,
+            "max_value": 15210851.0,
+            "mean_value": 2653576.765625,
+            "median_value": 2215751.5,
+            "sample_values": "495252, 666627, 677559, 721447, 735116, ..., 5433538, 6097814, 6394875, 9439076, 15210851",
+            "inferred_semantic_summary": "Population_2022 represents the total number of residents in each of Bangladesh’s 64 districts as counted or estimated for the year 2022."
+          }
+        ],
+        "formatted_summary": "## Table 1: Bangladesh_Districts_wise_population (64 rows × 10 columns)\n\n### Description\nData loaded from CSV file: 268.csv (Dataset: Bangladesh Districts wise population)\n\n### Schema (10 fields)\n  - Name -- type: object, values: Bagerhat, Bandarban, Barguna, Barishal, Bhola, ..., Sirajganj, Sunamganj, Sylhet, Tangail, Thakurgaon\n  - Abbr. -- type: object, values: BAG, BAN, BBA, BHO, BOG, ..., SIR, SUN, SYL, TAN, THA\n  - Division -- type: object, values: Barisal, Chattogram, Dhaka, Khulna, Mymensingh, Rajshahi, Rangpur, Sylhet\n  - Established -- type: int64, values: 1666, 1772, 1781, 1782, 1786, ..., 1969, 1978, 1981, 1983, 1984\n  - Native -- type: object, values: কক্সবাজার জেলা, কিশোরগঞ্জ জেলা, কুড়িগ্রাম জেলা, কুমিল্লা জেলা, কুষ্টিয়া জেলা, ..., সাতক্ষীরা জেলা, সিরাজগঞ্জ জেলা, সিলেট জেলা, সুনামগঞ্জ জেলা, হবিগঞ্জ জেলা\n  - Area (km2) -- type: int64, values: 684, 707, 752, 968, 990, ..., 4394, 4395, 4496, 5282, 6116\n  - Population_1991 -- type: int64, values: 246000, 366000, 430000, 511000, 682000, ..., 3108000, 4097000, 4264000, 5744000, 6164000\n  - Population_2001 -- type: int64, values: 311741, 531489, 549134, 618466, 726182, ..., 3443497, 4696966, 4807649, 7009504, 9151343\n  - Population_2011 -- type: int64, values: 404091, 620215, 638967, 681331, 709914, ..., 3749086, 5313163, 5602624, 7913366, 12517360\n  - Population_2022 -- type: int64, values: 495252, 666627, 677559, 721447, 735116, ..., 5433538, 6097814, 6394875, 9439076, 15210851\n\n### Sample Data (first 5 rows)\n```\n         Name Abbr. Division  Established           Native  Area (km2)  Population_1991  Population_2001  Population_2011  Population_2022\n0     Barguna   BRG  Barisal         1984      বরগুনা জেলা        1831           805000           887376           927889          1035596\n1    Barishal   BRS  Barisal         1797      বরিশাল জেলা        2785          2299000          2465249          2414729          2634203\n2       Bhola   BHO  Barisal         1984        ভোলা জেলা        3403          1532000          1781043          1846351          1980452\n3   Jhalokati   JHA  Barisal         1984     ঝালকাঠি জেলা         707           694000           726182           709914           677559\n4  Patuakhali   PAT  Barisal         1969  পটুয়াখালী জেলা        3221          1323000          1527628          1596223          1770096\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

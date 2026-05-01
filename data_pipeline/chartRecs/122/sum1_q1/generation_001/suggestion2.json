@@ -1,0 +1,43 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do global sales differ across platforms, and which platforms consistently lead in overall sales?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Platform-Year Heatmap",
+      "design_rationale": "A heatmap with platforms on one axis and years on the other visualizes not only which platforms dominate overall but also their leadership consistency and longevity over time. By depicting the intensity of global sales per platform-year, this chart highlights periods of peak dominance and market transitions, addressing both the differences and consistency in platform leadership. The heatmap supports rapid pattern recognition for trends, rises, and falls in the platform lifecycle.",
+      "target_insight": "Reveals which platforms led in global sales during different periods and highlights consistent annual top performers. Enables detection of shifts in market leadership across decades.",
+      "output_fields": [
+        "Platform",
+        "Year",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Platform",
+        "color": "Sum of Global_Sales per Platform-Year (mapped to color intensity)",
+        "size": "None",
+        "other_aesthetics": "Colorbar for interpreting sales intensity"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Year' is null",
+      "Group by both 'Platform' and 'Year', aggregating by the sum of 'Global_Sales'",
+      "Pivot the table so 'Platform' (rows) x 'Year' (columns), with values as summed 'Global_Sales'",
+      "Sort platforms by overall total 'Global_Sales' descending to show leaders at the top"
+    ],
+    "data_preparation_steps": [
+      "df_year_platform = df.dropna(subset=['Year'])",
+      "df_year_platform_sales = df_year_platform.groupby(['Platform', 'Year'], as_index=False)['Global_Sales'].sum()",
+      "pivot = df_year_platform_sales.pivot(index='Platform', columns='Year', values='Global_Sales').fillna(0)",
+      "platform_order = df.groupby('Platform')['Global_Sales'].sum().sort_values(ascending=False).index",
+      "pivot = pivot.loc[platform_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_year_platform = df.dropna(subset=['Year'])\ndf_year_platform_sales = df_year_platform.groupby(['Platform', 'Year'], as_index=False)['Global_Sales'].sum()\npivot = df_year_platform_sales.pivot(index='Platform', columns='Year', values='Global_Sales').fillna(0)\nplatform_order = df.groupby('Platform')['Global_Sales'].sum().sort_values(ascending=False).index\npivot = pivot.loc[platform_order]\nfig, ax = plt.subplots(figsize=(16,10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_yticklabels(pivot.index)\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_xticklabels([int(y) for y in pivot.columns], rotation=90)\nax.set_xlabel('Year')\nax.set_ylabel('Platform')\nax.set_title('Global Sales Intensity by Platform and Year\\n(Heatmap of Platform Leadership across Time)')\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Total Global Sales (Millions)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

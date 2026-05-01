@@ -1,0 +1,39 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "During which years did the fertility rate experience its most significant decline, and what was the impact on population growth?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot with dual axes (Fertility Rate vs Year and Yearly % Change vs Year)",
+      "design_rationale": "A dual-axis line plot conveys the temporal relationship between fertility rate and population growth most directly. Years are mapped to the x-axis (as a continuous, regularly spaced variable); fertility rate is on the primary y-axis, while population yearly % change is on the secondary y-axis. This setup allows easy identification of periods of rapid decline in fertility and helps immediately connect those declines with possible inflection points or trends in population growth. Leveraging color distinction and axis labels, this classic approach suits this relatively compact dataset and reveals temporal cause-and-effect.",
+      "target_insight": "Pinpoints timeline of steep fertility decline and highlights its impact on population growth rate year by year.",
+      "output_fields": [
+        "Year",
+        "Fertility Rate",
+        "Yearly % Change"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Fertility Rate (primary axis)",
+        "y2": "Yearly % Change (secondary axis)",
+        "color": "Distinct colors for Fertility Rate and Yearly % Change lines",
+        "size": null,
+        "other_aesthetics": "Marker symbols for data points, dashed line for Yearly % Change, solid line for Fertility Rate, axis labeling, annotation of steepest drop"
+      }
+    },
+    "transformations": [
+      "Convert 'Yearly % Change' field from string to float for plotting and comparison",
+      "Identify the interval(s) with the largest drop in 'Fertility Rate' and annotate those years"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "No further aggregation needed due to small row count (18), simply use all data"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\nfig, ax1 = plt.subplots(figsize=(10,6))\ncolor1 = 'tab:blue'\ncolor2 = 'tab:red'\nax1.plot(df['Year'], df['Fertility Rate'], color=color1, marker='o', label='Fertility Rate')\nax1.set_xlabel('Year')\nax1.set_ylabel('Fertility Rate', color=color1)\nax1.tick_params(axis='y', labelcolor=color1)\nax2 = ax1.twinx()\nax2.plot(df['Year'], df['Yearly % Change'], color=color2, linestyle='--', marker='s', label='Yearly % Change')\nax2.set_ylabel('Yearly % Change', color=color2)\nax2.tick_params(axis='y', labelcolor=color2)\ndrop_idx = np.argmax(np.abs(np.diff(df['Fertility Rate'])))\ndrop_year = df['Year'].iloc[drop_idx+1]\ndrop_val = df['Fertility Rate'].iloc[drop_idx+1]\nax1.axvspan(df['Year'].iloc[drop_idx], df['Year'].iloc[drop_idx+1], color='grey', alpha=0.2)\nax1.text(drop_year, drop_val+0.15, 'Most significant decline', color='black', fontsize=12, ha='center')\nplt.title('Fertility Rate and Population Growth\\nMajor Declines Across Decades', fontsize=16)\nax1.legend(loc='upper left')\nax2.legend(loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

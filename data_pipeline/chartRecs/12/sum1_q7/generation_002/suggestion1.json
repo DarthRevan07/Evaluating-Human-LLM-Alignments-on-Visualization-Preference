@@ -1,0 +1,41 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable difference in Perceptual Aptitude between Careers with strong analytical requirements and those that are more people-oriented?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (side-by-side for two groups)",
+      "design_rationale": "Boxplots allow direct comparison of Perceptual Aptitude distributions between two categories of careers: analytical vs people-oriented. By visually displaying medians, quartiles, and outliers, this approach reveals both central tendency and spread, making it ideal for uncovering group differences. With 104 unique careers, an explicit split helps clarify the analytical question.",
+      "target_insight": "Whether there is a statistically or visually noticeable difference in Perceptual Aptitude scores between analytically demanding careers and people-oriented careers.",
+      "output_fields": [
+        "Perceptual Aptitude",
+        "Career",
+        "Numerical Aptitude",
+        "Verbal Reasoning"
+      ],
+      "chart_encodings": {
+        "x": "Career Group (Analytical vs People-Oriented)",
+        "y": "Perceptual Aptitude",
+        "color": "Distinct color for each group",
+        "size": null,
+        "other_aesthetics": "Box width; alpha=0.8; gridlines"
+      }
+    },
+    "transformations": [
+      "Manually assign each Career to either 'Analytical' or 'People-Oriented' group based on high scores in 'Numerical Aptitude' and 'Abstract Reasoning' (> mean for analytical), or high 'Verbal Reasoning' and likely low 'Numerical Aptitude' (<= mean) for people-oriented.",
+      "Create a new column 'Career Group' in the dataframe with values 'Analytical' or 'People-Oriented'",
+      "Aggregate Perceptual Aptitude values within each group for boxplot display"
+    ],
+    "data_preparation_steps": [
+      "df['Career Group'] = np.where((df['Numerical Aptitude'] >= df['Numerical Aptitude'].mean()) | (df['Abstract Reasoning'] >= df['Abstract Reasoning'].mean()), 'Analytical', 'People-Oriented')",
+      "Split the Perceptual Aptitude scores into two Series: analytical and people-oriented according to 'Career Group'",
+      "Prepare data for boxplot: [analytical_values, people_oriented_values]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\12.csv')\n\n# Assign careers to groups\nanalytical_cond = (df['Numerical Aptitude'] >= df['Numerical Aptitude'].mean()) | (df['Abstract Reasoning'] >= df['Abstract Reasoning'].mean())\ndf['Career Group'] = np.where(analytical_cond, 'Analytical', 'People-Oriented')\n\n# Extract values\nperceptual_analytical = df[df['Career Group'] == 'Analytical']['Perceptual Aptitude']\nperceptual_people = df[df['Career Group'] == 'People-Oriented']['Perceptual Aptitude']\ndata_to_plot = [perceptual_analytical, perceptual_people]\n\nfig, ax = plt.subplots(figsize=(7,5))\ncolors = ['#1f77b4', '#ff7f0e']\nboxprops = dict(facecolor='#dddddd', alpha=0.8)\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=['Analytical', 'People-Oriented'])\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.8)\n\nax.set_ylabel('Perceptual Aptitude')\nax.set_xlabel('Career Group')\nax.set_title('Comparison of Perceptual Aptitude Scores for Analytical vs People-Oriented Careers\\nBy Categorized Career Groups')\nax.grid(True, axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

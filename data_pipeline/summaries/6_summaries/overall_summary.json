@@ -1,0 +1,28 @@
+{
+  "table_name": "world’s wildlife?",
+  "file_index": "6",
+  "original_filename": "6.csv",
+  "total_rows": 13549,
+  "total_columns": 4,
+  "column_names": [
+    "country",
+    "code country",
+    "Year",
+    "Maize yield"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\6_summaries",
+  "source_file": "csv_c2_sec\\6.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\6_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

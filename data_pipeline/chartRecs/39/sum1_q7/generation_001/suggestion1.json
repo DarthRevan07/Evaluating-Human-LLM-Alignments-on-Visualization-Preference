@@ -1,0 +1,39 @@
+{
+  "table_name": "39",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "How does the ratio of K (potassium) to Ca (calcium) differ among the identified glass Types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot succinctly summarizes the distribution (median, quartiles, outliers) of the K/Ca ratio for each glass Type, allowing rapid visual comparison of both typical and extreme values across Types. Given the moderate number of samples (214 rows) and several unique Types, this approach offers clarity and robustness against outliers and skew. It is especially effective for highlighting differences in typical ratio, spread, and variance between glass Types.",
+      "target_insight": "Which Types exhibit higher, lower, or more variable K/Ca ratios; detection of Types with distinctive median or dispersion.",
+      "output_fields": [
+        "Type",
+        "K",
+        "Ca"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "K/Ca Ratio (computed)",
+        "color": "Type (distinct box color)",
+        "size": null,
+        "other_aesthetics": "box colors by Type, outlier points styled, grid"
+      }
+    },
+    "transformations": [
+      "Compute the K/Ca ratio for each row using df['K'] / df['Ca']",
+      "Group rows by df['Type'] to prepare ratio lists per Type"
+    ],
+    "data_preparation_steps": [
+      "Add new column 'K_Ca_ratio' to df: df['K_Ca_ratio'] = df['K'] / df['Ca']",
+      "Prepare list of ratios grouped by Type: [df[df['Type'] == t]['K_Ca_ratio'] for t in sorted(df['Type'].unique())]",
+      "Assign Type labels for tick marks using sorted(df['Type'].unique())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\39.csv')\ndf['K_Ca_ratio'] = df['K'] / df['Ca']\ntypes = sorted(df['Type'].unique())\ndata = [df[df['Type'] == t]['K_Ca_ratio'] for t in types]\nfig, ax = plt.subplots(figsize=(8,5))\nboxprops = dict(facecolor='lightblue', color='navy')\nmedianprops = dict(color='red', linewidth=2)\nflierprops = dict(marker='o', color='orange', alpha=0.6)\nbplot = ax.boxplot(data, labels=types, patch_artist=True, boxprops=boxprops, medianprops=medianprops, flierprops=flierprops)\nax.set_xlabel('Type')\nax.set_ylabel('Potassium/Calcium Ratio')\nax.set_title('Distribution of Potassium/Calcium Ratio by Glass Type')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

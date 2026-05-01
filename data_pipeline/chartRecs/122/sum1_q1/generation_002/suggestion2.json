@@ -1,0 +1,41 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do global sales differ across platforms, and which platforms consistently lead in overall sales?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Distribution of Game Sales per Platform)",
+      "design_rationale": "A boxplot (one per platform) offers a deeper look into the consistency and spread of global sales across all games released on each platform, rather than just total sales. By displaying medians, quartiles, and outliers, we can identify platforms where a few games drive most of the sales (highly skewed distribution) versus platforms with more consistently selling games. Limiting to platforms with a substantial number of titles ensures statistical reliability and comparative clarity.",
+      "target_insight": "This visualization reveals which platforms have the highest median and typical sales per title, which have wide variability, and whether leading platforms (by total sales) also produce consistently high-selling games.",
+      "output_fields": [
+        "Platform",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Platform (filtered to top N with most games, sorted by median sales)",
+        "y": "Global_Sales (distribution per platform, millions)",
+        "color": "Box color (uniform or alternating for readability)",
+        "size": null,
+        "other_aesthetics": "Show outliers (fliers); rotate x labels for clarity; feature median lines"
+      }
+    },
+    "transformations": [
+      "Count the number of games per platform, select platforms with a minimum threshold (e.g., at least 100 games)",
+      "Filter original df to only include these platforms",
+      "Prepare list of platforms sorted by median global sales for display order"
+    ],
+    "data_preparation_steps": [
+      "platform_counts = df['Platform'].value_counts()",
+      "sufficient_games = platform_counts[platform_counts >= 100].index.tolist()",
+      "df_filtered = df[df['Platform'].isin(sufficient_games)]",
+      "platform_medians = df_filtered.groupby('Platform')['Global_Sales'].median().sort_values(ascending=False)",
+      "platform_order = platform_medians.index.tolist()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\nplatform_counts = df['Platform'].value_counts()\nsufficient_games = platform_counts[platform_counts >= 100].index.tolist()\ndf_filtered = df[df['Platform'].isin(sufficient_games)]\nplatform_medians = df_filtered.groupby('Platform')['Global_Sales'].median().sort_values(ascending=False)\nplatform_order = platform_medians.index.tolist()\ndata_to_plot = [df_filtered[df_filtered['Platform'] == plat]['Global_Sales'].values for plat in platform_order]\nfig, ax = plt.subplots(figsize=(14,6))\nbox = ax.boxplot(data_to_plot, patch_artist=True, showfliers=True, medianprops={'color': 'black'}, boxprops={'facecolor': '#76c7c0'})\nax.set_xticks(np.arange(1, len(platform_order)+1))\nax.set_xticklabels(platform_order, rotation=30, ha='right')\nax.set_ylabel('Global Sales per Game (millions)')\nax.set_xlabel('Platform (100+ games per platform)')\nax.set_title('Distribution of Global Sales per Game Across Major Platforms')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

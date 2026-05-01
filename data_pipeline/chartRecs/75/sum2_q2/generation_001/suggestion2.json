@@ -1,0 +1,38 @@
+{
+  "table_name": "75",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What is the average writing score for each parental level of education category?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot + Overlayed Mean",
+      "design_rationale": "A boxplot for each parental education category (x-axis: categorical, y-axis: 'writing score') gives full insight into not just the average, but the spread, skewness, and outlier tendencies of writing scores. Boxplots expose how reliably scores cluster around the mean and highlight categories with higher variability. Overlaying actual mean points on the boxes with a distinct color directly addresses the analytical question, clearly revealing both central tendency and distribution shape.",
+      "target_insight": "See the distribution (spread, median, range, outliers) of writing scores for each parental education category. Mean points provide an immediate answer to the question, while box shapes allow deeper investigation into score consistency for each group.",
+      "output_fields": [
+        "parental level of education",
+        "writing score"
+      ],
+      "chart_encodings": {
+        "x": "'parental level of education'",
+        "y": "'writing score'",
+        "color": "Box fill color uniform, mean point in contrasting color",
+        "size": "null",
+        "other_aesthetics": "mean markers overlaid (black dots), gridlines, rotated x-axis labels"
+      }
+    },
+    "transformations": [
+      "For each 'parental level of education' group, extract all 'writing score' values",
+      "Compute mean writing score for each group"
+    ],
+    "data_preparation_steps": [
+      "edu_categories = df['parental level of education'].unique()",
+      "scores = [df[df['parental level of education'] == cat]['writing score'].values for cat in edu_categories]",
+      "mean_scores = [df[df['parental level of education'] == cat]['writing score'].mean() for cat in edu_categories]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\75.csv')\nedu_categories = df['parental level of education'].unique()\nscores = [df[df['parental level of education'] == cat]['writing score'].values for cat in edu_categories]\nmean_scores = [df[df['parental level of education'] == cat]['writing score'].mean() for cat in edu_categories]\nfig, ax = plt.subplots(figsize=(10, 6))\nbox = ax.boxplot(scores, patch_artist=True, labels=edu_categories)\nfor patch in box['boxes']:\n    patch.set_facecolor('lightcoral')\nax.scatter(np.arange(1, len(edu_categories)+1), mean_scores, color='black', marker='o', s=60, label='Mean Writing Score')\nax.set_ylabel('Writing Score')\nax.set_xlabel('Parental Level of Education')\nax.set_title('Distribution of Writing Scores by Parental Level of Education')\nax.legend(loc='upper right')\nplt.xticks(rotation=30, ha='right')\nax.grid(axis='y', linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

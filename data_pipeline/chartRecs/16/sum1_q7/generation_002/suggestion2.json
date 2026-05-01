@@ -1,0 +1,40 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do Pokémon with a secondary type (Type 2) generally have higher Total statistics than those without?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "violin plot by primary type (Type 1)",
+      "design_rationale": "A violin plot stratified by 'Type 1' and split by 'Type 2' presence reveals not only overall differences in 'Total' for Pokémon with/without secondary type, but also how this relationship varies across primary types. This unconventional approach leverages the categorical ('Type 1') and binary ('Has Type 2') groupings to uncover deeper patterns and anomalies.",
+      "target_insight": "Within each primary type, are Pokémon with a secondary type stronger (higher 'Total'), weaker, or similar relative to their single-type counterparts? This also exposes generational or elemental balancing strategies.",
+      "output_fields": [
+        "Type 1",
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "Type 1",
+        "y": "Total",
+        "color": "Has Type 2 ('Yes' = blue, 'No' = orange)",
+        "size": null,
+        "other_aesthetics": "Violin shape for distribution; split for binary grouping; rotated x labels for readability"
+      }
+    },
+    "transformations": [
+      "Create 'Has Type 2' categorical column as above",
+      "For each 'Type 1', split 'Total' values into 'Has Type 2' == 'Yes' and 'Has Type 2' == 'No'",
+      "Prepare paired violin plots for each primary type"
+    ],
+    "data_preparation_steps": [
+      "df['Has Type 2'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')",
+      "For each unique value in df['Type 1'], collect 'Total' for Has Type 2 == 'Yes' and 'No'",
+      "Build paired lists for violin plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf['Has Type 2'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')\ntypes = df['Type 1'].unique()\ntypes_sorted = sorted(types)\nno_data = [df[(df['Type 1'] == t) & (df['Has Type 2'] == 'No')]['Total'] for t in types_sorted]\nyes_data = [df[(df['Type 1'] == t) & (df['Has Type 2'] == 'Yes')]['Total'] for t in types_sorted]\nfig, ax = plt.subplots(figsize=(14, 8))\nvp1 = ax.violinplot(no_data, positions=np.arange(len(types_sorted)) - 0.2, widths=0.35, showmeans=False, showmedians=True, showextrema=True)\nvp2 = ax.violinplot(yes_data, positions=np.arange(len(types_sorted)) + 0.2, widths=0.35, showmeans=False, showmedians=True, showextrema=True)\nfor pc in vp1['bodies']:\n    pc.set_facecolor('#FFA07A')\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.7)\nfor pc in vp2['bodies']:\n    pc.set_facecolor('#87CEEB')\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.7)\nfor partname in ('cbars', 'cmins', 'cmaxes', 'medians'):\n    vp1[partname].set_color('black')\n    vp2[partname].set_color('black')\nax.set_xticks(np.arange(len(types_sorted)))\nax.set_xticklabels(types_sorted, rotation=45, ha='right')\nax.set_ylabel('Total')\nax.set_xlabel('Type 1')\nax.set_title('Total Stats by Primary Type\\nSplit by Secondary Type Presence')\nax.legend(['No Type 2', 'Has Type 2'], loc='upper left', frameon=True)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,44 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "Which drinks combine both high calorie and high caffeine amounts, and what types do they represent?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot",
+      "design_rationale": "A scatter plot of Calories vs. Caffeine allows for easy visual identification of drinks that are simultaneously high in calories and caffeine. Coloring points by 'type' reveals which drink categories (e.g., energy drinks, coffee, soda) are dominant in the high-calorie-high-caffeine quadrant. Point size based on volume helps illustrate which offerings are large servings. Outliers and clusters become immediately apparent, supporting the analytical goal.",
+      "target_insight": "Drinks that are both high in calories and caffeine, the distribution of such drinks among different types, and the relationship to serving size.",
+      "output_fields": [
+        "Calories",
+        "Caffeine (mg)",
+        "type",
+        "drink",
+        "Volume (ml)"
+      ],
+      "chart_encodings": {
+        "x": "Calories",
+        "y": "Caffeine (mg)",
+        "color": "type (categorical: color-coded by beverage type)",
+        "size": "Volume (ml) (point size)",
+        "other_aesthetics": "alpha=0.7, edgecolors='k', legend for type; annotate top outliers"
+      }
+    },
+    "transformations": [
+      "Filter to highlight points with both Calories and Caffeine (mg) above their respective 75th percentiles ('high')",
+      "Create a color map based on unique values in 'type'",
+      "Select top 5 highest calorie-caffeine drinks for annotation"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c2_sec\\112.csv')",
+      "Calculate 75th percentile values for both 'Calories' and 'Caffeine (mg)'",
+      "Create a boolean mask for drinks above both thresholds",
+      "Create color mapping for 'type' categories",
+      "Sort filtered drinks by product of Calories and Caffeine (mg), pick top 5 for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ncal_75 = df['Calories'].quantile(0.75)\ncaf_75 = df['Caffeine (mg)'].quantile(0.75)\nhigh_mask = (df['Calories'] >= cal_75) & (df['Caffeine (mg)'] >= caf_75)\ndf_high = df[high_mask]\ntypes = df['type'].unique()\ncmap = mpl.colormaps['tab10']\ntype_colors = {t: cmap(i % 10) for i, t in enumerate(types)}\ncolors = df_high['type'].map(type_colors)\nplt.figure(figsize=(10, 7))\nsc = plt.scatter(\n    df_high['Calories'],\n    df_high['Caffeine (mg)'],\n    s=df_high['Volume (ml)'] / df_high['Volume (ml)'].max() * 300 + 50,\n    c=colors,\n    alpha=0.7,\n    edgecolors='k',\n    linewidths=0.5\n)\nfor t in types:\n    plt.scatter([], [], c=type_colors[t], label=t, s=80)\nplt.xlabel('Calories')\nplt.ylabel('Caffeine (mg)')\nplt.title('Drinks High in Both Calories and Caffeine\\nColored by Type (Size ~ Volume (ml))')\nplt.legend(title='Type', bbox_to_anchor=(1.05, 1), loc='upper left')\n# Annotate top 5 by Calories*Caffeine\nif len(df_high) > 0:\n    df_high['Score'] = df_high['Calories'] * df_high['Caffeine (mg)']\n    annots = df_high.nlargest(5, 'Score')\n    for idx, row in annots.iterrows():\n        plt.text(row['Calories'], row['Caffeine (mg)']+10, row['drink'], fontsize=8, color='dimgray', alpha=0.85)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

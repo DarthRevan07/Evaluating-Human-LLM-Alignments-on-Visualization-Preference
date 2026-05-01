@@ -1,0 +1,39 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "How do the sales distributions of a single genre differ among platforms, indicating platform-genre strengths or gaps?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (distribution plot)",
+      "design_rationale": "A boxplot enables a visual comparison of the distribution of Global_Sales for a single genre across different platforms, highlighting not only the average sales but also the spread and the existence of outliers. This approach is effective for the large dataset, allows viewers to spot which platforms excel (or lag) for the selected genre, and immediately exposes platform-genre strengths or gaps via median, quartile range, and extreme values.",
+      "target_insight": "Which platforms have higher typical sales and wider ranges for the chosen genre, and where genre-platform gaps (underperformance or dominance) exist.",
+      "output_fields": [
+        "Platform",
+        "Genre",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Platform",
+        "y": "Global_Sales",
+        "color": "Genre (filtered to single value)",
+        "size": null,
+        "other_aesthetics": "Box coloring by Platform, gridlines for readability; outliers show potential standout hits or flops"
+      }
+    },
+    "transformations": [
+      "Filter df to only rows with the selected Genre, e.g., 'Action'.",
+      "Group by 'Platform', extract 'Global_Sales' for each platform."
+    ],
+    "data_preparation_steps": [
+      "Ask user or set genre='Action' for demonstration purposes.",
+      "filtered_df = df[df['Genre']=='Action']",
+      "Prepare list of 'Global_Sales' per 'Platform' for boxplot."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ngenre = 'Action'\nfiltered_df = df[df['Genre']==genre]\nplatforms = filtered_df['Platform'].unique()\ndata = [filtered_df[filtered_df['Platform']==plat]['Global_Sales'] for plat in platforms]\nfig, ax = plt.subplots(figsize=(14,6))\nbox = ax.boxplot(data, patch_artist=True, labels=platforms)\ncmap = mpl.colormaps['viridis'].resampled(len(platforms))\nfor patch, color in zip(box['boxes'], cmap.colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_color('black')\nax.set_title('Global Sales Distribution of ' + genre + ' Games by Platform')\nax.set_xlabel('Platform')\nax.set_ylabel('Global_Sales (millions)')\nax.grid(True, linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

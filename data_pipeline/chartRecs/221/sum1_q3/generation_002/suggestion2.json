@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Is there a relationship between traveler age and accommodation type preference?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Bar Chart (Accommodation type by age group)",
+      "design_rationale": "A stacked bar chart allows a direct analysis of accommodation type preference within discrete age bins. By binning 'Traveler age' (20-60, range from schema) into several age groups and counting the number of trips per accommodation type within each group, we gain an intuitive view of proportions and popularity patterns. This approach leverages categorical groupings and is effective for segmenting the demographic landscape of traveler preferences.",
+      "target_insight": "Which accommodation types are preferred across different age groups, highlighting shifts in type selection as age increases.",
+      "output_fields": [
+        "Traveler age",
+        "Accommodation type"
+      ],
+      "chart_encodings": {
+        "x": "Traveler age group (binned)",
+        "y": "Number of trips",
+        "color": "Accommodation type (distinct color per stack)",
+        "size": "null",
+        "other_aesthetics": "legend for accommodation types; edge color for bar separation"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Traveler age' or 'Accommodation type'",
+      "Bin 'Traveler age' into groups: 20-29, 30-39, 40-49, 50-59, 60+ (cover range 20-60)",
+      "Group by age bin and 'Accommodation type', count trips per accommodation type per bin"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Traveler age', 'Accommodation type'])",
+      "age_bins = [20, 30, 40, 50, 60, np.inf]",
+      "age_labels = ['20-29', '30-39', '40-49', '50-59', '60+']",
+      "df['Age group'] = pd.cut(df['Traveler age'], bins=age_bins, labels=age_labels, right=False)",
+      "pivot = df.groupby(['Age group', 'Accommodation type']).size().unstack(fill_value=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf = df.dropna(subset=['Traveler age', 'Accommodation type'])\nage_bins = [20, 30, 40, 50, 60, np.inf]\nage_labels = ['20-29', '30-39', '40-49', '50-59', '60+']\ndf['Age group'] = pd.cut(df['Traveler age'], bins=age_bins, labels=age_labels, right=False)\npivot = df.groupby(['Age group', 'Accommodation type']).size().unstack(fill_value=0)\naccommod_types = pivot.columns\ncmap = mpl.colormaps['viridis'].resampled(len(accommod_types))\nfig, ax = plt.subplots(figsize=(10, 6))\nbottom = np.zeros(len(pivot))\nfor i, t in enumerate(accommod_types):\n    ax.bar(pivot.index, pivot[t], label=t, bottom=bottom, color=cmap(i), edgecolor='black')\n    bottom += pivot[t].values\nax.set_xlabel('Traveler age group')\nax.set_ylabel('Number of trips')\nplt.title('Accommodation type preference by age group\\nStacked proportions highlight shifting lodging choices')\nax.legend(title='Accommodation type', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

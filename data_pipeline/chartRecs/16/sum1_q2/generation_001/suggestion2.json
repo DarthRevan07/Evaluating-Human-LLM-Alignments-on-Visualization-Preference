@@ -1,0 +1,39 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which Generation features the highest proportion of Legendary Pokémon compared to its total Pokémon count?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap makes it easy to visually scan how the proportion of Legendary Pokémon changes across Generations. By encoding the ratio as color intensity, Generations with strong representation stand out instantly. This approach introduces a less conventional view while enabling quick recognition of relative strengths. Heatmaps are effective with categorical axes and normalized values as in our ratio metric.",
+      "target_insight": "Provides a visual overview of ratio 'hot spots', making Generations with high Legendary proportion instantly obvious and also showing relative intensity for all Generations.",
+      "output_fields": [
+        "Generation",
+        "Legendary"
+      ],
+      "chart_encodings": {
+        "x": "Generation (horizontal axis)",
+        "y": "Single row (for simplicity - fixed label 'Legendary Ratio')",
+        "color": "Legendary proportion (normalized, shown as heatmap intensity via cmap='viridis')",
+        "size": null,
+        "other_aesthetics": "Ratio annotation in each cell, colorbar mapping ratio to color"
+      }
+    },
+    "transformations": [
+      "Group by 'Generation' and calculate proportion: sum(Legendary) / count of entries"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('Generation')",
+      "legendary_counts = df_grouped['Legendary'].sum()",
+      "total_counts = df_grouped.size()",
+      "legendary_ratio = legendary_counts / total_counts",
+      "legendary_ratio_matrix = legendary_ratio.values.reshape(1, -1)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\16.csv')\ndf_grouped = df.groupby('Generation')\nlegendary_counts = df_grouped['Legendary'].sum()\ntotal_counts = df_grouped.size()\nlegendary_ratio = legendary_counts / total_counts\nlegendary_ratio_matrix = legendary_ratio.values.reshape(1, -1)\nfig, ax = plt.subplots(figsize=(8, 2))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(legendary_ratio_matrix, aspect='auto', cmap=cmap, vmin=0, vmax=legendary_ratio.max())\nax.set_xticks(np.arange(len(legendary_ratio)))\nax.set_xticklabels(legendary_ratio.index.astype(int), fontsize=12)\nax.set_yticks([0])\nax.set_yticklabels(['Legendary Ratio'], fontsize=12)\nfor j in range(len(legendary_ratio)):\n    val = legendary_ratio.values[j]\n    color = cmap(val/legendary_ratio.max())\n    textcolor = 'white' if val > 0.18 else 'black'\n    ax.text(j, 0, f'{val:.2%}', ha='center', va='center', color=textcolor, fontsize=11, fontweight='bold')\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', pad=0.01)\ncbar.set_label('Legendary Proportion', fontsize=12)\nax.set_title('Heatmap of Legendary Pokémon Proportion\\nby Generation', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Compare the frequency and timing of astronaut fatalities (Death Date) with their mission involvement (Death Mission).",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Timeline Scatter Plot",
+      "design_rationale": "A timeline scatter plot allows us to visualize all astronaut fatalities ('Death Date') along a chronological axis, highlighting those associated with mission accidents ('Death Mission'). Fatalities without a 'Death Mission' are plotted in a different color, facilitating an immediate distinction between mission-related and other causes. This approach is effective given the limited number of fatalities and the three unique values in 'Death Mission'. It maximizes clarity by combining chronological order with categorical coloring, revealing clusters and timing of both mission-related and non-mission fatalities.",
+      "target_insight": "Shows when astronaut deaths occurred, distinguishing deaths during missions from those unrelated to missions, highlighting patterns or clustering around specific incidents.",
+      "output_fields": [
+        "Death Date",
+        "Death Mission",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Death Date",
+        "y": "Death Mission",
+        "color": "Death Mission (distinct color for mission vs non-mission deaths)",
+        "size": "null",
+        "other_aesthetics": "point shape to indicate mission vs non-mission deaths; marker alpha for clarity"
+      }
+    },
+    "transformations": [
+      "Filter rows where 'Death Date' is not null.",
+      "Create a boolean flag for 'Death Mission' (True if mission related, False otherwise).",
+      "Convert 'Death Date' to datetime format for correct chronological plotting.",
+      "Assign y-coordinate for scatter plot (missions get a nonzero y-value, others get zero)."
+    ],
+    "data_preparation_steps": [
+      "df_death = df[df['Death Date'].notnull()]",
+      "df_death['Death Mission Flag'] = df_death['Death Mission'].notnull()",
+      "df_death['Death Date'] = pd.to_datetime(df_death['Death Date'])",
+      "df_death['y_plot'] = df_death['Death Mission Flag'].map({True: 1, False: 0})"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf_death = df[df['Death Date'].notnull()].copy()\ndf_death['Death Mission Flag'] = df_death['Death Mission'].notnull()\ndf_death['Death Date'] = pd.to_datetime(df_death['Death Date'])\ndf_death['y_plot'] = df_death['Death Mission Flag'].map({True: 1, False: 0})\nplt.figure(figsize=(10,3))\ncmap = mpl.colormaps['tab10']\ncolors = df_death['Death Mission Flag'].map({True: cmap(0), False: cmap(1)})\nmarkers = df_death['Death Mission Flag'].map({True: 'o', False: 'x'})\nfor i, row in df_death.iterrows():\n    plt.scatter(row['Death Date'], row['y_plot'], c=[colors[i]], marker=markers[i], s=100, alpha=0.8)\nplt.yticks([0,1], ['Non-Mission Fatality', 'Mission Fatality'])\nplt.xlabel('Death Date')\nplt.title('Astronaut Deaths Timeline\\nMission vs Non-Mission Fatalities')\nplt.grid(axis='x', linestyle='--', alpha=0.3)\nmission_legend = plt.Line2D([0], [0], marker='o', color='w', label='Mission Fatality', markerfacecolor=cmap(0), markersize=9)\nnon_mission_legend = plt.Line2D([0], [0], marker='x', color='w', label='Non-Mission Fatality', markerfacecolor=cmap(1), markeredgecolor=cmap(1), markersize=9)\nplt.legend(handles=[mission_legend, non_mission_legend], bbox_to_anchor=(1.01,1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

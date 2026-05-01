@@ -1,0 +1,38 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 1,
+  "question": "What brands or drink names dominate the top ranks for caffeine content and how does their calorie content compare?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal bar plot (ranked list)",
+      "design_rationale": "A horizontal bar plot directly showcases the top caffeine content beverages, with each bar representing a brand/drink. Overlaying calorie content as a color encoding provides immediate visual comparison of stimulant potency versus energy value across brands. This is ideal given the large number of unique drinks (610), allowing for clear ranking and comparison.",
+      "target_insight": "Identifies the highest caffeine drinks by brand/name and unveils whether top-ranked caffeine drinks tend to be high or low in calories, revealing patterns such as whether energy drinks are calorie-laden or not.",
+      "output_fields": [
+        "drink",
+        "Caffeine (mg)",
+        "Calories"
+      ],
+      "chart_encodings": {
+        "x": "Caffeine (mg)",
+        "y": "drink",
+        "color": "Calories (continuous colormap)",
+        "size": null,
+        "other_aesthetics": "Bars sorted descending; colorbar shows calorie scale; bar width set for readability; only top 20 drinks are shown."
+      }
+    },
+    "transformations": [
+      "Sort df by 'Caffeine (mg)' descending",
+      "Select top 20 rows for most caffeinated drinks"
+    ],
+    "data_preparation_steps": [
+      "df_sorted = df.sort_values(by='Caffeine (mg)', ascending=False)",
+      "df_top20 = df_sorted.head(20)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_sorted = df.sort_values(by='Caffeine (mg)', ascending=False)\ndf_top20 = df_sorted.head(20)\ncmap = mpl.colormaps['viridis']\ncal_min = df_top20['Calories'].min()\ncal_max = df_top20['Calories'].max()\nnorm = mpl.colors.Normalize(vmin=cal_min, vmax=cal_max)\ncolors = cmap(norm(df_top20['Calories']))\nfig, ax = plt.subplots(figsize=(10,7))\nbars = ax.barh(df_top20['drink'], df_top20['Caffeine (mg)'], color=colors, edgecolor='black')\nax.invert_yaxis()\nfor i, (bar, cal) in enumerate(zip(bars, df_top20['Calories'])):\n    ax.text(bar.get_width() + 5, bar.get_y() + bar.get_height()/2, str(cal) + ' cal', va='center', fontsize=10)\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\ncbar = fig.colorbar(sm, ax=ax, label='Calories')\nax.set_xlabel('Caffeine (mg)', fontsize=12)\nax.set_ylabel('Drink (Brand Name)', fontsize=12)\nax.set_title('Top 20 Caffeinated Drinks\\nBar Color Shows Calorie Content', fontsize=15)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

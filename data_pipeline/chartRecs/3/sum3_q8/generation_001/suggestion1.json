@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which countries have both high rice production (Tons) and high rice yield (Kg / Hectare)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Annotated Highlight",
+      "design_rationale": "A scatter plot is ideal for visualizing the relationship between rice production volume and rice yield per hectare across all countries. By plotting both metrics for each country, high producers and high yielders appear in the top-right quadrant. This approach directly exposes which countries combine high output with high productivity and spotlights those excelling in both metrics. Annotation and color highlighting further guide viewers to the top-performing nations.",
+      "target_insight": "Identify countries that rank highly in both rice production and rice yield, distinguishing them visually and making it easy to spot global leaders who excel in both volume and agricultural efficiency.",
+      "output_fields": [
+        "Country",
+        "Rice Production (Tons)",
+        "Rice Yield (Kg / Hectare)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production (Tons) - transformed to numeric",
+        "y": "Rice Yield (Kg / Hectare)",
+        "color": "Highlight countries above 75th percentile in both metrics (distinct color), others as gray",
+        "size": "null",
+        "other_aesthetics": "annotate highlighted countries, alpha for scatter points"
+      }
+    },
+    "transformations": [
+      "Convert df['Rice Production (Tons)'] from string abbreviations (K, M) to numeric value",
+      "Convert df['Rice Yield (Kg / Hectare)'] from string to float",
+      "Calculate 75th percentile threshold for rice production and rice yield",
+      "Create boolean mask for countries above both thresholds"
+    ],
+    "data_preparation_steps": [
+      "Define helper function to parse K/M notation to numeric",
+      "Apply function to df['Rice Production (Tons)'] and assign to new column 'Rice Production (Tons)_num'",
+      "Convert df['Rice Yield (Kg / Hectare)'] to float and assign to new column 'Rice Yield (Kg / Hectare)_num'",
+      "Calculate 75th percentiles for both metrics",
+      "Create mask for countries above both percentiles",
+      "Extract top countries for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\n\ndef parse_km(val):\n    val = str(val).strip()\n    if val[-1] == \"K\":\n        return float(val[:-1]) * 1e3\n    elif val[-1] == \"M\":\n        return float(val[:-1]) * 1e6\n    else:\n        try:\n            return float(val)\n        except:\n            return np.nan\n\ndf[\"Rice Production (Tons)_num\"] = df[\"Rice Production (Tons)\"].apply(parse_km)\ndf[\"Rice Yield (Kg / Hectare)_num\"] = df[\"Rice Yield (Kg / Hectare)\"].astype(float)\n\nprod_thresh = df[\"Rice Production (Tons)_num\"].quantile(0.75)\nyield_thresh = df[\"Rice Yield (Kg / Hectare)_num\"].quantile(0.75)\n\nmask = (df[\"Rice Production (Tons)_num\"] >= prod_thresh) & (df[\"Rice Yield (Kg / Hectare)_num\"] >= yield_thresh)\n\ndf_top = df[mask]\n\nplt.figure(figsize=(10,6))\nplt.scatter(df[\"Rice Production (Tons)_num\"], df[\"Rice Yield (Kg / Hectare)_num\"], color=\"gray\", alpha=0.6, label=\"Other countries\")\nplt.scatter(df_top[\"Rice Production (Tons)_num\"], df_top[\"Rice Yield (Kg / Hectare)_num\"], color=\"orange\", s=80, label=\"High production and yield\")\nfor idx, row in df_top.iterrows():\n    plt.text(row[\"Rice Production (Tons)_num\"]+0.02*prod_thresh, row[\"Rice Yield (Kg / Hectare)_num\"], row[\"Country\"], fontsize=9, color=\"black\")\nplt.xlabel(\"Rice Production (Tons)\")\nplt.ylabel(\"Rice Yield (Kg / Hectare)\")\nplt.title(\"Countries with both high rice production and high rice yield\\n(Top quartile highlighted)\")\nplt.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

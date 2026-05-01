@@ -1,0 +1,41 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the purchase conversion rate vary across different age groups?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line Chart (continuous Age vs Conversion Rate)",
+      "design_rationale": "A line chart visualizing the rolling purchase conversion rate across the continuous Age spectrum (using a moving average or window) captures subtler trends and micro-fluctuations, leveraging Age's numeric detail and distribution. This approach is unconventional for bin analysis but ideal for revealing inflection points and age-related behavioral shifts, especially given the moderately large dataset and diverse Age values.",
+      "target_insight": "Uncovers nuanced, potentially non-linear relationships between Age and conversion rate. Pinpoints ages where conversion dips or spikes, informing finer-grained segmentation and tailoring.",
+      "output_fields": [
+        "Age",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "Age (sorted, continuous)",
+        "y": "Purchase conversion rate (moving average of 'PurchaseStatus')",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Smoothed curve with window=5, shaded area for 95% CI, vertical dashed line at mean Age"
+      }
+    },
+    "transformations": [
+      "Sort df by df['Age'] ascending",
+      "Compute rolling mean (window=5) of df['PurchaseStatus'] across df['Age'] for smoothing",
+      "Compute 95% confidence interval for each rolling window"
+    ],
+    "data_preparation_steps": [
+      "Sort df by 'Age'",
+      "Apply rolling window (size=5) to calculate mean and std of 'PurchaseStatus'",
+      "Calculate 95% CI using mean +/- 1.96*std/sqrt(window)",
+      "Drop NaN values resulting from the rolling computation",
+      "Prepare dataframe with columns: Age, rolling mean, lower CI, upper CI"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_sorted = df.sort_values('Age').reset_index(drop=True)\nwindow = 5\nroll_mean = df_sorted['PurchaseStatus'].rolling(window=window, center=True).mean()\nroll_std = df_sorted['PurchaseStatus'].rolling(window=window, center=True).std()\nroll_count = df_sorted['PurchaseStatus'].rolling(window=window, center=True).count()\nci95 = 1.96 * roll_std / np.sqrt(roll_count)\nlower_ci = roll_mean - ci95\nupper_ci = roll_mean + ci95\nmask = ~roll_mean.isna()\nfig, ax = plt.subplots(figsize=(10, 6))\nax.plot(df_sorted['Age'][mask], roll_mean[mask], color='#306998', linewidth=2, label='Conversion Rate (MA5)')\nax.fill_between(df_sorted['Age'][mask], lower_ci[mask], upper_ci[mask], color='#4B8BBE', alpha=0.2, label='95% Confidence Interval')\nax.axvline(df['Age'].mean(), color='#FFD43B', linestyle='--', linewidth=1.5, label='Mean Age')\nax.set_xlabel('Age')\nax.set_ylabel('Purchase Conversion Rate')\nax.set_title('Purchase Conversion Rate Across Continuous Age Spectrum')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

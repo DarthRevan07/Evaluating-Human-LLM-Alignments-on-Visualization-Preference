@@ -1,0 +1,41 @@
+{
+  "table_name": "26",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "What are the most significant spikes or drops in Tesla's daily price range (the difference between High and Low), and when did they occur?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Annotated Line Plot",
+      "design_rationale": "A line plot allows the viewer to see the time-series evolution of daily price range across the entire dataset (2010–2020), identifying peaks and troughs visually. By annotating the largest spikes and drops, the viewer can immediately recognize outlier events and when they occurred. This approach leverages the uniqueness and chronological order of the 'Date' field (string, but essentially a time axis) and the numeric nature of price range, suited for line chart with highlighted annotations.",
+      "target_insight": "The specific dates and magnitude of the most extreme spikes and drops in Tesla's daily price range, instantly visible as sharp peaks or valleys, and explicitly called out with annotations for top N events.",
+      "output_fields": [
+        "Date",
+        "High",
+        "Low"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Daily Price Range (High - Low)",
+        "color": "Single color for line; red for spikes, blue for drops annotations",
+        "size": "null",
+        "other_aesthetics": "Annotated markers for top spikes and drops; text labels for annotation; rotated x-ticks for readability"
+      }
+    },
+    "transformations": [
+      "Compute daily price range for each row: df['High'] - df['Low']",
+      "Sort days by price range descending for spikes; ascending for drops",
+      "Select top 3 spikes and top 3 drops for annotation"
+    ],
+    "data_preparation_steps": [
+      "Create a new column 'Price Range' as df['High'] - df['Low']",
+      "Convert df['Date'] to datetime for sorting and axis formatting",
+      "Sort df by 'Date' ascending.",
+      "Identify indices of highest and lowest 3 'Price Range' values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\26.csv\")\ndf[\"Price Range\"] = df[\"High\"] - df[\"Low\"]\ndf[\"Date_dt\"] = pd.to_datetime(df[\"Date\"])\ndf = df.sort_values(\"Date_dt\")\nfig, ax = plt.subplots(figsize=(14, 6))\nax.plot(df[\"Date_dt\"], df[\"Price Range\"], color=\"black\", linewidth=1.5)\nn_spikes = 3\nn_drops = 3\nspike_idx = df[\"Price Range\"].nlargest(n_spikes).index\ndrop_idx = df[\"Price Range\"].nsmallest(n_drops).index\nfor i in spike_idx:\n    ax.scatter(df.loc[i, \"Date_dt\"], df.loc[i, \"Price Range\"], color=\"red\", s=80, zorder=3)\n    ax.text(df.loc[i, \"Date_dt\"], df.loc[i, \"Price Range\"] + 2,\n            str(df.loc[i, \"Date_dt\"].date()) + \"\\nSpike: \" + str(round(df.loc[i, \"Price Range\"], 2)),\n            color=\"red\", fontsize=10, ha=\"center\", va=\"bottom\", fontweight=\"bold\")\nfor i in drop_idx:\n    ax.scatter(df.loc[i, \"Date_dt\"], df.loc[i, \"Price Range\"], color=\"blue\", s=80, zorder=3)\n    ax.text(df.loc[i, \"Date_dt\"], df.loc[i, \"Price Range\"] - 2,\n            str(df.loc[i, \"Date_dt\"].date()) + \"\\nDrop: \" + str(round(df.loc[i, \"Price Range\"], 2)),\n            color=\"blue\", fontsize=10, ha=\"center\", va=\"top\", fontweight=\"bold\")\nax.set_xlabel(\"Date\")\nax.set_ylabel(\"Daily Price Range (High - Low)\")\nplt.title(\"Tesla Daily Price Range: Spikes and Drops Annotated (2010-2020)\")\nplt.xticks(rotation=45)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which countries had the highest total methane emissions in 2018, and how does this compare to their values in 1990?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot (Change vs Initial Value)",
+      "design_rationale": "A scatter plot, with each point as a country, allows us to explore emission changes more dynamically. Mapping the x-axis to the 1990 value and the y-axis to the 2018 value, countries above the diagonal line have increased emissions, and below have decreased. The size of each marker can represent the absolute change, and color can highlight the top emitters in 2018. This effectively visualizes not only the magnitude of change but also the relative standing of each country in both years.",
+      "target_insight": "Shows which countries have increased or decreased methane emissions and highlights the leading contributors and trends.",
+      "output_fields": [
+        "Country",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "1990",
+        "y": "2018",
+        "color": "Top emitter highlight (2018)",
+        "size": "Absolute emission change (|2018 - 1990|)",
+        "other_aesthetics": "Diagonal y=x reference line, label top 5 countries"
+      }
+    },
+    "transformations": [
+      "Aggregate for each country across all sectors for both years (sum '2018' and '1990')",
+      "Calculate absolute change = |2018 - 1990|",
+      "Identify top 5 emitters by 2018 for labeling/highlighted coloring"
+    ],
+    "data_preparation_steps": [
+      "df_total = df.groupby('Country')[['2018', '1990']].sum().reset_index()",
+      "df_total['abs_change'] = (df_total['2018'] - df_total['1990']).abs()",
+      "top_countries = df_total.nlargest(5, '2018')['Country'].tolist()",
+      "df_total['is_top5'] = df_total['Country'].isin(top_countries)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_total = df.groupby('Country')[['2018', '1990']].sum().reset_index()\ndf_total['abs_change'] = (df_total['2018'] - df_total['1990']).abs()\ntop_countries = df_total.nlargest(5, '2018')['Country'].tolist()\ndf_total['is_top5'] = df_total['Country'].isin(top_countries)\ncmap = mpl.colormaps['tab10']\nfig, ax = plt.subplots(figsize=(8, 8))\nsc = ax.scatter(df_total['1990'], df_total['2018'], c=df_total['is_top5'].map({True: cmap(0), False: 'gray'}), \n                s=df_total['abs_change'] * 0.5 + 10, alpha=0.7, edgecolor='w', linewidth=0.5)\nlim = max(df_total[['1990','2018']].max()) * 1.05\nax.plot([0, lim], [0, lim], color='black', linestyle='--', lw=1, label='No Change (y=x)')\nfor idx, row in df_total[df_total['is_top5']].iterrows():\n    ax.text(row['1990']+5, row['2018']+5, row['Country'], fontsize=10, color=cmap(0), fontweight='bold')\nax.set_xlabel('Methane Emissions in 1990 (MTCO2e)')\nax.set_ylabel('Methane Emissions in 2018 (MTCO2e)')\nax.set_title('Methane Emissions per Country: 1990 vs 2018\\nHighlight: Top 5 Emitters in 2018', fontsize=14, fontweight='bold')\nlegend_elements = [mpl.lines.Line2D([0], [0], marker='o', color='w', label='Top 5 in 2018', markerfacecolor=cmap(0), markersize=10, markeredgecolor='w'),\n                   mpl.lines.Line2D([0], [0], marker='o', color='w', label='Other Countries', markerfacecolor='gray', markersize=10, markeredgecolor='w')]\nax.legend(handles=legend_elements, loc='upper left')\nax.set_xlim(left=0)\nax.set_ylim(bottom=0)\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

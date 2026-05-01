@@ -1,0 +1,39 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the relationship between Luminosity and Radius for stars of the same Star type?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Faceting (Star type)",
+      "design_rationale": "A scatter plot directly visualizes the relationship between Luminosity(L/Lo) and Radius(R/Ro) at the individual star level. By faceting by Star type (each subplot is one Star type), viewers can compare the relationship within each type. Color-coding by Absolute magnitude(Mv) adds a third variable for insight into star brightness, revealing patterns specific to each type. This approach is effective for 240 rows, providing both granular and comparative views.",
+      "target_insight": "This visual clearly shows the correlation (or lack thereof) between Luminosity and Radius for every Star type, while revealing how Absolute magnitude varies within the scatter distributions.",
+      "output_fields": [
+        "Luminosity(L/Lo)",
+        "Radius(R/Ro)",
+        "Star type",
+        "Absolute magnitude(Mv)"
+      ],
+      "chart_encodings": {
+        "x": "Radius(R/Ro)",
+        "y": "Luminosity(L/Lo)",
+        "color": "Absolute magnitude(Mv)",
+        "size": null,
+        "other_aesthetics": "Facets: one subplot per Star type, colormap='viridis', alpha=0.8"
+      }
+    },
+    "transformations": [
+      "Separate dataset by unique values of df['Star type'] (0-5) to create facets",
+      "For each facet, plot df['Radius(R/Ro)'] vs df['Luminosity(L/Lo)'] colored by df['Absolute magnitude(Mv)']"
+    ],
+    "data_preparation_steps": [
+      "Identify unique values in df['Star type']",
+      "For each Star type value, subset df to only stars of that type"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\192.csv')\nstar_types = sorted(df['Star type'].unique())\nfig, axes = plt.subplots(2, 3, figsize=(18, 10), sharex=True, sharey=True)\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['Absolute magnitude(Mv)'].min(), vmax=df['Absolute magnitude(Mv)'].max())\nfor i, st in enumerate(star_types):\n    ax = axes[i // 3, i % 3]\n    df_type = df[df['Star type'] == st]\n    sc = ax.scatter(\n        df_type['Radius(R/Ro)'],\n        df_type['Luminosity(L/Lo)'],\n        c=df_type['Absolute magnitude(Mv)'],\n        cmap=cmap,\n        norm=norm,\n        alpha=0.8\n    )\n    ax.set_title('Star type: ' + str(st))\n    ax.set_xlabel('Radius(R/Ro)')\n    ax.set_ylabel('Luminosity(L/Lo)')\n    ax.set_xscale('log')\n    ax.set_yscale('log')\nfig.suptitle('Luminosity vs Radius for each Star type\\nColor = Absolute magnitude(Mv)', fontsize=18)\ncbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=axes, orientation='vertical', fraction=0.02, pad=0.05)\ncbar.set_label('Absolute magnitude(Mv)')\nplt.tight_layout(rect=[0, 0.03, 1, 0.96])\nplt.show()"
+  },
+  "schema_based": true
+}

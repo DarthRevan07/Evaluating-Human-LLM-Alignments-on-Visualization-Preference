@@ -1,0 +1,37 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Do properties with more bedrooms tend to have higher prices compared to those with fewer bedrooms?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot (with regression line)",
+      "design_rationale": "A scatter plot directly visualizes the relationship between 'bedrooms' (as discrete numeric) and 'price' (continuous). Overlaying a regression line allows quantifying the overall trend, showing whether higher bedroom counts correlate with increased sale prices. Point transparency helps reveal density and clustering, while a regression line communicates the average effect. This chart also uncovers patterns not visible in aggregated visualizations, such as non-linear or variable relationships.",
+      "target_insight": "The strength and nature of the relationship between the number of bedrooms and price across all individual properties, including correlation, outliers, and clustering.",
+      "output_fields": [
+        "bedrooms",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "bedrooms",
+        "y": "price",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "alpha for overplotting, regression line overlay"
+      }
+    },
+    "transformations": [
+      "No aggregation; plot raw values of 'bedrooms' and 'price' for each property.",
+      "Fit a linear regression using np.polyfit to get slope/intercept for line."
+    ],
+    "data_preparation_steps": [
+      "Extract 'bedrooms' (numeric) and 'price' (numeric) from df as x and y arrays.",
+      "Use np.polyfit to compute regression coefficients."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\nx = df['bedrooms'].values\ny = df['price'].values\nfig, ax = plt.subplots(figsize=(10,6))\nax.scatter(x, y, alpha=0.4, color=\"#69b3a2\", edgecolors=\"gray\")\ncoeffs = np.polyfit(x, y, 1)\nreg_line = coeffs[0] * x + coeffs[1]\nax.plot(np.sort(x), np.poly1d(coeffs)(np.sort(x)), color=\"#e31a1c\", linewidth=2, label=\"Linear trend\")\nax.set_xlabel(\"bedrooms\", fontsize=13)\nax.set_ylabel(\"price\", fontsize=13)\nax.set_title(\"Scatterplot: Relationship between bedrooms and price (with regression line)\", fontsize=15)\nax.legend()\nax.grid(True, linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

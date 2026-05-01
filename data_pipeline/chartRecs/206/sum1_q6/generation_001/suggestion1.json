@@ -1,0 +1,37 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable trend in property prices based on the number of stories?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (distribution visualization)",
+      "design_rationale": "A boxplot is ideal for visualizing the distribution and spread of property prices within each 'stories' category. This lets us see median prices, interquartile ranges, and outliers for 1, 2, 3, and 4-story homes, showing if higher stories tend to command higher prices and how much price variability exists within each group. The schema indicates price is skewed and stories are discrete (1-4), making this chart an effective and clear choice. It answers the question with both overall trend (medians) and detailed spread.",
+      "target_insight": "The visualization shows whether there is a monotonic or notable trend in median and spread of property prices as the number of stories increases, and highlights the presence of outliers or price overlap between categories.",
+      "output_fields": [
+        "stories",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "stories",
+        "y": "price",
+        "color": "stories (discrete, via palette)",
+        "size": "null",
+        "other_aesthetics": "box width, outlier markers, grid, legend visible"
+      }
+    },
+    "transformations": [
+      "Group houses by 'stories' and extract corresponding 'price' values",
+      "Sort the 'stories' categories for orderly display"
+    ],
+    "data_preparation_steps": [
+      "Extract unique values for 'stories'",
+      "For each 'stories' value, collect all associated 'price' values into list"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\nstories_sorted = sorted(df['stories'].unique())\ndata_to_plot = [df[df['stories']==s]['price'].values for s in stories_sorted]\nfig, ax = plt.subplots(figsize=(8,6))\ncmap = mpl.colormaps['viridis'].resampled(len(stories_sorted))\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=[str(s) for s in stories_sorted])\nfor patch, s in zip(box['boxes'], stories_sorted):\n    color_ind = stories_sorted.index(s)\n    patch.set_facecolor(cmap(color_ind/len(stories_sorted)))\n    patch.set_edgecolor(\"black\")\nfor median in box['medians']:\n    median.set_color(\"yellow\")\nfor flier in box['fliers']:\n    flier.set(marker='o', color='red', alpha=0.7)\nax.set_xlabel(\"stories\")\nax.set_ylabel(\"price\")\nax.set_title(\"Distribution of Property Prices by Number of Stories\\n(Boxplot)\")\nax.grid(axis='y', alpha=0.25)\nlegend_handles = [mpl.patches.Patch(color=cmap(i/len(stories_sorted)), label=str(s) + \" stories\") for i, s in enumerate(stories_sorted)]\nax.legend(handles=legend_handles, title=\"stories\", loc=\"upper right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

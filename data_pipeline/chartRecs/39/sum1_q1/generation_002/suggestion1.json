@@ -1,0 +1,38 @@
+{
+  "table_name": "39",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the distribution of RI (refractive index) vary across different Type classifications?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "Boxplots are ideal for displaying the distribution of a continuous variable (RI) across categories (Type). The Glass Classification schema provides a numeric 'Type' variable with 6 unique classes and nearly continuous 'RI' measurements with 178 unique values. By showing the median, quartiles, and outliers for each Type group, viewers can directly compare the spread, central tendency, and variability in RI for each classification. This addresses the question by answering: Are some Types more variable in RI than others? Do any have higher/lower typical RI values?",
+      "target_insight": "Compare the central tendency, spread, and presence of outliers in RI across glass Type classifications to reveal differences in material properties by intended use.",
+      "output_fields": [
+        "RI",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "RI",
+        "color": "Type (distinct color per category)",
+        "size": "null",
+        "other_aesthetics": "show outliers, notch for median confidence, colored boxes per Type"
+      }
+    },
+    "transformations": [
+      "Group df['RI'] values by df['Type'] to prepare list of RI distributions per Type",
+      "Assign distinct colors for each Type classification"
+    ],
+    "data_preparation_steps": [
+      "For each value in df['Type'], create a list of corresponding df['RI'] values",
+      "Use Type codes as x-tick labels (sorted ascending)",
+      "Create a color mapping where each Type gets its own color"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\39.csv')\ntype_values = sorted(df['Type'].unique())\nri_per_type = [df[df['Type'] == t]['RI'].values for t in type_values]\ncmap = mpl.colormaps['viridis'].resampled(len(type_values))\nbox_colors = [cmap(i) for i in range(len(type_values))]\nfig, ax = plt.subplots(figsize=(9,6))\nbp = ax.boxplot(ri_per_type, notch=True, patch_artist=True, boxprops=dict(facecolor='white'))\nfor patch, color in zip(bp['boxes'], box_colors):\n    patch.set_facecolor(color)\nfor median in bp['medians']:\n    median.set_color('black')\nax.set_xticks(np.arange(1, len(type_values)+1))\nax.set_xticklabels([str(t) for t in type_values])\nax.set_xlabel('Type')\nax.set_ylabel('RI')\nax.set_title('Distribution of RI by Glass Type\\n(Boxplot: median, spread, & outliers)')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=min(type_values), vmax=max(type_values)))\nsm.set_array([])\ncbar = plt.colorbar(sm, ticks=type_values)\ncbar.set_label('Type Classification')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

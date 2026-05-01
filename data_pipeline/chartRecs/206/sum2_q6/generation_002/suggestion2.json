@@ -1,0 +1,40 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "How does the distribution of houses with guestrooms compare between preferred and non-preferred areas?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot",
+      "design_rationale": "A violin plot provides a nuanced view on how the area distribution varies for houses with guestrooms across preferred vs. non-preferred areas. Since 'area' is a numeric field and both 'prefarea' and 'guestroom' are binary categoricals, faceting violins for the four combinations surfaces possible differences in house sizes (area) for guestroom availability, split by area preference. This chart type shows not only medians and spread but also multi-modal tendencies, revealing deeper insights beyond simple counts.",
+      "target_insight": "The visualization uncovers whether preferred area houses with guestrooms tend to be larger, by comparing the distribution of property sizes for each guestroom and area preference category.",
+      "output_fields": [
+        "area",
+        "guestroom",
+        "prefarea"
+      ],
+      "chart_encodings": {
+        "x": "Combined guestroom and prefarea categories",
+        "y": "area",
+        "color": "guestroom/prefarea category",
+        "size": null,
+        "other_aesthetics": "Violin shape, transparency to emphasize density, bold group labels"
+      }
+    },
+    "transformations": [
+      "Create new column combining 'guestroom' and 'prefarea' e.g. 'Preferred+Guestroom', 'Preferred+No Guestroom', etc.",
+      "Filter out non-used combinations (if any)",
+      "For each combined category, extract 'area' values"
+    ],
+    "data_preparation_steps": [
+      "df['category'] = np.where(df['prefarea']=='yes', 'Preferred', 'Non-Preferred') + ' Area, ' + np.where(df['guestroom']=='yes', 'Guestroom', 'No Guestroom')",
+      "Order the categories for plotting: ['Preferred Area, Guestroom', 'Preferred Area, No Guestroom', 'Non-Preferred Area, Guestroom', 'Non-Preferred Area, No Guestroom']",
+      "Prepare data arrays grouped by new 'category'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\206.csv')\ndf['category'] = np.where(df['prefarea']=='yes', 'Preferred', 'Non-Preferred') + ' Area, ' + np.where(df['guestroom']=='yes', 'Guestroom', 'No Guestroom')\ncategory_order = ['Preferred Area, Guestroom', 'Preferred Area, No Guestroom', 'Non-Preferred Area, Guestroom', 'Non-Preferred Area, No Guestroom']\ndata_to_plot = [df.loc[df['category']==cat, 'area'] for cat in category_order]\nfig, ax = plt.subplots(figsize=(9, 6))\nparts = ax.violinplot(data_to_plot, positions=np.arange(len(category_order)), widths=0.6, showmedians=True, showmeans=True, showextrema=True)\ncolors = ['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78']\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.6)\nfor partname in ('cbars', 'cmins', 'cmaxes', 'cmedians', 'cmeans'):\n    parts[partname].set_edgecolor('black')\n    parts[partname].set_linewidth(1)\nax.set_xticks(np.arange(len(category_order)))\nax.set_xticklabels(category_order, rotation=20, fontsize=11)\nax.set_ylabel('Area (sq ft)', fontsize=12, weight='bold')\nax.set_xlabel('Area Preference & Guestroom Combination', fontsize=12, weight='bold')\nplt.title('House Area Distribution for Guestroom Availability\\nby Area Preference', fontsize=14, weight='bold')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

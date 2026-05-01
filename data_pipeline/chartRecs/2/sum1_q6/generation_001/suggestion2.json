@@ -1,0 +1,73 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Are there significant anomalies or spikes in methane emissions for any country-sector combination in a given year?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Country-Sector Time Series Outlier Boxplot",
+      "design_rationale": "A boxplot grouped by country-sector for each year succinctly visualizes distribution and reveals spikes as outliers. By plotting methane emission time series as boxplots, with each box representing annual stats for a country-sector, extreme values appear as points outside whiskers. This is ideal for highlighting not only overall anomalies but also the extent and frequency of spikes within individual country-sector paths. Faceting the boxplot for each sector provides a sector-level exploration, and selecting top 10 most variable country-sector pairs keeps the visualization readable and focused.",
+      "target_insight": "Which country-sector pairs display the largest variation and most frequent anomalies/spikes in methane emissions across years, which can be seen in distribution shapes and outlier points?",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "2018",
+        "2017",
+        "2016",
+        "2015",
+        "2014",
+        "2013",
+        "2012",
+        "2011",
+        "2010",
+        "2009",
+        "2008",
+        "2007",
+        "2006",
+        "2005",
+        "2004",
+        "2003",
+        "2002",
+        "2001",
+        "2000",
+        "1999",
+        "1998",
+        "1997",
+        "1996",
+        "1995",
+        "1994",
+        "1993",
+        "1992",
+        "1991",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Country-Sector (top 10 pairs by variation)",
+        "y": "Annual methane emission values per year",
+        "color": "Sector (for facet/subplot separation)",
+        "size": "Null",
+        "other_aesthetics": "Boxplot with outliers plotted as markers, facet for each sector"
+      }
+    },
+    "transformations": [
+      "Unpivot the year columns from '1990'-'2018' into a single 'Year' column and a 'Methane Emission' value column",
+      "Concatenate 'Country' and 'Sector' to form composite grouping",
+      "Compute standard deviation of methane emissions per country-sector pair across years",
+      "Select top 10 most variable country-sector pairs",
+      "Prepare emission time series for these pairs for boxplot visualization, facet by sector"
+    ],
+    "data_preparation_steps": [
+      "Melt df to long format: year columns into 'Year', and values into 'Methane Emission'",
+      "Add 'Country-Sector' column by concatenating 'Country' and 'Sector'",
+      "Group by 'Country-Sector' and aggregate std deviation of 'Methane Emission'",
+      "Select top 10 'Country-Sector' pairs by descending std dev",
+      "For the selected pairs, collect all emission values per year for boxplot",
+      "For sector-faceting, separate boxplots into subplot per sector present in top 10"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\2.csv')\nyear_columns = [str(y) for y in range(1990,2019)]\ndf_long = df.melt(id_vars=['Country','Sector'], value_vars=year_columns, var_name='Year', value_name='Methane Emission')\ndf_long['Country-Sector'] = df_long['Country'] + ' - ' + df_long['Sector']\ndf_long['Year'] = df_long['Year'].astype(int)\ngrouped_std = df_long.groupby('Country-Sector')['Methane Emission'].std().reset_index().sort_values(by='Methane Emission', ascending=False)\ntop10 = grouped_std['Country-Sector'].head(10).tolist()\ndf_top = df_long[df_long['Country-Sector'].isin(top10)]\nsectors_top = df_top['Sector'].unique()\nfig, axes = plt.subplots(len(sectors_top), 1, figsize=(14, len(sectors_top)*4), sharex=True)\nif len(sectors_top) == 1:\n    axes = [axes]\nfor idx, sector in enumerate(sectors_top):\n    df_sector = df_top[df_top['Sector']==sector]\n    cs_pairs = df_sector['Country-Sector'].unique()\n    box_data = [df_sector[df_sector['Country-Sector']==pair]['Methane Emission'].values for pair in cs_pairs]\n    axes[idx].boxplot(box_data, labels=cs_pairs, patch_artist=True, boxprops=dict(facecolor='lightblue',alpha=0.6))\n    axes[idx].set_title('Sector: ' + sector, fontsize=13)\n    axes[idx].set_ylabel('Methane Emission', fontsize=11)\n    for i, pair in enumerate(cs_pairs):\n        outliers = df_sector[df_sector['Country-Sector']==pair]['Methane Emission']\n        q1 = np.percentile(outliers,25)\n        q3 = np.percentile(outliers,75)\n        iqr = q3-q1\n        lower = q1-1.5*iqr\n        upper = q3+1.5*iqr\n        ot = outliers[(outliers < lower) | (outliers > upper)]\n        axes[idx].scatter([i+1]*len(ot), ot, c='red', edgecolors='black', s=65, zorder=3, label='Spike' if i==0 else '')\n    axes[idx].set_xticklabels(cs_pairs, rotation=40, ha='right', fontsize=10)\naxes[-1].set_xlabel('Country-Sector Pair', fontsize=12)\nplt.suptitle('Country-Sector Methane Emission Time Series (Boxplot)\\nTop 10 Most Variable Pairs\\nRed markers show spikes/outliers', fontsize=17)\nplt.tight_layout(rect=[0,0,1,0.96])\nplt.show()"
+  },
+  "schema_based": true
+}

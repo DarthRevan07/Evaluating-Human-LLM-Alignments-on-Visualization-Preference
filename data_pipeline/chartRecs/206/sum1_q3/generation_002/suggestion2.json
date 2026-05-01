@@ -1,0 +1,40 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Do properties with more bedrooms tend to have higher prices compared to those with fewer bedrooms?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "scatter with aggregation trendline",
+      "design_rationale": "A scatter plot is selected to show every property as a point, plotting 'bedrooms' (integer, 1–6) along x and 'price' (wide numeric range) on y. This approach allows exploration of the nuanced variation and potential overlap across bedroom counts, revealing if additional bedrooms correspond to an upward shift in price. To further clarify the structural trend, the plot overlays each bedroom group's mean price as a larger point and fits a linear regression trendline to the mean values, helping quantify the relationship.",
+      "target_insight": "Reveals whether more bedrooms result in higher prices at the property level and visualizes the linearity or deviation of this relationship with a trendline and group mean comparison.",
+      "output_fields": [
+        "bedrooms",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "bedrooms",
+        "y": "price",
+        "color": "scatter dot: uniform color; group mean: distinct color; trendline: color overlay",
+        "size": "mean points are larger; individual points are small",
+        "other_aesthetics": "trendline; transparent scatter dots for density; annotation of mean prices"
+      }
+    },
+    "transformations": [
+      "No aggregation for scatter (individual values shown)",
+      "Calculate mean 'price' for each 'bedrooms' group (for overlay points and trendline)",
+      "Fit linear regression to group mean prices vs bedroom counts"
+    ],
+    "data_preparation_steps": [
+      "Extract 'bedrooms' and 'price' columns for scatter plot",
+      "Group df by 'bedrooms' and compute mean 'price' for each group: df.groupby('bedrooms')['price'].mean()",
+      "Fit np.polyfit to (bedroom_counts, mean_prices) for trendline",
+      "Prepare annotation texts for mean price overlay"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\206.csv')\nfig, ax = plt.subplots(figsize=(10, 6))\n# Scatter plot: properties\nax.scatter(df['bedrooms'], df['price'], alpha=0.25, s=22, color='#4069E2', label='Individual property')\n# Group means overlay\nmeans = df.groupby('bedrooms')['price'].mean()\nbedroom_counts = means.index.values\nmean_prices = means.values\nax.scatter(bedroom_counts, mean_prices, s=180, color='#ECF20E', edgecolor='black', marker='o', label='Mean price per bedrooms')\nfor x, y in zip(bedroom_counts, mean_prices):\n    ax.text(x, y, f'{y:,.0f}', fontsize=9, va='bottom', ha='center', color='black')\n# Trendline\nz = np.polyfit(bedroom_counts, mean_prices, 1)\np = np.poly1d(z)\nx_vals = np.linspace(min(bedroom_counts), max(bedroom_counts), 100)\ny_vals = p(x_vals)\nax.plot(x_vals, y_vals, color='#C04000', lw=2, label='Trendline (linear fit)')\nax.set_xlabel('bedrooms')\nax.set_ylabel('price')\nax.set_xticks(bedroom_counts)\nax.set_title('Price vs Number of Bedrooms (with Mean & Trendline)')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

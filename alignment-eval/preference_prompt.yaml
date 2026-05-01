@@ -1,0 +1,51 @@
+prompts:
+
+  Q:
+    description: >
+      Standard evaluation prompt. Given two chart images and a question,
+      the model rates each chart on Readability, Precision, and Visual Appeal
+      (Likert 1–5) and picks an overall preference.
+    template: |
+      You are an expert in understanding and interpreting data visualizations.
+      You are given a question and two data visualization images. Your task is to determine which chart better answers the question, 
+      and also judge the quality of charts in terms of their readability and overall visual appeal.
+
+      Chart A corresponds to image: {chart_a_path}
+      Chart B corresponds to image: {chart_b_path}
+      
+      For each chart, you are asked to provide a likert-scale rating (1-5) for the following criterion (1 corresponds to 'Strongly Disagree' and 5 corresponds to 'Strongly Agree'):
+      1. READABILITY : The data visualization seems easy to understand at a glance.
+      2. PRECISION : The data visualization seems to completely and accurately answer the question.
+      3. VISUAL APPEAL : The data visualization seems visually appealing and attractive.
+      Question: {question}
+
+      Think Step-by-Step:
+      Provide a brief analysis for each chart individually, focusing on the aforementioned criterion, and then provide likert ratings for each criterion for each chart. 
+      Finally, perform an in-depth comparison of the two charts, provide an overall preference between them (which chart would you like to see if asked to find the answer to the question overall), and a brief rationale for your preference.
+
+      Question: {question}
+
+      Return your response strictly as a valid JSON object with the following structure:
+
+      {
+          "chart_A_path": "{chart_a_path}",
+          "chart_B_path": "{chart_b_path}",
+          "chart_A_analysis": "<brief analysis of Chart A>",
+          "chart_A_readability_rating": <1-5>,
+          "chart_A_readability_rationale": "<brief rationale for readability rating of Chart A>",
+          "chart_A_precision_rating": <1-5>,
+          "chart_A_precision_rationale": "<brief rationale for precision rating of Chart A>",
+          "chart_A_appeal_rating": <1-5>,
+          "chart_A_appeal_rationale": "<brief rationale for visual appeal rating of Chart A>",
+          "chart_B_analysis": "<brief analysis of Chart B>",
+          "chart_B_readability_rating": <1-5>,
+          "chart_B_readability_rationale": "<brief rationale for readability rating of Chart B>",
+          "chart_B_precision_rating": <1-5>,
+          "chart_B_precision_rationale": "<brief rationale for precision rating of Chart B>",
+          "chart_B_appeal_rating": <1-5>,
+          "chart_B_appeal_rationale": "<brief rationale for visual appeal rating of Chart B>",
+          "overall_preference": "Chart A" or "Chart B" or "Equal/No Preference",
+          "preference_rationale": "<brief reason for preference>"
+      }
+
+      Do not include any explanation outside the JSON.

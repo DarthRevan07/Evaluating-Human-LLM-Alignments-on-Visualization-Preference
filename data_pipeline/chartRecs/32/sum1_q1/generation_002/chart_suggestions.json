@@ -1,0 +1,314 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\32\\sum1_q1\\generation_002",
+  "schema_context": "Table: Medical Cost Personal Datasets\nRows: 1338\nColumns: 7\n\nFIELD INFORMATION:\nField: age\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 47\n  - Semantic Meaning: This field represents the age of individuals in years, likely used to analyze how medical costs vary across adults in the insurance or healthcare context.\n  - Value Range: 18.0 to 64.0\n  - Mean: 39.21\n\nField: sex\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the biological sex (female or male) of individuals whose medical costs are tracked, providing demographic context for healthcare analysis.\n\nField: bmi\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 548\n  - Semantic Meaning: This field represents the Body Mass Index (BMI) values for individuals, indicating their relative body weight status (underweight, healthy, overweight, or obese) within a medical insurance cost dataset.\n  - Value Range: 15.96 to 53.13\n  - Mean: 30.66\n\nField: children\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field represents the number of dependent children covered under a person's medical insurance policy in the context of personal healthcare cost analysis.\n  - Value Range: 0.0 to 5.0\n  - Mean: 1.09\n\nField: smoker\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether an individual is a smoker (\"yes\") or non-smoker (\"no\"), reflecting a lifestyle risk factor relevant to personal medical insurance costs.\n\nField: region\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: The \"region\" field indicates the geographical area within the United States where each individual is located, used to analyze regional variations in medical costs.\n\nField: charges\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 1337\n  - Semantic Meaning: The 'charges' field represents the total billed medical costs for an individual's healthcare services or insurance claims, expressed as a dollar amount.\n  - Value Range: 1121.8739 to 63770.42801\n  - Mean: 13270.42\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"age\"\n  2. \"sex\"\n  3. \"bmi\"\n  4. \"children\"\n  5. \"smoker\"\n  6. \"region\"\n  7. \"charges\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['age'], df['sex']",
+  "table_metadata": {
+    "table_name": "Medical Cost Personal Datasets",
+    "file_path": "csv_c_squared\\32.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 32.csv (Dataset: Medical Cost Personal Datasets)",
+    "original_filename": "32.csv",
+    "dataset_name": "Medical Cost Personal Datasets",
+    "row_count": 1338,
+    "column_count": 7,
+    "table_hash": -1507220614411370915,
+    "fields": [
+      {
+        "name": "age",
+        "clean_name": "age",
+        "camel_case_name": "age",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 47,
+        "min_value": 18.0,
+        "max_value": 64.0,
+        "mean_value": 39.20702541106129,
+        "median_value": 39.0,
+        "sample_values": "18, 19, 20, 21, 22, ..., 60, 61, 62, 63, 64",
+        "inferred_semantic_summary": "This field represents the age of individuals in years, likely used to analyze how medical costs vary across adults in the insurance or healthcare context."
+      },
+      {
+        "name": "sex",
+        "clean_name": "sex",
+        "camel_case_name": "sex",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 2,
+        "sample_values": "female, male",
+        "inferred_semantic_summary": "This field records the biological sex (female or male) of individuals whose medical costs are tracked, providing demographic context for healthcare analysis."
+      },
+      {
+        "name": "bmi",
+        "clean_name": "bmi",
+        "camel_case_name": "bmi",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 548,
+        "min_value": 15.96,
+        "max_value": 53.13,
+        "mean_value": 30.66339686098655,
+        "median_value": 30.4,
+        "sample_values": "15.96, 16.815, 17.195, 17.29, 17.385, ..., 48.07, 49.06, 50.38, 52.58, 53.13",
+        "inferred_semantic_summary": "This field represents the Body Mass Index (BMI) values for individuals, indicating their relative body weight status (underweight, healthy, overweight, or obese) within a medical insurance cost dataset."
+      },
+      {
+        "name": "children",
+        "clean_name": "children",
+        "camel_case_name": "children",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 6,
+        "min_value": 0.0,
+        "max_value": 5.0,
+        "mean_value": 1.0949177877429,
+        "median_value": 1.0,
+        "sample_values": "0, 1, 2, 3, 4, 5",
+        "inferred_semantic_summary": "This field represents the number of dependent children covered under a person's medical insurance policy in the context of personal healthcare cost analysis."
+      },
+      {
+        "name": "smoker",
+        "clean_name": "smoker",
+        "camel_case_name": "smoker",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "Indicates whether an individual is a smoker (\"yes\") or non-smoker (\"no\"), reflecting a lifestyle risk factor relevant to personal medical insurance costs."
+      },
+      {
+        "name": "region",
+        "clean_name": "region",
+        "camel_case_name": "region",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 4,
+        "sample_values": "northeast, northwest, southeast, southwest",
+        "inferred_semantic_summary": "The \"region\" field indicates the geographical area within the United States where each individual is located, used to analyze regional variations in medical costs."
+      },
+      {
+        "name": "charges",
+        "clean_name": "charges",
+        "camel_case_name": "charges",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1338,
+        "unique_values": 1337,
+        "min_value": 1121.8739,
+        "max_value": 63770.42801,
+        "mean_value": 13270.422265141257,
+        "median_value": 9382.033,
+        "sample_values": "1121.8739, 1131.5066, 1135.9407, 1136.3994, 1137.011, ..., 55135.40209, 58571.07448, 60021.39897, 62592.87309, 63770.42801",
+        "inferred_semantic_summary": "The 'charges' field represents the total billed medical costs for an individual's healthcare services or insurance claims, expressed as a dollar amount."
+      }
+    ],
+    "formatted_summary": "## Table 1: Medical_Cost_Personal_Datasets (1,338 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 32.csv (Dataset: Medical Cost Personal Datasets)\n\n### Schema (7 fields)\n  - age -- type: int64, values: 18, 19, 20, 21, 22, ..., 60, 61, 62, 63, 64\n  - sex -- type: object, values: female, male\n  - bmi -- type: float64, values: 15.96, 16.815, 17.195, 17.29, 17.385, ..., 48.07, 49.06, 50.38, 52.58, 53.13\n  - children -- type: int64, values: 0, 1, 2, 3, 4, 5\n  - smoker -- type: object, values: no, yes\n  - region -- type: object, values: northeast, northwest, southeast, southwest\n  - charges -- type: float64, values: 1121.8739, 1131.5066, 1135.9407, 1136.3994, 1137.011, ..., 55135.40209, 58571.07448, 60021.39897, 62592.87309, 63770.42801\n\n### Sample Data (first 5 rows)\n```\n   age     sex     bmi  children smoker     region      charges\n0   19  female  27.900         0    yes  southwest  16884.92400\n1   18    male  33.770         1     no  southeast   1725.55230\n2   28    male  33.000         3     no  southeast   4449.46200\n3   33    male  22.705         0     no  northwest  21984.47061\n4   32    male  28.880         0     no  northwest   3866.85520\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "32",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "question": "How do average medical charges differ between smokers and non-smokers across various regions?",
+      "column_combination": [
+        "age",
+        "sex",
+        "bmi",
+        "children",
+        "smoker",
+        "region",
+        "charges"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Grouped Bar Chart",
+            "design_rationale": "A grouped bar chart enables direct comparison of average medical charges between smokers and non-smokers for each region, clearly displaying differences in medical costs attributable to smoking status within each geographical area. The categorical 'smoker' and 'region' fields make this chart appropriate. The bar heights encode the average charges, with color distinguishing smoker status, allowing the viewer to quickly assess both inter-region and intra-region disparities.",
+            "target_insight": "How smoker status impacts average medical charges in each U.S. region; highlighting which regions exhibit the largest or smallest cost gaps.",
+            "output_fields": [
+              "region",
+              "smoker",
+              "charges"
+            ],
+            "chart_encodings": {
+              "x": "region",
+              "y": "charges",
+              "color": "smoker",
+              "size": null,
+              "other_aesthetics": "Grouped bars by 'region', bar color via smoker status, grid lines for clarity"
+            }
+          },
+          "transformations": [
+            "Aggregate df by 'region' and 'smoker', computing mean of 'charges'"
+          ],
+          "data_preparation_steps": [
+            "df_grouped = df.groupby(['region', 'smoker'])['charges'].mean().reset_index()"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\32.csv')\ndf_grouped = df.groupby(['region', 'smoker'])['charges'].mean().reset_index()\nregions = df_grouped['region'].unique()\nsmoker_types = df_grouped['smoker'].unique()\nbar_width = 0.35\nx = np.arange(len(regions))\ncharge_means = {}\nfor smoker in smoker_types:\n    charge_means[smoker] = [df_grouped[(df_grouped['region'] == region) & (df_grouped['smoker'] == smoker)]['charges'].values[0] if ((df_grouped['region'] == region) & (df_grouped['smoker'] == smoker)).any() else 0 for region in regions]\nfig, ax = plt.subplots(figsize=(8,6))\ncolors = {'yes':'#e74c3c', 'no':'#2ecc71'}\nfor i, smoker in enumerate(smoker_types):\n    ax.bar(x + i*bar_width, charge_means[smoker], bar_width, label='Smoker: ' + smoker, color=colors[smoker])\nax.set_xticks(x + bar_width / 2)\nax.set_xticklabels(regions)\nax.set_xlabel('Region')\nax.set_ylabel('Average Medical Charges ($)')\ntitle = 'Average Medical Charges by Smoking Status\\nAcross Regions'\nax.set_title(title)\nax.legend(title='Smoker Status')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Boxplot (Faceted by Region)",
+            "design_rationale": "Boxplots visualize the distribution of medical charges—showing central tendency, spread, and outliers—between smokers and non-smokers, faceted (split) by region. This design answers the question at both aggregate and granular levels: not only revealing differences in means, but also medians, variability, and the presence of extreme values. Faceting by region allows region-specific comparisons and deeper exploration of charge variability.",
+            "target_insight": "A nuanced view of medical charge distributions for smokers vs non-smokers within each region, revealing if any regions have exceptionally high variability or outliers for smokers, and how charge distributions differ overall.",
+            "output_fields": [
+              "region",
+              "smoker",
+              "charges"
+            ],
+            "chart_encodings": {
+              "x": "smoker",
+              "y": "charges",
+              "color": "smoker",
+              "size": null,
+              "other_aesthetics": "Separate subplot for each 'region', box color per smoker status"
+            }
+          },
+          "transformations": [
+            "No aggregation; retain individual-level 'charges' data for each region/smoker combination"
+          ],
+          "data_preparation_steps": [
+            "Split df into separate subsets for each region using df['region']"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\32.csv')\nregions = df['region'].unique()\nsmoker_types = ['yes', 'no']\ncolors = {'yes': '#e74c3c', 'no': '#2ecc71'}\nfig, axes = plt.subplots(1, len(regions), figsize=(16,5), sharey=True)\nfor idx, region in enumerate(regions):\n    ax = axes[idx]\n    region_df = df[df['region'] == region]\n    box_data = [region_df[region_df['smoker'] == smoker]['charges'].values for smoker in smoker_types]\n    bp = ax.boxplot(box_data, patch_artist=True, labels=smoker_types)\n    for patch, smoker in zip(bp['boxes'], smoker_types):\n        patch.set_facecolor(colors[smoker])\n        patch.set_alpha(0.7)\n    ax.set_title('Region: ' + region)\n    ax.set_xlabel('Smoker Status')\n    if idx == 0:\n        ax.set_ylabel('Medical Charges ($)')\n    ax.grid(axis='y', linestyle='--', alpha=0.4)\nplt.suptitle('Distribution of Medical Charges for Smokers vs Non-Smokers by Region', fontsize=15)\nplt.tight_layout(rect=[0,0,1,0.95])\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T17:57:22.486772",
+      "schema_context": "Table: Medical Cost Personal Datasets\nRows: 1338\nColumns: 7\n\nFIELD INFORMATION:\nField: age\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 47\n  - Semantic Meaning: This field represents the age of individuals in years, likely used to analyze how medical costs vary across adults in the insurance or healthcare context.\n  - Value Range: 18.0 to 64.0\n  - Mean: 39.21\n\nField: sex\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the biological sex (female or male) of individuals whose medical costs are tracked, providing demographic context for healthcare analysis.\n\nField: bmi\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 548\n  - Semantic Meaning: This field represents the Body Mass Index (BMI) values for individuals, indicating their relative body weight status (underweight, healthy, overweight, or obese) within a medical insurance cost dataset.\n  - Value Range: 15.96 to 53.13\n  - Mean: 30.66\n\nField: children\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field represents the number of dependent children covered under a person's medical insurance policy in the context of personal healthcare cost analysis.\n  - Value Range: 0.0 to 5.0\n  - Mean: 1.09\n\nField: smoker\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether an individual is a smoker (\"yes\") or non-smoker (\"no\"), reflecting a lifestyle risk factor relevant to personal medical insurance costs.\n\nField: region\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: The \"region\" field indicates the geographical area within the United States where each individual is located, used to analyze regional variations in medical costs.\n\nField: charges\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 1337\n  - Semantic Meaning: The 'charges' field represents the total billed medical costs for an individual's healthcare services or insurance claims, expressed as a dollar amount.\n  - Value Range: 1121.8739 to 63770.42801\n  - Mean: 13270.42\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"age\"\n  2. \"sex\"\n  3. \"bmi\"\n  4. \"children\"\n  5. \"smoker\"\n  6. \"region\"\n  7. \"charges\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['age'], df['sex']",
+      "table_metadata": {
+        "table_name": "Medical Cost Personal Datasets",
+        "file_path": "csv_c_squared\\32.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 32.csv (Dataset: Medical Cost Personal Datasets)",
+        "original_filename": "32.csv",
+        "dataset_name": "Medical Cost Personal Datasets",
+        "row_count": 1338,
+        "column_count": 7,
+        "table_hash": -1507220614411370915,
+        "fields": [
+          {
+            "name": "age",
+            "clean_name": "age",
+            "camel_case_name": "age",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 47,
+            "min_value": 18.0,
+            "max_value": 64.0,
+            "mean_value": 39.20702541106129,
+            "median_value": 39.0,
+            "sample_values": "18, 19, 20, 21, 22, ..., 60, 61, 62, 63, 64",
+            "inferred_semantic_summary": "This field represents the age of individuals in years, likely used to analyze how medical costs vary across adults in the insurance or healthcare context."
+          },
+          {
+            "name": "sex",
+            "clean_name": "sex",
+            "camel_case_name": "sex",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 2,
+            "sample_values": "female, male",
+            "inferred_semantic_summary": "This field records the biological sex (female or male) of individuals whose medical costs are tracked, providing demographic context for healthcare analysis."
+          },
+          {
+            "name": "bmi",
+            "clean_name": "bmi",
+            "camel_case_name": "bmi",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 548,
+            "min_value": 15.96,
+            "max_value": 53.13,
+            "mean_value": 30.66339686098655,
+            "median_value": 30.4,
+            "sample_values": "15.96, 16.815, 17.195, 17.29, 17.385, ..., 48.07, 49.06, 50.38, 52.58, 53.13",
+            "inferred_semantic_summary": "This field represents the Body Mass Index (BMI) values for individuals, indicating their relative body weight status (underweight, healthy, overweight, or obese) within a medical insurance cost dataset."
+          },
+          {
+            "name": "children",
+            "clean_name": "children",
+            "camel_case_name": "children",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 6,
+            "min_value": 0.0,
+            "max_value": 5.0,
+            "mean_value": 1.0949177877429,
+            "median_value": 1.0,
+            "sample_values": "0, 1, 2, 3, 4, 5",
+            "inferred_semantic_summary": "This field represents the number of dependent children covered under a person's medical insurance policy in the context of personal healthcare cost analysis."
+          },
+          {
+            "name": "smoker",
+            "clean_name": "smoker",
+            "camel_case_name": "smoker",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "Indicates whether an individual is a smoker (\"yes\") or non-smoker (\"no\"), reflecting a lifestyle risk factor relevant to personal medical insurance costs."
+          },
+          {
+            "name": "region",
+            "clean_name": "region",
+            "camel_case_name": "region",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 4,
+            "sample_values": "northeast, northwest, southeast, southwest",
+            "inferred_semantic_summary": "The \"region\" field indicates the geographical area within the United States where each individual is located, used to analyze regional variations in medical costs."
+          },
+          {
+            "name": "charges",
+            "clean_name": "charges",
+            "camel_case_name": "charges",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1338,
+            "unique_values": 1337,
+            "min_value": 1121.8739,
+            "max_value": 63770.42801,
+            "mean_value": 13270.422265141257,
+            "median_value": 9382.033,
+            "sample_values": "1121.8739, 1131.5066, 1135.9407, 1136.3994, 1137.011, ..., 55135.40209, 58571.07448, 60021.39897, 62592.87309, 63770.42801",
+            "inferred_semantic_summary": "The 'charges' field represents the total billed medical costs for an individual's healthcare services or insurance claims, expressed as a dollar amount."
+          }
+        ],
+        "formatted_summary": "## Table 1: Medical_Cost_Personal_Datasets (1,338 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 32.csv (Dataset: Medical Cost Personal Datasets)\n\n### Schema (7 fields)\n  - age -- type: int64, values: 18, 19, 20, 21, 22, ..., 60, 61, 62, 63, 64\n  - sex -- type: object, values: female, male\n  - bmi -- type: float64, values: 15.96, 16.815, 17.195, 17.29, 17.385, ..., 48.07, 49.06, 50.38, 52.58, 53.13\n  - children -- type: int64, values: 0, 1, 2, 3, 4, 5\n  - smoker -- type: object, values: no, yes\n  - region -- type: object, values: northeast, northwest, southeast, southwest\n  - charges -- type: float64, values: 1121.8739, 1131.5066, 1135.9407, 1136.3994, 1137.011, ..., 55135.40209, 58571.07448, 60021.39897, 62592.87309, 63770.42801\n\n### Sample Data (first 5 rows)\n```\n   age     sex     bmi  children smoker     region      charges\n0   19  female  27.900         0    yes  southwest  16884.92400\n1   18    male  33.770         1     no  southeast   1725.55230\n2   28    male  33.000         3     no  southeast   4449.46200\n3   33    male  22.705         0     no  northwest  21984.47061\n4   32    male  28.880         0     no  northwest   3866.85520\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

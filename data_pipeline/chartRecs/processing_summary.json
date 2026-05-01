@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "stage": "3_modified",
+    "description": "Schema-based chart suggestions generated from Stage 2 Modified questions with multiple generations stored in separate subdirectories",
+    "output_structure": "Nested directories: {table_name}/sum{X}_q{Y}/generation_XXX/chart_suggestions.json",
+    "generations_per_question": 2,
+    "total_tables_processed": 1,
+    "total_questions_processed": 1,
+    "total_generations_attempted": 2,
+    "total_generations_successful": 2,
+    "success_rate": "100.0%",
+    "schema_based": true
+  },
+  "tables": [
+    {
+      "table_name": "122",
+      "generation_directories": [
+        "122/sum2_q5/generation_001/chart_suggestions.json",
+        "122/sum2_q5/generation_002/chart_suggestions.json"
+      ],
+      "question_count": 1
+    }
+  ]
+}

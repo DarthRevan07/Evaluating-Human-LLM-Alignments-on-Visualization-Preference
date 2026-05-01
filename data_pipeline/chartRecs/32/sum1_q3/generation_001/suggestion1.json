@@ -1,0 +1,39 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable difference in medical charges for males versus females within each region?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Boxplot",
+      "design_rationale": "A grouped boxplot is highly effective for visualizing the distribution of medical charges for males vs females within each region. Boxplots summarize the spread, median, and any outliers, letting us inspect both overall and subtle differences in cost by sex within regions. Because 'charges' is continuous, 'sex' and 'region' are categorical, this approach efficiently compares distributions and makes regional patterns visually obvious. Grouped boxplots also highlight variability and skew, offering deep insight beyond averages.",
+      "target_insight": "Shows if there are consistent or region-specific differences in medical charges for males vs females, and reveals variations in distributions, medians and outliers within each region.",
+      "output_fields": [
+        "region",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "charges",
+        "color": "sex",
+        "size": null,
+        "other_aesthetics": "Grouped by sex within each region; alternating box colors for sex; region ordering"
+      }
+    },
+    "transformations": [
+      "Group df by 'region' and 'sex' to obtain lists of 'charges' distributions per group",
+      "Prepare as: for each region, boxplots for female and male"
+    ],
+    "data_preparation_steps": [
+      "Extract unique regions in df['region'] and unique sexes in df['sex']",
+      "For each region, filter df to two groups: df[df['region']==region & df['sex']==sex] for each sex",
+      "Collect 'charges' values for each group into a nested list: one per region per sex"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\nregions = df['region'].unique()\nsexes = df['sex'].unique()\nregion_order = sorted(regions)\nsex_order = sorted(sexes)\ndata = []\nfor region in region_order:\n    for sex in sex_order:\n        charges = df[(df['region'] == region) & (df['sex'] == sex)]['charges'].values\n        data.append(charges)\nfig, ax = plt.subplots(figsize=(10,6))\nbox_colors = ['#4472C4','#ED7D31']\npositions = []\nlabels = []\nfor i, region in enumerate(region_order):\n    offset = i*3\n    for j, sex in enumerate(sex_order):\n        positions.append(offset + j + 1)\n        labels.append(region + '\\n' + sex)\nbp = ax.boxplot(data, positions=positions, widths=0.7, patch_artist=True)\nfor patch, color in zip(bp['boxes'], box_colors*len(region_order)):\n    patch.set_facecolor(color)\nfor median in bp['medians']:\n    median.set_color('black')\nax.set_xticks([np.mean(positions[i*2:i*2+2]) for i in range(len(region_order))])\nax.set_xticklabels(region_order)\nax.set_xlabel('region')\nax.set_ylabel('charges')\nax.set_title('Medical Charges by Sex Within Each Region')\nlegend_handles = [mpl.patches.Patch(color=box_colors[i], label=sex_order[i]) for i in range(len(sex_order))]\nax.legend(handles=legend_handles, title='sex')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

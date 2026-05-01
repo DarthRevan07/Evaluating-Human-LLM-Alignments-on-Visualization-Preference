@@ -1,0 +1,41 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the average car price vary across different manufacturers?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot allows exploration of price variability within each manufacturer along with their medians and outlier behavior. This approach goes beyond the mean by showing full price distributions, which is critical given the possibility of wide ranges (some manufacturers may have both entry-level and luxury models). Displaying top N manufacturers with the most listings prevents clutter, ensuring the boxplots remain interpretable and visually compelling.",
+      "target_insight": "Price dispersion, medians, and outliers across the most popular manufacturers, revealing how price varies not just on average but in spread and extremes.",
+      "output_fields": [
+        "Manufacturer",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Manufacturer (Top N by listing count)",
+        "y": "Price distribution (boxplot)",
+        "color": "Null",
+        "size": "Null",
+        "other_aesthetics": "Show outliers; rotate x-labels; highlight medians"
+      }
+    },
+    "transformations": [
+      "Count number of listings per manufacturer",
+      "Select top 10 manufacturers by listing count",
+      "Filter original dataframe to these manufacturers",
+      "Prepare price series for boxplot"
+    ],
+    "data_preparation_steps": [
+      "manufacturer_counts = df['Manufacturer'].value_counts()",
+      "top10_manufacturers = manufacturer_counts.head(10).index.tolist()",
+      "df_top = df[df['Manufacturer'].isin(top10_manufacturers)]",
+      "boxplot_data = [df_top[df_top['Manufacturer'] == manu]['Price'] for manu in top10_manufacturers]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\nmanufacturer_counts = df[\"Manufacturer\"].value_counts()\ntop10_manufacturers = manufacturer_counts.head(10).index.tolist()\ndf_top = df[df[\"Manufacturer\"].isin(top10_manufacturers)]\nboxplot_data = [df_top[df_top[\"Manufacturer\"] == manu][\"Price\"] for manu in top10_manufacturers]\nplt.figure(figsize=(14, 8))\nplt.boxplot(boxplot_data, labels=top10_manufacturers, vert=True, patch_artist=True, boxprops=dict(facecolor=\"lightgreen\", alpha=0.5), medianprops=dict(color=\"darkred\", linewidth=2))\nplt.xlabel(\"Manufacturer (Top 10 by Listings)\")\nplt.ylabel(\"Car Price\")\nplt.title(\"Car Price Distribution by Top Manufacturers\\n(Boxplot: Median, Spread, Outliers)\")\nplt.xticks(rotation=30, ha=\"right\")\nplt.grid(axis=\"y\", alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

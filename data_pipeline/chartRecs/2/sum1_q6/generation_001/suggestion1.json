@@ -1,0 +1,73 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Are there significant anomalies or spikes in methane emissions for any country-sector combination in a given year?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap with anomaly overlay",
+      "design_rationale": "A heatmap enables a high-density overview across multiple country-sector-year combinations, displaying values as color intensity. It is ideal for spotting anomalies or spikes, as sudden color changes indicate outliers. Overlaying detected anomalies (e.g., with circle markers) allows viewers to quickly see which specific combinations and years exhibit unusual deviations. With 195 countries and 9 sectors, the grid layout efficiently communicates broad patterns and rare spikes. Grouping by each sector and visualizing years (x-axis) allows cross-sector, cross-country comparison.",
+      "target_insight": "Which country-sector-year combinations exhibit abrupt spikes or anomalies in methane emissions, and are these anomalies concentrated in particular sectors, years, or countries?",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "2018",
+        "2017",
+        "2016",
+        "2015",
+        "2014",
+        "2013",
+        "2012",
+        "2011",
+        "2010",
+        "2009",
+        "2008",
+        "2007",
+        "2006",
+        "2005",
+        "2004",
+        "2003",
+        "2002",
+        "2001",
+        "2000",
+        "1999",
+        "1998",
+        "1997",
+        "1996",
+        "1995",
+        "1994",
+        "1993",
+        "1992",
+        "1991",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Year (from 1990 to 2018)",
+        "y": "Country-Sector pair (concatenated)",
+        "color": "Methane emission value for given year",
+        "size": "Circle overlay for anomaly strength (z-score magnitude)",
+        "other_aesthetics": "Alpha for overlay marker, sector facet plot with subplot for each sector"
+      }
+    },
+    "transformations": [
+      "Unpivot the year columns from '1990'-'2018' into a single 'Year' column and a 'Methane Emission' value column",
+      "Concatenate 'Country' and 'Sector' to create a composite y-axis label",
+      "For each country-sector grouping, compute rolling mean and rolling std dev over years, calculate z-score for each year",
+      "Flag entries with z-score > 2 as anomalies (spikes), select these for overlay"
+    ],
+    "data_preparation_steps": [
+      "Melt df to long format: year columns into a 'Year' column and emission values into 'Methane Emission'",
+      "Add 'Country-Sector' column by concatenating 'Country' and 'Sector'",
+      "Sort values by 'Country-Sector' and 'Year'",
+      "Compute rolling mean/rolling std per 'Country-Sector', then calculate z-score per row",
+      "Create a boolean 'Anomaly' column where |z-score| > 2",
+      "For plotting, pivot table to shape: rows = 'Country-Sector', columns = 'Year', values = 'Methane Emission'",
+      "Select anomalies for marker overlay, scaling marker size by |z-score|"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nyear_columns = [str(y) for y in range(1990,2019)]\ndf_long = df.melt(id_vars=['Country','Sector'], value_vars=year_columns, var_name='Year', value_name='Methane Emission')\ndf_long['Country-Sector'] = df_long['Country'] + ' - ' + df_long['Sector']\ndf_long['Year'] = df_long['Year'].astype(int)\ndf_long.sort_values(['Country-Sector','Year'], inplace=True)\ndef rolling_zscore(x):\n    roll = pd.Series(x)\n    # Use window=5 for local anomaly, min_periods=3\n    rm = roll.rolling(window=5, min_periods=3).mean()\n    rs = roll.rolling(window=5, min_periods=3).std()\n    z = (roll - rm) / rs\n    return z\n\ndf_long['zscore'] = df_long.groupby('Country-Sector')['Methane Emission'].transform(rolling_zscore)\ndf_long['Anomaly'] = df_long['zscore'].abs() > 2\ndf_pivot = df_long.pivot(index='Country-Sector', columns='Year', values='Methane Emission').fillna(0)\nsector_list = df_long['Sector'].unique()\nfig, axes = plt.subplots(len(sector_list), 1, figsize=(16, 22), sharex=True)\ncmap = mpl.colormaps['viridis']\nfor idx, sector in enumerate(sector_list):\n    df_sector = df_long[df_long['Sector']==sector]\n    cs_order = sorted(df_sector['Country-Sector'].unique())\n    heat_data = df_sector.pivot(index='Country-Sector', columns='Year', values='Methane Emission').reindex(cs_order)\n    im = axes[idx].imshow(heat_data, aspect='auto', cmap=cmap, interpolation='nearest', origin='upper')\n    axes[idx].set_yticks(np.arange(len(cs_order)))\n    axes[idx].set_yticklabels(cs_order, fontsize=6)\n    axes[idx].set_title('Sector: ' + sector, fontsize=12)\n    # Overlay anomalies\n    anomalies = df_sector[df_sector['Anomaly']]\n    for _, row in anomalies.iterrows():\n        y_pos = cs_order.index(row['Country-Sector'])\n        x_pos = int(row['Year']) - 1990\n        axes[idx].scatter(x_pos, y_pos, s=min(200, abs(row['zscore'])*50), c='red', alpha=0.7, edgecolor='black')\n    axes[idx].set_ylabel('Country-Sector', fontsize=9)\naxes[-1].set_xlabel('Year', fontsize=12)\naxes[-1].set_xticks(np.arange(len(year_columns)))\naxes[-1].set_xticklabels(year_columns, rotation=90)\nfig.colorbar(im, ax=axes, orientation='vertical', pad=0.01, label='Methane Emission')\nplt.suptitle('Methane Emission Heatmap by Country-Sector-Year with Spikes Overlayed\\nRed circles show anomaly years (|z-score|>2)', fontsize=18)\nplt.tight_layout(rect=[0,0,1,0.98])\nplt.show()"
+  },
+  "schema_based": true
+}

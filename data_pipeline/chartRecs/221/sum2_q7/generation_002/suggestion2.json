@@ -1,0 +1,42 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which destinations see higher transportation costs, and is this linked to specific transportation types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Faceted by Transportation Type)",
+      "design_rationale": "A faceted boxplot approach visualizes the distribution and variability of transportation costs for major destinations, separated by transportation type. By showing boxplots for each transport mode, the design highlights both typical costs and outliers, helping users see if certain destinations consistently have high costs and whether this is unique to specific transportation modes (flights, trains, etc). This suits both categorical and numeric data, provides deep statistical insight, and leverages the manageable number of unique values for effective facetting.",
+      "target_insight": "Reveals not just average costs but the spread and extremes of transportation costs for each destination and transport type, showing whether high costs are widespread or tied to specific modes.",
+      "output_fields": [
+        "Destination",
+        "Transportation cost",
+        "Transportation type"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Transportation cost (distribution)",
+        "color": "Destination (distinct color per boxplot)",
+        "size": null,
+        "other_aesthetics": "Facet by 'Transportation type', vertical orientation, separate axes for each transport mode"
+      }
+    },
+    "transformations": [
+      "Convert df['Transportation cost'] to numeric values, handling currency symbols and errors",
+      "Drop rows where df['Transportation cost'], df['Transportation type'], or df['Destination'] is missing",
+      "Select top 6 most expensive destinations (overall average), limit number for clearer facetting",
+      "For each transportation type, prepare boxplot data for these destinations"
+    ],
+    "data_preparation_steps": [
+      "Ensure df['Transportation cost'] is float (clean conversion)",
+      "Drop rows with NA for cost/type/destination",
+      "Compute mean transportation cost by destination; select top 6 destinations",
+      "Subset data to only top 6 destinations and organize for boxplot facetting by transportation type"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\n# Parse transportation cost\n\ndef parse_cost(val):\n    if pd.isnull(val):\n        return np.nan\n    val = str(val).replace('$','').replace('USD','').replace(',','').strip()\n    try:\n        return float(val)\n    except:\n        return np.nan\n\ndf['Transportation cost'] = df['Transportation cost'].apply(parse_cost)\ndf_clean = df.dropna(subset=['Destination','Transportation type','Transportation cost'])\n# Find top 6 destinations by mean transportation cost\ntop_dests = df_clean.groupby('Destination')['Transportation cost'].mean().sort_values(ascending=False).head(6).index.tolist()\ndf_plot = df_clean[df_clean['Destination'].isin(top_dests)]\ntransport_types = df_plot['Transportation type'].unique()\ncolors = mpl.colormaps['tab10'].colors\nfig, axs = plt.subplots(len(transport_types),1, figsize=(12,4*len(transport_types)), sharex=True)\nif len(transport_types)==1:\n    axs = [axs]\nfor i, ttype in enumerate(transport_types):\n    ax = axs[i]\n    subset = df_plot[df_plot['Transportation type']==ttype]\n    dests = top_dests\n    box_data = [subset[subset['Destination']==dest]['Transportation cost'].dropna().values for dest in dests]\n    box = ax.boxplot(box_data, patch_artist=True, labels=dests)\n    for j in range(len(box['boxes'])):\n        box['boxes'][j].set_facecolor(colors[j%len(colors)])\n    ax.set_title(\"Distribution of Transportation Costs for \" + ttype)\n    ax.set_ylabel('Transportation cost (USD)')\nplt.xlabel('Destination')\nplt.suptitle('Transportation Cost Distribution by Destination and Transportation Type', fontsize=15, y=0.98)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

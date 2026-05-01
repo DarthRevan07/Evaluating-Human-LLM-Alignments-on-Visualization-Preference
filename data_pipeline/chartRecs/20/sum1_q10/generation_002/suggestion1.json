@@ -1,0 +1,44 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "Which genres appear most often during periods of stylistic transition, as indicated by overlapping or mixed genre entries?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal bar chart",
+      "design_rationale": "A horizontal bar chart provides a clear ranking of genres most commonly observed in overlapping or mixed genre artworks. By counting each genre across artworks with mixed entries, this chart visualizes the frequency distribution and makes it easy to identify which genres are most dominant during stylistic transitions.",
+      "target_insight": "The visualization highlights which artistic genres are most frequently involved during periods of stylistic transition, offering an overview of stylistic fluidity in art history.",
+      "output_fields": [
+        "genre",
+        "id"
+      ],
+      "chart_encodings": {
+        "x": "frequency (count of genre occurrences across transitional artworks)",
+        "y": "genre",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "bar width and order descending by frequency"
+      }
+    },
+    "transformations": [
+      "Filter df to select rows where df['genre'] contains multiple genres (identify using presence of delimiter such as ',' or '/' in the string).",
+      "Split each mixed genre cell into individual genre strings.",
+      "Count occurrences of each genre across the selected artworks.",
+      "Sort genres by count descending."
+    ],
+    "data_preparation_steps": [
+      "filtered = df[df['genre'].str.contains(',') | df['genre'].str.contains('/')]",
+      "exploded = filtered.copy()",
+      "exploded['genre'] = exploded['genre'].str.replace('/', ',')",
+      "exploded = exploded.assign(genre=exploded['genre'].str.split(','))",
+      "exploded = exploded.explode('genre')",
+      "exploded['genre'] = exploded['genre'].str.strip()",
+      "genre_counts = exploded['genre'].value_counts().sort_values(ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nfiltered = df[df['genre'].str.contains(',') | df['genre'].str.contains('/')]\nexploded = filtered.copy()\nexploded['genre'] = exploded['genre'].str.replace('/', ',')\nexploded = exploded.assign(genre=exploded['genre'].str.split(','))\nexploded = exploded.explode('genre')\nexploded['genre'] = exploded['genre'].str.strip()\ngenre_counts = exploded['genre'].value_counts().sort_values(ascending=False)\nfig, ax = plt.subplots(figsize=(9, 7))\nax.barh(genre_counts.index, genre_counts.values, color='skyblue')\nax.set_xlabel('Number of transitional artworks involving genre')\nax.set_ylabel('Genre')\nax.set_title('Genres Most Frequent in Transitional (Mixed) Artworks\\nBest Artworks of All Time')\nfor i, (v, k) in enumerate(zip(genre_counts.values, genre_counts.index)):\n    ax.text(v + 0.5, i, str(v), va='center', fontsize=9)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

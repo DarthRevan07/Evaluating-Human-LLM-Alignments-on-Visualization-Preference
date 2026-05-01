@@ -1,0 +1,45 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there any anomalies or outliers in the time series of methane emissions for the Waste sector in any country?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of per-country outlier-years (binary outlier matrix)",
+      "design_rationale": "A heatmap provides a country-by-year grid where color intensity indicates whether a country is classified as an outlier for a given year in the Waste sector. This answers the anomaly identification question from a broad, matrix-style overview, making it easy to spot countries with persistent or episodic anomalies. Sorting countries by total number of outlier years further highlights those with repeated emissions anomalies.",
+      "target_insight": "Which countries exhibit repeated or singular anomalies over time in the Waste sector; which years see most anomalies globally.",
+      "output_fields": [
+        "Country",
+        "Year",
+        "Methane Emissions",
+        "is_outlier"
+      ],
+      "chart_encodings": {
+        "x": "Year (from '1990' to '2018')",
+        "y": "Country (sorted by number of outlier years descending)",
+        "color": "Binary: red = outlier, white = normal",
+        "size": "Null",
+        "other_aesthetics": "Heatmap (binary, no colorbar), grid for legibility, annotation of top 5 most anomalous countries"
+      }
+    },
+    "transformations": [
+      "Filter df to Sector == 'Waste'",
+      "Melt yearly columns ('1990'-'2018') to long format: ['Country', 'Year', 'Methane Emissions']",
+      "For each Year, compute IQR boundaries and set flag is_outlier",
+      "Create a [Country x Year] matrix with 1 for outlier, 0 for normal",
+      "Sum is_outlier per country (across years) and sort Countries descending by total outlier count"
+    ],
+    "data_preparation_steps": [
+      "waste = df[df['Sector'] == 'Waste'].copy()",
+      "df_melt = waste.melt(id_vars=['Country'], value_vars=[str(y) for y in range(1990, 2019)], var_name='Year', value_name='Methane Emissions')",
+      "For each Year, compute IQR thresholds and assign 'is_outlier' column (1=outlier, 0=normal)",
+      "heatmat = df_melt.pivot(index='Country', columns='Year', values='is_outlier').fillna(0)",
+      "Count anomalies per country and sort index accordingly"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\nwaste = df[df['Sector'] == 'Waste'].copy()\nyears = [str(y) for y in range(1990,2019)]\ndf_melt = waste.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Methane Emissions')\ndf_melt['Year'] = df_melt['Year'].astype(int)\ndf_melt['is_outlier'] = 0\nfor y in range(1990,2019):\n    vals = df_melt[df_melt['Year']==y]['Methane Emissions'].dropna().values\n    if len(vals)>0:\n        q1 = np.percentile(vals, 25)\n        q3 = np.percentile(vals, 75)\n        iqr = q3 - q1\n        lower = q1 - 1.5 * iqr\n        upper = q3 + 1.5 * iqr\n        mask = (df_melt['Year']==y) & ((df_melt['Methane Emissions'] < lower) | (df_melt['Methane Emissions'] > upper))\n        df_melt.loc[mask, 'is_outlier'] = 1\nhm = df_melt.pivot(index='Country', columns='Year', values='is_outlier').fillna(0)\nhm['OutlierSum'] = hm.sum(axis=1)\nhm = hm.sort_values('OutlierSum', ascending=False)\nhm = hm.drop('OutlierSum', axis=1)\nplt.figure(figsize=(19,9))\ncmap = mpl.colors.ListedColormap(['#ffffff','#c13c3c'])\nplt.imshow(hm.values, aspect='auto', cmap=cmap, vmin=0, vmax=1)\nplt.yticks(ticks=np.arange(hm.shape[0]), labels=hm.index, fontsize=8)\nplt.xticks(ticks=np.arange(len(hm.columns)), labels=hm.columns, rotation=90)\nplt.xlabel(\"Year\")\nplt.ylabel(\"Country (sorted by anomaly count)\")\ntitle = \"Heatmap of Outlier Years for Waste Methane Emissions\\nRed=Year is Anomaly per IQR, White=Normal\\nTop: Countries with Most Anomaly Years on Top\"\nplt.title(title)\nplt.grid(axis='x', linestyle=':', color='#cccccc', alpha=0.15)\nn_top = 5\nfor i, country in enumerate(hm.index[:n_top]):\n    plt.text(0, i+0.2, '*', color='blue', fontsize=13, ha='left', va='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

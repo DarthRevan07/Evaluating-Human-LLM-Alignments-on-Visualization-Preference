@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which combination of enginetype and enginesize consistently leads to higher car prices?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot (categorical grid/facet)",
+      "design_rationale": "Faceted scatter plots allow direct visualization of individual car prices in the context of both enginetype (facet) and enginesize (quantitative X-axis). By facetting each enginetype, viewers can examine the spread and clustering of prices across enginesize for each type, revealing if a consistent relationship exists or if certain engine types with larger engines always command higher prices.",
+      "target_insight": "Highlights price trends within enginetype categories across enginesize, revealing if larger engines within certain types always result in higher car prices (consistency and exceptions).",
+      "output_fields": [
+        "enginetype",
+        "enginesize",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginesize",
+        "y": "price",
+        "color": "enginetype (for distinction across facets)",
+        "size": null,
+        "other_aesthetics": "Separate subplot (facet) for each enginetype, axis sharing for comparison"
+      }
+    },
+    "transformations": [
+      "For each unique enginetype, filter df accordingly",
+      "Plot enginesize vs price for each group in a separate subplot"
+    ],
+    "data_preparation_steps": [
+      "Get sorted unique enginetype values",
+      "For each enginetype, filter df and plot scatter"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\nenginetypes = sorted(df['enginetype'].unique())\nnum_types = len(enginetypes)\nfig, axes = plt.subplots(num_types, 1, figsize=(8, 3*num_types), sharex=True)\ncmap = mpl.colormaps['tab10']\nfor idx, etype in enumerate(enginetypes):\n    ax = axes[idx] if num_types > 1 else axes\n    df_sub = df[df['enginetype'] == etype]\n    colors = [cmap(idx % 10) for _ in range(len(df_sub))]\n    ax.scatter(df_sub['enginesize'], df_sub['price'], c=colors, label=etype, edgecolors='k', alpha=0.8, s=40)\n    ax.set_ylabel(\"price\")\n    ax.set_title(\"Enginetype: \" + etype)\nax.set_xlabel(\"enginesize\")\nfig.suptitle(\"Car Price vs Enginesize for each Enginetype\\n(Consistency of price trends across combinations)\", fontsize=14)\nplt.tight_layout(rect=[0, 0, 1, 0.96])\nplt.show()"
+  },
+  "schema_based": true
+}

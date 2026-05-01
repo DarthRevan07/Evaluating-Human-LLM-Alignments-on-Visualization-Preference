@@ -1,0 +1,39 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the average car price vary across different manufacturers?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot by Manufacturer",
+      "design_rationale": "Boxplots for each manufacturer visualize the distribution of car prices, not just the average. With 65 manufacturers, selecting the top 10 by number of listings avoids clutter and allows detailed comparison. This chart reveals not only average price variations but also the spread, presence of outliers, and skew within each brand: essential to understand how consistent or diverse pricing is among the most active manufacturers.",
+      "target_insight": "Beyond averages, shows how price dispersion differs between top manufacturers—whether certain brands have more luxury or budget models, or strong presence of outliers.",
+      "output_fields": [
+        "Manufacturer",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Manufacturer (Top 10 by count)",
+        "y": "Price",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Boxplot (shows median, IQR, whiskers, outliers); x-axis ordered by count descending"
+      }
+    },
+    "transformations": [
+      "Count listings per Manufacturer and select top 10 manufacturers by row count",
+      "Filter df for only these top 10 manufacturers"
+    ],
+    "data_preparation_steps": [
+      "manufacturer_counts = df['Manufacturer'].value_counts()",
+      "top10_manufacturers = manufacturer_counts.index[:10]",
+      "df_top10 = df[df['Manufacturer'].isin(top10_manufacturers)]",
+      "Prepare list of price arrays for each top manufacturer for boxplot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\28.csv')\nmanufacturer_counts = df['Manufacturer'].value_counts()\ntop10_manufacturers = manufacturer_counts.index[:10]\ndf_top10 = df[df['Manufacturer'].isin(top10_manufacturers)]\ndata = [df_top10[df_top10['Manufacturer']==m]['Price'].values for m in top10_manufacturers]\nfig, ax = plt.subplots(figsize=(12,8))\nax.boxplot(data, labels=top10_manufacturers, patch_artist=True, boxprops=dict(facecolor='lightgreen', color='darkgreen'), medianprops=dict(color='orange', linewidth=2), whiskerprops=dict(color='gray'))\nax.set_xlabel('Manufacturer (Top 10 by count)')\nax.set_ylabel('Price')\nax.set_title('Distribution of Car Prices by Manufacturer\\n(Top 10 by number of listings)', pad=20)\nplt.xticks(rotation=30)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

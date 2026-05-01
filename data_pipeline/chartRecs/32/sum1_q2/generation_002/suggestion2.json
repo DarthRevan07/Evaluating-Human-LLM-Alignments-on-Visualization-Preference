@@ -1,0 +1,40 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What trends can be observed in medical charges as age increases, and do these trends differ by smoking status?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (age bins, charges distribution, separated by smoking status)",
+      "design_rationale": "A boxplot for grouped age bins with charges as distribution values, split by smoker status, shows not just central tendency but the spread and outliers in medical charges for each age group. This reveals whether higher charges at certain ages are due to skew or consistent increases, and exposes differences in distribution shape (e.g., variability) between smokers and non-smokers. The categorical contrast plus aggregated summary makes charge disparities clear and interpretable, tailored for showing both trend and risk effect.",
+      "target_insight": "How the distributions (not just averages) of medical charges within each age bin differ for smokers vs non-smokers, helping to see if charge variability is higher among smokers, and if certain age bins show disproportionate increases.",
+      "output_fields": [
+        "age",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age (binned, e.g. 18-24, 25-31, up to 64)",
+        "y": "charges (distribution within bin, split by smoker status)",
+        "color": "smoker (box color: blue for non, red for yes)",
+        "size": null,
+        "other_aesthetics": "boxes grouped by age bin and smoker status; legend indicates smoker color; outliers visible"
+      }
+    },
+    "transformations": [
+      "Bin 'age' into 7-year intervals: 18-24, 25-31, ..., 58-64 (covering min to max age)",
+      "For each bin, create two groups: smoker == 'yes', smoker == 'no'"
+    ],
+    "data_preparation_steps": [
+      "age_bins = np.arange(18, 65, 7)",
+      "age_labels = [f\"{age_bins[i]}-{age_bins[i+1]-1}\" for i in range(len(age_bins)-1)]",
+      "df['age_bin'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, right=False)",
+      "For each age_bin & smoker status, collect 'charges' values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\32.csv\")\nage_bins = np.arange(18, 65, 7)\nage_labels = [f\"{age_bins[i]}-{age_bins[i+1]-1}\" for i in range(len(age_bins)-1)]\ndf['age_bin'] = pd.cut(df['age'], bins=age_bins, labels=age_labels, right=False)\nbin_labels = df['age_bin'].unique().tolist()\nbin_labels = [bl for bl in bin_labels if pd.notnull(bl)]\ndata = []\ncolors = []\nfor bin_label in bin_labels:\n    for smoker_status in ['no', 'yes']:\n        charges = df[(df['age_bin']==bin_label) & (df['smoker']==smoker_status)]['charges'].values\n        data.append(charges)\n        colors.append('steelblue' if smoker_status=='no' else 'firebrick')\ngroup_labels = []\nfor bl in bin_labels:\n    group_labels.append(f\"{bl}\\nNon-smoker\")\n    group_labels.append(f\"{bl}\\nSmoker\")\nfig, ax = plt.subplots(figsize=(12,6))\nbox = ax.boxplot(data, patch_artist=True, labels=group_labels)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xlabel(\"age_bin and smoker status\")\nax.set_ylabel(\"Medical charges distribution\")\nax.set_title(\"Medical Charges Distribution by Age Bins\\n and Smoking Status (Boxplots)\")\nfrom matplotlib.lines import Line2D\ncustom_legend = [Line2D([0], [0], color='steelblue', lw=8, label='Non-smoker'), Line2D([0], [0], color='firebrick', lw=8, label='Smoker')]\nax.legend(handles=custom_legend, loc='upper right')\nax.grid(True, axis='y', linestyle=':', linewidth=0.5, alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,37 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot with decade-highlighted background bands",
+      "design_rationale": "A conventional line plot with decade-color bands is ideal for visualizing the trajectory of global population over time, especially given the 'Year' and 'Population' fields sampled at regular intervals. Highlighting background by decade emphasizes patterns and shifts in growth rate visually, while the line's slope changes illustrate acceleration and deceleration. This approach makes decade-wise trends explicit and provides an immediate overview of key periods while leveraging precise numeric axes.",
+      "target_insight": "The visualization reveals population growth trends and pacing across different decades, making it easy to spot periods of rapid or slowed growth, and emphasizes how global population trajectory has shifted over time.",
+      "output_fields": [
+        "Year",
+        "Population"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Population",
+        "color": "Decade background bands; line color for population trajectory",
+        "size": null,
+        "other_aesthetics": "Decade background bands, line thickness, year markers"
+      }
+    },
+    "transformations": [
+      "Convert df['Population'] (string) to numeric values for plotting",
+      "Create a 'Decade' column from df['Year'] for background bands"
+    ],
+    "data_preparation_steps": [
+      "df['Population_num'] = df['Population'].str.replace(',', '').astype(float)",
+      "df['Decade'] = (df['Year']//10)*10"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Population_num'] = df['Population'].str.replace(',', '').astype(float)\ndf['Decade'] = (df['Year']//10)*10\nfig, ax = plt.subplots(figsize=(10, 6))\ndecades = df['Decade'].unique()\ndecade_colors = mpl.colormaps['viridis'].resampled(len(decades)).colors\nfor i, dec in enumerate(np.sort(decades)):\n    min_year = dec\n    max_year = dec + 10\n    ax.axvspan(min_year, max_year, color=decade_colors[i], alpha=0.12)\nax.plot(df['Year'], df['Population_num'], color='#003366', linewidth=2, marker='o', label='Global Population')\nax.set_xlabel('Year')\nax.set_ylabel('Population')\nax.set_title('Global Population Growth (1955–2024) with Decade Trends', fontsize=14)\ny_ticks = np.linspace(df['Population_num'].min(), df['Population_num'].max(), 7)\nax.set_yticks(y_ticks)\nax.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x, _: f'{int(x):,}'))\nfor decade, color in zip(decades, decade_colors):\n    ax.text(decade+4.5, df['Population_num'].min()*1.02, str(int(decade))+'s', color=color, fontsize=11, ha='center', va='bottom', alpha=0.8)\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

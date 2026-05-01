@@ -1,0 +1,374 @@
+{
+  "status": "complete",
+  "total_schemas": 20,
+  "successful": 20,
+  "failed": 0,
+  "summaries_per_generation": 2,
+  "num_generations_per_schema": 1,
+  "total_successful_generations": 20,
+  "total_summaries_generated": 40,
+  "processed_schemas": {
+    "1": {
+      "status": "success",
+      "output_directory": "c2_summaries\\List_of_Countries_by_GDP_Sector_Composition_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 230,
+      "total_columns": 15,
+      "source_file": "csv_c_squared\\1.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\List_of_Countries_by_GDP_Sector_Composition_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "160": {
+      "status": "success",
+      "output_directory": "c2_summaries\\wwc_outcomes_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 568,
+      "total_columns": 7,
+      "source_file": "csv_c_squared\\160.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\wwc_outcomes_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "192": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Star_dataset_to_predict_star_types_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 240,
+      "total_columns": 7,
+      "source_file": "csv_c_squared\\192.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Star_dataset_to_predict_star_types_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "2": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Methane_Emissions_Around_The_World__1990-2018__summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1738,
+      "total_columns": 33,
+      "source_file": "csv_c_squared\\2.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Methane_Emissions_Around_The_World__1990-2018__summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "206": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Housing_Prices_Dataset_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 545,
+      "total_columns": 13,
+      "source_file": "csv_c_squared\\206.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Housing_Prices_Dataset_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "22": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Car_Price_Prediction_Multiple_Linear_Regression_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 205,
+      "total_columns": 26,
+      "source_file": "csv_c_squared\\22.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Car_Price_Prediction_Multiple_Linear_Regression_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "221": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Traveler_Trip_Dataset__summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 139,
+      "total_columns": 13,
+      "source_file": "csv_c_squared\\221.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Traveler_Trip_Dataset__summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "243": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Global_Metropolis_Weather_Dataset_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 800,
+      "total_columns": 11,
+      "source_file": "csv_c_squared\\243.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Global_Metropolis_Weather_Dataset_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "25": {
+      "status": "success",
+      "output_directory": "c2_summaries\\NIFTY-50_Stocks_Dataset_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 50,
+      "total_columns": 13,
+      "source_file": "csv_c_squared\\25.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\NIFTY-50_Stocks_Dataset_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "261": {
+      "status": "success",
+      "output_directory": "c2_summaries\\NASA_Astronauts__1959-Present_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 357,
+      "total_columns": 19,
+      "source_file": "csv_c_squared\\261.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\NASA_Astronauts__1959-Present_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "268": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Bangladesh_Districts_wise_population_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 64,
+      "total_columns": 10,
+      "source_file": "csv_c_squared\\268.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Bangladesh_Districts_wise_population_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "269": {
+      "status": "success",
+      "output_directory": "c2_summaries\\World_data_population_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 234,
+      "total_columns": 17,
+      "source_file": "csv_c_squared\\269.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\World_data_population_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "28": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Car_Price_Prediction_Challenge_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 19237,
+      "total_columns": 18,
+      "source_file": "csv_c_squared\\28.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Car_Price_Prediction_Challenge_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "3": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Global_Rice_Production_Statistics_Dataset_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 119,
+      "total_columns": 9,
+      "source_file": "csv_c_squared\\3.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Global_Rice_Production_Statistics_Dataset_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "32": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Medical_Cost_Personal_Datasets_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1338,
+      "total_columns": 7,
+      "source_file": "csv_c_squared\\32.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Medical_Cost_Personal_Datasets_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "39": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Glass_Classification_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 214,
+      "total_columns": 10,
+      "source_file": "csv_c_squared\\39.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Glass_Classification_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "429": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Imports_and_Exports_of_Dogs_by_state_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 90,
+      "total_columns": 5,
+      "source_file": "csv_c_squared\\429.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Imports_and_Exports_of_Dogs_by_state_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "461": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Monthly_highest_temperature_in_Amherst_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 140,
+      "total_columns": 3,
+      "source_file": "csv_c_squared\\461.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Monthly_highest_temperature_in_Amherst_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "63": {
+      "status": "success",
+      "output_directory": "c2_summaries\\___Predict_Customer_Purchase_Behavior_Dataset_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 1500,
+      "total_columns": 9,
+      "source_file": "csv_c_squared\\63.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\___Predict_Customer_Purchase_Behavior_Dataset_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    },
+    "97": {
+      "status": "success",
+      "output_directory": "c2_summaries\\Supply_Chain_Analysis_summaries",
+      "successful_generations": 1,
+      "failed_generations": 0,
+      "total_summaries": 2,
+      "total_rows": 100,
+      "total_columns": 24,
+      "source_file": "csv_c_squared\\97.csv",
+      "generations": {
+        "generation_001": {
+          "status": "success",
+          "output_file": "c2_summaries\\Supply_Chain_Analysis_summaries\\generation_001\\summaries_gen_001.json",
+          "summaries_count": 2,
+          "generation_number": 1
+        }
+      }
+    }
+  },
+  "schema_directory": "c2_schemas",
+  "output_directory": "c2_summaries"
+}

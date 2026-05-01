@@ -1,0 +1,34 @@
+{
+  "table_name": "Impact of Product Positioning on Sales",
+  "file_index": "65",
+  "original_filename": "65.csv",
+  "total_rows": 1000,
+  "total_columns": 10,
+  "column_names": [
+    "Product ID",
+    "Product Position",
+    "Price",
+    "Competitor's Price",
+    "Promotion",
+    "Foot Traffic",
+    "Consumer Demographics",
+    "Product Category",
+    "Seasonal",
+    "Sales Volume"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\65_summaries",
+  "source_file": "csv_c2_sec\\65.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\65_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

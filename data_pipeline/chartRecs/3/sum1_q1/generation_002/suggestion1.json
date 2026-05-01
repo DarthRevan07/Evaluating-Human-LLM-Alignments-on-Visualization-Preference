@@ -1,0 +1,40 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which countries have the highest rice yield per hectare, and how does their total rice production compare with those having the greatest production volumes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart is ideal for ranking countries and clearly highlighting those with the highest rice yield per hectare. With 119 unique countries, vertical bars would be congested – horizontal arrangement allows easy comparison and readable labels. By displaying 'Rice Yield (Kg / Hectare)' and overlaying total 'Rice Production (Tons)', the chart shows both productivity and absolute output for each top-yield country, directly addressing the question.",
+      "target_insight": "It reveals which countries achieve the highest rice yield per hectare, and also enables comparison of their total rice production volumes, so one can see if high yield coincides with large overall production.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rice Production (Tons)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Yield (Kg / Hectare)",
+        "y": "Country",
+        "color": "Rice Production (Tons) (mapped to colormap, Viridis)",
+        "size": null,
+        "other_aesthetics": "Highlight top 15 countries; annotate bar ends with total rice production; color intensity = production"
+      }
+    },
+    "transformations": [
+      "Sort df by 'Rank of Rice Yield' ascending (top yielders first)",
+      "Select top 15 countries with highest rice yield",
+      "Convert 'Rice Yield (Kg / Hectare)' and 'Rice Production (Tons)' from string to numeric values (handle 'K' and 'M' abbreviations)"
+    ],
+    "data_preparation_steps": [
+      "df = df.sort_values('Rank of Rice Yield').head(15)",
+      "df['Rice Yield (Kg / Hectare)'] = df['Rice Yield (Kg / Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)",
+      "df['Rice Production (Tons)'] = df['Rice Production (Tons)'].str.replace('K','000').str.replace('M','000000').astype(float)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf = df.sort_values('Rank of Rice Yield').head(15)\ndf['Rice Yield (Kg / Hectare)'] = df['Rice Yield (Kg / Hectare)'].str.replace('K','000').str.replace('M','000000').astype(float)\ndf['Rice Production (Tons)'] = df['Rice Production (Tons)'].str.replace('K','000').str.replace('M','000000').astype(float)\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['Rice Production (Tons)'].min(), vmax=df['Rice Production (Tons)'].max())\ncolors = cmap(norm(df['Rice Production (Tons)']))\nfig, ax = plt.subplots(figsize=(9,7))\nbars = ax.barh(df['Country'], df['Rice Yield (Kg / Hectare)'], color=colors, edgecolor='k')\nfor i, (yield_val, prod_val) in enumerate(zip(df['Rice Yield (Kg / Hectare)'], df['Rice Production (Tons)'])):\n    ax.text(yield_val+0.02*yield_val, i, f'{int(prod_val):,}', va='center', fontsize=10, color='black')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm._A = []\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.03)\ncbar.set_label('Rice Production (Tons)', fontsize=12)\nax.set_xlabel('Rice Yield (Kg / Hectare)', fontsize=13)\nax.set_ylabel('Country', fontsize=13)\nplt.title('Top 15 Countries by Rice Yield per Hectare\\nBar color = Total Rice Production', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

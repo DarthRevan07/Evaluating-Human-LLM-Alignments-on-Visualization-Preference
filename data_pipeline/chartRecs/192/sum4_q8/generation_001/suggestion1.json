@@ -1,0 +1,43 @@
+{
+  "table_name": "192",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What is the association between Radius(R/Ro) and Temperature (K) for stars of the same Star type?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Faceted Scatter Plot (Separate Panels by Star type)",
+      "design_rationale": "A faceted scatter plot is highly effective for examining how Radius(R/Ro) and Temperature (K) relate within each Star type. Since 'Star type' has exactly 6 categories and both variables of interest are continuous and central to stellar physics, faceting by 'Star type' allows for direct comparison of association patterns between temperature and radius across types, while avoiding overplotting. Using color to encode 'Luminosity(L/Lo)' adds a further dimension, revealing energy output variations within each star group. The approach enables users to see both within-type trends/patterns and differences across types in a single visual frame.",
+      "target_insight": "Users can observe for each star type if larger radii correspond to higher or lower temperatures, whether the association is linear or clustered, compare spread and ranges, and also inspect how luminosity varies jointly with size and temperature within each category.",
+      "output_fields": [
+        "Temperature (K)",
+        "Radius(R/Ro)",
+        "Star type",
+        "Luminosity(L/Lo)"
+      ],
+      "chart_encodings": {
+        "x": "Temperature (K)",
+        "y": "Radius(R/Ro)",
+        "color": "Luminosity(L/Lo) - continuous colormap",
+        "size": null,
+        "other_aesthetics": "Facet grid (subplots) by Star type; sharex for temperature, log y-axis for radius to account for large value range"
+      }
+    },
+    "transformations": [
+      "No aggregation; retain all rows as 240 is a manageable amount (show scatter per star)",
+      "Subset numeric columns of relevance: Temperature (K), Radius(R/Ro), Luminosity(L/Lo), Star type",
+      "Apply log10 scaling to y-axis to address the large range in Radius(R/Ro)",
+      "Sort data by Star type for grouping",
+      "Map Star type integer values to subplot axes for faceting"
+    ],
+    "data_preparation_steps": [
+      "Read data from csv_c_squared\\192.csv into df",
+      "Ensure Temperature (K), Radius(R/Ro), Luminosity(L/Lo), and Star type columns are present",
+      "No nulls to handle per schema; ready to plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\192.csv\")\nunique_types = sorted(df['Star type'].unique())\ntype_to_subplot = {t: i for i, t in enumerate(unique_types)}\nnum_types = len(unique_types)\nfig, axes = plt.subplots(nrows=2, ncols=3, figsize=(18, 10), sharex=True, sharey=True)\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.LogNorm(vmin=df['Luminosity(L/Lo)'].min(), vmax=df['Luminosity(L/Lo)'].max())\nfor t in unique_types:\n    ax = axes[type_to_subplot[t] // 3, type_to_subplot[t] % 3]\n    dft = df[df['Star type'] == t]\n    sc = ax.scatter(\n        dft['Temperature (K)'],\n        dft['Radius(R/Ro)'],\n        c=dft['Luminosity(L/Lo)'],\n        cmap=cmap,\n        norm=norm,\n        edgecolor='black',\n        linewidth=0.5,\n        alpha=0.8\n    )\n    ax.set_yscale('log')\n    ax.set_title(\"Star type: \" + str(t), fontsize=13)\n    ax.grid(True, alpha=0.2)\n    if type_to_subplot[t] % 3 == 0:\n        ax.set_ylabel(\"Radius(R/Ro) (log scale)\")\n    if type_to_subplot[t] // 3 == 1:\n        ax.set_xlabel(\"Temperature (K)\")\ncbar_ax = fig.add_axes([0.92, 0.15, 0.015, 0.7])\nfig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), cax=cbar_ax, label=\"Luminosity(L/Lo) (log scale)\")\nfig.suptitle(\n    \"Radius vs. Temperature Faceted by Star type\\nColor=log Luminosity (L/Lo)\", \n    fontsize=16\n)\nplt.tight_layout(rect=[0,0,0.9,0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

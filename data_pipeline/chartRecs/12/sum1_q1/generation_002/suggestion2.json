@@ -1,0 +1,40 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the distribution of Numerical Aptitude scores differ across various Career groupings?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Heatmap of Median Numerical Aptitude for Top 10 Most Frequent Careers",
+      "design_rationale": "Given that most careers are unique, we focus on the top 10 most common career titles by frequency, showing a heatmap that encodes the median Numerical Aptitude score for each. To reveal both centrality and spread, we also show violin plots (mirrored KDEs) horizontally per career. Combining a violin plot with a heatmap emphasis (cell color indicating the median) gives users a dual insight: both the typical range as a density curve and an intuitive color readout of the group's central tendency.",
+      "target_insight": "This hybrid chart shows, for the most popular career choices, which have the widest/narrowest variation in quantitative aptitude, while the cell coloring provides an at-a-glance view of which careers tend to attract high or low scorers.",
+      "output_fields": [
+        "Career",
+        "Numerical Aptitude"
+      ],
+      "chart_encodings": {
+        "y": "Top 10 most frequent Career (ordered by median Numerical Aptitude)",
+        "x": "Numerical Aptitude (distribution per career)",
+        "color": "Cell background: heatmap color by median Numerical Aptitude per Career",
+        "size": null,
+        "other_aesthetics": "Horizontal violin plots, career labels y-axis, colormap 'viridis'"
+      }
+    },
+    "transformations": [
+      "Identify the 10 most frequent careers using value_counts on df['Career'].",
+      "Subset the dataframe to only those careers.",
+      "Compute the median 'Numerical Aptitude' for each of those careers.",
+      "Order the careers by median Numerical Aptitude (descending)."
+    ],
+    "data_preparation_steps": [
+      "Compute df['Career'].value_counts().nlargest(10).index to get top 10 carrier titles.",
+      "Subset df to only rows where Career is in that top 10 list.",
+      "For ordering, group by Career, compute median 'Numerical Aptitude', order accordingly."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nimport seaborn as sns\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\n# Top 10 most frequent career titles\ncareer_counts = df[\"Career\"].value_counts()\ntop10_careers = career_counts.nlargest(10).index.tolist()\ndf_top10 = df[df[\"Career\"].isin(top10_careers)].copy()\n# Order by median Numerical Aptitude descending\nmedians = df_top10.groupby(\"Career\")[\"Numerical Aptitude\"].median().sort_values(ascending=False)\norder = medians.index.tolist()\n# Normalize medians for coloring\nmin_med, max_med = medians.min(), medians.max()\nnorm = mpl.colors.Normalize(vmin=min_med, vmax=max_med)\ncmap = mpl.colormaps[\"viridis\"]\nplt.figure(figsize=(11,7))\nax = plt.gca()\nfor i, career in enumerate(order):\n    yloc = i\n    scores = df_top10[df_top10[\"Career\"] == career][\"Numerical Aptitude\"].values\n    parts = ax.violinplot(scores, positions=[yloc], vert=False, widths=0.76, showmeans=False, showmedians=False, showextrema=False)\n    color = cmap(norm(medians[career]))\n    for pc in parts['bodies']:\n        pc.set_facecolor(color)\n        pc.set_edgecolor(\"k\")\n        pc.set_alpha(0.76)\n    # Overlay the median as a dot\n    median = np.median(scores)\n    ax.plot(median, yloc, marker=\"o\", color=\"#222\", markersize=7, zorder=3)\n# Format axes\nax.set_yticks(range(len(order)))\nax.set_yticklabels(order, fontsize=11)\nax.set_xlabel(\"Numerical Aptitude Score\", fontsize=13)\nax.set_ylabel(\"Career (Top 10 by Frequency)\", fontsize=13)\nplt.title(\"Numerical Aptitude Distribution for\\nMost Frequent Careers (Violin Heatmap)\", fontsize=15, fontweight=\"bold\")\n# Create a colorbar showing median mapping\nsm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)\ncbar = plt.colorbar(sm, ax=ax, orientation=\"vertical\", pad=0.02)\ncbar.set_label(\"Median Numerical Aptitude\", fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

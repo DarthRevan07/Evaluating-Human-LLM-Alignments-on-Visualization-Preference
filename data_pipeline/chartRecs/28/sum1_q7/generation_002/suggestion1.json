@@ -1,0 +1,47 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "What are the highest and lowest price outliers by manufacturer and model?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "strip plot (scatter) with side-by-side box plots for price outliers",
+      "design_rationale": "A box plot visualizes price distributions and highlights outliers for each manufacturer and model. Overlaying a strip plot allows each car listing's price to be visualized along with the box plot summary, making outliers explicit and identifiable. With many manufacturers and models, grouping by manufacturer and showing top models per manufacturer (by count) creates a focused, interpretable view. This hybrid approach directly answers 'highest and lowest price outliers by manufacturer and model', combining both aggregate and granular perspectives, well-suited because 'Price' is heavily skewed with many extreme values.",
+      "target_insight": "Visually spot extreme high and low price outliers for each major manufacturer/model, making clear which combinations drive the outliers.",
+      "output_fields": [
+        "Manufacturer",
+        "Model",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Manufacturer (grouped), within each: Model (for top N models per manufacturer by count)",
+        "y": "Price",
+        "color": "Outlier status (outlier = red, non-outlier = gray)",
+        "size": "null",
+        "other_aesthetics": "Box plots for each manufacturer/model, strip plot for individual points, alpha to reduce overplotting"
+      }
+    },
+    "transformations": [
+      "For each Manufacturer and Model, compute IQR (Q1, Q3, IQR = Q3 - Q1) on 'Price'",
+      "Tag each row as a price outlier if Price < Q1 - 1.5*IQR or Price > Q3 + 1.5*IQR",
+      "Select top 5 models per manufacturer by row count",
+      "Subset to these major Manufacturer-Model groups"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\28.csv')",
+      "grouped = df.groupby(['Manufacturer', 'Model'])",
+      "model_counts = grouped.size().reset_index(name='Count')",
+      "top_models = model_counts.groupby('Manufacturer').apply(lambda x: x.nlargest(5, 'Count')).reset_index(drop=True)",
+      "mask = df.set_index(['Manufacturer','Model']).index.isin(top_models.set_index(['Manufacturer','Model']).index)",
+      "df_top = df[mask]",
+      "def outlier_tag(subdf):\n    q1 = subdf['Price'].quantile(0.25)\n    q3 = subdf['Price'].quantile(0.75)\n    iqr = q3 - q1\n    return ((subdf['Price'] < q1 - 1.5*iqr) | (subdf['Price'] > q3 + 1.5*iqr))",
+      "df_top['outlier'] = grouped['Price'].apply(outlier_tag).reset_index(drop=True)",
+      "df_top['Manu_Model'] = df_top['Manufacturer'] + '-' + df_top['Model']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ngrouped = df.groupby(['Manufacturer', 'Model'])\nmodel_counts = grouped.size().reset_index(name='Count')\ntop_models = model_counts.groupby('Manufacturer').apply(lambda x: x.nlargest(5, 'Count')).reset_index(drop=True)\nmask = df.set_index(['Manufacturer','Model']).index.isin(top_models.set_index(['Manufacturer','Model']).index)\ndf_top = df[mask]\ndef outlier_tag(subdf):\n    q1 = subdf['Price'].quantile(0.25)\n    q3 = subdf['Price'].quantile(0.75)\n    iqr = q3 - q1\n    return ((subdf['Price'] < q1 - 1.5*iqr) | (subdf['Price'] > q3 + 1.5*iqr))\ndf_top['outlier'] = grouped['Price'].apply(outlier_tag).reset_index(drop=True)\ndf_top['Manu_Model'] = df_top['Manufacturer'] + '-' + df_top['Model']\nunique_groups = df_top['Manu_Model'].unique()\nfig, ax = plt.subplots(figsize=(18,8))\npositions = np.arange(len(unique_groups))\nfor i, group in enumerate(unique_groups):\n    subdf = df_top[df_top['Manu_Model'] == group]\n    outlier_points = subdf[subdf['outlier']]\n    non_outlier_points = subdf[~subdf['outlier']]\n    ax.boxplot(subdf['Price'], positions=[positions[i]], widths=0.5, patch_artist=True, boxprops={'facecolor':'lightblue','alpha':0.5}, medianprops={'color':'darkblue'})\n    ax.scatter(np.full(non_outlier_points.shape[0], positions[i]), non_outlier_points['Price'], color='gray', alpha=0.4, s=10)\n    ax.scatter(np.full(outlier_points.shape[0], positions[i]), outlier_points['Price'], color='red', alpha=0.85, s=25, label='Outlier' if i==0 else None)\nax.set_xticks(positions)\nax.set_xticklabels(unique_groups, rotation=90, fontsize=10)\nax.set_ylabel('Price')\nax.set_title('Highest and Lowest Price Outliers by Manufacturer and Model (Top 5 Models per Manufacturer)\\nRed dots are price outliers')\nplt.tight_layout()\nplt.legend(handles=[mpl.lines.Line2D([], [], color='red', marker='o', linestyle='', label='Outlier')], loc='upper right')\nplt.show()"
+  },
+  "schema_based": true
+}

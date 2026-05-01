@@ -1,0 +1,46 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 1,
+  "question": "Which drinks combine both high calorie and high caffeine amounts, and what types do they represent?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot",
+      "design_rationale": "A scatter plot allows us to directly visualize the relationship between calories and caffeine across all drinks. By encoding drink type with color and using point size to reflect serving volume, we can detect which drink types (and which individual drinks) combine both high calorie and high caffeine amounts. Highlighting the threshold lines for 'high calorie' and 'high caffeine' (e.g., at the 75th percentile for each) focuses the viewer's attention on the most relevant quadrant.",
+      "target_insight": "Identifies the drinks and drink types that simultaneously have high calorie and high caffeine content, with an overview of how different types cluster.",
+      "output_fields": [
+        "Calories",
+        "Caffeine (mg)",
+        "type",
+        "Volume (ml)",
+        "drink"
+      ],
+      "chart_encodings": {
+        "x": "Calories",
+        "y": "Caffeine (mg)",
+        "color": "type (categorical colormap)",
+        "size": "Volume (ml) (point area)",
+        "other_aesthetics": "alpha=0.7, edgecolor='k', threshold lines for high calorie/high caffeine"
+      }
+    },
+    "transformations": [
+      "Compute 75th percentile of df['Calories'] and df['Caffeine (mg)'] to define 'high' thresholds",
+      "Filter drinks with Calories >= 75th percentile and Caffeine (mg) >= 75th percentile for annotation",
+      "Prepare a color mapping for df['type']"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c2_sec\\112.csv')",
+      "calorie_thresh = np.percentile(df['Calories'], 75)",
+      "caffeine_thresh = np.percentile(df['Caffeine (mg)'], 75)",
+      "types = df['type'].unique()",
+      "type_colors = dict(zip(types, plt.cm.Set2.colors[:len(types)]))",
+      "df['color'] = df['type'].map(type_colors)",
+      "df_high = df[(df['Calories'] >= calorie_thresh) & (df['Caffeine (mg)'] >= caffeine_thresh)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ncalorie_thresh = np.percentile(df['Calories'], 75)\ncaffeine_thresh = np.percentile(df['Caffeine (mg)'], 75)\ntypes = df['type'].unique()\ncmap = mpl.colormaps['Set2']\ntype_colors = dict(zip(types, cmap.colors[:len(types)]))\ndf['color'] = df['type'].map(type_colors)\nplt.figure(figsize=(10, 7))\nsc = plt.scatter(\n    df['Calories'],\n    df['Caffeine (mg)'],\n    c=df['color'],\n    s=20 + 80 * (df['Volume (ml)'] / df['Volume (ml)'].max()),\n    alpha=0.7,\n    edgecolor='k',\n    linewidth=0.5\n)\nfor idx, row in df[(df['Calories'] >= calorie_thresh) & (df['Caffeine (mg)'] >= caffeine_thresh)].iterrows():\n    plt.text(row['Calories'] + 2, row['Caffeine (mg)'] + 2, row['drink'], fontsize=7, alpha=0.8)\nplt.axvline(calorie_thresh, color='red', linestyle='--', lw=1, label='High Calorie (75th pct)')\nplt.axhline(caffeine_thresh, color='blue', linestyle='--', lw=1, label='High Caffeine (75th pct)')\nlegend_elements = [mpl.lines.Line2D([0], [0], marker='o', color='w', label=t, markerfacecolor=type_colors[t], markersize=10) for t in types]\nplt.legend(handles=legend_elements, title='Drink Type', bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)\nplt.xlabel('Calories')\nplt.ylabel('Caffeine (mg)')\ntitle_text = 'Drinks by Calories and Caffeine Content (Size = Volume)\\n'\ntitle_text += 'Dashed lines: 75th percentile thresholds for High Calorie / High Caffeine'\nplt.title(title_text)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

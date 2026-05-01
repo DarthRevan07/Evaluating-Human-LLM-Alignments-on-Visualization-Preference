@@ -1,0 +1,41 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable relationship between a stock’s Open price and its High price in the current period?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stock-wise Open-to-High Spread Diverging Bar Chart",
+      "design_rationale": "To further examine not just the correlation but the scale and direction of the difference between Open and High for each stock, a bar chart encoding (High - Open) per Symbol captures both the spread and outliers. Sorting by spread size and coloring the bars by magnitude makes it easy to see which stocks experience the biggest upward swings compared to their Open, and whether most stocks are clustered or divergent.",
+      "target_insight": "The viewer can compare, per stock, the magnitude of price movement from Open to High and easily spot which stocks have unusually large or small spreads, revealing sector outliers or market activity clusters.",
+      "output_fields": [
+        "Symbol",
+        "Open",
+        "High"
+      ],
+      "chart_encodings": {
+        "x": "Symbol (sorted by High - Open, horizontal axis)",
+        "y": "High - Open (bar length)",
+        "color": "Diverging colormap (e.g., coolwarm) based on spread value",
+        "size": "Bar width uniform",
+        "other_aesthetics": "Horizontal bar arrangement, sorting, Symbol labels rotated vertically for legibility, colorbar for spread values"
+      }
+    },
+    "transformations": [
+      "Convert df['Open'] and df['High'] from string to numeric using pd.to_numeric (remove commas and whitespace, coerce errors)",
+      "Calculate new column 'Open_to_High_Spread' = df['High'] - df['Open']",
+      "Sort DataFrame by 'Open_to_High_Spread' in descending order"
+    ],
+    "data_preparation_steps": [
+      "df['Open'] = pd.to_numeric(df['Open'].str.replace(',', '').str.strip(), errors='coerce')",
+      "df['High'] = pd.to_numeric(df['High'].str.replace(',', '').str.strip(), errors='coerce')",
+      "df['Open_to_High_Spread'] = df['High'] - df['Open']",
+      "df_sorted = df.sort_values('Open_to_High_Spread', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['Open'] = pd.to_numeric(df['Open'].str.replace(',', '').str.strip(), errors='coerce')\ndf['High'] = pd.to_numeric(df['High'].str.replace(',', '').str.strip(), errors='coerce')\ndf['Open_to_High_Spread'] = df['High'] - df['Open']\ndf_sorted = df.sort_values('Open_to_High_Spread', ascending=False)\n\nfig, ax = plt.subplots(figsize=(12,7))\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.TwoSlopeNorm(vmin=df_sorted['Open_to_High_Spread'].min(), vcenter=0, vmax=df_sorted['Open_to_High_Spread'].max())\nbar_colors = cmap(norm(df_sorted['Open_to_High_Spread']))\n\nbars = ax.bar(df_sorted['Symbol'], df_sorted['Open_to_High_Spread'], color=bar_colors, edgecolor='k')\nax.set_xlabel('Symbol')\nax.set_ylabel('High - Open (Spread)')\nax.set_title('Open-to-High Price Spread for Each NIFTY-50 Stock')\nax.tick_params(axis='x', labelrotation=90)\nax.axhline(0, color='black', linewidth=1, linestyle='--', alpha=0.6)\n\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', fraction=0.025, pad=0.02)\ncbar.set_label('Spread Value (High - Open)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries have both high rice production (Tons) and high rice yield (Kg / Hectare)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Ranked Bump Chart (Dual Ranking Lineplot)",
+      "design_rationale": "A bump chart visualizes shifts or concurrence in rankings across two metrics for each country: production volume and yield. This approach spotlights countries that consistently rank high in both, revealing those at the top for output AND agricultural efficiency. Countries that are prominent in both lines (low ranks, near top) are immediately apparent; lines crossing show disparity. This method dives into leaderboard dynamics and surfaces hidden dual leaders. Highlighting intersections and top dual-rankers adds clarity.",
+      "target_insight": "Reveal which countries are top-ranked for both production and yield; visualize overlaps and disparities in rankings to identify consistent elite performers.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Country (sorted by average of two ranks, or by Rank of Rice Production)",
+        "y": "Rank of Rice Production and Rank of Rice Yield (two line series per country)",
+        "color": "Highlight countries ranked in top 10 for BOTH metrics (distinct color), others as muted",
+        "size": "null",
+        "other_aesthetics": "lines for ranking, alpha for others, annotate dual top-10 countries"
+      }
+    },
+    "transformations": [
+      "Drop any row with missing rank values",
+      "Convert df['Rank of Rice Production'] and df['Rank of Rice Yield'] to numeric (float)",
+      "Calculate for each country if it is top-10 in both rankings",
+      "Sort countries by the average of their two ranks (ascending), for ordering"
+    ],
+    "data_preparation_steps": [
+      "Drop rows with missing values in 'Rank of Rice Production' or 'Rank of Rice Yield'",
+      "Convert ranking fields to numeric",
+      "Create boolean 'dual_top10' for countries having both ranks <= 10",
+      "Sort DataFrame by mean of ranks",
+      "Extract countries for annotation (dual top-10)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf_ranked = df.dropna(subset=[\"Rank of Rice Production\", \"Rank of Rice Yield\"])\ndf_ranked[\"Rank of Rice Production\"] = df_ranked[\"Rank of Rice Production\"].astype(float)\ndf_ranked[\"Rank of Rice Yield\"] = df_ranked[\"Rank of Rice Yield\"].astype(float)\ndf_ranked[\"dual_top10\"] = (df_ranked[\"Rank of Rice Production\"] <= 10) & (df_ranked[\"Rank of Rice Yield\"] <= 10)\ndf_ranked[\"avg_rank\"] = df_ranked[[\"Rank of Rice Production\", \"Rank of Rice Yield\"]].mean(axis=1)\ndf_ranked = df_ranked.sort_values(\"avg_rank\")\n\ncountries = df_ranked[\"Country\"].values\nr_prod = df_ranked[\"Rank of Rice Production\"].values\nr_yield = df_ranked[\"Rank of Rice Yield\"].values\ndual_top10_mask = df_ranked[\"dual_top10\"].values\n\nplt.figure(figsize=(14,7))\nfor i in range(len(countries)):\n    color = \"red\" if dual_top10_mask[i] else \"lightgray\"\n    alpha = 1 if dual_top10_mask[i] else 0.5\n    plt.plot([0,1], [r_prod[i], r_yield[i]], color=color, alpha=alpha, linewidth=2)\n    if dual_top10_mask[i]:\n        plt.text(1.05, r_yield[i], countries[i], fontsize=9, color=\"black\")\nplt.scatter([0]*len(r_prod), r_prod, c=[\"red\" if dual_top10_mask[i] else \"lightgray\" for i in range(len(r_prod))], alpha=0.8)\nplt.scatter([1]*len(r_yield), r_yield, c=[\"red\" if dual_top10_mask[i] else \"lightgray\" for i in range(len(r_yield))], alpha=0.8)\nplt.xticks([0,1], [\"Production Rank\", \"Yield Rank\"])\nplt.gca().invert_yaxis()\nplt.ylabel(\"Rank (1 = highest)\")\nplt.title(\"Countries ranked for rice production vs. rice yield\\nDual top-10 countries highlighted\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

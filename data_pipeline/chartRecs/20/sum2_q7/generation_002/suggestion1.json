@@ -1,0 +1,39 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Which artists have both a high number of paintings and biographies that emphasize innovation or major influence on artistic movements?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart with Highlighting",
+      "design_rationale": "A bar chart lets us rank artists by the number of paintings and directly compare their output. Highlighting bars where biographies mention 'innovation' or 'influence on movements' draws immediate attention to those artists that intersect both the quantitative and qualitative criteria. This chart type is compact and readable for the dataset size (50 rows), and by sorting bars and overlaying annotation, it spotlights the artists who meet both criteria.",
+      "target_insight": "Shows which artists have the highest painting counts and whose biographies emphasize innovation or major influence, with direct visual marking of those who satisfy both criteria.",
+      "output_fields": [
+        "name",
+        "paintings",
+        "bio"
+      ],
+      "chart_encodings": {
+        "x": "paintings",
+        "y": "name",
+        "color": "Bar color: highlighted if biography mentions 'innovation' or 'influence'",
+        "size": "null",
+        "other_aesthetics": "Sort bars descending by number of paintings; annotate or differently color bars where criteria are met; add count labels; show legend for highlighted artists"
+      }
+    },
+    "transformations": [
+      "Filter df['bio'] for biographies containing keywords 'innovation', 'innovative', 'influence', or 'movement'",
+      "Create boolean mask 'innovator' for artists where df['bio'] contains relevant keywords",
+      "Sort artists by df['paintings'] descending"
+    ],
+    "data_preparation_steps": [
+      "df['innovator'] = df['bio'].str.contains('innovation|innovative|influence|movement', case=False, regex=True)",
+      "df_plot = df.sort_values('paintings', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndf['innovator'] = df['bio'].str.contains('innovation|innovative|influence|movement', case=False, regex=True)\ndf_plot = df.sort_values('paintings', ascending=False)\nfig, ax = plt.subplots(figsize=(10, 9))\nbar_colors = np.where(df_plot['innovator'], 'tab:red', 'tab:blue')\nbars = ax.barh(df_plot['name'], df_plot['paintings'], color=bar_colors, edgecolor='black')\nfor i, (val, innov) in enumerate(zip(df_plot['paintings'], df_plot['innovator'])):\n    ax.text(val + 5, i, str(int(val)), va='center', color='black', fontsize=10)\nax.set_xlabel('paintings')\nax.set_ylabel('name')\nax.set_title('Artists with High painting counts and Biographies emphasizing Innovation or Influence', fontsize=14)\nfrom matplotlib.patches import Patch\nlegend_elements = [Patch(facecolor='tab:red', edgecolor='black', label='Bio emphasizes innovation/influence'),Patch(facecolor='tab:blue', edgecolor='black', label='Other artists')]\nax.legend(handles=legend_elements, loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

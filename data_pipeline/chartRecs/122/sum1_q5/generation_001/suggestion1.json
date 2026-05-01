@@ -1,0 +1,41 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there genres that dominate global sales in specific years, suggesting shifts in market demand or player preferences?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Area Chart",
+      "design_rationale": "A stacked area chart is effective for visualizing how the proportion of global sales for each genre changes over time. By stacking genres for each year, we can quickly spot years where a certain genre surges, revealing dominance and market shifts. Using color for genre and the area for the cumulative global sales, we highlight not only which genres drive the market, but also their relative growth, decline, or stability.",
+      "target_insight": "This visualization reveals transitions in genre popularity, allowing us to see when new genres rise, old genres fade, and if there are pivotal years where market preference shifts from one genre to another.",
+      "output_fields": [
+        "Year",
+        "Genre",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Global_Sales (aggregated sum per genre per year)",
+        "color": "Genre",
+        "size": null,
+        "other_aesthetics": "stacked fill, smooth color palette, legend ordered by current dominance"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Year'] is null to ensure valid time series analysis",
+      "Group by df['Year'] and df['Genre'], aggregate df['Global_Sales'] by sum",
+      "Pivot into wide format: each 'Genre' becomes a column, index is 'Year', values are summed 'Global_Sales', fill missing with 0"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Year'])",
+      "df_grouped = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()",
+      "df_pivot = df_grouped.pivot(index='Year', columns='Genre', values='Global_Sales').fillna(0)",
+      "df_pivot = df_pivot.sort_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf = df.dropna(subset=['Year'])\ndf_grouped = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()\ndf_pivot = df_grouped.pivot(index='Year', columns='Genre', values='Global_Sales').fillna(0)\ndf_pivot = df_pivot.sort_index()\ngenres = df_pivot.columns\ncmap = mpl.colormaps['tab20'].resampled(len(genres))\ncolors = cmap(np.linspace(0, 1, len(genres)))\nfig, ax = plt.subplots(figsize=(14,7))\nax.stackplot(df_pivot.index, df_pivot.T.values, labels=genres, colors=colors, alpha=0.85)\nax.set_title('Global Video Game Sales by Genre per Year\\nStacked Area Chart to Reveal Genre Dominance and Market Shifts', fontsize=17, fontweight='bold', pad=20)\nax.set_xlabel('Year', fontsize=13)\nax.set_ylabel('Global Sales (Millions of Units)', fontsize=13)\nax.legend(loc='upper left', bbox_to_anchor=(1,1), title='Genre')\nax.set_xlim(df_pivot.index.min(), df_pivot.index.max())\nax.grid(axis='y', lw=0.5, alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

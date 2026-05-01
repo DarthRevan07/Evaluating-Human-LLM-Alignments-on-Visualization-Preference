@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Are there any epochs or periods that feature an unusually high diversity of genres?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart (Genre Diversity per Period)",
+      "design_rationale": "To directly answer whether some periods feature unusually high genre diversity, we need to aggregate artworks by their 'years' and count the number of unique 'genre' values per period. A bar chart allows clear comparison between epochs, highlighting any spikes or outliers in genre count. Since 'years' may represent a time span, we'll group artworks into broader periods (e.g., decade or century buckets) for meaningful aggregation. This approach is effective because 'genre' is categorical and 'years' is string, and a bar chart gives a clear, direct visual for diversity comparison across time.",
+      "target_insight": "Identifies which time periods/epochs had the highest diversity of genres, revealing potential golden ages or unique bursts of creativity.",
+      "output_fields": [
+        "years",
+        "genre"
+      ],
+      "chart_encodings": {
+        "x": "period",
+        "y": "unique_genre_count",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bar width for visibility, sorted by genre diversity descending"
+      }
+    },
+    "transformations": [
+      "Parse df['years'] to extract creation year and assign to epoch buckets (e.g., century)",
+      "For each epoch bucket, count number of unique genres (splitting multi-genre entries)",
+      "Sort epochs descending by genre diversity"
+    ],
+    "data_preparation_steps": [
+      "Extract year from df['years'] (using regex for the earliest year within each range)",
+      "Assign each artwork to a century (e.g., 1400s, 1500s...)",
+      "Split df['genre'] on delimiters (e.g., ',' or ';') and flatten genre list for each epoch",
+      "Aggregate unique genre count per century",
+      "Build summary DataFrame with columns: 'century', 'unique_genre_count'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport re\n\ndf = pd.read_csv('csv_c2_sec\\20.csv')\n# Extract creation year using regex (pick first 4-digit number)\ndef extract_year(s):\n    years = re.findall(r'[0-9]{4}', str(s))\n    return int(years[0]) if len(years) > 0 else np.nan\n\ndf['creation_year'] = df['years'].apply(extract_year)\ndef assign_century(year):\n    if pd.isnull(year):\n        return 'Unknown'\n    century = (year // 100) * 100\n    return f'{century}s'\ndf['century'] = df['creation_year'].apply(assign_century)\n# Split genres and explode for unique counting\ndf['genre_list'] = df['genre'].str.split(',')\ndf_exploded = df.explode('genre_list')\ndf_exploded['genre_list'] = df_exploded['genre_list'].str.strip()\ndf_grouped = df_exploded.groupby('century')['genre_list'].nunique().reset_index()\ndf_grouped = df_grouped.rename(columns={'genre_list': 'unique_genre_count'})\ndf_grouped = df_grouped.sort_values('unique_genre_count', ascending=False)\nfig, ax = plt.subplots(figsize=(10,6))\nax.bar(df_grouped['century'], df_grouped['unique_genre_count'], color='skyblue')\nax.set_xlabel('Century')\nax.set_ylabel('Number of Unique Genres')\nax.set_title('Genre Diversity per Epoch (Century)\\nBest Artworks of All Time')\nfor i, (century, cnt) in enumerate(zip(df_grouped['century'], df_grouped['unique_genre_count'])):\n    ax.text(i, cnt + 0.2, str(cnt), ha='center', va='bottom', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

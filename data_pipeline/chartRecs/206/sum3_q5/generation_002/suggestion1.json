@@ -1,0 +1,41 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Does the presence of a guestroom influence the price for homes with similar area?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Overlaid Density Plots (Kernel Density Estimation)",
+      "design_rationale": "To directly compare the distribution of home prices for properties with and without a guestroom, after controlling for area, we segment the 'area' variable into quantile-based bins and plot KDEs of 'price' for each 'guestroom' category within each area segment. This approach reveals if homes with guestrooms systematically command higher prices within the same size bracket, and visualizes the degree and consistency of any price premium attributed to guestrooms across property sizes. Overlaying KDEs clarifies not only mean but also the spread of prices, aiding comparison at different market tiers.",
+      "target_insight": "Highlights how the presence or absence of a guestroom shifts the price distribution for similarly sized homes, revealing possible premiums or distributional differences attributable to guestrooms.",
+      "output_fields": [
+        "area",
+        "price",
+        "guestroom"
+      ],
+      "chart_encodings": {
+        "x": "price",
+        "y": "Density (derived)",
+        "color": "guestroom ('yes' vs 'no')",
+        "size": null,
+        "other_aesthetics": "Each subplot (row) represents an 'area' quantile bin; KDE lines for 'guestroom' overlayed with different colors. Titles show area bin range. Legend for guestroom encoding."
+      }
+    },
+    "transformations": [
+      "Create quantile-based bins for 'area' (e.g., quartiles or quintiles) to group homes with similar area.",
+      "For each area bin, split homes by 'guestroom' value ('yes', 'no').",
+      "Within each group, extract the 'price' values for KDE plotting."
+    ],
+    "data_preparation_steps": [
+      "Use pd.qcut to split df['area'] into 4 quantile bins, add as new column 'area_bin'.",
+      "Drop unused dataframe columns if needed for memory/performance.",
+      "For each 'area_bin', plot KDEs of 'price' by 'guestroom' value ('yes' vs 'no').",
+      "Assign colors: e.g., 'yes'=blue, 'no'=orange. Ensure legends are clear."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport seaborn as sns\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\ndf['area_bin'] = pd.qcut(df['area'], 4, labels=[\"Smallest\",\"Small-Med\",\"Med-Large\",\"Largest\"])\nguest_colors = {'yes': '#1f77b4', 'no': '#ff7f0e'}\narea_bins = df['area_bin'].unique()\narea_bins = [x for x in df['area_bin'].cat.categories]\nfig, axes = plt.subplots(nrows=4, ncols=1, figsize=(9, 12), sharex=True)\nfor idx, area_range in enumerate(area_bins):\n    ax = axes[idx]\n    for guest_val in ['yes','no']:\n        subset = df[(df['area_bin']==area_range) & (df['guestroom']==guest_val)]\n        if len(subset) > 1:\n            sns.kdeplot(\n                subset['price'],\n                label=\"Guestroom: \" + guest_val,\n                ax=ax,\n                color=guest_colors[guest_val],\n                fill=False,\n                common_norm=False\n            )\n    ax.set_ylabel(\"Density\")\n    ax.set_title(f\"Area Group: {area_range}\")\n    ax.legend()\naxes[-1].set_xlabel(\"Price\")\nfig.suptitle(\"Price Distributions for Homes with and without Guestroom by Area Quantile\", fontsize=16)\nplt.tight_layout(rect=[0,0,1,0.97])\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,45 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any publishers whose games consistently perform well in a particular region compared to others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap enables a side-by-side comparison of average regional sales per publisher. This approach reveals which publishers excel in specific regions (North America, Europe, Japan, Other) and whether a publisher consistently outperforms others in a particular region. By representing publishers as rows and regions as columns, the heatmap supports easy identification of regional strengths and cross-regional differences.",
+      "target_insight": "Identify publishers that consistently achieve high average sales in specific regions compared to their performance in other regions and relative to other publishers.",
+      "output_fields": [
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales"
+      ],
+      "chart_encodings": {
+        "x": "[NA_Sales, EU_Sales, JP_Sales, Other_Sales]",
+        "y": "Publisher",
+        "color": "Average sales by region (value, colormap intensity)",
+        "size": "null",
+        "other_aesthetics": "Display top 15 publishers by average global sales; colorbar to highlight scale; publisher names on y-axis"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Publisher'] is null",
+      "Group df by df['Publisher'], aggregate mean for df['NA_Sales'], df['EU_Sales'], df['JP_Sales'], df['Other_Sales'], df['Global_Sales']",
+      "Sort grouped dataframe by mean df['Global_Sales'] descending",
+      "Select top 15 publishers by global sales for focused heatmap"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Publisher'])",
+      "df_grouped = df_clean.groupby('Publisher')[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales','Global_Sales']].mean().reset_index()",
+      "df_top = df_grouped.sort_values('Global_Sales', ascending=False).head(15)",
+      "df_heat = df_top[['Publisher','NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]",
+      "Create a data matrix for heatmap: values = df_heat[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']].values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_clean = df.dropna(subset=['Publisher'])\ndf_grouped = df_clean.groupby('Publisher')[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales','Global_Sales']].mean().reset_index()\ndf_top = df_grouped.sort_values('Global_Sales', ascending=False).head(15)\ndf_heat = df_top[['Publisher','NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']]\nvalues = df_heat[['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']].values\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(9,8))\nim = ax.imshow(values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(4))\nax.set_xticklabels(['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales'], fontsize=12)\nax.set_yticks(np.arange(len(df_heat)))\nax.set_yticklabels(df_heat['Publisher'], fontsize=12)\nplt.title('Publisher Regional Sales\\n(Avg Sales in Top 15 Publishers)', fontsize=16)\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Average Sales (Millions)', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

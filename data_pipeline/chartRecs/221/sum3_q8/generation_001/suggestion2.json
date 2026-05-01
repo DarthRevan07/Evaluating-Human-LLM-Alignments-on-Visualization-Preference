@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Are there any destinations that predominantly attract travelers of a specific nationality?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Nationality-Destination matrix)",
+      "design_rationale": "A heatmap provides a densely-packed grid displaying the intensity of trip counts for each nationality-destination combination. With 59 destinations and 41 nationalities, this chart allows us to visually scan for 'hot spots' where one nationality dominates a destination, contrasted by lower counts for other nationalities. The color gradient effectively encodes trip frequency and enables cross-destination comparison of nationality dominance. It's particularly useful to reveal patterns or outliers across all pairs, supporting deep data exploration.",
+      "target_insight": "Visual pattern discovery: Instantly observe high-count intersections signaling destinations predominantly visited by specific nationalities.",
+      "output_fields": [
+        "Destination",
+        "Traveler nationality",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Traveler nationality",
+        "color": "Trip count (heatmap matrix cell)",
+        "size": null,
+        "other_aesthetics": "Viridis colormap for intensity; colorbar for trip count scale"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Destination' or 'Traveler nationality' is null",
+      "Group by 'Destination' and 'Traveler nationality' and count 'Trip ID'",
+      "Pivot to grid-format for matrix heatmap"
+    ],
+    "data_preparation_steps": [
+      "Remove rows with missing values in 'Destination' or 'Traveler nationality'",
+      "Aggregate using df.groupby(['Traveler nationality', 'Destination'])['Trip ID'].count().reset_index()",
+      "Pivot table: df.pivot(index='Traveler nationality', columns='Destination', values='Trip ID').fillna(0)",
+      "Sort travelers by total trip counts to visually emphasize frequent nationalities"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf = df.dropna(subset=[\"Destination\", \"Traveler nationality\"])\ngrouped = df.groupby([\"Traveler nationality\", \"Destination\"])['Trip ID'].count().reset_index()\npivot = grouped.pivot(index='Traveler nationality', columns='Destination', values='Trip ID').fillna(0)\npivot['total_trips'] = pivot.sum(axis=1)\npivot = pivot.sort_values('total_trips', ascending=False)\npivot = pivot.drop(columns=['total_trips'])\nfig, ax = plt.subplots(figsize=(min(24, 0.28*len(pivot.columns)), min(12, 0.25*len(pivot.index))))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, cmap=cmap, aspect='auto', interpolation='nearest')\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_xticklabels(pivot.columns, rotation=90)\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_yticklabels(pivot.index)\nax.set_xlabel('Destination')\nax.set_ylabel('Traveler nationality')\ntitle_main = 'Heatmap: Trips per Destination by Nationality'\ntitle_sub = 'Color intensity reveals destinations where a nationality dominates''\\nScan for horizontal lines of strong color'\nax.set_title(title_main + '\\n' + title_sub, fontsize=13)\ncbar = plt.colorbar(im, ax=ax, fraction=0.03, pad=0.04)\ncbar.set_label('Number of Trips')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,43 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there any countries where the agriculture, industry, and services sectors contribute almost equally to GDP, based on their % contributions?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Ternary plot (triangle plot) of sector %s",
+      "design_rationale": "A ternary plot is uniquely suited for visualizing the composition of three components (agriculture, industry, services) that sum to a whole. Each country is represented as a point in the triangle, with proximity to the center indicating near-equal sector % contributions. This direct geometric encoding instantly highlights those countries where all sectors contribute similarly, while also revealing the broader spread of sector dominance.",
+      "target_insight": "Pinpoints countries with balanced sector compositions by their proximity to the triangle's center, and shows the distribution of all countries.",
+      "output_fields": [
+        "Country/Economy",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "coordinate derived from industry and services %s",
+        "y": "coordinate derived from agriculture %s",
+        "color": "distance from triangle center (optional warm/cool scale for equality)",
+        "size": null,
+        "other_aesthetics": "annotate countries closest to center; triangle border and sector labels"
+      }
+    },
+    "transformations": [
+      "Convert 'Agriculture Sector GDP of % Contribution', 'Industry%ofGDP', and 'Services%ofGDP' to numeric, clean missing values.",
+      "Normalize sector %s to sum to 100 for each country (if possible).",
+      "Compute each country's coordinate in ternary space.",
+      "Calculate Euclidean distance to triangle center (representing equal 33.3% compositions) for color encoding."
+    ],
+    "data_preparation_steps": [
+      "Convert percentage fields to float; drop rows with missing sector %s.",
+      "For each row, if sum of three %s not approx 100, optionally renormalize or exclude for geometric accuracy.",
+      "Calculate triangle coordinates for each country.",
+      "Calculate distance to center, create color scale."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\1.csv\")\ndef parse_percent(s):\n    try:\n        return float(str(s).replace('%',''))\n    except:\n        return np.nan\ndf['Agriculture_pct'] = df['Agriculture Sector GDP of % Contribution'].apply(parse_percent)\ndf['Industry_pct'] = df['Industry%ofGDP'].apply(parse_percent)\ndf['Services_pct'] = df['Services%ofGDP'].apply(parse_percent)\ndf_drop = df[['Country/Economy','Agriculture_pct','Industry_pct','Services_pct']].dropna()\ndf_drop = df_drop[df_drop['Agriculture_pct']+df_drop['Industry_pct']+df_drop['Services_pct'] > 0]\ndef ternary_coords(ag, ind, serv):\n    total = ag + ind + serv\n    ag_n, ind_n, serv_n = ag/total, ind/total, serv/total\n    x = 0.5 * (2*ind_n + serv_n)\n    y = np.sqrt(3)/2 * serv_n\n    return x, y\ndf_drop['x'], df_drop['y'] = zip(*df_drop.apply(lambda row: ternary_coords(row['Agriculture_pct'], row['Industry_pct'], row['Services_pct']), axis=1))\ncenter_ind = 33.33; center_serv = 33.33; center_ag = 33.33\ncenter_x, center_y = ternary_coords(center_ag, center_ind, center_serv)\ndf_drop['distance'] = np.sqrt((df_drop['x']-center_x)**2 + (df_drop['y']-center_y)**2)\ncmap = mpl.colormaps['coolwarm']\nfig, ax = plt.subplots(figsize=(7,7))\nscatter = ax.scatter(df_drop['x'], df_drop['y'], c=df_drop['distance'], cmap=cmap, s=60, edgecolor='black')\nax.set_xlim(0,1)\nax.set_ylim(0,np.sqrt(3)/2)\nax.set_xticks([])\nax.set_yticks([])\n# Draw triangle\ntriangle_x = [0,1,0.5,0]\ntriangle_y = [0,0,np.sqrt(3)/2,0]\nax.plot(triangle_x, triangle_y, color='gray', lw=2)\nax.text(0,-0.04,'Industry',fontsize=12, ha='center')\nax.text(1,-0.04,'Services',fontsize=12, ha='center')\nax.text(0.5,np.sqrt(3)/2 + 0.04,'Agriculture',fontsize=12, ha='center')\nax.set_title('Ternary Plot: Balance of Agriculture, Industry, Services Sector %\\nCountries closest to center have nearly equal sector contributions', fontsize=14)\ncbar = plt.colorbar(scatter, ax=ax, fraction=0.04)\ncbar.set_label('Distance from Sector Equality Center')\n# Annotate closest countries to center (most balanced)\nclosest = df_drop.nsmallest(5,'distance')\nfor i,row in closest.iterrows():\n    ax.text(row['x'], row['y']+0.04, row['Country/Economy'], fontsize=9, color='black', ha='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,49 @@
+{
+  "table_name": "39",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Among the numeric fields, which elemental combinations most strongly distinguish one Type from another?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Parallel Coordinates Plot (with color by Type)",
+      "design_rationale": "A parallel coordinates plot allows simultaneous visualization of all numeric elemental concentrations per sample, colored by 'Type'. This highlights both single and multi-element patterns, visualizing which sequences or combinations sharply separate glass types (e.g. certain Types cluster in low Fe, high Mg, etc). Outliers, crossings, and tightly grouped lines provide immediate visual evidence of which elemental variables (and combinations) best distinguish Types, supporting the question's intent with direct sample-level granularity.",
+      "target_insight": "Distinct glass Types trace different paths across elemental concentration axes; combinations with minimal crossings (e.g., certain Mg, Ca, Na zones) indicate strong distinguishing power for classification.",
+      "output_fields": [
+        "RI",
+        "Na",
+        "Mg",
+        "Al",
+        "Si",
+        "K",
+        "Ca",
+        "Ba",
+        "Fe",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Elemental axis (each numeric field: RI, Na, Mg, ...)",
+        "y": "Normalized value per sample (0-1 scaling)",
+        "color": "Glass Type (categorical colormap; 6 distinct colors)",
+        "size": null,
+        "other_aesthetics": "Alpha blending for line overlap, legend for Type, axes labeled"
+      }
+    },
+    "transformations": [
+      "Select all numeric elemental fields and 'Type': ['RI','Na','Mg','Al','Si','K','Ca','Ba','Fe','Type'].",
+      "Min-max normalize each elemental field for parallel display (excluding 'Type').",
+      "For each sample, plot path across all axes, color-coded by 'Type'.",
+      "Alpha blend overlapping lines to enhance visibility of major classification groups."
+    ],
+    "data_preparation_steps": [
+      "Extract all rows from df for columns ['RI','Na','Mg','Al','Si','K','Ca','Ba','Fe','Type'].",
+      "Apply min-max normalization per field to all columns except 'Type'.",
+      "Map 'Type' to discrete colors using a colormap (6 classes).",
+      "Create the parallel coordinates plot: one polyline per sample, colored by 'Type'."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\39.csv')\nfields = ['RI','Na','Mg','Al','Si','K','Ca','Ba','Fe']\nTYPES = sorted(df['Type'].unique())\n# Min-max normalize\nnormed = (df[fields] - df[fields].min())/(df[fields].max()-df[fields].min())\n# Assign colors\ncmap = mpl.colormaps['tab10'].resampled(len(TYPES))\ntype_to_color = {typ: cmap(i) for i, typ in enumerate(TYPES)}\ntype_colors = df['Type'].map(type_to_color)\nfig, ax = plt.subplots(figsize=(14,7))\nfor idx,row in normed.iterrows():\n    ax.plot(np.arange(len(fields)), row.values, color=type_colors.iloc[idx], alpha=0.27)\nfor i,typ in enumerate(TYPES):\n    mask = df['Type']==typ\n    # Add mean line for each Type\n    ax.plot(np.arange(len(fields)), normed[mask].mean().values, color=type_to_color[typ], alpha=0.95, linewidth=3, label='Type '+str(typ))\nax.set_xticks(np.arange(len(fields)))\nax.set_xticklabels(fields, fontsize=13, rotation=0)\nax.set_xlim(0,len(fields)-1)\nax.set_ylim(0,1)\nax.set_ylabel('Normalized Value (min-max)', fontsize=12)\nplt.title('Parallel Coordinates: Elemental Profiles\\nby Glass Type', fontsize=17)\nax.legend(title='Glass Type', fontsize=11, title_fontsize=12, loc='upper right', bbox_to_anchor=(1,1))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

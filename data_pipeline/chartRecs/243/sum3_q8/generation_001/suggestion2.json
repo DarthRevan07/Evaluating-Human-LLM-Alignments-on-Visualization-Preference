@@ -1,0 +1,41 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Do higher Wind Speed (kph) values correspond with lower Visibility (km) at certain times of day?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line Chart (Grouped by Observation Time)",
+      "design_rationale": "By aggregating to the mean 'Visibility (km)' for bins of 'Wind Speed (kph)' and plotting line graphs for each 'Observation Time', this approach shows if the trend of visibility changes as wind speed increases and whether this pattern shifts across different times of day. Overlaying the time-of-day lines enables direct comparison, while binning controls for the small number of unique values and produces smoother curves.",
+      "target_insight": "The visualization highlights whether low visibility consistently coincides with higher wind speed for certain times, and identifies temporal variation in the relationship.",
+      "output_fields": [
+        "Wind Speed (kph)",
+        "Visibility (km)",
+        "Observation Time"
+      ],
+      "chart_encodings": {
+        "x": "Wind Speed (kph) (binned)",
+        "y": "Average Visibility (km)",
+        "color": "Observation Time",
+        "size": null,
+        "other_aesthetics": "Line for each Observation Time; legend; 7-color palette; markers at points"
+      }
+    },
+    "transformations": [
+      "Bin 'Wind Speed (kph)' into 6 equispaced bins",
+      "For each 'Observation Time', calculate mean Visibility for each bin",
+      "Plot a line for each Observation Time: x=bin mid, y=mean Visibility"
+    ],
+    "data_preparation_steps": [
+      "Load data from csv_c_squared\\243.csv as df",
+      "Create 6 bins for 'Wind Speed (kph)' using pd.cut",
+      "Group df by ['Observation Time', 'Wind Speed (kph)' bin] and compute mean Visibility (km)",
+      "Pivot to have one line per Observation Time"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\nbins = np.linspace(df['Wind Speed (kph)'].min(), df['Wind Speed (kph)'].max(), 7)\nlabels = np.round((bins[:-1]+bins[1:])/2,2)\ndf['Wind Speed Bin'] = pd.cut(df['Wind Speed (kph)'], bins=bins, labels=labels, include_lowest=True)\nobs_times = df['Observation Time'].unique()\ncmap = mpl.colormaps['tab10']\nfig, ax = plt.subplots(figsize=(8,6))\nfor idx, obs_time in enumerate(obs_times):\n    df_sub = df[df['Observation Time'] == obs_time]\n    grouped = df_sub.groupby('Wind Speed Bin')['Visibility (km)'].mean()\n    x_vals = np.array([float(l) for l in grouped.index])\n    y_vals = grouped.values\n    ax.plot(x_vals, y_vals, marker='o', color=cmap(idx), label=str(obs_time), linewidth=2)\nax.set_xlabel('Wind Speed Bin Center (kph)', fontsize=12)\nax.set_ylabel('Average Visibility (km)', fontsize=12)\nax.set_xticks(labels)\nax.set_title('Average Visibility vs Wind Speed\\nLines Grouped by Observation Time', fontsize=15)\nax.legend(title='Observation Time')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

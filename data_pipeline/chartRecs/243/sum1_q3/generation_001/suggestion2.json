@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "How does the 'feels like' temperature compare to the actual temperature in each city?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "City-level Difference Heatmap",
+      "design_rationale": "A heatmap visualizes the gap between perceived and actual temperatures for each city and each observation time. This is unconventional yet suited for exploring both location and temporal variation: by encoding difference (Feels Like - Actual) as color, we can quickly spot patterns, such as cities or time periods with consistently higher or lower perceived temperatures. The low cardinality of both 'Location' and 'Observation Time' means the matrix remains readable, and the color gradient brings attention to outliers and trends.",
+      "target_insight": "Is the 'feels like' temperature consistently higher or lower than actual temperature for specific cities and times? Which cities/times have the largest positive or negative difference?",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)",
+        "Feels Like (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Location",
+        "color": "Difference ('Feels Like (°C)' - 'Temperature (°C)')",
+        "size": null,
+        "other_aesthetics": "Colorbar scale, rectangular heat cell grid"
+      }
+    },
+    "transformations": [
+      "Compute difference: df['Feels Like (°C)'] - df['Temperature (°C)'] for each record",
+      "Group by df['Location'], df['Observation Time'] and take mean difference per city-time cell"
+    ],
+    "data_preparation_steps": [
+      "Create df['Diff'] = df['Feels Like (°C)'] - df['Temperature (°C)']",
+      "Pivot df to wide format: cities as rows, observation times as columns, values are mean Diff",
+      "Use df_heat = df.pivot_table(index='Location', columns='Observation Time', values='Diff', aggfunc='mean')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Diff'] = df['Feels Like (°C)'] - df['Temperature (°C)']\ndf_heat = df.pivot_table(index='Location', columns='Observation Time', values='Diff', aggfunc='mean')\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['coolwarm']\nc = ax.imshow(df_heat.values, cmap=cmap, aspect='auto', vmin=df_heat.min().min(), vmax=df_heat.max().max())\nax.set_xticks(np.arange(len(df_heat.columns)))\nax.set_yticks(np.arange(len(df_heat.index)))\nax.set_xticklabels(df_heat.columns, rotation=30)\nax.set_yticklabels(df_heat.index)\nax.set_xlabel('Observation Time')\nax.set_ylabel('Location')\nax.set_title('City and Time Heatmap of \"Feels Like\" vs Actual Temperature Difference')\nfor i in range(len(df_heat.index)):\n    for j in range(len(df_heat.columns)):\n        val = df_heat.values[i,j]\n        ax.text(j, i, f'{val:.1f}', ha='center', va='center', color='black' if abs(val) < 1.5 else 'white', fontsize=11)\ncbar = fig.colorbar(c, ax=ax, fraction=0.03, pad=0.05)\ncbar.set_label('Feels Like - Actual (°C)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

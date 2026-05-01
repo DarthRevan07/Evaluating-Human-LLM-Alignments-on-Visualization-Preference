@@ -1,0 +1,38 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How do prices differ across the three furnishing status categories: furnished, semi-furnished, and unfurnished?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot overlaid with mean markers",
+      "design_rationale": "A violin plot shows the underlying price density for each furnishing status, revealing multimodal distributions or subtle differences in spread not seen in boxplots. Overlaying mean price markers directly answers how the average price differs by group, and the shape reveals how pricing is concentrated. It delivers both a summary measure and a nuanced view of pricing for each furnishing status.",
+      "target_insight": "The visualization shows differences in average sale price and visual comparison of price distributions for furnished, semi-furnished, and unfurnished homes, highlighting if one category has more price clustering or spread than the others.",
+      "output_fields": [
+        "price",
+        "furnishingstatus"
+      ],
+      "chart_encodings": {
+        "x": "furnishingstatus",
+        "y": "price",
+        "color": "violin face color by furnishingstatus",
+        "size": "mean marker size fixed",
+        "other_aesthetics": "mean marker as a bold horizontal dash; violin plot for distribution, separate color per category"
+      }
+    },
+    "transformations": [
+      "Group df by 'furnishingstatus'; For each, prepare price arrays for plotting",
+      "Calculate mean price for each furnishingstatus"
+    ],
+    "data_preparation_steps": [
+      "Read the dataset",
+      "Derive unique furnishingstatus values in consistent order",
+      "Calculate array of mean prices for each furnishingstatus for overlay"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\206.csv')\nstatus_order = ['furnished', 'semi-furnished', 'unfurnished']\nprices_by_status = [df[df['furnishingstatus']==status]['price'] for status in status_order]\nmean_prices = [prices.mean() for prices in prices_by_status]\ncolors = ['#274c77','#6096fd','#f1a208']\nfig, ax = plt.subplots(figsize=(8,6))\nviolins = ax.violinplot(prices_by_status, showmeans=False, showmedians=False, showextrema=False)\nfor i, body in enumerate(violins['bodies']):\n    body.set_facecolor(colors[i])\n    body.set_edgecolor('gray')\n    body.set_alpha(0.7)\nfor i, mean in enumerate(mean_prices):\n    ax.plot(i+1, mean, marker='_', markersize=20, color='black', linewidth=3, label='Mean' if i==0 else None)\nax.set_xticks([1,2,3])\nax.set_xticklabels(status_order)\nax.set_xlabel('furnishingstatus', fontsize=13)\nax.set_ylabel('price', fontsize=13)\nax.set_title('Price Density Across Furnishing Status\\nMean Prices Highlighted', fontsize=15, fontweight='bold')\nax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x,_: '{:,}'.format(int(x))))\nax.legend(loc='upper right', frameon=False)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

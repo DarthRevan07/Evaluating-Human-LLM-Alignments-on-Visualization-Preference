@@ -1,0 +1,38 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Which Consumer Demographic group is associated with the highest Sales Volume for each Product Category?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides a matrix overview of the relationship between Consumer Demographics and Product Category, encoding total Sales Volume in color intensity. This approach instantly reveals both the overall patterns (e.g., which product categories are generally high-volume for all demographics, and which demographics are strongest per category) and specific outliers. Highlighting the maximum volume for each Product Category can be done with annotation, further answering the question. This method supports fast scanning of patterns and outlier detection, and is ideal given the modest size and discrete categorical structure of the data.",
+      "target_insight": "A visual matrix: instantly spot which Consumer Demographic group generates the highest Sales Volume for each Product Category (viewed as the darkest cell in a row), plus broader patterns of strengths/weaknesses.",
+      "output_fields": [
+        "Product Category",
+        "Consumer Demographics",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics",
+        "y": "Product Category",
+        "color": "sum of Sales Volume (via color intensity, e.g. 'YlGnBu' palette)",
+        "size": null,
+        "other_aesthetics": "Text annotation to highlight the maximum in each row"
+      }
+    },
+    "transformations": [
+      "Group data by ['Product Category', 'Consumer Demographics'] and sum 'Sales Volume'",
+      "Pivot the grouped data to a matrix with Product Category as rows and Consumer Demographics as columns"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Product Category', 'Consumer Demographics'])['Sales Volume'].sum().reset_index()",
+      "df_pivot = df_grouped.pivot(index='Product Category', columns='Consumer Demographics', values='Sales Volume')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_grouped = df.groupby(['Product Category', 'Consumer Demographics'])['Sales Volume'].sum().reset_index()\ndf_pivot = df_grouped.pivot(index='Product Category', columns='Consumer Demographics', values='Sales Volume')\ncmap = mpl.colormaps['YlGnBu']\nfig, ax = plt.subplots(figsize=(9,5))\nim = ax.imshow(df_pivot, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_xticklabels(df_pivot.columns)\nax.set_yticklabels(df_pivot.index)\nplt.setp(ax.get_xticklabels(), rotation=30, ha='right', rotation_mode='anchor')\nfor i in range(df_pivot.shape[0]):\n    max_col = np.nanargmax(df_pivot.values[i, :])\n    for j in range(df_pivot.shape[1]):\n        val = df_pivot.values[i, j]\n        textcolor = 'w' if val > 0.6 * np.nanmax(df_pivot.values) else 'black'\n        is_max = j == max_col\n        text = f'{int(val):,}' if not np.isnan(val) else ''\n        weight = 'bold' if is_max else 'normal'\n        ax.text(j, i, text, ha='center', va='center', color=textcolor, fontsize=10, fontweight=weight)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Total Sales Volume')\nax.set_xlabel('Consumer Demographics')\nax.set_ylabel('Product Category')\nplt.title('Sales Volume Heatmap by Consumer Demographic and Product Category')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

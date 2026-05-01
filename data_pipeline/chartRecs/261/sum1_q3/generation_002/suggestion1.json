@@ -1,0 +1,41 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Which alma maters have produced the highest number of NASA astronauts, and how does their representation vary across decades?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart succinctly communicates categorical rankings—perfect for identifying the alma maters that have produced the most NASA astronauts across the entire dataset. Due to the high cardinality (280 unique alma maters), showing only the top contributors prevents clutter, gives immediate perspective, and provides a clear ranking. Institutions with the most alumni in the program are highlighted, making institutional impact visible. The design is suited to the 'Alma Mater' categorical variable and leverages count aggregation for clarity. Neutral color encoding ensures focus remains on the data without unnecessary distraction.",
+      "target_insight": "The leading universities and colleges that have produced the highest number of NASA astronauts, and how dominant their representation is relative to others.",
+      "output_fields": [
+        "Alma Mater",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Number of astronauts (count of 'Name' by 'Alma Mater')",
+        "y": "Alma Mater",
+        "color": "null (single color palette for bars)",
+        "size": "null",
+        "other_aesthetics": "Bar width, horizontal orientation, sorted by descending count"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing 'Alma Mater' values",
+      "Aggregate by 'Alma Mater', counting the number of unique 'Name' per institution",
+      "Sort aggregated institutions by astronaut count descending",
+      "Select the top 15 alma maters for display"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Alma Mater'])",
+      "alma_counts = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)",
+      "top15_alma = alma_counts.head(15)",
+      "Create new DataFrame: df_plot = top15_alma.reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf = df.dropna(subset=['Alma Mater'])\nalma_counts = df.groupby('Alma Mater')['Name'].count().sort_values(ascending=False)\ntop15_alma = alma_counts.head(15)\ndf_plot = top15_alma.reset_index()\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(df_plot['Alma Mater'], df_plot['Name'], color='#4b8bbe')\nax.invert_yaxis()\nax.set_xlabel(\"Number of NASA Astronauts\")\nax.set_ylabel(\"Alma Mater\")\nax.set_title(\"Top 15 Alma Maters by NASA Astronaut Count\")\nfor i, (count, alma) in enumerate(zip(df_plot['Name'], df_plot['Alma Mater'])):\n    ax.text(count + 0.5, i, str(count), va='center', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

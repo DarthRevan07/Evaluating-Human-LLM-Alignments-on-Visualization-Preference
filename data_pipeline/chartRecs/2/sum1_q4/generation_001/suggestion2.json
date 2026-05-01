@@ -1,0 +1,45 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there countries where methane emissions from the Energy sector show clear decreasing trends between 1990 and 2018?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Divergence heatmap",
+      "design_rationale": "A heatmap gives a powerful overview, comparing changes across all countries. By computing the normalized percentage change in Energy sector methane emissions between 1990 and 2018, the chart highlights countries showing the strongest decreases as cool colors and increases as warm colors. The matrix format enables quick scanning for negative values (decreases), making it ideal for revealing global patterns and outliers at scale.",
+      "target_insight": "Global map of Energy sector methane emission change: visually identifies countries with clear decreases over time.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "Year (two columns: 1990, 2018)",
+        "y": "Country",
+        "color": "Percentage change from 1990 to 2018 (divergence, continuous color)",
+        "size": "null",
+        "other_aesthetics": "Colorbar annotated; y-axis sorted by decrease"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where df['Sector'] == 'Energy'",
+      "Drop rows missing both '1990' and '2018'",
+      "Calculate percent change per country: (df['2018'] - df['1990']) / df['1990']",
+      "Sort countries by percent change ascending"
+    ],
+    "data_preparation_steps": [
+      "df_energy = df[df['Sector'] == 'Energy']",
+      "df_energy = df_energy.dropna(subset=['1990', '2018'])",
+      "df_energy['pct_change'] = (df_energy['2018'] - df_energy['1990']) / df_energy['1990']",
+      "sorted_countries = df_energy.sort_values('pct_change').reset_index(drop=True)",
+      "country_labels = sorted_countries['Country'].values",
+      "heatmap_data = sorted_countries[['1990', '2018']].values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\ndf_energy = df[df['Sector'] == 'Energy']\ndf_energy = df_energy.dropna(subset=['1990', '2018'])\ndf_energy['pct_change'] = (df_energy['2018'] - df_energy['1990']) / df_energy['1990']\nsorted_countries = df_energy.sort_values('pct_change').reset_index(drop=True)\ncountry_labels = sorted_countries['Country'].values\nheatmap_data = sorted_countries[['1990', '2018']].values\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.TwoSlopeNorm(vcenter=0, vmin=sorted_countries['pct_change'].min(), vmax=sorted_countries['pct_change'].max())\nfig, ax = plt.subplots(figsize=(10, 16))\npct_changes = sorted_countries['pct_change'].values.reshape(-1, 1)\nim = ax.imshow(pct_changes, cmap=cmap, aspect='auto', norm=norm)\nax.set_yticks(np.arange(len(country_labels)))\nax.set_yticklabels(country_labels, fontsize=8)\nax.set_xticks([0])\nax.set_xticklabels(['Pct Change (1990-2018)'], fontsize=12)\nplt.title(\"Energy sector methane emissions: Percent change 1990-2018\\n(sorted, negative values indicate decrease)\", fontsize=15)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical')\ncbar.set_label('Percent Change', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

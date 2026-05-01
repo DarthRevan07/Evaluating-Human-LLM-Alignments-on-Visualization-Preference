@@ -1,0 +1,42 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Are there outliers where a country’s rank in rice production per person differs greatly from its rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter plot with outlier highlighting",
+      "design_rationale": "A scatter plot mapping 'Rank of Rice Production' vs 'Rank of Rice Production Per Person' directly visualizes the relationship and allows immediate identification of countries where rank difference is large (i.e., outliers away from the diagonal). Highlighting these points is intuitive and effective due to the numeric nature (1-118/119) and the absence of nulls (except one null in production rank), making the plot clean and interpretable. This approach is ideal for showing both the population and per capita metrics.",
+      "target_insight": "Which countries have large discrepancies between their rice production rank and rice production per person rank, revealing outliers clearly, and how these outliers compare to the global trend.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Production Per Person"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Production Per Person",
+        "color": "Highlight if absolute difference exceeds threshold (e.g., top 10 largest differences), else grey",
+        "size": "null",
+        "other_aesthetics": "Diagonal reference line; Outlier countries annotated"
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Rank of Rice Production' is null",
+      "Calculate absolute difference between 'Rank of Rice Production' and 'Rank of Rice Production Per Person'; store as 'Rank Difference'",
+      "Identify top 10 countries with highest 'Rank Difference'",
+      "Assign colors: red for outliers, grey for others"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Rank of Rice Production'])",
+      "df['Rank Difference'] = np.abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])",
+      "outlier_threshold = df['Rank Difference'].nlargest(10).min()",
+      "df['Color'] = np.where(df['Rank Difference'] >= outlier_threshold, 'red', 'grey')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf = df.dropna(subset=['Rank of Rice Production'])\ndf['Rank Difference'] = np.abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])\noutlier_threshold = df['Rank Difference'].nlargest(10).min()\ndf['Color'] = np.where(df['Rank Difference'] >= outlier_threshold, 'red', 'grey')\n\nfig, ax = plt.subplots(figsize=(8, 8))\n\nax.scatter(df['Rank of Rice Production'], df['Rank of Rice Production Per Person'], c=df['Color'], alpha=0.7, edgecolors='k')\nax.plot([1, 119], [1, 119], '--', color='black', linewidth=1, label='Diagonal: Ranks match')\n\nfor idx in df[df['Color']=='red'].index:\n    country = df.loc[idx, 'Country']\n    x = df.loc[idx, 'Rank of Rice Production']\n    y = df.loc[idx, 'Rank of Rice Production Per Person']\n    ax.text(x, y, country, fontsize=9, color='red', ha='right', va='bottom', rotation=45)\n\nax.set_xlabel('Rank of Rice Production')\nax.set_ylabel('Rank of Rice Production Per Person')\nax.set_title('Discrepancy Between Country Rice Production Rank and Per Capita Rank\\nRed = Top 10 Outliers')\nax.legend(['Diagonal: Ranks match'])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

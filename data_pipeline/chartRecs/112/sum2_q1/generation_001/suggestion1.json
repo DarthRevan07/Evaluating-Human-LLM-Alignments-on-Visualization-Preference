@@ -1,0 +1,38 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do caffeine levels vary among different drink types, such as coffee, tea, energy drinks, and soft drinks?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot provides an intuitive visualization of the distribution and spread of caffeine content across the major drink types. The box-and-whisker approach makes it easy to compare medians, variability, and potential outliers between groups, using the categorical 'type' field for comparison. Given the large number of unique drinks, aggregating at the type level shows meaningful differences and patterns that answer the main question directly.",
+      "target_insight": "This visualization reveals the comparative spread, median, and range of caffeine content across each drink type, highlighting which drinks tend to have higher or more variable caffeine levels and where extreme values exist.",
+      "output_fields": [
+        "type",
+        "Caffeine (mg)"
+      ],
+      "chart_encodings": {
+        "x": "type",
+        "y": "Caffeine (mg)",
+        "color": "type (for box color grouping)",
+        "size": null,
+        "other_aesthetics": "box width, gridlines, alpha for outlier dots"
+      }
+    },
+    "transformations": [
+      "Group data by 'type' and extract 'Caffeine (mg)' values for each group",
+      "Exclude groups with zero caffeine if visually needed (e.g. water) to concentrate on caffeinated drinks"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df[df['Caffeine (mg)'] > 0]",
+      "groups = sorted(df_plot['type'].unique())",
+      "caffeine_by_type = [df_plot[df_plot['type'] == t]['Caffeine (mg)'] for t in groups]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_plot = df[df['Caffeine (mg)'] > 0]\ngroups = sorted(df_plot['type'].unique())\ncaffeine_by_type = [df_plot[df_plot['type'] == t]['Caffeine (mg)'] for t in groups]\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(groups))]\nplt.figure(figsize=(10,6))\nbox = plt.boxplot(caffeine_by_type, patch_artist=True, labels=groups, widths=0.65)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor whisker in box['whiskers']:\n    whisker.set_color('black')\nfor cap in box['caps']:\n    cap.set_color('black')\nfor median in box['medians']:\n    median.set_color('white')\nfor flier in box['fliers']:\n    flier.set_marker('o')\n    flier.set_alpha(0.32)\nplt.xlabel('type')\nplt.ylabel('Caffeine (mg)')\nplt.title('Distribution of Caffeine Content Across Drink Types')\nplt.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

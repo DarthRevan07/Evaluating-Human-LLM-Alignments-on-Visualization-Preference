@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which countries show emerging opportunities in the global rice trade based on low production rank but high yield per hectare?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot (Bubble map)",
+      "design_rationale": "A scatter plot mapping 'Rank of Rice Production' (x-axis, inverted so lower production is rightmost), and 'Rank of Rice Yield' (y-axis, so higher yield is uppermost) allows for direct visual identification of countries with low rice production but high yield per hectare. The use of bubble sizes to encode 'Rice Acreage (Hectare)' and color to encode 'Rice Production Per Person (Kg)' adds richer context, helping viewers spot outliers and 'emerging opportunity' countries.",
+      "target_insight": "Countries in the lower-right quadrant (low production rank, high yield rank) are those with smaller production but impressive yields, indicating possible emerging opportunities. Bubble size and color help the audience assess scale and per-capita productivity.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield",
+        "Rice Acreage (Hectare)",
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Yield",
+        "color": "Rice Production Per Person (Kg)",
+        "size": "Rice Acreage (Hectare)",
+        "other_aesthetics": "alpha: 0.7; labels: selected countries with low production rank & high yield rank; title: multi-line; grid: True"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Acreage (Hectare)' and 'Rice Production Per Person (Kg)' to numeric values (handling 'K' and 'M' abbreviations)",
+      "Filter countries where 'Rank of Rice Production' > median (low producers) AND 'Rank of Rice Yield' < median (high yielders)",
+      "Sort by 'Rank of Rice Yield' ascending to highlight best yielders among low producers"
+    ],
+    "data_preparation_steps": [
+      "Create a helper function to convert 'Rice Acreage (Hectare)' and 'Rice Production Per Person (Kg)' to float numbers",
+      "Compute median of 'Rank of Rice Production' and 'Rank of Rice Yield' from df",
+      "Filter df to countries where 'Rank of Rice Production' > median AND 'Rank of Rice Yield' < median",
+      "Extract relevant columns and numeric conversions for plotting",
+      "Optionally label 5 most extreme cases (lowest production, highest yield)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef str_to_num(s):\n    if pd.isnull(s): return np.nan\n    s = str(s).strip()\n    if s.endswith('K'): return float(s[:-1]) * 1e3\n    if s.endswith('M'): return float(s[:-1]) * 1e6\n    try: return float(s)\n    except: return np.nan\ndf['Rice Acreage Num'] = df['Rice Acreage (Hectare)'].apply(str_to_num)\ndf['Rice Production Per Person Num'] = df['Rice Production Per Person (Kg)'].apply(str_to_num)\nmedian_prod = df['Rank of Rice Production'].median()\nmedian_yield = df['Rank of Rice Yield'].median()\ndf_filtered = df[(df['Rank of Rice Production'] > median_prod) & (df['Rank of Rice Yield'] < median_yield)]\nx = df_filtered['Rank of Rice Production']\ny = df_filtered['Rank of Rice Yield']\nsizes = np.sqrt(df_filtered['Rice Acreage Num']) / np.sqrt(df_filtered['Rice Acreage Num']).max() * 800\ncmap = mpl.colormaps['viridis']\ncolors = df_filtered['Rice Production Per Person Num']\nfig, ax = plt.subplots(figsize=(10,7))\nscatter = ax.scatter(x, y, c=colors, s=sizes, cmap=cmap, alpha=0.7, edgecolor='black')\nax.invert_xaxis()\nax.set_xlabel('Rank of Rice Production (Lower right = lower production)', fontsize=12)\nax.set_ylabel('Rank of Rice Yield (Lower = higher yield)', fontsize=12)\nax.set_title('Emerging Opportunities in Global Rice Trade:\\nLow Production Rank, High Yield per Hectare', fontsize=15)\nax.grid(True, linestyle='--', alpha=0.4)\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=df_filtered['Rice Production Per Person Num'].min(), vmax=df_filtered['Rice Production Per Person Num'].max()))\ncbar = plt.colorbar(sm, ax=ax)\ncbar.set_label('Rice Production Per Person (Kg)', fontsize=12)\ntop_cases = df_filtered.nsmallest(5, 'Rank of Rice Yield')\nfor _, row in top_cases.iterrows():\n    ax.text(row['Rank of Rice Production'], row['Rank of Rice Yield'], row['Country'], fontsize=10, fontweight='bold')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

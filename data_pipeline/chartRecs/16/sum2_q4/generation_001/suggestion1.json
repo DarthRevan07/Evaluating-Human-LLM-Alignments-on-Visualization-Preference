@@ -1,0 +1,37 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How does the Total stat differ between Pokémon with and without a secondary type (Type 2)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot elegantly summarizes both the central tendency and dispersion of the 'Total' stat for Pokémon categorized by whether they have a secondary type or not. Given the numeric nature of 'Total' and the categorical distinction ('Type 2' present or missing), this chart provides a strong visual basis for comparing distributions, highlighting medians, spread, and outlier differences.",
+      "target_insight": "Whether Pokémon with a secondary type ('Type 2' not null) generally have higher, lower, or similar 'Total' stats compared to single-type Pokémon, emphasizing differences in spread and central values.",
+      "output_fields": [
+        "Total",
+        "Type 2"
+      ],
+      "chart_encodings": {
+        "x": "Has Secondary Type",
+        "y": "Total",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "box width encoding count, show median line, highlight outliers"
+      }
+    },
+    "transformations": [
+      "Create a new column 'Has Secondary Type' in df: True if 'Type 2' is not null, False otherwise",
+      "Group data by 'Has Secondary Type', plot distributions of 'Total'"
+    ],
+    "data_preparation_steps": [
+      "df['Has Secondary Type'] = ~df['Type 2'].isnull()",
+      "Sort df by 'Has Secondary Type' for plotting order"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\16.csv')\ndf['Has Secondary Type'] = ~df['Type 2'].isnull()\ngroups = [df[df['Has Secondary Type'] == False]['Total'], df[df['Has Secondary Type'] == True]['Total']]\nlabels = ['Single Type', 'Dual Type']\nfig, ax = plt.subplots(figsize=(7, 5))\nbp = ax.boxplot(groups, patch_artist=True, widths=0.6, labels=labels, showmeans=False)\ncolors = ['#d8e2dc', '#ffcad4']\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nfor median in bp['medians']:\n    median.set_color('#6a4c93')\nax.set_ylabel('Total')\nax.set_xlabel('Has Secondary Type')\nax.set_title('Distribution of Total Stat\\nby Secondary Type Presence')\nax.grid(True, axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

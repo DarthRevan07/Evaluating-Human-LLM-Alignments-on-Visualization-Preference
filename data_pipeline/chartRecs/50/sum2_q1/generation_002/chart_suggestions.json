@@ -1,0 +1,314 @@
+{
+  "table_name": "50",
+  "generation_id": 2,
+  "generation_dir": "secondIter\\chartRecs\\50\\sum2_q1\\generation_002",
+  "schema_context": "Table: Social Influence on Shopping\nRows: 1450\nColumns: 7\n\nFIELD INFORMATION:\nField: index\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 1450\n  - Semantic Meaning: This field represents a unique identifier for each record or participant in the Social Influence on Shopping dataset, used to distinguish individual entries.\n  - Value Range: 0.0 to 1449.0\n  - Mean: 724.50\n\nField: Question\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 1\n  - Semantic Meaning: This field contains the survey question asking respondents to identify the social platform that has most influenced their online shopping decisions, used to assess social media impact in consumer behavior research.\n\nField: Segment Type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 5\n  - Semantic Meaning: Segment Type categorizes shoppers based on demographic, behavioral, or platform-related profiles such as gender, mobile usage, educational affiliation, and web activity.\n\nField: Segment Description\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 289\n  - Semantic Meaning: This field categorizes individuals into distinct demographic, affiliation, or characteristic-based segments—such as educational institutions, team membership, relationship status, and zodiac signs—for analysis of how social groupings influence shopping behavior.\n\nField: Answer\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 290\n  - Unique Values: 4\n  - Semantic Meaning: This field captures the social media platform that influenced a respondent's shopping decision, indicating which channel had an impact in the context of social influence on consumer behavior.\n\nField: Count\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 202\n  - Semantic Meaning: \"Count\" likely represents the number of individual shopping actions or customer interactions recorded for each observation, quantifying engagement or activity levels in the context of social influence on shopping behavior.\n  - Value Range: 0.0 to 947.0\n  - Mean: 35.01\n\nField: Percentage\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 334\n  - Semantic Meaning: This field represents the proportion (from 0 to 100%) of an individual's shopping decisions influenced by social factors such as friends, family, or online communities in the context of consumer behavior analysis.\n  - Value Range: 0.0 to 1.0\n  - Mean: 0.20\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"index\"\n  2. \"Question\"\n  3. \"Segment Type\"\n  4. \"Segment Description\"\n  5. \"Answer\"\n  6. \"Count\"\n  7. \"Percentage\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['index'], df['Question']",
+  "table_metadata": {
+    "table_name": "Social Influence on Shopping",
+    "file_path": "csv_c2_sec\\50.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 50.csv (Dataset: Social Influence on Shopping)",
+    "original_filename": "50.csv",
+    "dataset_name": "Social Influence on Shopping",
+    "row_count": 1450,
+    "column_count": 7,
+    "table_hash": -3470126352864593621,
+    "fields": [
+      {
+        "name": "index",
+        "clean_name": "index",
+        "camel_case_name": "index",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 1450,
+        "min_value": 0.0,
+        "max_value": 1449.0,
+        "mean_value": 724.5,
+        "median_value": 724.5,
+        "sample_values": "0, 1, 2, 3, 4, ..., 1445, 1446, 1447, 1448, 1449",
+        "inferred_semantic_summary": "This field represents a unique identifier for each record or participant in the Social Influence on Shopping dataset, used to distinguish individual entries."
+      },
+      {
+        "name": "Question",
+        "clean_name": "Question",
+        "camel_case_name": "question",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 1,
+        "sample_values": "What social platform has influenced your online shopping most?",
+        "inferred_semantic_summary": "This field contains the survey question asking respondents to identify the social platform that has most influenced their online shopping decisions, used to assess social media impact in consumer behavior research."
+      },
+      {
+        "name": "Segment Type",
+        "clean_name": "Segment_Type",
+        "camel_case_name": "segmentType",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 5,
+        "sample_values": "Custom, Gender, Mobile, University, Web",
+        "inferred_semantic_summary": "Segment Type categorizes shoppers based on demographic, behavioral, or platform-related profiles such as gender, mobile usage, educational affiliation, and web activity."
+      },
+      {
+        "name": "Segment Description",
+        "clean_name": "Segment_Description",
+        "camel_case_name": "segmentDescription",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 289,
+        "sample_values": "Appalachian State University, Arbroath Academy, Are you a? SVB team member, Are you a? Student Trekker, Are you single? No, ..., your zodiac sign? Pisces (Feb 19 - Mar 20), your zodiac sign? Sagittarius (Nov 22 - Dec 21), your zodiac sign? Scorpio (Oct 23 - Nov 21), your zodiac sign? Taurus (Apr 20 - May 20), your zodiac sign? Virgo (Aug 23 - Sep 22)",
+        "inferred_semantic_summary": "This field categorizes individuals into distinct demographic, affiliation, or characteristic-based segments—such as educational institutions, team membership, relationship status, and zodiac signs—for analysis of how social groupings influence shopping behavior."
+      },
+      {
+        "name": "Answer",
+        "clean_name": "Answer",
+        "camel_case_name": "answer",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 290,
+        "non_null_count": 1160,
+        "unique_values": 4,
+        "sample_values": "Snapchat, nan, Facebook, Twitter, Instagram",
+        "inferred_semantic_summary": "This field captures the social media platform that influenced a respondent's shopping decision, indicating which channel had an impact in the context of social influence on consumer behavior."
+      },
+      {
+        "name": "Count",
+        "clean_name": "Count",
+        "camel_case_name": "count",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 202,
+        "min_value": 0.0,
+        "max_value": 947.0,
+        "mean_value": 35.01379310344828,
+        "median_value": 1.0,
+        "sample_values": "0, 1, 2, 3, 4, ..., 678, 781, 820, 916, 947",
+        "inferred_semantic_summary": "\"Count\" likely represents the number of individual shopping actions or customer interactions recorded for each observation, quantifying engagement or activity levels in the context of social influence on shopping behavior."
+      },
+      {
+        "name": "Percentage",
+        "clean_name": "Percentage",
+        "camel_case_name": "percentage",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1450,
+        "unique_values": 334,
+        "min_value": 0.0,
+        "max_value": 1.0,
+        "mean_value": 0.19931310344827588,
+        "median_value": 0.0635,
+        "sample_values": "0.0, 0.008, 0.01, 0.011, 0.012, ..., 0.667, 0.692, 0.75, 0.765, 1.0",
+        "inferred_semantic_summary": "This field represents the proportion (from 0 to 100%) of an individual's shopping decisions influenced by social factors such as friends, family, or online communities in the context of consumer behavior analysis."
+      }
+    ],
+    "formatted_summary": "## Table 1: Social_Influence_on_Shopping (1,450 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 50.csv (Dataset: Social Influence on Shopping)\n\n### Schema (7 fields)\n  - index -- type: int64, values: 0, 1, 2, 3, 4, ..., 1445, 1446, 1447, 1448, 1449\n  - Question -- type: object, values: What social platform has influenced your online shopping most?\n  - Segment Type -- type: object, values: Custom, Gender, Mobile, University, Web\n  - Segment Description -- type: object, values: Appalachian State University, Arbroath Academy, Are you a? SVB team member, Are you a? Student Trekker, Are you single? No, ..., your zodiac sign? Pisces (Feb 19 - Mar 20), your zodiac sign? Sagittarius (Nov 22 - Dec 21), your zodiac sign? Scorpio (Oct 23 - Nov 21), your zodiac sign? Taurus (Apr 20 - May 20), your zodiac sign? Virgo (Aug 23 - Sep 22)\n  - Answer -- type: object, values: Snapchat, nan, Facebook, Twitter, Instagram\n  - Count -- type: int64, values: 0, 1, 2, 3, 4, ..., 678, 781, 820, 916, 947\n  - Percentage -- type: float64, values: 0.0, 0.008, 0.01, 0.011, 0.012, ..., 0.667, 0.692, 0.75, 0.765, 1.0\n\n### Sample Data (first 5 rows)\n```\n   index                                                        Question Segment Type Segment Description     Answer  Count  Percentage\n0      0  What social platform has influenced your online shopping most?       Mobile      Global results   Facebook    548       0.205\n1      1  What social platform has influenced your online shopping most?       Mobile      Global results  Instagram    916       0.342\n2      2  What social platform has influenced your online shopping most?       Mobile      Global results   Snapchat     86       0.032\n3      3  What social platform has influenced your online shopping most?       Mobile      Global results    Twitter    179       0.067\n4      4  What social platform has influenced your online shopping most?       Mobile      Global results        NaN    947       0.354\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "50",
+      "summary_idx": 2,
+      "question_idx": 1,
+      "question": "How does the percentage of respondents influenced by each social platform vary across different segment types?",
+      "column_combination": [
+        "index",
+        "Question",
+        "Segment Type",
+        "Segment Description",
+        "Answer",
+        "Count",
+        "Percentage"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "grouped bar chart",
+            "design_rationale": "A grouped bar chart enables direct comparison of the influence (percentage) of each social platform ('Answer') across multiple shopper segment types ('Segment Type'). Using groupings on the x-axis for 'Segment Type' and colored bars for 'Answer', this chart makes it easy to see patterns and variations in social platform impact among different segments. This approach leverages the categorical, discrete nature of both segment and platform fields, providing a straightforward overview.",
+            "target_insight": "Which social platforms hold greater influence in specific shopper segment types, highlighting any disproportionate impacts.",
+            "output_fields": [
+              "Segment Type",
+              "Answer",
+              "Percentage"
+            ],
+            "chart_encodings": {
+              "x": "Segment Type",
+              "y": "Percentage",
+              "color": "Answer",
+              "size": null,
+              "other_aesthetics": "Bar grouping by 'Segment Type', color differentiation by 'Answer', value labels above bars"
+            }
+          },
+          "transformations": [
+            "Filter to exclude rows with missing 'Answer' values",
+            "Group by 'Segment Type' and 'Answer' and aggregate mean 'Percentage' for each group",
+            "Sort bars within each group by mean 'Percentage' descending for clarity"
+          ],
+          "data_preparation_steps": [
+            "df_clean = df.dropna(subset=['Answer'])",
+            "df_grouped = df_clean.groupby(['Segment Type', 'Answer'])['Percentage'].mean().reset_index()",
+            "pivot_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\50.csv')\ndf_clean = df.dropna(subset=['Answer'])\ndf_grouped = df_clean.groupby(['Segment Type','Answer'])['Percentage'].mean().reset_index()\npivot_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')\nplatforms = pivot_df.columns.tolist()\nsegment_types = pivot_df.index.tolist()\ncolors = mpl.colormaps['tab10'].resampled(len(platforms))\nbar_width = 0.15\nx = np.arange(len(segment_types))\nfig, ax = plt.subplots(figsize=(10,6))\nfor i, platform in enumerate(platforms):\n    values = pivot_df[platform].fillna(0)\n    ax.bar(x+i*bar_width, values, width=bar_width, color=colors(i), label=platform)\n    for j, val in enumerate(values):\n        ax.text(x[j]+i*bar_width, val+0.01, f'{val:.2f}', ha='center', va='bottom', fontsize=8)\nax.set_xticks(x+(bar_width*(len(platforms)-1)/2))\nax.set_xticklabels(segment_types, rotation=45, ha='right')\nax.set_ylabel('Mean Percentage Influenced')\nax.set_xlabel('Segment Type')\nax.set_title('Social Platform Influence Across Segment Types\\nMean Percentage of Respondents (Grouped Bar Chart)')\nax.legend(title='Social Platform', bbox_to_anchor=(1.02,1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "heatmap",
+            "design_rationale": "A heatmap offers a compact overview of platform influence by shading each cell according to the mean percentage for each platform ('Answer') within each segment type ('Segment Type'). This allows rapid identification of high- and low-influence combinations and overall patterns in a single visual, ideal for such a multidimensional categorical dataset with limited unique values.",
+            "target_insight": "Which segment types and platforms combinations are most and least influential, with clear magnitudes and comparative color intensity.",
+            "output_fields": [
+              "Segment Type",
+              "Answer",
+              "Percentage"
+            ],
+            "chart_encodings": {
+              "x": "Answer",
+              "y": "Segment Type",
+              "color": "Percentage (cell color)",
+              "size": null,
+              "other_aesthetics": "Percentage annotation inside each cell, colorbar for scale"
+            }
+          },
+          "transformations": [
+            "Filter out rows with null 'Answer' values",
+            "Aggregate mean 'Percentage' for each combination of 'Segment Type' and 'Answer'",
+            "Pivot table so rows = 'Segment Type', columns = 'Answer', values = mean 'Percentage'"
+          ],
+          "data_preparation_steps": [
+            "df_clean = df.dropna(subset=['Answer'])",
+            "df_grouped = df_clean.groupby(['Segment Type','Answer'])['Percentage'].mean().reset_index()",
+            "heatmap_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\50.csv')\ndf_clean = df.dropna(subset=['Answer'])\ndf_grouped = df_clean.groupby(['Segment Type','Answer'])['Percentage'].mean().reset_index()\nheatmap_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')\nfig, ax = plt.subplots(figsize=(8,6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_df.values, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(heatmap_df.columns)))\nax.set_yticks(np.arange(len(heatmap_df.index)))\nax.set_xticklabels(heatmap_df.columns)\nax.set_yticklabels(heatmap_df.index)\nplt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')\nfor i in range(len(heatmap_df.index)):\n    for j in range(len(heatmap_df.columns)):\n        val = heatmap_df.values[i,j]\n        text_str = f'{val:.2f}' if not np.isnan(val) else ''\n        ax.text(j, i, text_str, ha='center', va='center', color='white', fontsize=9)\ncbar = plt.colorbar(im, ax=ax, fraction=0.05, pad=0.05)\ncbar.set_label('Mean Percentage Influenced')\nax.set_xlabel('Social Platform')\nax.set_ylabel('Segment Type')\nax.set_title('Social Platform Influence Across Segment Types\\nMean Percentage (Heatmap)')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T13:59:46.078780",
+      "schema_context": "Table: Social Influence on Shopping\nRows: 1450\nColumns: 7\n\nFIELD INFORMATION:\nField: index\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 1450\n  - Semantic Meaning: This field represents a unique identifier for each record or participant in the Social Influence on Shopping dataset, used to distinguish individual entries.\n  - Value Range: 0.0 to 1449.0\n  - Mean: 724.50\n\nField: Question\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 1\n  - Semantic Meaning: This field contains the survey question asking respondents to identify the social platform that has most influenced their online shopping decisions, used to assess social media impact in consumer behavior research.\n\nField: Segment Type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 5\n  - Semantic Meaning: Segment Type categorizes shoppers based on demographic, behavioral, or platform-related profiles such as gender, mobile usage, educational affiliation, and web activity.\n\nField: Segment Description\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 289\n  - Semantic Meaning: This field categorizes individuals into distinct demographic, affiliation, or characteristic-based segments—such as educational institutions, team membership, relationship status, and zodiac signs—for analysis of how social groupings influence shopping behavior.\n\nField: Answer\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 290\n  - Unique Values: 4\n  - Semantic Meaning: This field captures the social media platform that influenced a respondent's shopping decision, indicating which channel had an impact in the context of social influence on consumer behavior.\n\nField: Count\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 202\n  - Semantic Meaning: \"Count\" likely represents the number of individual shopping actions or customer interactions recorded for each observation, quantifying engagement or activity levels in the context of social influence on shopping behavior.\n  - Value Range: 0.0 to 947.0\n  - Mean: 35.01\n\nField: Percentage\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 334\n  - Semantic Meaning: This field represents the proportion (from 0 to 100%) of an individual's shopping decisions influenced by social factors such as friends, family, or online communities in the context of consumer behavior analysis.\n  - Value Range: 0.0 to 1.0\n  - Mean: 0.20\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"index\"\n  2. \"Question\"\n  3. \"Segment Type\"\n  4. \"Segment Description\"\n  5. \"Answer\"\n  6. \"Count\"\n  7. \"Percentage\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['index'], df['Question']",
+      "table_metadata": {
+        "table_name": "Social Influence on Shopping",
+        "file_path": "csv_c2_sec\\50.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 50.csv (Dataset: Social Influence on Shopping)",
+        "original_filename": "50.csv",
+        "dataset_name": "Social Influence on Shopping",
+        "row_count": 1450,
+        "column_count": 7,
+        "table_hash": -3470126352864593621,
+        "fields": [
+          {
+            "name": "index",
+            "clean_name": "index",
+            "camel_case_name": "index",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 1450,
+            "min_value": 0.0,
+            "max_value": 1449.0,
+            "mean_value": 724.5,
+            "median_value": 724.5,
+            "sample_values": "0, 1, 2, 3, 4, ..., 1445, 1446, 1447, 1448, 1449",
+            "inferred_semantic_summary": "This field represents a unique identifier for each record or participant in the Social Influence on Shopping dataset, used to distinguish individual entries."
+          },
+          {
+            "name": "Question",
+            "clean_name": "Question",
+            "camel_case_name": "question",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 1,
+            "sample_values": "What social platform has influenced your online shopping most?",
+            "inferred_semantic_summary": "This field contains the survey question asking respondents to identify the social platform that has most influenced their online shopping decisions, used to assess social media impact in consumer behavior research."
+          },
+          {
+            "name": "Segment Type",
+            "clean_name": "Segment_Type",
+            "camel_case_name": "segmentType",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 5,
+            "sample_values": "Custom, Gender, Mobile, University, Web",
+            "inferred_semantic_summary": "Segment Type categorizes shoppers based on demographic, behavioral, or platform-related profiles such as gender, mobile usage, educational affiliation, and web activity."
+          },
+          {
+            "name": "Segment Description",
+            "clean_name": "Segment_Description",
+            "camel_case_name": "segmentDescription",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 289,
+            "sample_values": "Appalachian State University, Arbroath Academy, Are you a? SVB team member, Are you a? Student Trekker, Are you single? No, ..., your zodiac sign? Pisces (Feb 19 - Mar 20), your zodiac sign? Sagittarius (Nov 22 - Dec 21), your zodiac sign? Scorpio (Oct 23 - Nov 21), your zodiac sign? Taurus (Apr 20 - May 20), your zodiac sign? Virgo (Aug 23 - Sep 22)",
+            "inferred_semantic_summary": "This field categorizes individuals into distinct demographic, affiliation, or characteristic-based segments—such as educational institutions, team membership, relationship status, and zodiac signs—for analysis of how social groupings influence shopping behavior."
+          },
+          {
+            "name": "Answer",
+            "clean_name": "Answer",
+            "camel_case_name": "answer",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 290,
+            "non_null_count": 1160,
+            "unique_values": 4,
+            "sample_values": "Snapchat, nan, Facebook, Twitter, Instagram",
+            "inferred_semantic_summary": "This field captures the social media platform that influenced a respondent's shopping decision, indicating which channel had an impact in the context of social influence on consumer behavior."
+          },
+          {
+            "name": "Count",
+            "clean_name": "Count",
+            "camel_case_name": "count",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 202,
+            "min_value": 0.0,
+            "max_value": 947.0,
+            "mean_value": 35.01379310344828,
+            "median_value": 1.0,
+            "sample_values": "0, 1, 2, 3, 4, ..., 678, 781, 820, 916, 947",
+            "inferred_semantic_summary": "\"Count\" likely represents the number of individual shopping actions or customer interactions recorded for each observation, quantifying engagement or activity levels in the context of social influence on shopping behavior."
+          },
+          {
+            "name": "Percentage",
+            "clean_name": "Percentage",
+            "camel_case_name": "percentage",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1450,
+            "unique_values": 334,
+            "min_value": 0.0,
+            "max_value": 1.0,
+            "mean_value": 0.19931310344827588,
+            "median_value": 0.0635,
+            "sample_values": "0.0, 0.008, 0.01, 0.011, 0.012, ..., 0.667, 0.692, 0.75, 0.765, 1.0",
+            "inferred_semantic_summary": "This field represents the proportion (from 0 to 100%) of an individual's shopping decisions influenced by social factors such as friends, family, or online communities in the context of consumer behavior analysis."
+          }
+        ],
+        "formatted_summary": "## Table 1: Social_Influence_on_Shopping (1,450 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 50.csv (Dataset: Social Influence on Shopping)\n\n### Schema (7 fields)\n  - index -- type: int64, values: 0, 1, 2, 3, 4, ..., 1445, 1446, 1447, 1448, 1449\n  - Question -- type: object, values: What social platform has influenced your online shopping most?\n  - Segment Type -- type: object, values: Custom, Gender, Mobile, University, Web\n  - Segment Description -- type: object, values: Appalachian State University, Arbroath Academy, Are you a? SVB team member, Are you a? Student Trekker, Are you single? No, ..., your zodiac sign? Pisces (Feb 19 - Mar 20), your zodiac sign? Sagittarius (Nov 22 - Dec 21), your zodiac sign? Scorpio (Oct 23 - Nov 21), your zodiac sign? Taurus (Apr 20 - May 20), your zodiac sign? Virgo (Aug 23 - Sep 22)\n  - Answer -- type: object, values: Snapchat, nan, Facebook, Twitter, Instagram\n  - Count -- type: int64, values: 0, 1, 2, 3, 4, ..., 678, 781, 820, 916, 947\n  - Percentage -- type: float64, values: 0.0, 0.008, 0.01, 0.011, 0.012, ..., 0.667, 0.692, 0.75, 0.765, 1.0\n\n### Sample Data (first 5 rows)\n```\n   index                                                        Question Segment Type Segment Description     Answer  Count  Percentage\n0      0  What social platform has influenced your online shopping most?       Mobile      Global results   Facebook    548       0.205\n1      1  What social platform has influenced your online shopping most?       Mobile      Global results  Instagram    916       0.342\n2      2  What social platform has influenced your online shopping most?       Mobile      Global results   Snapchat     86       0.032\n3      3  What social platform has influenced your online shopping most?       Mobile      Global results    Twitter    179       0.067\n4      4  What social platform has influenced your online shopping most?       Mobile      Global results        NaN    947       0.354\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

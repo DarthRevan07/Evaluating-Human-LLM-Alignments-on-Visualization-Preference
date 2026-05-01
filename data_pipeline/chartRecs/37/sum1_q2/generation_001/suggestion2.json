@@ -1,0 +1,43 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Is there a relationship between annual income and spending score among mall customers?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of median spending score by income and age groups",
+      "design_rationale": "A binned heatmap aggregates customers into income and age buckets, then visualizes the median 'Spending Score (1-100)' per bin. This unconventional approach reveals regional patterns and nonlinear interactions, potentially uncovering nuanced relationships between annual income and spending propensity across age segments. Particularly effective due to moderate dataset size (200 rows, 51 unique ages, 64 unique incomes) and the analytical question's focus on relationship rather than individual details.",
+      "target_insight": "How spending score varies across combinations of annual income and age, illustrating regions of higher or lower spending propensity and identifying hotspots, clusters, or gaps.",
+      "output_fields": [
+        "Annual Income (k$)",
+        "Spending Score (1-100)",
+        "Age"
+      ],
+      "chart_encodings": {
+        "x": "Annual Income (k$) (binned, 8 bins)",
+        "y": "Age (binned, 6 bins)",
+        "color": "Median Spending Score (1-100) per bin (heatmap shading)",
+        "size": null,
+        "other_aesthetics": "Colorbar labeled 'Median Spending Score'; axes labeled with bin edges"
+      }
+    },
+    "transformations": [
+      "Bin 'Annual Income (k$)' into 8 intervals using np.histogram_bin_edges",
+      "Bin 'Age' into 6 intervals using np.histogram_bin_edges",
+      "Group df by income and age bins, compute median 'Spending Score (1-100)' for each bin",
+      "Pivot results to matrix format for heatmap"
+    ],
+    "data_preparation_steps": [
+      "Load dataframe from csv_c2_sec\\37.csv",
+      "Define bins for 'Annual Income (k$)' and 'Age' using np.linspace based on their value ranges",
+      "Add columns to df for income and age bins (categorical labels)",
+      "Group by income and age bins, aggregate with median spending score",
+      "Pivot groupby output for heatmap matrix (income bins as x, age bins as y)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\37.csv')\nincome_min, income_max = df['Annual Income (k$)'].min(), df['Annual Income (k$)'].max()\nage_min, age_max = df['Age'].min(), df['Age'].max()\nincome_bins = np.linspace(income_min, income_max, 9)\nage_bins = np.linspace(age_min, age_max, 7)\ndf['IncomeBin'] = pd.cut(df['Annual Income (k$)'], bins=income_bins, include_lowest=True, right=False)\ndf['AgeBin'] = pd.cut(df['Age'], bins=age_bins, include_lowest=True, right=False)\ngrouped = df.groupby(['IncomeBin', 'AgeBin'])['Spending Score (1-100)'].median().reset_index()\npivot = grouped.pivot(index='AgeBin', columns='IncomeBin', values='Spending Score (1-100)')\ncmap = mpl.colormaps['viridis']\nplt.figure(figsize=(10,6))\nim = plt.imshow(pivot.values, aspect='auto', cmap=cmap, origin='lower')\nplt.xticks(np.arange(len(pivot.columns)), [str(bin) for bin in pivot.columns], rotation=60)\nplt.yticks(np.arange(len(pivot.index)), [str(bin) for bin in pivot.index])\nplt.xlabel('Annual Income (k$) bins')\nplt.ylabel('Age bins')\nplt.title('Median Spending Score Heatmap\\nby Income and Age Groups')\ncbar = plt.colorbar(im, shrink=0.8, pad=0.03)\ncbar.set_label('Median Spending Score (1-100)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

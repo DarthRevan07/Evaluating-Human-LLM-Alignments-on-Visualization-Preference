@@ -1,0 +1,40 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How do sales in Japan for role-playing games compare to sales in North America for the same genre?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Trend Lines",
+      "design_rationale": "This plot shows per-game sales for role-playing games, comparing the JP_Sales and NA_Sales values for each title. A scatter plot lets us observe whether North America or Japan dominates at the game level, spot outliers, and understand distribution/spread. Adding trend lines helps reveal the overall relationship; coloring by platform can show if certain platforms bias sales totals.",
+      "target_insight": "Direct per-game comparison of sales for role-playing games between Japan and North America; shows correlation, dominance, and outliers.",
+      "output_fields": [
+        "Name",
+        "JP_Sales",
+        "NA_Sales",
+        "Platform"
+      ],
+      "chart_encodings": {
+        "x": "NA_Sales",
+        "y": "JP_Sales",
+        "color": "Platform",
+        "size": null,
+        "other_aesthetics": "Scatter dots, semi-transparency, regression line, legend for platform"
+      }
+    },
+    "transformations": [
+      "Filter df to role-playing games: df['Genre'] == 'Role-Playing'",
+      "Drop rows with both df['JP_Sales'] and df['NA_Sales'] equal to 0",
+      "Prepare for scatter: per-game df['NA_Sales'], df['JP_Sales'], and df['Platform']"
+    ],
+    "data_preparation_steps": [
+      "df_role = df[df['Genre'] == 'Role-Playing']",
+      "df_role_nonzero = df_role[(df_role['JP_Sales'] > 0) | (df_role['NA_Sales'] > 0)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_role = df[df['Genre'] == 'Role-Playing']\ndf_role_nonzero = df_role[(df_role['JP_Sales'] > 0) | (df_role['NA_Sales'] > 0)]\nplatforms = df_role_nonzero['Platform'].unique()\ncmap = mpl.colormaps['tab20'].resampled(len(platforms))\nplatform_dict = {platform: idx for idx, platform in enumerate(platforms)}\ncolors = df_role_nonzero['Platform'].map(platform_dict)\nfig, ax = plt.subplots(figsize=(10,8))\nsc = ax.scatter(df_role_nonzero['NA_Sales'], df_role_nonzero['JP_Sales'], c=colors, cmap=cmap, alpha=0.6, label=None)\nfor idx, platform in enumerate(platforms):\n    ax.scatter([], [], color=cmap(idx), label=platform)\nax.set_xlabel('North America Sales (Millions)')\nax.set_ylabel('Japan Sales (Millions)')\nax.set_title('Role-Playing Games: Sales Comparison per Game\\nJapan vs North America')\nax.legend(title='Platform', bbox_to_anchor=(1.05,1), loc='upper left')\n# Fit and plot regression line\nx = df_role_nonzero['NA_Sales'].values\ny = df_role_nonzero['JP_Sales'].values\ncoeffs = np.polyfit(x, y, 1)\ny_pred = np.polyval(coeffs, x)\nax.plot(np.sort(x), np.polyval(coeffs, np.sort(x)), color='black', linewidth=2, linestyle='--', label='Trend')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

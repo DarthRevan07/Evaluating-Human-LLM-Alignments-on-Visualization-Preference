@@ -1,0 +1,20 @@
+{
+    "chart_A_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var2.png",
+    "chart_B_path": "C:\\ExcelCopilotResearch\\ChartPreference\\run2_variants_parallel_organized\\25\\sum_1_ques_1\\var4.png",
+    "chart_A_analysis": "Chart A uses horizontal bars to explicitly show 30-day positive, 30-day negative, and 365-day percentage changes for selected stocks. This makes it easy to identify the largest movers over 30 days and visually compare those short-term moves against much larger annual changes for the same stocks. However, the chart is dense, with many stocks and bars overlapping in visual attention, which slightly reduces clarity.",
+    "chart_A_readability_rating": 4,
+    "chart_A_readability_rationale": "Axes, labels, and color coding clearly distinguish time horizons and direction of change, though the large number of stocks makes it slightly busy.",
+    "chart_A_precision_rating": 5,
+    "chart_A_precision_rationale": "The chart directly answers which stocks had the largest positive or negative 30-day changes and shows their corresponding 365-day changes side by side.",
+    "chart_A_appeal_rating": 3,
+    "chart_A_appeal_rationale": "Functional but visually crowded; limited whitespace and many bars reduce aesthetic polish.",
+    "chart_B_analysis": "Chart B uses a scatter plot comparing 30-day percentage change against 365-day percentage change, with labels for selected stocks. It highlights overall relationships and outliers well but does not focus as clearly on ranking the largest positive or negative 30-day movers. The emphasis is more on correlation than on directly answering the ranking-based question.",
+    "chart_B_readability_rating": 3,
+    "chart_B_readability_rationale": "The scatter plot is understandable, but overlapping points and text labels make it harder to quickly identify the key largest movers.",
+    "chart_B_precision_rating": 3,
+    "chart_B_precision_rationale": "While it compares 30-day and 365-day changes, it does not explicitly highlight which stocks have the largest positive or negative 30-day changes.",
+    "chart_B_appeal_rating": 4,
+    "chart_B_appeal_rationale": "Cleaner layout with balanced spacing and a trend line, making it visually more appealing than the bar-heavy chart.",
+    "overall_preference": "Chart A",
+    "preference_rationale": "Chart A more directly and precisely answers the question by clearly identifying the largest positive and negative 30-day stock changes and directly comparing them to their 365-day performance, even if it is less visually elegant than Chart B."
+}

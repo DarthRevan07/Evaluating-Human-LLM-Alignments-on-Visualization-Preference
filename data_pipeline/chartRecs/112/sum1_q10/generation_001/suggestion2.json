@@ -1,0 +1,50 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Which drinks combine both high calorie and high caffeine amounts, and what types do they represent?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Type vs. High Calorie & High Caffeine Overlap)",
+      "design_rationale": "A heatmap summarizes at a higher level which drink types most often appear in the top quartile for both calorie and caffeine. It visually encodes the overlap rate as intensity, displaying how prevalent 'unhealthy' (high cal, high caffeine) drinks are within each type. This is effective for quickly seeing type-level patterns without reading each drink label.",
+      "target_insight": "Reveals the proportion of each drink type that falls into the high calorie & high caffeine category, highlighting categories with a higher density of 'problem' drinks.",
+      "output_fields": [
+        "type",
+        "high_calorie",
+        "high_caffeine",
+        "count",
+        "fraction_high_cal_and_caf"
+      ],
+      "chart_encodings": {
+        "x": "type (categorical)",
+        "y": "'High Calorie & High Caffeine' boolean",
+        "color": "Fraction of Type in Category (values between 0 and 1, sequential colormap)",
+        "size": null,
+        "other_aesthetics": "Annotations of exact counts in each cell"
+      }
+    },
+    "transformations": [
+      "Compute high calorie and high caffeine booleans using the 75th percentiles as thresholds",
+      "Create a boolean column that marks if a drink is BOTH high calorie and high caffeine",
+      "Group by 'type' and count how many drinks per type are in the high cal & high caffeine segment",
+      "Normalize counts within each type to get the fraction"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c2_sec\\112.csv')",
+      "calorie_thresh = np.percentile(df['Calories'], 75)",
+      "caffeine_thresh = np.percentile(df['Caffeine (mg)'], 75)",
+      "df['high_calorie'] = df['Calories'] >= calorie_thresh",
+      "df['high_caffeine'] = df['Caffeine (mg)'] >= caffeine_thresh",
+      "df['high_cal_and_caf'] = df['high_calorie'] & df['high_caffeine']",
+      "type_totals = df.groupby('type').size()",
+      "high_cal_and_caf_counts = df.groupby('type')['high_cal_and_caf'].sum()",
+      "fractions = (high_cal_and_caf_counts / type_totals).reindex(type_totals.index)",
+      "heatmap_data = pd.DataFrame({'type': type_totals.index, 'fraction': fractions.values, 'count': high_cal_and_caf_counts.values})"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ncalorie_thresh = np.percentile(df['Calories'], 75)\ncaffeine_thresh = np.percentile(df['Caffeine (mg)'], 75)\ndf['high_calorie'] = df['Calories'] >= calorie_thresh\ndf['high_caffeine'] = df['Caffeine (mg)'] >= caffeine_thresh\ndf['high_cal_and_caf'] = df['high_calorie'] & df['high_caffeine']\ntype_totals = df.groupby('type').size()\nhigh_cal_and_caf_counts = df.groupby('type')['high_cal_and_caf'].sum()\nfractions = (high_cal_and_caf_counts / type_totals).reindex(type_totals.index)\nheatmap_data = pd.DataFrame({'type': type_totals.index, 'fraction': fractions.values, 'count': high_cal_and_caf_counts.values})\nfig, ax = plt.subplots(figsize=(8,3))\ncmap = mpl.colormaps['YlOrRd']\ncolors = cmap(heatmap_data['fraction'].fillna(0))\nfor idx, (t, frac, cnt) in heatmap_data.iterrows():\n    rect = plt.Rectangle((idx, 0), 1, 1, color=colors[idx], ec='k')\n    ax.add_patch(rect)\n    ax.text(idx+0.5, 0.5, f'{cnt:.0f}\\n({frac:.2f})', va='center', ha='center', fontsize=13)\nax.set_xlim(0, len(heatmap_data['type']))\nax.set_ylim(0,1)\nax.set_xticks(np.arange(len(heatmap_data['type'])) + 0.5)\nax.set_xticklabels(heatmap_data['type'], rotation=30, ha='right')\nax.set_yticks([])\nax.set_ylabel('High Calorie & High Caffeine')\ncb = plt.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.Normalize(vmin=0, vmax=1), cmap=cmap), ax=ax, orientation='vertical', shrink=0.75)\ncb.set_label('Fraction of Type in High Calorie & High Caffeine Segment')\ntitle = 'Prevalence of High Calorie & High Caffeine Drinks by Type\\nCounts & (Fraction in Each Type)'\nplt.title(title)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

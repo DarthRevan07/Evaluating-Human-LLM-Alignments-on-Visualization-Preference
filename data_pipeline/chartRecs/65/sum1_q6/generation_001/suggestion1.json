@@ -1,0 +1,37 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there any relationship between Consumer Demographics (College students, Families, Seniors, Young adults) and Sales Volume for promoted products?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot enables powerful visual comparison of Sales Volume distributions for each Consumer Demographics group but only for promoted products. This answers whether sales outcomes (median, spread, outliers) differ between segments under promotion, highlighting demographic-driven effects and potential outlier behavior. Boxplot presentation is effective here because it communicates not just the averages but also variability, outliers, and range—all critical for understanding the nature of promotional impact by segment.",
+      "target_insight": "Do some consumer groups respond with notably higher or lower (or more variable) sales to promotions? Are there extreme values or wide spread for certain demographics?",
+      "output_fields": [
+        "Consumer Demographics",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics",
+        "y": "Sales Volume",
+        "color": "Consumer Demographics (distinct palette/category color)",
+        "size": null,
+        "other_aesthetics": "Show outliers; set notches for median confidence"
+      }
+    },
+    "transformations": [
+      "Filter for promoted products where df['Promotion'] == 'Yes'",
+      "Group data by df['Consumer Demographics'] and aggregate df['Sales Volume'] values for each group"
+    ],
+    "data_preparation_steps": [
+      "df_promoted = df[df['Promotion'] == 'Yes']",
+      "Create list of Sales Volume arrays, one per Consumer Demographics: grouped in original order for consistent color mapping"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_promoted = df[df['Promotion'] == 'Yes']\ndemographics_order = ['College students','Families','Seniors','Young adults']\ngroups = [df_promoted[df_promoted['Consumer Demographics'] == demo]['Sales Volume'].values for demo in demographics_order]\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(demographics_order))]\nfig, ax = plt.subplots(figsize=(8,5))\nbp = ax.boxplot(groups, patch_artist=True, notch=True, labels=demographics_order, vert=True, medianprops={'color':'black'}, showfliers=True)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xlabel('Consumer Demographics')\nax.set_ylabel('Sales Volume')\nax.set_title('Sales Volume by Consumer Demographics\\nPromoted Products Only')\nax.yaxis.grid(True)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

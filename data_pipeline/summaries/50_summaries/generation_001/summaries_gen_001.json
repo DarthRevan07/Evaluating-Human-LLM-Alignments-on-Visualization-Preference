@@ -1,0 +1,39 @@
+{
+  "generation_number": 1,
+  "table_name": "Social Influence on Shopping",
+  "total_rows": 1450,
+  "total_columns": 7,
+  "column_names": [
+    "index",
+    "Question",
+    "Segment Type",
+    "Segment Description",
+    "Answer",
+    "Count",
+    "Percentage"
+  ],
+  "summaries_per_generation": 2,
+  "schema_context": "## Table 1: Social_Influence_on_Shopping (1,450 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 50.csv (Dataset: Social Influence on Shopping)\n\n### Schema (7 fields)\n  - index -- type: int64, values: 0, 1, 2, 3, 4, ..., 1445, 1446, 1447, 1448, 1449\n  - Question -- type: object, values: What social platform has influenced your online shopping most?\n  - Segment Type -- type: object, values: Custom, Gender, Mobile, University, Web\n  - Segment Description -- type: object, values: Appalachian State University, Arbroath Academy, Are you a? SVB team member, Are you a? Student Trekker, Are you single? No, ..., your zodiac sign? Pisces (Feb 19 - Mar 20), your zodiac sign? Sagittarius (Nov 22 - Dec 21), your zodiac sign? Scorpio (Oct 23 - Nov 21), your zodiac sign? Taurus (Apr 20 - May 20), your zodiac sign? Virgo (Aug 23 - Sep 22)\n  - Answer -- type: object, values: Snapchat, nan, Facebook, Twitter, Instagram\n  - Count -- type: int64, values: 0, 1, 2, 3, 4, ..., 678, 781, 820, 916, 947\n  - Percentage -- type: float64, values: 0.0, 0.008, 0.01, 0.011, 0.012, ..., 0.667, 0.692, 0.75, 0.765, 1.0\n\n### Sample Data (first 5 rows)\n```\n   index                                                        Question Segment Type Segment Description     Answer  Count  Percentage\n0      0  What social platform has influenced your online shopping most?       Mobile      Global results   Facebook    548       0.205\n1      1  What social platform has influenced your online shopping most?       Mobile      Global results  Instagram    916       0.342\n2      2  What social platform has influenced your online shopping most?       Mobile      Global results   Snapchat     86       0.032\n3      3  What social platform has influenced your online shopping most?       Mobile      Global results    Twitter    179       0.067\n4      4  What social platform has influenced your online shopping most?       Mobile      Global results        NaN    947       0.354\n```\n",
+  "source_file": "csv_c2_sec\\50.csv",
+  "sheet_name": "",
+  "summaries": [
+    {
+      "idx": 1,
+      "chain_of_thought": {
+        "target_audience": "Marketing leads and brand strategists seeking to optimize social media campaigns for specific demographic segments",
+        "curator_intention": "Encourage the audience to identify which social platforms drive shopping influence in key demographic groups, prompting actionable segmentation and channel allocation",
+        "common_ground": "Both curator and marketer share interest in discovering how different segments (age, gender, university, zodiac, custom groups) respond to social shopping influence to inform tailored marketing actions"
+      },
+      "narrative_summary": "This schema enables marketing strategists to visualize how various demographic segments engage with different social platforms in influencing shopping behaviors. By examining combinations such as 'Segment Type', 'Segment Description', and 'Answer', practitioners can determine platform-specific resonance among defined audiences. The structured segmentation allows for granular targeting and strategic investment based on segment-driven influence trends, supporting data-driven campaign design to maximize channel ROI."
+    },
+    {
+      "idx": 2,
+      "chain_of_thought": {
+        "target_audience": "Academic researchers and social behavior analysts interested in the interplay between social identity and purchasing decisions",
+        "curator_intention": "Guide the audience to explore correlations between social influence (platform choice) and varied social identity attributes reflected in the segment descriptions for hypothesis-building or further study",
+        "common_ground": "Curator and researcher both seek to establish a nuanced understanding of how social and personal identity markers relate to platform-driven shopping influence, facilitating robust hypothesis generation and sociological insight"
+      },
+      "narrative_summary": "The schema's detailed breakdown of segment types and descriptions supports sociological exploration of online shopping influence mechanisms. Researchers can leverage this structure to analyze cross-sectional patterns, investigate hidden correlations, and generate hypotheses about social media's impact on different social or personal identifiers. The table's design encourages deep visualization and statistical analysis of influence distribution, fostering theory development and refinement in the context of social media-driven consumer behavior."
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there noticeable differences in price between fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot + Overlayed Swarm",
+      "design_rationale": "A violin plot provides a detailed look at the full price distribution's shape for each fueltype, showing density and multimodality, which a boxplot cannot. Overlaying a swarmplot (with jittered dots) adds individual car instances for clarity. This dual encoding highlights differences not only in typical values (median) but also in distribution skewness, density clusters, and price extremes. The approach leverages the moderate dataset size and continuous price field, offering an engaging, layered comparison.",
+      "target_insight": "Are price distributions for gas vs diesel cars similar in shape, or do they differ in range, density, or extremes?",
+      "output_fields": [
+        "fueltype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "price",
+        "color": "fueltype (use contrasting hues)",
+        "size": null,
+        "other_aesthetics": "filled violin density, alpha blending, individual dots from swarm"
+      }
+    },
+    "transformations": [
+      "Filter out rows with missing 'fueltype' or 'price' values.",
+      "Prepare arrays for violin plot per 'fueltype'."
+    ],
+    "data_preparation_steps": [
+      "df = df[df['fueltype'].isin(['gas', 'diesel'])]",
+      "Create price arrays per fueltype for density estimation and plotting."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\ndf = df[df['fueltype'].isin(['gas', 'diesel'])]\nlabels = ['gas', 'diesel']\ndata = [df[df['fueltype']=='gas']['price'].values,\n        df[df['fueltype']=='diesel']['price'].values]\nfig, ax = plt.subplots(figsize=(8,6))\nviolin_parts = ax.violinplot(data, positions=[0,1], widths=0.7, showmedians=True, showmeans=True, showextrema=True)\ncolors = [\"#00a9d7\", \"#e26a2c\"]\nfor i, part in enumerate(['bodies']):\n    for idx, item in enumerate(violin_parts[part]):\n        item.set_facecolor(colors[idx])\n        item.set_alpha(0.5)\nfor i in range(2):\n    x_pos = np.full_like(data[i], i, dtype=float)\n    x_jitter = x_pos + np.random.uniform(-0.14,0.14,len(x_pos))\n    ax.scatter(x_jitter, data[i], s=20, color=colors[i], alpha=0.7, edgecolor=\"k\", linewidth=0.5, label=labels[i])\nax.set_xticks([0,1])\nax.set_xticklabels(labels, fontsize=14)\nax.set_title(\"Detailed Price Distributions for Gas vs Diesel Cars\\nViolin+Swarm for Range and Density\", fontsize=15, pad=20)\nax.set_xlabel(\"fueltype\", fontsize=13)\nax.set_ylabel(\"price ($)\", fontsize=13)\nax.legend(title=\"fueltype\", loc=\"upper right\")\nax.grid(axis=\"y\", linestyle=\"--\", alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

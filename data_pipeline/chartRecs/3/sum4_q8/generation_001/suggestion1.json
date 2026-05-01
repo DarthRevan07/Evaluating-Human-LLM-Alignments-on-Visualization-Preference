@@ -1,0 +1,41 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which countries show emerging opportunities in the global rice trade based on low production rank but high yield per hectare?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter plot with quadrant highlight",
+      "design_rationale": "A scatter plot visually contrasts countries' production rank versus yield rank, directly revealing those in the lower production tier (high rank numbers) but upper yield tier (low rank numbers). Highlighting the 'opportunity quadrant' guides focus to standout countries with low overall production but high yield efficiency.",
+      "target_insight": "Identifies countries likely underutilizing their rice yield potential and therefore presenting emerging trade opportunities.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Yield",
+        "color": "Highlight countries in opportunity quadrant ('low production, high yield')",
+        "size": "null",
+        "other_aesthetics": "Label highlighted countries; opportunity quadrant shaded"
+      }
+    },
+    "transformations": [
+      "Convert all non-null 'Rank of Rice Production' and 'Rank of Rice Yield' values to float",
+      "Filter countries where 'Rank of Rice Production' > mean (59.5) and 'Rank of Rice Yield' < mean (59.5)",
+      "Tag each country as 'opportunity' if both conditions are met"
+    ],
+    "data_preparation_steps": [
+      "df['Rank of Rice Production'] and df['Rank of Rice Yield'] made numeric with pd.to_numeric",
+      "Calculate mean values for both ranking columns",
+      "Create boolean mask for opportunity countries",
+      "Separate plotting color arrays for opportunity vs non-opportunity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf['Rank of Rice Production'] = pd.to_numeric(df['Rank of Rice Production'], errors='coerce')\ndf['Rank of Rice Yield'] = pd.to_numeric(df['Rank of Rice Yield'], errors='coerce')\nmean_prod = df['Rank of Rice Production'].mean()\nmean_yield = df['Rank of Rice Yield'].mean()\nopportunity_mask = (df['Rank of Rice Production'] > mean_prod) & (df['Rank of Rice Yield'] < mean_yield)\nfig, ax = plt.subplots(figsize=(10, 8))\n# Plot quadrants\nax.axvspan(mean_prod, df['Rank of Rice Production'].max(), ymin=0, ymax=(mean_yield/df['Rank of Rice Yield'].max()), color='yellow', alpha=0.15)\nax.axhspan(0, mean_yield, xmin=(mean_prod/df['Rank of Rice Production'].max()), xmax=1, color='yellow', alpha=0.15)\n# Plot all countries\nax.scatter(df['Rank of Rice Production'], df['Rank of Rice Yield'], c='grey', alpha=0.5, label='Others')\n# Plot opportunity countries\nax.scatter(df.loc[opportunity_mask, 'Rank of Rice Production'], df.loc[opportunity_mask, 'Rank of Rice Yield'], c='red', s=70, alpha=0.8, label='Emerging Opportunities')\n# Annotate highlighted countries\nfor idx in df[opportunity_mask].index:\n    ax.text(df.loc[idx, 'Rank of Rice Production'], df.loc[idx, 'Rank of Rice Yield'], df.loc[idx, 'Country'], fontsize=9, color='red')\nax.set_xlabel('Rank of Rice Production (higher = lower production)')\nax.set_ylabel('Rank of Rice Yield (lower = higher yield)')\nax.invert_xaxis()\nax.set_title('Emerging Rice Trade Opportunities:\\nLow Production Rank, High Yield per Hectare')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

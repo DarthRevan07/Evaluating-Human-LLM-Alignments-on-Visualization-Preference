@@ -1,0 +1,39 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the distribution of Numerical Aptitude scores differ across various Career groupings?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Boxplot",
+      "design_rationale": "A grouped boxplot is ideal for visualizing how the spread, central tendency, and outliers of Numerical Aptitude scores differ by Career groupings. Given that 'Career' has 104 unique values and 105 rows, each career mostly appears once, but likely there are a few small groupings. To meaningfully group careers, we can bin similar careers into broad sectors or group the careers with the highest frequencies. This approach provides an overview of the distribution shapes, medians, and ranges across these groupings, and makes it easy to compare multiple groups side by side.",
+      "target_insight": "Comparison of central tendency, spread, and presence of outliers in Numerical Aptitude among the most common Career groupings or broader Career clusters.",
+      "output_fields": [
+        "Numerical Aptitude",
+        "Career"
+      ],
+      "chart_encodings": {
+        "x": "Career grouping (binned from 'Career')",
+        "y": "Numerical Aptitude",
+        "color": "Career grouping (different colors for each group)",
+        "size": null,
+        "other_aesthetics": "Whiskers (show outliers), box width uniform, x-axis rotated for category readability"
+      }
+    },
+    "transformations": [
+      "Group or map 'Career' into 5-7 higher-level groupings or choose the top 5 most frequent careers (to avoid single observation per box).",
+      "Filter the DataFrame to include only these grouped careers for clarity.",
+      "Sort the groupings on median Numerical Aptitude for order in the plot."
+    ],
+    "data_preparation_steps": [
+      "df_count = df['Career'].value_counts()",
+      "Select top 5 most common 'Career' values: careers_top = df_count.head(5).index.tolist()",
+      "df_plot = df[df['Career'].isin(careers_top)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\ndf_count = df['Career'].value_counts()\ncareers_top = df_count.head(5).index.tolist()\ndf_plot = df[df['Career'].isin(careers_top)]\ngroups = [df_plot[df_plot['Career'] == car]['Numerical Aptitude'].values for car in careers_top]\nimport matplotlib as mpl\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(careers_top))]\nfig, ax = plt.subplots(figsize=(10,6))\nbp = ax.boxplot(groups, patch_artist=True, widths=0.6)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_edgecolor('black')\n    patch.set_alpha(0.8)\nfor flier, color in zip(bp['fliers'], colors):\n    flier.set(marker='o', color=color, alpha=0.7)\nax.set_xticklabels(careers_top, rotation=30, ha='right')\nax.set_xlabel(\"Career\")\nax.set_ylabel(\"Numerical Aptitude\")\nax.set_title(\"Distribution of Numerical Aptitude Scores Among Top Career Groupings\")\nax.grid(axis='y', linestyle='--', linewidth=0.5, alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

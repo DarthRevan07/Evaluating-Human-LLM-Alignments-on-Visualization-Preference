@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the relationship between humidity and cloud cover in each city?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter plot with faceting by city",
+      "design_rationale": "A scatter plot allows for direct visualization of the relationship between two quantitative variables—here, 'Humidity (%)' and 'Cloud Cover (%)'. By faceting (splitting) the plot by 'Location', each subplot shows the relationship for a single city, revealing differences in how humidity and cloud cover relate in different climates and urban environments. Using color or shape for 'Weather Condition' can further contextualize weather states.",
+      "target_insight": "Visual comparison of the correlation pattern between humidity and cloud cover across the major cities, including possible city-specific trends, clusters, or outliers.",
+      "output_fields": [
+        "Location",
+        "Humidity (%)",
+        "Cloud Cover (%)",
+        "Weather Condition"
+      ],
+      "chart_encodings": {
+        "x": "Humidity (%)",
+        "y": "Cloud Cover (%)",
+        "color": "Weather Condition (discrete, for legend)",
+        "size": null,
+        "other_aesthetics": "Facet (subplot) by Location; marker style by Weather Condition; alpha for visibility"
+      }
+    },
+    "transformations": [
+      "Split data into subsets by 'Location'",
+      "Map marker color and style to 'Weather Condition' categories"
+    ],
+    "data_preparation_steps": [
+      "Read and clean the dataset from csv_c_squared\\243.csv",
+      "Identify unique values in 'Location' to create subplots",
+      "Assign colors and marker styles to each 'Weather Condition'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n# Load data\ndf = pd.read_csv('csv_c_squared\\243.csv')\nlocations = df['Location'].unique()\nweather_conditions = df['Weather Condition'].unique()\ncolor_map = {'clear':'#4daf4a', 'cloudy':'#377eb8', 'rain':'#e41a1c'}\nmarker_map = {'clear':'o', 'cloudy':'s', 'rain':'^'}\nfig, axs = plt.subplots(2, 4, figsize=(20, 10), sharex=True, sharey=True)\nfor idx, loc in enumerate(locations):\n    ax = axs.flat[idx]\n    df_loc = df[df['Location'] == loc]\n    for condition in weather_conditions:\n        df_wc = df_loc[df_loc['Weather Condition'] == condition]\n        ax.scatter(df_wc['Humidity (%)'], df_wc['Cloud Cover (%)'],\n            c=color_map[condition], marker=marker_map[condition], alpha=0.7, label=condition if idx == 0 else None)\n    ax.set_title(loc)\n    ax.set_xlim(40, 100)\n    ax.set_ylim(0, 75)\n    if idx % 4 == 0:\n        ax.set_ylabel('Cloud Cover (%)')\n    if idx >= 4:\n        ax.set_xlabel('Humidity (%)')\n# Add legend only to first axis\nhandles = [mpl.lines.Line2D([0],[0], marker=marker_map[wc], color='w', markerfacecolor=color_map[wc], markersize=10, label=wc) for wc in weather_conditions]\naxs[0,0].legend(handles=handles, title='Weather Condition', loc='upper left', bbox_to_anchor=(1.05, 1))\nplt.suptitle('Relationship between Humidity and Cloud Cover by City\\nColored by Weather Condition')\nplt.tight_layout(rect=[0,0,0.93,0.93])\nplt.show()"
+  },
+  "schema_based": true
+}

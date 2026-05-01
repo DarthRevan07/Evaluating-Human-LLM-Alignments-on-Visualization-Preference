@@ -1,0 +1,37 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "How variable are monthly temperature maxima from year to year in Amherst—do some years show more extreme fluctuations than others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot for each year displays the distribution, spread, and potential outliers of monthly maximum temperatures within every year. This is ideal for comparing temperature variability and detecting years with more extreme fluctuations, leveraging the table's structure with many monthly records per year. Boxplots quickly communicate median, IQR, and possible outliers for each year's monthly temperature maxima.",
+      "target_insight": "Easily compare intra-year variability and spot which years had unusually wide or narrow spreads, signaling periods of greater or lesser temperature extremes.",
+      "output_fields": [
+        "Year",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Temperature",
+        "color": "Year (as categorical, for box color); highlights per year",
+        "size": null,
+        "other_aesthetics": "Show outliers; light grid; x-axis as discrete ticks for each year"
+      }
+    },
+    "transformations": [
+      "Group df by 'Year' to assemble yearly lists of 'Temperature' values",
+      "Sort years in ascending order for coherent x-axis layout"
+    ],
+    "data_preparation_steps": [
+      "years = sorted(df['Year'].unique())",
+      "data_per_year = [df[df['Year'] == year]['Temperature'] for year in years]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\461.csv\")\nyears = sorted(df['Year'].unique())\ndata_per_year = [df[df['Year'] == year]['Temperature'] for year in years]\ncmap = mpl.colormaps['Set2'\n].resampled(len(years))\nfig, ax = plt.subplots(figsize=(10,6))\nbox = ax.boxplot(data_per_year, patch_artist=True, widths=0.6, showfliers=True, flierprops={'marker': 'o', 'markerfacecolor': 'gray', 'markersize': 5, 'alpha':0.7})\nfor patch, color in zip(box['boxes'], cmap(np.linspace(0,1,len(years)))):\n    patch.set_facecolor(color)\nax.set_xticks(np.arange(1, len(years)+1))\nax.set_xticklabels([str(int(year)) for year in years])\nax.set_xlabel(\"Year\")\nax.set_ylabel(\"Temperature\")\nax.set_title(\"Year-to-Year Variability in Monthly Highest Temperatures in Amherst\\n(Boxplots show spread and outliers per year)\")\nax.grid(axis='y', linestyle='--', alpha=0.6)\nax.set_ylim([df['Temperature'].min() - 2, df['Temperature'].max() + 2])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

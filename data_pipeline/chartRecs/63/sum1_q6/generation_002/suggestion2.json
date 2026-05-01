@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Do customers who avail more discounts tend to have higher purchase rates?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (NumberOfPurchases by DiscountsAvailed)",
+      "design_rationale": "A boxplot displays the distribution and variability of 'NumberOfPurchases' for customers in each 'DiscountsAvailed' group, revealing whether customers availing more discounts tend to have higher purchase counts, including detection of outliers. This approach complements the binary purchase rate by examining the intensity of purchasing behavior (frequency), offering granular insight into whether heavy discount users are also frequent purchasers.",
+      "target_insight": "Do those who use more discounts consistently make more purchases, not just more likely to transact once?",
+      "output_fields": [
+        "DiscountsAvailed",
+        "NumberOfPurchases"
+      ],
+      "chart_encodings": {
+        "x": "DiscountsAvailed (categorical x-axis per discount count 0-5)",
+        "y": "NumberOfPurchases (distribution shown as boxplot per x group)",
+        "color": "Different box color per group using viridis colormap",
+        "size": null,
+        "other_aesthetics": "Show outlier points; overlay mean value with dot marker"
+      }
+    },
+    "transformations": [
+      "Sort df by 'DiscountsAvailed' for consistent grouping",
+      "Prepare list of 'NumberOfPurchases' arrays, one per 'DiscountsAvailed' value"
+    ],
+    "data_preparation_steps": [
+      "discounts_counts = sorted(df['DiscountsAvailed'].unique())",
+      "data = [df[df['DiscountsAvailed'] == k]['NumberOfPurchases'].values for k in discounts_counts]",
+      "means = [np.mean(d) if len(d)>0 else np.nan for d in data]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndiscounts_counts = sorted(df['DiscountsAvailed'].unique())\ndata = [df[df['DiscountsAvailed'] == k]['NumberOfPurchases'].values for k in discounts_counts]\nmeans = [np.mean(d) if len(d) > 0 else np.nan for d in data]\ncmap = mpl.colormaps['viridis'].resampled(len(discounts_counts))\ncolors = [cmap(i / (len(discounts_counts) - 1)) for i in range(len(discounts_counts))]\nfig, ax = plt.subplots(figsize=(9, 5))\nbox = ax.boxplot(data, patch_artist=True, positions=np.arange(len(discounts_counts)),\n                 showmeans=False, meanline=False, showcaps=True, showbox=True, showfliers=True)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_edgecolor('black')\nfor median in box['medians']:\n    median.set_color('red')\n    median.set_linewidth(2)\nax.scatter(np.arange(len(discounts_counts)), means, color='black', marker='o', label='Mean', zorder=4)\nax.set_xticks(np.arange(len(discounts_counts)))\nax.set_xticklabels([str(int(k)) for k in discounts_counts])\nax.set_xlabel('DiscountsAvailed', fontsize=12)\nax.set_ylabel('NumberOfPurchases', fontsize=12)\nax.set_title('Number of Purchases by Discounts Availed', fontsize=14)\nax.legend(['Mean of NumberOfPurchases'], frameon=False, loc='upper left')\nsm = mpl.cm.ScalarMappable(cmap=cmap)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.01)\ncbar.set_ticks(np.linspace(0,1,len(discounts_counts)))\ncbar.set_ticklabels([str(int(k)) for k in discounts_counts])\ncbar.set_label('DiscountsAvailed', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Which artists have both a high number of paintings and biographies that emphasize innovation or major influence on artistic movements?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Sorted)",
+      "design_rationale": "A horizontal bar chart—sorted by descending number of paintings—efficiently highlights prolific artists. Overlaying a color encoding for innovation/major influence found in their 'bio' allows for an at-a-glance answer to the question, emphasizing those with both high output and impact. The chart format is suitable for the top 50 rows and categorical artist names.",
+      "target_insight": "Identifies which artists have created many paintings AND whose biographies emphasize their innovative impact or major influence, clearly differentiating them via bar color.",
+      "output_fields": [
+        "name",
+        "paintings",
+        "bio"
+      ],
+      "chart_encodings": {
+        "x": "paintings",
+        "y": "name",
+        "color": "bio innovation/influence flag",
+        "size": null,
+        "other_aesthetics": "Sort bars. Use hue to encode 'innovation/influence' in bio. Set bar alpha for visual clarity."
+      }
+    },
+    "transformations": [
+      "Create a new column: df['Bio Flag'] = 1 if df['bio'] contains keywords like 'innovation', 'innovative', 'major influence', 'influential', 'founder', 'movement', else 0",
+      "Sort df descending by df['paintings']",
+      "Select all rows for comprehensive overview"
+    ],
+    "data_preparation_steps": [
+      "Define innovation/influence keywords",
+      "Flag each artist with high innovation/influence in 'bio' (df['Bio Flag'])",
+      "Sort df by 'paintings' descending",
+      "Prepare 'name', 'paintings', and 'Bio Flag' for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\20.csv')\n# Define keywords for innovation/influence\nkeywords = ['innovation', 'innovative', 'influence', 'influential', 'founder', 'movement']\ndf['Bio Flag'] = df['bio'].str.lower().apply(lambda b: int(any(k in b for k in keywords)))\ndf_sorted = df.sort_values('paintings', ascending=False)\nfig, ax = plt.subplots(figsize=(10,8))\ncolors = np.where(df_sorted['Bio Flag']==1, '#1f77b4', '#cccccc')\nbars = ax.barh(df_sorted['name'], df_sorted['paintings'], color=colors, alpha=0.85)\nax.set_xlabel('paintings')\nax.set_ylabel('name')\n# Compose legend manually\nfrom matplotlib.patches import Patch\nlegend_elements = [Patch(facecolor='#1f77b4', label='Innovation/Influence'), Patch(facecolor='#cccccc', label='Other')]\nax.legend(handles=legend_elements, title='Bio Emphasis', loc='lower right')\nax.set_title('Artists with High Number of Paintings\\nHighlighting Innovation or Influence in Biographies')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

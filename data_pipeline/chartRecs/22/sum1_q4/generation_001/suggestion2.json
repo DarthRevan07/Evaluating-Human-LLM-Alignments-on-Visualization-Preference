@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Among different enginetypes, which are associated with higher average prices?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Price Distribution by Enginetype)",
+      "design_rationale": "A boxplot enables a deeper look at how the price spreads within each enginetype, capturing median, quartiles, and potential outliers. This is perfect given varied price distributions, as it helps identify which engine types not only have higher averages but also greater variability and presence of expensive models. The categorical 'enginetype' and numerical 'price' combo makes this chart highly informative for both central tendency and spread.",
+      "target_insight": "Shows both the median price and the range/distribution for each enginetype, highlighting those types that consistently achieve high prices and those with broad price variability.",
+      "output_fields": [
+        "enginetype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginetype",
+        "y": "price",
+        "color": "enginetype (distinct color for each box)",
+        "size": null,
+        "other_aesthetics": "Show fliers (outliers); annotate median values; adjust box colors for clarity"
+      }
+    },
+    "transformations": [
+      "Sort enginetype categories by median price descending to highlight top performers",
+      "No aggregation needed, retain individual price values"
+    ],
+    "data_preparation_steps": [
+      "medians = df.groupby('enginetype')['price'].median().sort_values(ascending=False)",
+      "enginetype_order = medians.index.tolist()",
+      "df['enginetype'] = pd.Categorical(df['enginetype'], enginetype_order)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\nmedians = df.groupby('enginetype')['price'].median().sort_values(ascending=False)\nenginetype_order = medians.index.tolist()\ndf['enginetype'] = pd.Categorical(df['enginetype'], enginetype_order)\nfig, ax = plt.subplots(figsize=(10,6))\nbox_colors = mpl.colormaps['Set3'](np.linspace(0,1,len(enginetype_order)))\nboxplot = ax.boxplot([df[df['enginetype'] == et]['price'] for et in enginetype_order],\n                     labels=enginetype_order,\n                     patch_artist=True,\n                     showfliers=True,\n                     medianprops={'color': 'black', 'linewidth': 2})\nfor patch, color in zip(boxplot['boxes'], box_colors):\n    patch.set_facecolor(color)\nfor i, median in enumerate(medians.values):\n    ax.text(i+1, median + 600, f'Median: {int(median)}', ha='center', va='bottom', fontsize=10, color='black')\nax.set_ylabel('Price (USD)')\nax.set_xlabel('Enginetype')\nax.set_title('Car Price Distribution by Enginetype\\n(Median and variability shown)', fontsize=14)\nax.grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,483 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\206\\sum2_q6\\generation_001",
+  "schema_context": "Table: Housing Prices Dataset\nRows: 545\nColumns: 13\n\nFIELD INFORMATION:\nField: price\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 219\n  - Semantic Meaning: This field represents the sale price, in whole currency units, at which individual residential properties were sold within a high-value housing market.\n  - Value Range: 1750000.0 to 13300000.0\n  - Mean: 4766729.25\n\nField: area\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 284\n  - Semantic Meaning: The 'area' field represents the size of a residential property in square feet, indicating the total floor space of homes listed in the housing prices dataset.\n  - Value Range: 1650.0 to 16200.0\n  - Mean: 5150.54\n\nField: bedrooms\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field indicates the number of bedrooms in a residential property, providing a count of distinct sleeping rooms typically used to assess housing size and value in real estate listings.\n  - Value Range: 1.0 to 6.0\n  - Mean: 2.97\n\nField: bathrooms\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field represents the number of bathrooms in a residential property, indicating a key attribute used to describe and value homes in housing markets.\n  - Value Range: 1.0 to 4.0\n  - Mean: 1.29\n\nField: stories\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field indicates the number of floors (stories) in a residential property, representing its vertical structure within the housing market context.\n  - Value Range: 1.0 to 4.0\n  - Mean: 1.81\n\nField: mainroad\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house has direct access to a main road, which may affect its accessibility and market value.\n\nField: guestroom\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house includes a dedicated guest room, specifying its availability as \"yes\" or \"no\" for each property listing.\n\nField: basement\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house has a basement, specifying the presence (\"yes\") or absence (\"no\") of this feature in a residential property.\n\nField: hotwaterheating\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a house is equipped with a hot water heating system (\"yes\" for presence, \"no\" for absence), relevant to home features and amenities in housing markets.\n\nField: airconditioning\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a house is equipped with air conditioning (\"yes\") or not (\"no\"), reflecting a key feature relevant to property amenities in the housing market.\n\nField: parking\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field represents the number of parking spaces available for each housing unit, indicating the level of parking provision associated with the property.\n  - Value Range: 0.0 to 3.0\n  - Mean: 0.69\n\nField: prefarea\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house is located in a preferred geographic area as designated by real estate or market criteria, with values denoting \"yes\" or \"no\".\n\nField: furnishingstatus\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the level of home furnishings provided with a property—whether it is fully furnished, partially furnished, or not furnished—when it is sold or rented.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"price\"\n  2. \"area\"\n  3. \"bedrooms\"\n  4. \"bathrooms\"\n  5. \"stories\"\n  6. \"mainroad\"\n  7. \"guestroom\"\n  8. \"basement\"\n  9. \"hotwaterheating\"\n  10. \"airconditioning\"\n  11. \"parking\"\n  12. \"prefarea\"\n  13. \"furnishingstatus\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['price'], df['area']",
+  "table_metadata": {
+    "table_name": "Housing Prices Dataset",
+    "file_path": "csv_c_squared\\206.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 206.csv (Dataset: Housing Prices Dataset)",
+    "original_filename": "206.csv",
+    "dataset_name": "Housing Prices Dataset",
+    "row_count": 545,
+    "column_count": 13,
+    "table_hash": 7398092576426359378,
+    "fields": [
+      {
+        "name": "price",
+        "clean_name": "price",
+        "camel_case_name": "price",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 219,
+        "min_value": 1750000.0,
+        "max_value": 13300000.0,
+        "mean_value": 4766729.247706422,
+        "median_value": 4340000.0,
+        "sample_values": "1750000, 1767150, 1820000, 1855000, 1890000, ..., 10850000, 11410000, 12215000, 12250000, 13300000",
+        "inferred_semantic_summary": "This field represents the sale price, in whole currency units, at which individual residential properties were sold within a high-value housing market."
+      },
+      {
+        "name": "area",
+        "clean_name": "area",
+        "camel_case_name": "area",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 284,
+        "min_value": 1650.0,
+        "max_value": 16200.0,
+        "mean_value": 5150.54128440367,
+        "median_value": 4600.0,
+        "sample_values": "1650, 1700, 1836, 1905, 1950, ..., 12900, 12944, 13200, 15600, 16200",
+        "inferred_semantic_summary": "The 'area' field represents the size of a residential property in square feet, indicating the total floor space of homes listed in the housing prices dataset."
+      },
+      {
+        "name": "bedrooms",
+        "clean_name": "bedrooms",
+        "camel_case_name": "bedrooms",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 6,
+        "min_value": 1.0,
+        "max_value": 6.0,
+        "mean_value": 2.9651376146788992,
+        "median_value": 3.0,
+        "sample_values": "1, 2, 3, 4, 5, 6",
+        "inferred_semantic_summary": "This field indicates the number of bedrooms in a residential property, providing a count of distinct sleeping rooms typically used to assess housing size and value in real estate listings."
+      },
+      {
+        "name": "bathrooms",
+        "clean_name": "bathrooms",
+        "camel_case_name": "bathrooms",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 4,
+        "min_value": 1.0,
+        "max_value": 4.0,
+        "mean_value": 1.2862385321100918,
+        "median_value": 1.0,
+        "sample_values": "1, 2, 3, 4",
+        "inferred_semantic_summary": "This field represents the number of bathrooms in a residential property, indicating a key attribute used to describe and value homes in housing markets."
+      },
+      {
+        "name": "stories",
+        "clean_name": "stories",
+        "camel_case_name": "stories",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 4,
+        "min_value": 1.0,
+        "max_value": 4.0,
+        "mean_value": 1.8055045871559634,
+        "median_value": 2.0,
+        "sample_values": "1, 2, 3, 4",
+        "inferred_semantic_summary": "This field indicates the number of floors (stories) in a residential property, representing its vertical structure within the housing market context."
+      },
+      {
+        "name": "mainroad",
+        "clean_name": "mainroad",
+        "camel_case_name": "mainroad",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "Indicates whether a house has direct access to a main road, which may affect its accessibility and market value."
+      },
+      {
+        "name": "guestroom",
+        "clean_name": "guestroom",
+        "camel_case_name": "guestroom",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "Indicates whether a house includes a dedicated guest room, specifying its availability as \"yes\" or \"no\" for each property listing."
+      },
+      {
+        "name": "basement",
+        "clean_name": "basement",
+        "camel_case_name": "basement",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "Indicates whether a house has a basement, specifying the presence (\"yes\") or absence (\"no\") of this feature in a residential property."
+      },
+      {
+        "name": "hotwaterheating",
+        "clean_name": "hotwaterheating",
+        "camel_case_name": "hotwaterheating",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "This field indicates whether a house is equipped with a hot water heating system (\"yes\" for presence, \"no\" for absence), relevant to home features and amenities in housing markets."
+      },
+      {
+        "name": "airconditioning",
+        "clean_name": "airconditioning",
+        "camel_case_name": "airconditioning",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "This field indicates whether a house is equipped with air conditioning (\"yes\") or not (\"no\"), reflecting a key feature relevant to property amenities in the housing market."
+      },
+      {
+        "name": "parking",
+        "clean_name": "parking",
+        "camel_case_name": "parking",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 4,
+        "min_value": 0.0,
+        "max_value": 3.0,
+        "mean_value": 0.6935779816513762,
+        "median_value": 0.0,
+        "sample_values": "0, 1, 2, 3",
+        "inferred_semantic_summary": "This field represents the number of parking spaces available for each housing unit, indicating the level of parking provision associated with the property."
+      },
+      {
+        "name": "prefarea",
+        "clean_name": "prefarea",
+        "camel_case_name": "prefarea",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 2,
+        "sample_values": "no, yes",
+        "inferred_semantic_summary": "Indicates whether a house is located in a preferred geographic area as designated by real estate or market criteria, with values denoting \"yes\" or \"no\"."
+      },
+      {
+        "name": "furnishingstatus",
+        "clean_name": "furnishingstatus",
+        "camel_case_name": "furnishingstatus",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 545,
+        "unique_values": 3,
+        "sample_values": "furnished, semi-furnished, unfurnished",
+        "inferred_semantic_summary": "This field indicates the level of home furnishings provided with a property—whether it is fully furnished, partially furnished, or not furnished—when it is sold or rented."
+      }
+    ],
+    "formatted_summary": "## Table 1: Housing_Prices_Dataset (545 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 206.csv (Dataset: Housing Prices Dataset)\n\n### Schema (13 fields)\n  - price -- type: int64, values: 1750000, 1767150, 1820000, 1855000, 1890000, ..., 10850000, 11410000, 12215000, 12250000, 13300000\n  - area -- type: int64, values: 1650, 1700, 1836, 1905, 1950, ..., 12900, 12944, 13200, 15600, 16200\n  - bedrooms -- type: int64, values: 1, 2, 3, 4, 5, 6\n  - bathrooms -- type: int64, values: 1, 2, 3, 4\n  - stories -- type: int64, values: 1, 2, 3, 4\n  - mainroad -- type: object, values: no, yes\n  - guestroom -- type: object, values: no, yes\n  - basement -- type: object, values: no, yes\n  - hotwaterheating -- type: object, values: no, yes\n  - airconditioning -- type: object, values: no, yes\n  - parking -- type: int64, values: 0, 1, 2, 3\n  - prefarea -- type: object, values: no, yes\n  - furnishingstatus -- type: object, values: furnished, semi-furnished, unfurnished\n\n### Sample Data (first 5 rows)\n```\n      price  area  bedrooms  bathrooms  stories mainroad guestroom basement hotwaterheating airconditioning  parking prefarea furnishingstatus\n0  13300000  7420         4          2        3      yes        no       no              no             yes        2      yes        furnished\n1  12250000  8960         4          4        4      yes        no       no              no             yes        3       no        furnished\n2  12250000  9960         3          2        2      yes        no      yes              no              no        2      yes   semi-furnished\n3  12215000  7500         4          2        2      yes        no      yes              no             yes        3      yes        furnished\n4  11410000  7420         4          1        2      yes       yes      yes              no             yes        2       no        furnished\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "206",
+      "summary_idx": 2,
+      "question_idx": 6,
+      "question": "How does the distribution of houses with guestrooms compare between preferred and non-preferred areas?",
+      "column_combination": [
+        "price",
+        "area",
+        "bedrooms",
+        "bathrooms",
+        "stories",
+        "mainroad",
+        "guestroom",
+        "basement",
+        "hotwaterheating",
+        "airconditioning",
+        "parking",
+        "prefarea",
+        "furnishingstatus"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Grouped Bar Chart",
+            "design_rationale": "A grouped bar chart clearly displays the proportion of houses with and without guestrooms across preferred ('yes') and non-preferred ('no') areas. It allows direct comparison of the counts (or percentages) of properties with guestrooms in each area category, utilizing the categorical nature of 'guestroom' and 'prefarea' fields. This approach exposes if guestroom-equipped properties are more frequent in preferred zones, which directly answers the question.",
+            "target_insight": "Whether houses with guestrooms are more prevalent in preferred areas compared to non-preferred areas, and the detailed breakdown of both categories.",
+            "output_fields": [
+              "prefarea",
+              "guestroom",
+              "Count"
+            ],
+            "chart_encodings": {
+              "x": "prefarea",
+              "y": "Count",
+              "color": "guestroom",
+              "size": null,
+              "other_aesthetics": "Grouped bars by 'guestroom' within each 'prefarea'; legend for guestroom"
+            }
+          },
+          "transformations": [
+            "Group by both 'prefarea' and 'guestroom' to count occurrences",
+            "Pivot/group counts to form (prefarea, guestroom) pairs"
+          ],
+          "data_preparation_steps": [
+            "df_grouped = df.groupby(['prefarea', 'guestroom']).size().reset_index(name='Count')",
+            "df_pivot = df_grouped.pivot(index='prefarea', columns='guestroom', values='Count').fillna(0)"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\ndf_grouped = df.groupby(['prefarea', 'guestroom']).size().reset_index(name='Count')\ndf_pivot = df_grouped.pivot(index='prefarea', columns='guestroom', values='Count').fillna(0)\nguestroom_categories = ['yes', 'no']\nprefarea_categories = ['yes', 'no']\nbar_width = 0.35\nx = np.arange(len(prefarea_categories))\nfig, ax = plt.subplots(figsize=(8,6))\nfor idx, guestroom in enumerate(guestroom_categories):\n    counts = df_pivot[guestroom].reindex(prefarea_categories).fillna(0)\n    ax.bar(x + idx*bar_width, counts, bar_width, label='Guestroom: ' + guestroom)\nax.set_xticks(x + bar_width/2)\nax.set_xticklabels(prefarea_categories)\nax.set_xlabel('Preferred Area')\nax.set_ylabel('Number of Houses')\ntitle_str = \"Distribution of Houses with and without Guestrooms \" + \"\\nby Preferred and Non-Preferred Areas\"\nax.set_title(title_str)\nax.legend(title='Guestroom')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Violin Plot",
+            "design_rationale": "A violin plot provides a deep view into the distribution ('shape') of house sizes ('area') for properties with guestrooms, separated by 'prefarea'. This reveals not just counts but how the area distribution differs—are guestroom-equipped houses larger in preferred areas? The plot blends density and summary statistics, ideal for numeric distributions stratified by categorical values.",
+            "target_insight": "How the area distribution of houses with guestrooms differs between preferred and non-preferred areas, indicating not only prevalence but also potential luxury/space trends.",
+            "output_fields": [
+              "area",
+              "prefarea"
+            ],
+            "chart_encodings": {
+              "x": "prefarea",
+              "y": "area",
+              "color": null,
+              "size": null,
+              "other_aesthetics": "Violin plots for 'area' stratified by 'prefarea'; only for houses with 'guestroom' == 'yes'; include median and box elements in violins"
+            }
+          },
+          "transformations": [
+            "Filter dataset to houses with 'guestroom' == 'yes'",
+            "Group filtered data by 'prefarea', extracting 'area' values"
+          ],
+          "data_preparation_steps": [
+            "df_guestroom = df[df['guestroom'] == 'yes']",
+            "data_per_area = [df_guestroom[df_guestroom['prefarea'] == val]['area'] for val in ['yes', 'no']]"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\ndf_guestroom = df[df['guestroom'] == 'yes']\nprefarea_categories = ['yes', 'no']\ndata_per_area = [df_guestroom[df_guestroom['prefarea'] == val]['area'] for val in prefarea_categories]\nfig, ax = plt.subplots(figsize=(7,6))\nparts = ax.violinplot(data_per_area, positions=np.arange(len(prefarea_categories)), widths=0.7, showmedians=True, showmeans=False, showextrema=True)\nfor pc in parts['bodies']:\n    pc.set_facecolor('#6baed6')\n    pc.set_alpha(0.65)\nax.set_xticks(np.arange(len(prefarea_categories)))\nax.set_xticklabels(prefarea_categories)\nax.set_xlabel('Preferred Area')\nax.set_ylabel('Area (sq ft)')\ntitle_str = \"Area Distribution for Houses with Guestrooms\" + \"\\nby Preferred vs Non-Preferred Areas\"\nax.set_title(title_str)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:17:52.466109",
+      "schema_context": "Table: Housing Prices Dataset\nRows: 545\nColumns: 13\n\nFIELD INFORMATION:\nField: price\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 219\n  - Semantic Meaning: This field represents the sale price, in whole currency units, at which individual residential properties were sold within a high-value housing market.\n  - Value Range: 1750000.0 to 13300000.0\n  - Mean: 4766729.25\n\nField: area\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 284\n  - Semantic Meaning: The 'area' field represents the size of a residential property in square feet, indicating the total floor space of homes listed in the housing prices dataset.\n  - Value Range: 1650.0 to 16200.0\n  - Mean: 5150.54\n\nField: bedrooms\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field indicates the number of bedrooms in a residential property, providing a count of distinct sleeping rooms typically used to assess housing size and value in real estate listings.\n  - Value Range: 1.0 to 6.0\n  - Mean: 2.97\n\nField: bathrooms\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field represents the number of bathrooms in a residential property, indicating a key attribute used to describe and value homes in housing markets.\n  - Value Range: 1.0 to 4.0\n  - Mean: 1.29\n\nField: stories\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field indicates the number of floors (stories) in a residential property, representing its vertical structure within the housing market context.\n  - Value Range: 1.0 to 4.0\n  - Mean: 1.81\n\nField: mainroad\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house has direct access to a main road, which may affect its accessibility and market value.\n\nField: guestroom\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house includes a dedicated guest room, specifying its availability as \"yes\" or \"no\" for each property listing.\n\nField: basement\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house has a basement, specifying the presence (\"yes\") or absence (\"no\") of this feature in a residential property.\n\nField: hotwaterheating\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a house is equipped with a hot water heating system (\"yes\" for presence, \"no\" for absence), relevant to home features and amenities in housing markets.\n\nField: airconditioning\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a house is equipped with air conditioning (\"yes\") or not (\"no\"), reflecting a key feature relevant to property amenities in the housing market.\n\nField: parking\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 4\n  - Semantic Meaning: This field represents the number of parking spaces available for each housing unit, indicating the level of parking provision associated with the property.\n  - Value Range: 0.0 to 3.0\n  - Mean: 0.69\n\nField: prefarea\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: Indicates whether a house is located in a preferred geographic area as designated by real estate or market criteria, with values denoting \"yes\" or \"no\".\n\nField: furnishingstatus\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 3\n  - Semantic Meaning: This field indicates the level of home furnishings provided with a property—whether it is fully furnished, partially furnished, or not furnished—when it is sold or rented.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"price\"\n  2. \"area\"\n  3. \"bedrooms\"\n  4. \"bathrooms\"\n  5. \"stories\"\n  6. \"mainroad\"\n  7. \"guestroom\"\n  8. \"basement\"\n  9. \"hotwaterheating\"\n  10. \"airconditioning\"\n  11. \"parking\"\n  12. \"prefarea\"\n  13. \"furnishingstatus\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['price'], df['area']",
+      "table_metadata": {
+        "table_name": "Housing Prices Dataset",
+        "file_path": "csv_c_squared\\206.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 206.csv (Dataset: Housing Prices Dataset)",
+        "original_filename": "206.csv",
+        "dataset_name": "Housing Prices Dataset",
+        "row_count": 545,
+        "column_count": 13,
+        "table_hash": 7398092576426359378,
+        "fields": [
+          {
+            "name": "price",
+            "clean_name": "price",
+            "camel_case_name": "price",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 219,
+            "min_value": 1750000.0,
+            "max_value": 13300000.0,
+            "mean_value": 4766729.247706422,
+            "median_value": 4340000.0,
+            "sample_values": "1750000, 1767150, 1820000, 1855000, 1890000, ..., 10850000, 11410000, 12215000, 12250000, 13300000",
+            "inferred_semantic_summary": "This field represents the sale price, in whole currency units, at which individual residential properties were sold within a high-value housing market."
+          },
+          {
+            "name": "area",
+            "clean_name": "area",
+            "camel_case_name": "area",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 284,
+            "min_value": 1650.0,
+            "max_value": 16200.0,
+            "mean_value": 5150.54128440367,
+            "median_value": 4600.0,
+            "sample_values": "1650, 1700, 1836, 1905, 1950, ..., 12900, 12944, 13200, 15600, 16200",
+            "inferred_semantic_summary": "The 'area' field represents the size of a residential property in square feet, indicating the total floor space of homes listed in the housing prices dataset."
+          },
+          {
+            "name": "bedrooms",
+            "clean_name": "bedrooms",
+            "camel_case_name": "bedrooms",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 6,
+            "min_value": 1.0,
+            "max_value": 6.0,
+            "mean_value": 2.9651376146788992,
+            "median_value": 3.0,
+            "sample_values": "1, 2, 3, 4, 5, 6",
+            "inferred_semantic_summary": "This field indicates the number of bedrooms in a residential property, providing a count of distinct sleeping rooms typically used to assess housing size and value in real estate listings."
+          },
+          {
+            "name": "bathrooms",
+            "clean_name": "bathrooms",
+            "camel_case_name": "bathrooms",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 4,
+            "min_value": 1.0,
+            "max_value": 4.0,
+            "mean_value": 1.2862385321100918,
+            "median_value": 1.0,
+            "sample_values": "1, 2, 3, 4",
+            "inferred_semantic_summary": "This field represents the number of bathrooms in a residential property, indicating a key attribute used to describe and value homes in housing markets."
+          },
+          {
+            "name": "stories",
+            "clean_name": "stories",
+            "camel_case_name": "stories",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 4,
+            "min_value": 1.0,
+            "max_value": 4.0,
+            "mean_value": 1.8055045871559634,
+            "median_value": 2.0,
+            "sample_values": "1, 2, 3, 4",
+            "inferred_semantic_summary": "This field indicates the number of floors (stories) in a residential property, representing its vertical structure within the housing market context."
+          },
+          {
+            "name": "mainroad",
+            "clean_name": "mainroad",
+            "camel_case_name": "mainroad",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "Indicates whether a house has direct access to a main road, which may affect its accessibility and market value."
+          },
+          {
+            "name": "guestroom",
+            "clean_name": "guestroom",
+            "camel_case_name": "guestroom",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "Indicates whether a house includes a dedicated guest room, specifying its availability as \"yes\" or \"no\" for each property listing."
+          },
+          {
+            "name": "basement",
+            "clean_name": "basement",
+            "camel_case_name": "basement",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "Indicates whether a house has a basement, specifying the presence (\"yes\") or absence (\"no\") of this feature in a residential property."
+          },
+          {
+            "name": "hotwaterheating",
+            "clean_name": "hotwaterheating",
+            "camel_case_name": "hotwaterheating",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "This field indicates whether a house is equipped with a hot water heating system (\"yes\" for presence, \"no\" for absence), relevant to home features and amenities in housing markets."
+          },
+          {
+            "name": "airconditioning",
+            "clean_name": "airconditioning",
+            "camel_case_name": "airconditioning",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "This field indicates whether a house is equipped with air conditioning (\"yes\") or not (\"no\"), reflecting a key feature relevant to property amenities in the housing market."
+          },
+          {
+            "name": "parking",
+            "clean_name": "parking",
+            "camel_case_name": "parking",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 4,
+            "min_value": 0.0,
+            "max_value": 3.0,
+            "mean_value": 0.6935779816513762,
+            "median_value": 0.0,
+            "sample_values": "0, 1, 2, 3",
+            "inferred_semantic_summary": "This field represents the number of parking spaces available for each housing unit, indicating the level of parking provision associated with the property."
+          },
+          {
+            "name": "prefarea",
+            "clean_name": "prefarea",
+            "camel_case_name": "prefarea",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 2,
+            "sample_values": "no, yes",
+            "inferred_semantic_summary": "Indicates whether a house is located in a preferred geographic area as designated by real estate or market criteria, with values denoting \"yes\" or \"no\"."
+          },
+          {
+            "name": "furnishingstatus",
+            "clean_name": "furnishingstatus",
+            "camel_case_name": "furnishingstatus",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 545,
+            "unique_values": 3,
+            "sample_values": "furnished, semi-furnished, unfurnished",
+            "inferred_semantic_summary": "This field indicates the level of home furnishings provided with a property—whether it is fully furnished, partially furnished, or not furnished—when it is sold or rented."
+          }
+        ],
+        "formatted_summary": "## Table 1: Housing_Prices_Dataset (545 rows × 13 columns)\n\n### Description\nData loaded from CSV file: 206.csv (Dataset: Housing Prices Dataset)\n\n### Schema (13 fields)\n  - price -- type: int64, values: 1750000, 1767150, 1820000, 1855000, 1890000, ..., 10850000, 11410000, 12215000, 12250000, 13300000\n  - area -- type: int64, values: 1650, 1700, 1836, 1905, 1950, ..., 12900, 12944, 13200, 15600, 16200\n  - bedrooms -- type: int64, values: 1, 2, 3, 4, 5, 6\n  - bathrooms -- type: int64, values: 1, 2, 3, 4\n  - stories -- type: int64, values: 1, 2, 3, 4\n  - mainroad -- type: object, values: no, yes\n  - guestroom -- type: object, values: no, yes\n  - basement -- type: object, values: no, yes\n  - hotwaterheating -- type: object, values: no, yes\n  - airconditioning -- type: object, values: no, yes\n  - parking -- type: int64, values: 0, 1, 2, 3\n  - prefarea -- type: object, values: no, yes\n  - furnishingstatus -- type: object, values: furnished, semi-furnished, unfurnished\n\n### Sample Data (first 5 rows)\n```\n      price  area  bedrooms  bathrooms  stories mainroad guestroom basement hotwaterheating airconditioning  parking prefarea furnishingstatus\n0  13300000  7420         4          2        3      yes        no       no              no             yes        2      yes        furnished\n1  12250000  8960         4          4        4      yes        no       no              no             yes        3       no        furnished\n2  12250000  9960         3          2        2      yes        no      yes              no              no        2      yes   semi-furnished\n3  12215000  7500         4          2        2      yes        no      yes              no             yes        3      yes        furnished\n4  11410000  7420         4          1        2      yes       yes      yes              no             yes        2       no        furnished\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

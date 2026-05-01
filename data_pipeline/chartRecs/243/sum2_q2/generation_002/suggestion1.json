@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the relationship between humidity and cloud cover in each city?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Faceted Scatter Plot (Grid per City)",
+      "design_rationale": "Since both humidity and cloud cover are numeric values and we're interested in their relationship per city, a faceted scatter plot offers a clear, direct view of correlation for each city. By splitting the data into subplots by 'Location', viewers can visually assess the trend, spread, and possible association for individual cities. The discrete levels of 'Cloud Cover (%)' will be visually salient (as it's only 0%, 50%, 75%) and the color encoding will represent cloud cover for further clarity.",
+      "target_insight": "Highlights whether higher humidity values are associated with higher cloud cover within and across cities, and whether the relationship varies from one city to another.",
+      "output_fields": [
+        "Location",
+        "Humidity (%)",
+        "Cloud Cover (%)"
+      ],
+      "chart_encodings": {
+        "x": "Humidity (%)",
+        "y": "Cloud Cover (%)",
+        "color": "Cloud Cover (%) (Continuous color encoding per point)",
+        "size": null,
+        "other_aesthetics": "Facets by Location, alpha set to improve visibility, grid layout"
+      }
+    },
+    "transformations": [
+      "For each unique value in df['Location'], filter dataframe to isolate records for that city.",
+      "No further aggregation: plot raw values per observation.",
+      "Ensure order and mapping for facets is consistent and clear."
+    ],
+    "data_preparation_steps": [
+      "Get unique city names from df['Location'] and count.",
+      "Create a grid of subplots (up to 8 cities) for plotting.",
+      "For each subplot, filter df to that city, and plot humidity vs cloud cover, coloring points by cloud cover."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\ncities = df[\"Location\"].unique()\nn_cities = len(cities)\nncols = 4\nnrows = int(np.ceil(n_cities / ncols))\nfig, axes = plt.subplots(nrows, ncols, figsize=(16, 9), sharex=True, sharey=True)\ncmap = mpl.colormaps[\"viridis\"]\nfor idx, city in enumerate(cities):\n    row = idx // ncols\n    col = idx % ncols\n    ax = axes[row, col]\n    city_df = df[df[\"Location\"] == city]\n    scatter = ax.scatter(city_df[\"Humidity (%)\"], city_df[\"Cloud Cover (%)\"], c=city_df[\"Cloud Cover (%)\"], cmap=cmap, alpha=0.7, edgecolor=\"k\")\n    ax.set_title(city)\n    ax.set_xlabel(\"Humidity (%)\")\n    ax.set_ylabel(\"Cloud Cover (%)\")\nfor i in range(n_cities, nrows * ncols):\n    fig.delaxes(axes[i // ncols, i % ncols])\ncbar_ax = fig.add_axes([0.92, 0.18, 0.015, 0.65])\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=min(df[\"Cloud Cover (%)\"]), vmax=max(df[\"Cloud Cover (%)\"])))\nfig.colorbar(sm, cax=cbar_ax, label=\"Cloud Cover (%)\")\nfig.suptitle(\"Humidity vs Cloud Cover Relationship\\n(Each subplot: One City, Points colored by Cloud Cover)\")\nplt.tight_layout(rect=(0,0,0.9,1))\nplt.show()"
+  },
+  "schema_based": true
+}

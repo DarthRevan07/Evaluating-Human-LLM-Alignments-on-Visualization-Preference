@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there noticeable differences in price between fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is ideal for comparing the distribution of car prices across the two 'fueltype' categories (gas and diesel), displaying median, quartiles, and outliers at a glance. Since 'fueltype' is categorical with only two values, and 'price' is continuous with wide variation, this chart type succinctly reveals typical price levels, spread, and any extreme values per fuel type, directly answering if noticeable differences exist. Boxplots are also robust for moderate data sizes (205 rows), and allow quick assessment of range and central tendency.",
+      "target_insight": "Whether gas and diesel cars show different median prices, variability, or presence of high/low outliers.",
+      "output_fields": [
+        "fueltype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "price",
+        "color": "fueltype (use distinct colors per category)",
+        "size": null,
+        "other_aesthetics": "box linewidth, outlier marker style, transparency"
+      }
+    },
+    "transformations": [
+      "No aggregation needed. Filter for only valid 'fueltype' values ('gas', 'diesel').",
+      "Extract columns 'fueltype' and 'price' for plotting."
+    ],
+    "data_preparation_steps": [
+      "df = df[df['fueltype'].isin(['gas', 'diesel'])]",
+      "Prepare list of price arrays per fueltype for boxplot."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\ndf = df[df['fueltype'].isin(['gas', 'diesel'])]\nlabels = ['gas', 'diesel']\ndata = [df[df['fueltype']=='gas']['price'].values,\n        df[df['fueltype']=='diesel']['price'].values]\nfig, ax = plt.subplots(figsize=(8,6))\nbox_colors = [\"#377eb8\", \"#ff7f00\"]\nbox = ax.boxplot(data,\n                 patch_artist=True,\n                 labels=labels,\n                 notch=True,\n                 showmeans=True,\n                 boxprops=dict(linewidth=2, facecolor=\"#377eb8\", alpha=0.4),\n                 medianprops=dict(color=\"#4daf4a\", linewidth=2),\n                 whiskerprops=dict(color=\"#555555\", linewidth=1.5),\n                 capprops=dict(color=\"#555555\", linewidth=1.5),\n                 flierprops=dict(marker=\"o\", markerfacecolor=\"#e41a1c\", alpha=0.75, markersize=8))\nfor patch, color in zip(box['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_title(\"Car Price Distribution by Fuel Type\\nMedian, Interquartile Range, and Outliers\", fontsize=16, pad=20)\nax.set_xlabel(\"fueltype\", fontsize=14)\nax.set_ylabel(\"price ($)\", fontsize=14)\nax.grid(axis=\"y\", linestyle=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "75",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the average writing score for each parental level of education category?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Plot",
+      "design_rationale": "A horizontal bar plot gives a clear comparison of the average writing score across different parental education categories. This categorical axis is ideal for 'parental level of education', which has six non-ordinal, nominal levels. Ordering the bars by mean score emphasizes differences and makes it easy to read with long labels. Color-coding the bars enhances visual distinction between categories.",
+      "target_insight": "Directly reveals which parental education category is associated with higher average writing scores, allowing easy ranking and interpretation.",
+      "output_fields": [
+        "parental level of education",
+        "writing score"
+      ],
+      "chart_encodings": {
+        "x": "writing score (mean)",
+        "y": "parental level of education",
+        "color": "parental level of education (distinct color per bar)",
+        "size": null,
+        "other_aesthetics": "sorted by writing score descending; gridlines for easier comparison"
+      }
+    },
+    "transformations": [
+      "Group df by df['parental level of education'] and calculate mean of df['writing score']",
+      "Sort aggregated means by writing score descending"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('parental level of education')['writing score'].mean().sort_values(ascending=False)",
+      "categories = df_grouped.index.tolist()",
+      "scores = df_grouped.values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ndf_grouped = df.groupby('parental level of education')['writing score'].mean().sort_values(ascending=False)\ncategories = df_grouped.index.tolist()\nscores = df_grouped.values\ncmap = mpl.colormaps['viridis'].resampled(len(categories))\ncolors = cmap(np.linspace(0, 1, len(categories)))\nfig, ax = plt.subplots(figsize=(9, 6))\nbars = ax.barh(categories, scores, color=colors, edgecolor='black')\nax.set_xlabel('Average Writing Score')\nax.set_title('Average Writing Score by Parental Level of Education\\n(sorted descending)', fontsize=14)\nax.set_xlim(0, max(scores)*1.1)\nax.grid(axis='x', linestyle='--', alpha=0.5)\nfor i, bar in enumerate(bars):\n    ax.text(bar.get_width()+1, bar.get_y() + bar.get_height()/2, f'{scores[i]:.1f}', va='center', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

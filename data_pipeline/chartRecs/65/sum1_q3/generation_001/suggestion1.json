@@ -1,0 +1,39 @@
+{
+  "table_name": "65",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there observable differences in Sales Volume across various Product Categories (Clothing, Electronics, Food) when Promotion is applied?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart effectively compares aggregated Sales Volume across Product Categories, split by Promotion status. This chart makes clear whether Promotion ('Yes' vs 'No') results in substantial changes for each category, and offers an immediate visual cue about the magnitude of differences. The schema indicates categorical splits with Product Category and Promotion, and Sales Volume as numeric, fitting the grouped bar well.",
+      "target_insight": "Determines if promotion-driven boosts in Sales Volume are universal or more pronounced for specific categories such as Electronics, Clothing, or Food.",
+      "output_fields": [
+        "Product Category",
+        "Promotion",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Product Category",
+        "y": "mean Sales Volume (aggregated over Product Category and Promotion)",
+        "color": "Promotion ('Yes','No')",
+        "size": null,
+        "other_aesthetics": "grouped bars, legend for Promotion, y-axis label for units"
+      }
+    },
+    "transformations": [
+      "Group df by 'Product Category' and 'Promotion', then aggregate to compute the mean of 'Sales Volume' for each group.",
+      "Reset index to get a flat DataFrame for plotting.",
+      "Sort by 'Product Category' for display order."
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Product Category','Promotion'], as_index=False)['Sales Volume'].mean()",
+      "df_grouped = df_grouped.sort_values('Product Category')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_grouped = df.groupby(['Product Category','Promotion'], as_index=False)['Sales Volume'].mean()\ndf_grouped = df_grouped.sort_values('Product Category')\ncategories = df_grouped['Product Category'].unique()\npromotion_types = ['Yes', 'No']\nwidth = 0.35\nx = np.arange(len(categories))\nfig, ax = plt.subplots(figsize=(8,6))\nfor i, promo in enumerate(promotion_types):\n    values = [df_grouped[(df_grouped['Product Category']==cat) & (df_grouped['Promotion']==promo)]['Sales Volume'].values[0] if not df_grouped[(df_grouped['Product Category']==cat) & (df_grouped['Promotion']==promo)].empty else 0 for cat in categories]\n    ax.bar(x + i*width, values, width, label=promo)\nax.set_xticks(x + width/2)\nax.set_xticklabels(categories)\nax.set_xlabel('Product Category')\nax.set_ylabel('Mean Sales Volume')\nax.set_title('Mean Sales Volume across Product Categories\\nGrouped by Promotion Status')\nax.legend(title='Promotion')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

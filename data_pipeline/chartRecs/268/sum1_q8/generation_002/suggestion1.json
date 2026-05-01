@@ -1,0 +1,45 @@
+{
+  "table_name": "268",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Which districts show accelerated population growth between the last two census periods (2011 and 2022)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Plot with Highlighting",
+      "design_rationale": "A horizontal bar plot is chosen for clear comparison across the 64 districts of Bangladesh, allowing rapid identification of districts with the highest acceleration in population growth rates between 2011 and 2022. Highlighting bars for districts with substantially higher acceleration (e.g. top 10) makes the focus visually immediate. This approach leverages categorical district names and numeric acceleration rates, with bars sorted by the calculated metric to answer the question directly.",
+      "target_insight": "The plot reveals, in rank order, which districts have the most pronounced acceleration in population growth between the last two census periods.",
+      "output_fields": [
+        "Name",
+        "Division",
+        "Population_2011",
+        "Population_2022"
+      ],
+      "chart_encodings": {
+        "x": "Population growth acceleration (computed difference in rate between 2001-2011 and 2011-2022)",
+        "y": "Name",
+        "color": "Top districts highlighted in distinct color",
+        "size": "null",
+        "other_aesthetics": "Horizontal layout; sorted descending; annotation for top districts"
+      }
+    },
+    "transformations": [
+      "Calculate growth rate for 2001-2011: (Population_2011 - Population_2001) / Population_2001",
+      "Calculate growth rate for 2011-2022: (Population_2022 - Population_2011) / Population_2011",
+      "Compute acceleration: growth_2011_2022 minus growth_2001_2011 for each district",
+      "Sort districts by absolute acceleration descending",
+      "Select top 10 districts for highlighting"
+    ],
+    "data_preparation_steps": [
+      "df[\"growth_2001_2011\"] = (df[\"Population_2011\"] - df[\"Population_2001\"]) / df[\"Population_2001\"]",
+      "df[\"growth_2011_2022\"] = (df[\"Population_2022\"] - df[\"Population_2011\"]) / df[\"Population_2011\"]",
+      "df[\"acceleration\"] = df[\"growth_2011_2022\"] - df[\"growth_2001_2011\"]",
+      "df_sorted = df.sort_values(\"acceleration\", ascending=False)",
+      "highlight_names = df_sorted[\"Name\"].iloc[:10].tolist()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Load data\ndf = pd.read_csv(\"csv_c_squared\\268.csv\")\n\n# Compute growth rates and acceleration\ndf[\"growth_2001_2011\"] = (df[\"Population_2011\"] - df[\"Population_2001\"]) / df[\"Population_2001\"]\ndf[\"growth_2011_2022\"] = (df[\"Population_2022\"] - df[\"Population_2011\"]) / df[\"Population_2011\"]\ndf[\"acceleration\"] = df[\"growth_2011_2022\"] - df[\"growth_2001_2011\"]\n\n# Sort districts for plotting\ndf_sorted = df.sort_values(\"acceleration\", ascending=False)\n\n# Highlight top 10 districts with highest acceleration\nhighlight_names = df_sorted[\"Name\"].iloc[:10].tolist()\ncolors = [\"tab:orange\" if name in highlight_names else \"tab:gray\" for name in df_sorted[\"Name\"]]\n\nfig, ax = plt.subplots(figsize=(10, 14))\ny_pos = np.arange(len(df_sorted))\nax.barh(y_pos, df_sorted[\"acceleration\"], color=colors, edgecolor=\"black\")\nax.set_yticks(y_pos)\nax.set_yticklabels(df_sorted[\"Name\"])\nax.invert_yaxis()\nax.set_xlabel(\"Acceleration in Population Growth Rate\\n(2011-2022 minus 2001-2011)\")\nax.set_title(\"Districts with Accelerated Population Growth (2011-2022)\\nTop 10 Highlighted\", fontsize=16)\n\n# Annotate top districts\ntop_acceleration = df_sorted[\"acceleration\"].iloc[:10].values\ntop_y = y_pos[:10]\nfor i, acc in enumerate(top_acceleration):\n    ax.text(acc + 0.005, top_y[i], f\"{acc:.3f}\", va=\"center\", fontsize=10, color=\"tab:orange\", fontweight=\"bold\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

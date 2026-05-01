@@ -1,0 +1,42 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which countries are outliers in terms of either extremely high or low rice production per hectare relative to their rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Rank Comparison Heatmap",
+      "design_rationale": "A heatmap visually encodes the difference between each country's rank in rice production and rice yield. Countries are sorted by production rank and colored by magnitude and direction of yield rank deviation, easily surfacing those with disproportionately high (or low) yield ranks for their production levels. This approach provides a global landscape overview, surfacing outliers by deviation.",
+      "target_insight": "Spot countries whose rice yield rank strongly diverges (positive or negative) from their rice production rank, indicating outlier efficiency or inefficiency.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Country (sorted by Rank of Rice Production)",
+        "y": "Difference: Rank of Rice Production minus Rank of Rice Yield",
+        "color": "Difference value (diverging colormap)",
+        "size": "null",
+        "other_aesthetics": "Horizontal colorbar, rotated x-labels, annotated top/bottom countries"
+      }
+    },
+    "transformations": [
+      "Remove rows with missing ranks",
+      "Compute difference: Rank of Rice Production - Rank of Rice Yield",
+      "Sort by Rank of Rice Production for meaningful axis order",
+      "Flag countries with largest positive/negative difference as outliers"
+    ],
+    "data_preparation_steps": [
+      "df_rank = df.dropna(subset=['Rank of Rice Production', 'Rank of Rice Yield'])",
+      "df_rank['Rank Difference'] = df_rank['Rank of Rice Production'] - df_rank['Rank of Rice Yield']",
+      "df_rank = df_rank.sort_values('Rank of Rice Production')",
+      "Identify top 3 and bottom 3 countries by Rank Difference for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf_rank = df.dropna(subset=['Rank of Rice Production', 'Rank of Rice Yield'])\ndf_rank['Rank Difference'] = df_rank['Rank of Rice Production'] - df_rank['Rank of Rice Yield']\ndf_rank = df_rank.sort_values('Rank of Rice Production')\ncountries = df_rank['Country']\ndiff = df_rank['Rank Difference']\nfig, ax = plt.subplots(figsize=(14, 5))\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.TwoSlopeNorm(vcenter=0, vmin=diff.min(), vmax=diff.max())\nbars = ax.bar(countries, diff, color=[cmap(norm(val)) for val in diff], alpha=0.8)\nax.set_ylabel('Rank Difference (Production - Yield)')\nax.set_xlabel('Country (sorted by Production Rank)')\nax.set_title('Deviation Between Rice Production Rank and Yield Rank\\nHighly Divergent Countries Highlighted')\nplt.xticks(rotation=90, fontsize=8)\ncbar = plt.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation='horizontal', pad=0.15)\ncbar.set_label('Rank Difference (Production minus Yield)')\n# Annotate top 3 and bottom 3 outliers\nsorted_idx = np.argsort(diff)\ntop_idx = sorted_idx[-3:]\nbottom_idx = sorted_idx[:3]\nfor idx in np.concatenate([top_idx, bottom_idx]):\n    val = diff.iloc[idx]\n    country = countries.iloc[idx]\n    ax.text(idx, val+2*np.sign(val), country, color='black', fontsize=8, ha='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

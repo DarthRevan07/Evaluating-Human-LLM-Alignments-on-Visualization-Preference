@@ -1,0 +1,42 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Does the presence of a guestroom influence the price for homes with similar area?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Local Regression (LOESS/LOWESS) Trendlines",
+      "design_rationale": "A scatter plot of 'area' vs 'price' with points colored by 'guestroom' presence visualizes the core relationship for the entire dataset, while locally weighted regression (LOWESS) lines for each 'guestroom' group make it easy to spot whether, for a given area, the price trajectory differs depending on the presence of a guestroom. This allows us to detect not just average shifts but if the effect of a guestroom changes as houses get larger, and whether the price premium is constant, increasing, or diminishing. Jittering area or alpha blending reduces overplotting on overlapping areas.",
+      "target_insight": "Reveals the extent and nature of any price premium for guestrooms at different area ranges and whether price-area relationships diverge between groups.",
+      "output_fields": [
+        "area",
+        "price",
+        "guestroom"
+      ],
+      "chart_encodings": {
+        "x": "area",
+        "y": "price",
+        "color": "guestroom ('yes' vs 'no')",
+        "size": null,
+        "other_aesthetics": "Alpha blending (opacity) for overlapping points; LOWESS trendlines per group; Add modest jitter (horizontal) to reduce point overplotting."
+      }
+    },
+    "transformations": [
+      "Map 'guestroom' column directly for coloring.",
+      "Fit LOWESS/LOESS smooth lines to (area, price) for each 'guestroom' group.",
+      "Apply alpha blending to points for legibility.",
+      "Apply slight jitter to 'area' values to help differentiate overplotted points."
+    ],
+    "data_preparation_steps": [
+      "Create a new column 'area_jitter' by adding random noise (~N(0,100)) to 'area' values.",
+      "Split the data by 'guestroom' value for independent LOWESS fits.",
+      "Assign colors: 'yes'=blue, 'no'=orange.",
+      "Adjust plot style (e.g., alpha=0.5 for points) for legibility."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom statsmodels.nonparametric.smoothers_lowess import lowess\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\nguest_colors = {'yes': '#1f77b4', 'no': '#ff7f0e'}\nnp.random.seed(0)\ndf['area_jitter'] = df['area'] + np.random.normal(0, 100, size=len(df))\nfig, ax = plt.subplots(figsize=(10,7))\nfor guest_val in ['yes','no']:\n    sub = df[df['guestroom']==guest_val]\n    ax.scatter(\n        sub['area_jitter'],\n        sub['price'],\n        c=guest_colors[guest_val],\n        alpha=0.5,\n        edgecolor='w',\n        label='Guestroom: ' + guest_val,\n        s=36\n    )\n    lowess_fit = lowess(sub['price'], sub['area'], frac=0.3, it=0)\n    ax.plot(\n        lowess_fit[:, 0],\n        lowess_fit[:, 1],\n        color=guest_colors[guest_val],\n        lw=2.5,\n        alpha=0.9,\n        label=\"LOWESS - Guestroom: \" + guest_val\n    )\nax.set_xlabel(\"Area (sq ft)\")\nax.set_ylabel(\"Price\")\nax.set_title(\"Home Price vs Area, Colored by Guestroom Presence\\nWith LOESS Trendlines\")\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

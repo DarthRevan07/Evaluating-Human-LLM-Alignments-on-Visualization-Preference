@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "What trends are observed in the number of purchases among customers who are part of the loyalty program compared to those who are not?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Barplot (Means and Standard Errors)",
+      "design_rationale": "A barplot of group means with error bars illustrates the average number of purchases for each loyalty segment, and highlights statistical differences in central tendency, while also representing the uncertainty (standard error) due to sample variability. This provides a crisp summary view, ideal for actionable business communication.",
+      "target_insight": "Quantifies and compares how much more (or less) on average loyalty program members purchase compared to non-members, with error bars indicating confidence in the observed difference.",
+      "output_fields": [
+        "NumberOfPurchases",
+        "LoyaltyProgram"
+      ],
+      "chart_encodings": {
+        "x": "LoyaltyProgram",
+        "y": "group mean of NumberOfPurchases",
+        "color": "LoyaltyProgram",
+        "size": null,
+        "other_aesthetics": "error bars (standard error), value annotations"
+      }
+    },
+    "transformations": [
+      "Group data by df['LoyaltyProgram'] == 0 or 1",
+      "Calculate the mean and standard error of 'NumberOfPurchases' for each group"
+    ],
+    "data_preparation_steps": [
+      "Create a grouped dataframe of mean and standard error: df.groupby('LoyaltyProgram')['NumberOfPurchases'].agg(['mean','count','std'])",
+      "Calculate standard error as std / sqrt(count) for each group",
+      "Prepare lists of group means and errors for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\63.csv')\ngroup_stats = df.groupby('LoyaltyProgram')['NumberOfPurchases'].agg(['mean','count','std']).reset_index()\nse = group_stats['std'] / np.sqrt(group_stats['count'])\nmeans = group_stats['mean']\nlabels = ['Not Enrolled', 'Enrolled']\ncolors = ['#E06666', '#6FA8DC']\nx = np.arange(len(labels))\nplt.figure(figsize=(7,5))\nbars = plt.bar(x, means, yerr=se, color=colors, capsize=8, alpha=0.9)\nfor i, bar in enumerate(bars):\n    plt.text(bar.get_x()+bar.get_width()/2, bar.get_height()+0.1, f'{means[i]:.2f}', ha='center', va='bottom', fontsize=11)\nplt.xticks(x, labels)\nplt.ylabel('Average Number of Purchases')\nplt.xlabel('Loyalty Program Membership')\nplt.title('Average Number of Purchases\\nfor Loyalty Program Members vs Non-members')\nplt.grid(True, axis='y', linestyle='--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable trend in property prices based on the number of stories?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with Aggregated Mean Line Overlay",
+      "design_rationale": "A scatterplot allows visualization of every property, showing individual prices for each story count (horizontal jitter for readability). Overlaying a mean price line per 'stories' group summarizes group-level trends. This dual-level approach visually demonstrates whether price increases with stories both in raw data and in group averages, capturing both granular and aggregate insights.",
+      "target_insight": "How do individual property prices cluster (or spread) for each stories level, and does average price clearly rise or fall with more stories?",
+      "output_fields": [
+        "stories",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "stories",
+        "y": "price",
+        "color": "price (continuous gradient)",
+        "size": null,
+        "other_aesthetics": "horizontal jitter by stories; mean line per group; scatter alpha=0.4"
+      }
+    },
+    "transformations": [
+      "Compute mean 'price' per 'stories'",
+      "Apply horizontal jitter to 'stories' for scatterpoints"
+    ],
+    "data_preparation_steps": [
+      "Generate jittered x positions for df['stories']",
+      "Normalize price for color gradient",
+      "Calculate group means for overlay line"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\206.csv')\nstories = df['stories']\nprice = df['price']\ncmap = mpl.colormaps['viridis']\n# Jitter by stories for scatterplot\nnp.random.seed(12)\njitter = np.random.uniform(-0.15, 0.15, size=len(df))\nx_vals = stories + jitter\nnorm = mpl.colors.Normalize(vmin=price.min(), vmax=price.max())\nfig, ax = plt.subplots(figsize=(9,6))\nsc = ax.scatter(x_vals, price, c=price, cmap=cmap, norm=norm, alpha=0.4, edgecolors='none')\n# Overlay mean line\nstories_means = df.groupby('stories')['price'].mean()\nstory_sorted = sorted(stories_means.index)\nmean_prices = [stories_means[s] for s in story_sorted]\nax.plot(story_sorted, mean_prices, color='red', lw=2, marker='o', label='Mean price')\nax.set_xlabel('stories')\nax.set_ylabel('price')\nax.set_title('Property Prices by Stories with Group Mean Overlay')\nax.set_xticks(story_sorted)\nax.legend(loc='upper left', frameon=True)\ncbar = plt.colorbar(sc)\ncbar.set_label('price')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

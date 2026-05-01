@@ -1,0 +1,45 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which specific CarName entries stand out for combining high citympg with low price, and what fueltype do they use?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar Chart (Horizontal) Sorted by Standout Score",
+      "design_rationale": "To answer which CarNames 'combine' high citympg and low price, a composite metric (score) can be constructed (e.g., citympg divided by price, normalizing for price), then CarNames sorted by this score. A horizontal bar chart allows easy ranking and direct comparison; coloring bars by fueltype adds a categorical layer. This approach highlights not just individual cars but the best CarNames in context, bringing out relative performers and the influence of fueltype.",
+      "target_insight": "Rank CarNames for optimal efficiency/value (highest citympg/price score), show their fueltype, and spotlight the ultimate winners.",
+      "output_fields": [
+        "CarName",
+        "citympg",
+        "price",
+        "fueltype",
+        "score"
+      ],
+      "chart_encodings": {
+        "x": "score (citympg/price)",
+        "y": "CarName (sorted, horizontal)",
+        "color": "fueltype (bar color)",
+        "size": null,
+        "other_aesthetics": "Sorted bars; top N highlight; grid; annotation with numeric score"
+      }
+    },
+    "transformations": [
+      "Create a new score: citympg divided by price",
+      "For each CarName, aggregate (or select top vehicle per CarName if duplicates) to avoid over-representation",
+      "Sort CarNames by score descending and select top N (e.g. 15)",
+      "Assign bar color by fueltype"
+    ],
+    "data_preparation_steps": [
+      "Compute df['score'] = df['citympg']/df['price']",
+      "For CarNames with duplicates, retain highest score per CarName",
+      "Sort resulting dataframe by 'score' descending",
+      "Select top 15 rows for plotting",
+      "Prepare color mapping for fueltype"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf['score'] = df['citympg']/df['price']\ndf_best = df.sort_values('score', ascending=False).groupby('CarName').first().reset_index()\ndf_best = df_best.sort_values('score', ascending=False).head(15)\nfueltype_palette = {'gas': '#1f77b4', 'diesel': '#ff7f0e'}\nbar_colors = df_best['fueltype'].map(fueltype_palette)\nfig, ax = plt.subplots(figsize=(11,7))\nbars = ax.barh(df_best['CarName'], df_best['score'], color=bar_colors)\nfor i, (score, cname) in enumerate(zip(df_best['score'], df_best['CarName'])):\n    ax.text(score+0.0001, i, f'{score:.4f}', va='center', fontsize=9, color='black')\nax.set_xlabel('Standout Score: citympg / price')\nax.set_title('Top 15 Cars: High CityMPG/Low Price Combo\\nRanked by Value/Performance Score and fueltype')\nax.set_ylabel('CarName')\nax.tick_params(axis='y', labelsize=10)\nax.invert_yaxis()\nax.grid(axis='x', alpha=0.2)\nhandles = [mpl.patches.Patch(color=fueltype_palette[ftype], label=ftype) for ftype in fueltype_palette]\nax.legend(handles=handles, title='fueltype', loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

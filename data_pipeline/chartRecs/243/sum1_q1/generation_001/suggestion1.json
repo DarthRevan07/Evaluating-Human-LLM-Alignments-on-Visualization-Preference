@@ -1,0 +1,39 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does temperature vary across different metropolitan locations at specific observation times?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart (multi-series, facet grid style)",
+      "design_rationale": "A multi-series line chart with separate lines for each city effectively reveals how temperature trends differ spatially and temporally. It leverages the exact timestamps ('Observation Time') and city identities, allowing users to trace the time evolution of temperature for all metropolitan locations simultaneously. Facetting by 'Location' (cities) shows detailed within-city patterns and facilitates rapid city-to-city comparison. This approach is clear for both overview and drill-down, especially suited to highlighting how temperature fluctuates under varying observation times for each city.",
+      "target_insight": "It shows both intra-city temperature evolution over time and cross-city differences at each observation timestamp, enabling identification of cities with peaks, troughs, or unusual trends.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Temperature (°C)",
+        "color": "Location",
+        "size": null,
+        "other_aesthetics": "Separate line per Location (legend); time labels angled; grid; clear axis titles"
+      }
+    },
+    "transformations": [
+      "Convert 'Observation Time' to pandas datetime for correct ordering and plotting",
+      "Sort dataframe by 'Location' and 'Observation Time' for consistent line plotting",
+      "No aggregation: plot all records for temporal variation"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "df.sort_values(['Location', 'Observation Time'], inplace=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\ndf.sort_values(['Location', 'Observation Time'], inplace=True)\nlocations = df['Location'].unique()\ncolors = mpl.colormaps['tab10'].resampled(len(locations))\ncolor_map = {loc: colors(i) for i, loc in enumerate(locations)}\nfig, ax = plt.subplots(figsize=(13, 7))\nfor loc in locations:\n    city_df = df[df['Location'] == loc]\n    ax.plot(city_df['Observation Time'], city_df['Temperature (°C)'], label=loc, color=color_map[loc], marker='o', linewidth=2)\nax.set_xlabel('Observation Time')\nax.set_ylabel('Temperature (°C)')\nax.set_title('Temperature Trends Across Metropolitan Locations at Specific Observation Times')\nax.grid(True, linestyle='--', alpha=0.45)\nplt.xticks(rotation=35)\nax.legend(title='Location', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

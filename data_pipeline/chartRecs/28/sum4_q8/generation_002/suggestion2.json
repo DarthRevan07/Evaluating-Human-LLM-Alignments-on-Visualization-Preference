@@ -1,0 +1,43 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "How does the proportion of manual versus automatic gear box types change over production years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Side-by-side Bar Chart (Normalized)",
+      "design_rationale": "By representing each production year as a grouped set of bars--one for manual, one for automatic--this chart enables direct comparison of proportions for each year, emphasizing periods of rapid change, crossover, or dominance. The approach is ideal for categorical comparison across time, and the normalization allows the observer to focus solely on proportion rather than absolute volume.",
+      "target_insight": "Reveals the detailed annual competition between manual and automatic transmission types, identifying years where one overtakes the other and allowing for detection of sudden market shifts.",
+      "output_fields": [
+        "Prod. year",
+        "Gear box type",
+        "ID"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Proportion of cars for each gear box type",
+        "color": "Gear box type (manual vs automatic, contrasting bar fills)",
+        "size": null,
+        "other_aesthetics": "Grouped side-by-side bars, legend, axis ticks for recent decades emphasized"
+      }
+    },
+    "transformations": [
+      "Filter df to only include 'Gear box type' entries 'Manual' and 'Automatic'",
+      "Group df by 'Prod. year' and 'Gear box type', count number of cars per group",
+      "Pivot table to get counts for each gear box type per year",
+      "Normalize counts to proportions for each year"
+    ],
+    "data_preparation_steps": [
+      "df_filtered = df[df['Gear box type'].isin(['Manual', 'Automatic'])]",
+      "df_grouped = df_filtered.groupby(['Prod. year', 'Gear box type'])['ID'].count().reset_index()",
+      "df_pivot = df_grouped.pivot(index='Prod. year', columns='Gear box type', values='ID')",
+      "df_pivot_fill = df_pivot.fillna(0)",
+      "df_pivot_prop = df_pivot_fill.div(df_pivot_fill.sum(axis=1), axis=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf_filtered = df[df['Gear box type'].isin(['Manual', 'Automatic'])]\ndf_grouped = df_filtered.groupby(['Prod. year', 'Gear box type'])['ID'].count().reset_index()\ndf_pivot = df_grouped.pivot(index='Prod. year', columns='Gear box type', values='ID')\ndf_pivot_fill = df_pivot.fillna(0)\ndf_pivot_prop = df_pivot_fill.div(df_pivot_fill.sum(axis=1), axis=0)\nprod_years = df_pivot_prop.index.values\ngap = 0.3\nwidth = 0.4\nmanual = df_pivot_prop['Manual'].values if 'Manual' in df_pivot_prop.columns else np.zeros(len(prod_years))\nautomatic = df_pivot_prop['Automatic'].values if 'Automatic' in df_pivot_prop.columns else np.zeros(len(prod_years))\nfig, ax = plt.subplots(figsize=(12,6))\ncolor_map = mpl.colormaps['tab10']\nax.bar(prod_years-gap/2, manual, width=width, color=color_map(0), label='Manual', alpha=0.85)\nax.bar(prod_years+gap/2, automatic, width=width, color=color_map(1), label='Automatic', alpha=0.85)\nax.set_xlabel('Prod. year')\nax.set_ylabel('Proportion')\nax.set_title('Yearly Proportions of Manual vs Automatic Gear Box Types')\nax.legend(title='Gear box type')\nax.set_xticks(prod_years[::2])\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Which genres appear most often during periods of stylistic transition, as indicated by overlapping or mixed genre entries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Genre Co-occurrence Heatmap",
+      "design_rationale": "A heatmap allows us to visualize the co-occurrence of pairs of genres in the same artworks during periods of stylistic transition. This unconventional chart type uncovers deep insights into which genre pairs are most likely to overlap, highlighting relationships and intersections between artistic styles. By focusing only on mixed/overlapping genre entries, the heatmap responds directly to the question and reveals patterns that would be obscured in simple counts.",
+      "target_insight": "The most common genre pairings during transitional periods, indicating stylistic affinities or crossover movements.",
+      "output_fields": [
+        "genre"
+      ],
+      "chart_encodings": {
+        "x": "Genre (first in pair)",
+        "y": "Genre (second in pair)",
+        "color": "Co-occurrence count (how often genres appear together in mixed-genre artworks)",
+        "size": "null",
+        "other_aesthetics": "Annotate cells with count; use color intensity for frequency"
+      }
+    },
+    "transformations": [
+      "Filter df to artworks with mixed genre entries (df['genre'] contains commas).",
+      "Split genre entries into individual genres; for each artwork, create all unique unordered pairs of genres.",
+      "Aggregate co-occurrence counts for each genre pair across all transitional artworks."
+    ],
+    "data_preparation_steps": [
+      "mask = df['genre'].str.contains(',')",
+      "df_mixed = df[mask]",
+      "genres_list = df_mixed['genre'].str.split(',').apply(lambda x: [g.strip() for g in x])",
+      "from collections import Counter\npair_counter = Counter()\nfor genre_group in genres_list:\n    pairs = set()\n    for i in range(len(genre_group)):\n        for j in range(i+1, len(genre_group)):\n            sorted_pair = tuple(sorted([genre_group[i], genre_group[j]]))\n            pairs.add(sorted_pair)\n    pair_counter.update(pairs)",
+      "unique_genres = sorted(set(genres_mixed.unique()))",
+      "heatmap_matrix = np.zeros((len(unique_genres), len(unique_genres)), dtype=int)\nfor (g1, g2), count in pair_counter.items():\n    i = unique_genres.index(g1)\n    j = unique_genres.index(g2)\n    heatmap_matrix[i, j] = count\n    heatmap_matrix[j, i] = count"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom collections import Counter\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nmask = df['genre'].str.contains(',')\ndf_mixed = df[mask]\ngenres_list = df_mixed['genre'].str.split(',').apply(lambda x: [g.strip() for g in x])\ngenres_flat = df_mixed['genre'].str.split(',').explode().str.strip()\nunique_genres = sorted(set(genres_flat.unique()))\npair_counter = Counter()\nfor genre_group in genres_list:\n    pairs = set()\n    for i in range(len(genre_group)):\n        for j in range(i+1, len(genre_group)):\n            sorted_pair = tuple(sorted([genre_group[i], genre_group[j]]))\n            pairs.add(sorted_pair)\n    pair_counter.update(pairs)\nheatmap_matrix = np.zeros((len(unique_genres), len(unique_genres)), dtype=int)\nfor (g1, g2), count in pair_counter.items():\n    i = unique_genres.index(g1)\n    j = unique_genres.index(g2)\n    heatmap_matrix[i, j] = count\n    heatmap_matrix[j, i] = count\nfig, ax = plt.subplots(figsize=(8,8))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_matrix, cmap=cmap)\nax.set_xticks(np.arange(len(unique_genres)))\nax.set_yticks(np.arange(len(unique_genres)))\nax.set_xticklabels(unique_genres, rotation=45, ha='right')\nax.set_yticklabels(unique_genres)\ntitle = 'Genre Co-occurrence Heatmap During Stylistic Transition\\n(Pairwise Overlaps in Mixed Genre Artworks)'\nax.set_title(title)\nfor i in range(len(unique_genres)):\n    for j in range(len(unique_genres)):\n        val = heatmap_matrix[i, j]\n        if val > 0:\n            ax.text(j, i, str(val), ha='center', va='center', color='white', fontsize=8)\nfig.colorbar(im, ax=ax, label='Co-occurrence Count')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

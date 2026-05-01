@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Are there any outliers or anomalies in the 365-day % change or 30-day % change values that stand out when compared across all stock symbols?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot with annotated outliers",
+      "design_rationale": "A boxplot succinctly summarizes the spread, median, and outlier detection for both 365-day % change and 30-day % change across all stocks. By plotting both metrics side by side, viewers can directly compare the distribution and immediately spot any extreme outliers — which is crucial with this numeric, relatively wide-range schema. Annotating outlier stock symbols adds actionable context, pointing out which companies are driving unusual performance.",
+      "target_insight": "This visualization reveals stocks with exceptionally high or low annual or monthly percentage changes — highlighting the specific symbols that are statistical outliers relative to the index.",
+      "output_fields": [
+        "365 d % chng",
+        "30 d % chng",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "Metric (categorical: '365 d % chng', '30 d % chng')",
+        "y": "Value (for each metric, the actual % change)",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "outlier points are annotated with stock Symbol; grid shows spread"
+      }
+    },
+    "transformations": [
+      "Stack '365 d % chng' and '30 d % chng' into a single long-format column for boxplot",
+      "Identify outlier points for each metric using 1.5*IQR rule",
+      "Map outlier values back to their 'Symbol' for annotation"
+    ],
+    "data_preparation_steps": [
+      "Create a long-format DataFrame with columns: 'Metric' (either '365 d % chng' or '30 d % chng'), 'Value', and 'Symbol'",
+      "For each metric, calculate Q1, Q3, and IQR; flag points as outliers if Value < Q1 - 1.5*IQR or Value > Q3 + 1.5*IQR",
+      "Prepare a list of outlier Symbol/Value/Metric tuples for annotation on the chart"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\n\nmetrics = [\"365 d % chng\", \"30 d % chng\"]\n\nlong_df = pd.concat([\n    pd.DataFrame({\"Metric\": metric, \"Value\": df[metric], \"Symbol\": df[\"Symbol\"]}) for metric in metrics\n], ignore_index=True)\n\noutlier_dict = {}\nfor metric in metrics:\n    vals = long_df.loc[long_df[\"Metric\"] == metric, \"Value\"]\n    q1 = np.percentile(vals, 25)\n    q3 = np.percentile(vals, 75)\n    iqr = q3 - q1\n    lower = q1 - 1.5 * iqr\n    upper = q3 + 1.5 * iqr\n    mask = (vals < lower) | (vals > upper)\n    outlier_symbols = long_df.loc[(long_df[\"Metric\"] == metric) & mask, [\"Symbol\", \"Value\"]]\n    outlier_dict[metric] = outlier_symbols\n\nfig, ax = plt.subplots(figsize=(9,6))\n\nbox_data = [long_df.loc[long_df[\"Metric\"] == metric, \"Value\"] for metric in metrics]\nax.boxplot(box_data, vert=True, patch_artist=True, labels=metrics, boxprops=dict(facecolor=\"#d0e3f0\", color=\"#005fa3\"), whiskerprops=dict(color=\"#005fa3\"), capprops=dict(color=\"#005fa3\"), medianprops=dict(color=\"#d12020\"))\n\nfor i, metric in enumerate(metrics):\n    for idx, row in outlier_dict[metric].iterrows():\n        x = i + 1\n        y = row[\"Value\"]\n        ax.plot(x, y, marker=\"o\", color=\"#ff9900\", zorder=5)\n        ax.text(x+0.1, y, row[\"Symbol\"], fontsize=9, color=\"#005fa3\", verticalalignment=\"center\")\n\nax.set_ylabel(\"Percentage Change\")\nax.set_title(\"Distribution of 365-day and 30-day % Change Across NIFTY-50 Stocks\\nOutliers Annotated With Symbol\", fontsize=14)\nax.grid(True, linestyle=\"--\", alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

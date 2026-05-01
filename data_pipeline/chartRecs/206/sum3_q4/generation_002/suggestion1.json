@@ -1,0 +1,36 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How do prices differ across the three furnishing status categories: furnished, semi-furnished, and unfurnished?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "Boxplots are ideal for exploring distributions across categorical groups. The furnishing status field divides the market into three clear categories. By visualizing the full spread, central tendency, and outliers of prices for each furnishingstatus, users can compare not just average prices, but the variability and skewness in pricing. This answers the question by showing whether furnished or unfurnished homes are priced higher, and the range of prices within each group.",
+      "target_insight": "This visualization reveals the median price, interquartile range, and the presence of outliers for each furnishing status. It helps users see both general trends and unusual cases, answering if furnished homes consistently command higher prices or if one category is notably more variable.",
+      "output_fields": [
+        "price",
+        "furnishingstatus"
+      ],
+      "chart_encodings": {
+        "x": "furnishingstatus",
+        "y": "price",
+        "color": "By box color for each furnishingstatus",
+        "size": "null",
+        "other_aesthetics": "show fliers; modify box color palette for distinction"
+      }
+    },
+    "transformations": [
+      "Group df by 'furnishingstatus' and extract 'price' for each category"
+    ],
+    "data_preparation_steps": [
+      "Read the dataset",
+      "Prepare a list of prices for each unique value in df['furnishingstatus'] in order: furnished, semi-furnished, unfurnished"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\206.csv')\nstatus_order = ['furnished', 'semi-furnished', 'unfurnished']\nprices_by_status = [df[df['furnishingstatus']==status]['price'] for status in status_order]\nbox_colors = ['#7bb1fa','#96e072','#f9d057']\nfig, ax = plt.subplots(figsize=(8,6))\nbox = ax.boxplot(prices_by_status, patch_artist=True, labels=status_order, showfliers=True, medianprops={'color':'black'}, whiskerprops={'color':'gray'}, boxprops={'linewidth':2})\nfor patch, color in zip(box['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_xlabel('furnishingstatus', fontsize=13)\nax.set_ylabel('price', fontsize=13)\nax.set_title('Distribution of Housing Prices Across Furnishing Status Categories', fontsize=15, fontweight='bold')\nax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x,_: '{:,}'.format(int(x))))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

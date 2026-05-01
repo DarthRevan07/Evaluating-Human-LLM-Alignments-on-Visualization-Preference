@@ -1,0 +1,40 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "During which years did the fertility rate experience its most significant decline, and what was the impact on population growth?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Temporal Highlight & Annotated Arrows",
+      "design_rationale": "A scatterplot with arrows visualizes both absolute and change dynamics: plotting Fertility Rate against Yearly Change in global population. Each point is a year, and arrows illustrate the trajectory from one time point (year) to the next, making periods of sharp decline or change visually intuitive. Color encoding by 'Year' allows temporal identification—darker for earlier years, lighter for recent.",
+      "target_insight": "Period when fertility drops most sharply and corresponding population growth changes become immediately visible. Annotated arrows amplify viewer's understanding of causality and sequence.",
+      "output_fields": [
+        "Year",
+        "Fertility Rate",
+        "Yearly Change"
+      ],
+      "chart_encodings": {
+        "x": "Fertility Rate",
+        "y": "Yearly Change",
+        "color": "Year (colormap continuous from dark to light)",
+        "size": null,
+        "other_aesthetics": "Arrows between points to show direction of change; Annotation for largest drop; Color bar for Year"
+      }
+    },
+    "transformations": [
+      "Convert 'Yearly Change' from string to integer (removing commas).",
+      "Ensure 'Year' as integer for colormap.",
+      "Order data by 'Year' ascending.",
+      "Calculate arrows/lines between successive points."
+    ],
+    "data_preparation_steps": [
+      "df['Yearly Change'] = df['Yearly Change'].str.replace(',','').astype(int)",
+      "df.sort_values('Year', inplace=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\94.csv\")\ndf['Yearly Change'] = df['Yearly Change'].str.replace(',','').astype(int)\ndf.sort_values('Year', inplace=True)\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['Year'].min(), vmax=df['Year'].max())\nfig, ax = plt.subplots(figsize=(10,6))\ncolors = cmap(norm(df['Year']))\nax.scatter(df['Fertility Rate'], df['Yearly Change'], c=colors, s=70, edgecolor='k')\nfor i in range(len(df['Year'])-1):\n    ax.annotate('',\n        xy=(df['Fertility Rate'].iloc[i+1], df['Yearly Change'].iloc[i+1]),\n        xytext=(df['Fertility Rate'].iloc[i], df['Yearly Change'].iloc[i]),\n        arrowprops=dict(arrowstyle='->', color=cmap(norm(df['Year'].iloc[i+1])), lw=2, alpha=0.7)\n    )\n# Mark the largest fertility drop\nfertility_diff = df['Fertility Rate'].diff()\nlargest_drop_idx = fertility_diff.abs().idxmax()\nlargest_drop_year = df['Year'].iloc[largest_drop_idx]\nax.text(df['Fertility Rate'].iloc[largest_drop_idx], df['Yearly Change'].iloc[largest_drop_idx],\n        'Largest Decline\\nYear: '+str(largest_drop_year), fontsize=11, ha='right', color='red')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', label='Year')\nax.set_xlabel('Fertility Rate', fontsize=12)\nax.set_ylabel('Yearly Change in Population', fontsize=12)\nplt.title('Fertility Rate vs Population Growth\\nDecline Trajectories by Year', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

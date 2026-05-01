@@ -1,0 +1,39 @@
+{
+  "table_name": "192",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What is the relationship between Luminosity and Radius for stars of the same Star type?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Grouped boxplot of (Luminosity/Luminosity mean)-per-(Radius/Ro) bins, for each Star type",
+      "design_rationale": "Boxplots summarize distribution, making it easy to compare central tendency and spread across categories. By binning stars by Radius(R/Ro) (e.g., quartiles) and plotting Luminosity(L/Lo) distribution per bin, grouped by Star type, we reveal how the Luminosity-Radius relationship varies within types and across radial size classes, exposing trends or outliers.",
+      "target_insight": "This chart shows the distribution of Luminosity for stars of each type within different radius bins, allowing visual comparison of how Luminosity scales with Radius per Star type.",
+      "output_fields": [
+        "Luminosity(L/Lo)",
+        "Radius(R/Ro)",
+        "Star type"
+      ],
+      "chart_encodings": {
+        "x": "Radius(R/Ro) bins (quartiles)",
+        "y": "Luminosity(L/Lo)",
+        "color": "Star type (hue in grouped boxplot)",
+        "size": null,
+        "other_aesthetics": "Box width reflects number of stars per bin; legend by Star type"
+      }
+    },
+    "transformations": [
+      "Bin 'Radius(R/Ro)' into quartiles to define size categories",
+      "For each Star type and within each radius bin, compute distribution of 'Luminosity(L/Lo)'"
+    ],
+    "data_preparation_steps": [
+      "Create 'Radius_bin' column as pd.qcut(df['Radius(R/Ro)'], 4, labels=['Q1','Q2','Q3','Q4'])",
+      "Sort dataframe by Star type and Radius_bin for plotting",
+      "For each (Star type, Radius_bin) group, get 'Luminosity(L/Lo)' values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\192.csv')\ndf['Radius_bin'] = pd.qcut(df['Radius(R/Ro)'], 4, labels=['Q1','Q2','Q3','Q4'])\nstar_types = sorted(df['Star type'].unique())\nradius_bins = ['Q1','Q2','Q3','Q4']\ncolors = mpl.colormaps['tab10'].resampled(len(star_types))\ndata = []\nfor rb in radius_bins:\n    for i, st in enumerate(star_types):\n        vals = df[(df['Radius_bin']==rb) & (df['Star type']==st)]['Luminosity(L/Lo)'].values\n        data.append(vals)\nfig, ax = plt.subplots(figsize=(10,6))\npositions = []\nlabels = []\nfor j, rb in enumerate(radius_bins):\n    for i, st in enumerate(star_types):\n        positions.append(j*len(star_types)+i)\n        labels.append('Star ' + str(int(st)) + ', ' + rb)\nbp = ax.boxplot(data, positions=positions, widths=0.7, patch_artist=True)\nfor patch, pos in zip(bp['boxes'], positions):\n    patch.set_facecolor(colors(pos % len(star_types)))\nfor median in bp['medians']:\n    median.set_color('black')\nax.set_xticks([j*len(star_types)+len(star_types)//2 for j in range(len(radius_bins))])\nax.set_xticklabels(radius_bins)\nax.set_xlabel('Radius(R/Ro) Quartile Bin')\nax.set_ylabel('Luminosity(L/Lo)')\nax.set_yscale('log')\nlegend_handles = [mpl.patches.Patch(color=colors(i), label='Star type ' + str(int(st))) for i, st in enumerate(star_types)]\nax.legend(handles=legend_handles, title='Star type', bbox_to_anchor=(1.02, 1), loc='upper left')\nax.set_title('Distribution of Luminosity by Radius Bin and Star type')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

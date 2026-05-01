@@ -1,0 +1,44 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "How do the industry sector's percentage contribution to GDP differ across countries with the highest and lowest GDP rankings?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot & Jittered Strip Chart",
+      "design_rationale": "A boxplot with overlaid jittered (strip) points for each group ('Top 10' and 'Bottom 10' countries by GDP) effectively communicates not just the range, but also the spread and outliers of the industrial sector percentage contribution among high and low GDP nations. This visually emphasizes distribution and variability, and allows for quick assessment of median, quartiles, and the presence of extreme cases.",
+      "target_insight": "Reveals differences in statistical distribution and typical values of industrial GDP contribution between wealthiest and least wealthy countries, capturing both general trends and unusual cases.",
+      "output_fields": [
+        "Country/Economy",
+        "GDP (millions of $)",
+        "Industry%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "GDP group (Top 10 / Bottom 10)",
+        "y": "Industry%ofGDP",
+        "color": "GDP group",
+        "size": null,
+        "other_aesthetics": "jittered points for each country, boxplot overlays for summary"
+      }
+    },
+    "transformations": [
+      "Convert df['GDP (millions of $)'] and df['Industry%ofGDP'] to float",
+      "Select Top 10 and Bottom 10 countries by GDP",
+      "Assign categorical variable indicating group"
+    ],
+    "data_preparation_steps": [
+      "df['GDP (millions of $)'] = df['GDP (millions of $)'].str.replace(',', '').astype(float)",
+      "df['Industry%ofGDP'] = df['Industry%ofGDP'].str.replace('%', '').astype(float)",
+      "top10 = df.nlargest(10, 'GDP (millions of $)')[['Country/Economy', 'GDP (millions of $)', 'Industry%ofGDP']]",
+      "bottom10 = df.nsmallest(10, 'GDP (millions of $)')[['Country/Economy', 'GDP (millions of $)', 'Industry%ofGDP']]",
+      "top10['GDP group'] = 'Top 10'",
+      "bottom10['GDP group'] = 'Bottom 10'",
+      "df_box = pd.concat([top10, bottom10], ignore_index=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n# Load and prepare data\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['GDP (millions of $)'] = df['GDP (millions of $)'].str.replace(',', '').astype(float)\ndf['Industry%ofGDP'] = df['Industry%ofGDP'].str.replace('%', '').astype(float)\ntop10 = df.nlargest(10, 'GDP (millions of $)')[['Country/Economy', 'GDP (millions of $)', 'Industry%ofGDP']]\nbottom10 = df.nsmallest(10, 'GDP (millions of $)')[['Country/Economy', 'GDP (millions of $)', 'Industry%ofGDP']]\ntop10['GDP group'] = 'Top 10'\nbottom10['GDP group'] = 'Bottom 10'\ndf_box = pd.concat([top10, bottom10], ignore_index=True)\ngroups = ['Top 10', 'Bottom 10']\ndata_box = [df_box[df_box['GDP group']==g]['Industry%ofGDP'].values for g in groups]\nfig, ax = plt.subplots(figsize=(7, 7))\ncolor_map = {'Top 10':'#4577b7', 'Bottom 10':'#ee964c'}\nbp = ax.boxplot(data_box, notch=True, patch_artist=True, widths=0.45)\nfor patch, grp in zip(bp['boxes'], groups):\n    patch.set_facecolor(color_map[grp])\nfor i, grp in enumerate(groups):\n    y = data_box[i]\n    x = np.random.normal(i+1, 0.07, size=len(y))\n    ax.scatter(x, y, s=64, alpha=0.86, label=grp if i==0 else None, color=color_map[grp], edgecolor='k', linewidth=1, zorder=3)\nax.set_xticks([1,2])\nax.set_xticklabels(groups)\nax.set_ylabel('Industry sector % of GDP')\nax.set_title('Distribution of Industry Sector % of GDP\\namong Top 10 and Bottom 10 Countries')\nax.grid(axis='y', linestyle='--', alpha=0.41)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

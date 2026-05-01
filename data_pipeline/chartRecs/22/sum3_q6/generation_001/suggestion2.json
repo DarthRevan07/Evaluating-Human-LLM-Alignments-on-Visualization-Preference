@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "What is the distribution of horsepower across different fuel types (gas vs diesel)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Kernel Density Estimate (KDE) Overlay Plot",
+      "design_rationale": "A KDE overlay provides a smooth estimate of the horsepower distribution for each fuel type, highlighting differences in population spread and modal values that may be missed by discrete histograms. By plotting both KDEs together, we reveal not only the central tendency but also potential multimodality, skewness, or separation between gas and diesel horsepower ranges, using color to distinguish fuel types.",
+      "target_insight": "Shows a nuanced comparison of the entire horsepower distribution shape for gas and diesel cars, revealing presence of distinct peaks, overlaps, or tails that characterize each fuel type’s engine power.",
+      "output_fields": [
+        "fueltype",
+        "horsepower"
+      ],
+      "chart_encodings": {
+        "x": "horsepower",
+        "y": "Density (KDE estimate)",
+        "color": "fueltype (two distinct colors)",
+        "size": null,
+        "other_aesthetics": "alpha (overlay), smooth line, legend"
+      }
+    },
+    "transformations": [
+      "For each 'fueltype', extract the horsepower column.",
+      "Use numpy to estimate KDE for each group over a common horsepower range."
+    ],
+    "data_preparation_steps": [
+      "Read all data from csv_c_squared\\22.csv.",
+      "Determine horsepower value range using min and max across both fueltypes.",
+      "Calculate KDE for horsepower within each fueltype using scipy.stats.gaussian_kde."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom scipy.stats import gaussian_kde\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\nfueltypes = df['fueltype'].unique()\ncolors = mpl.colormaps['Set2'].resampled(len(fueltypes))\nhorsepower_min = df['horsepower'].min()\nhorsepower_max = df['horsepower'].max()\nx_grid = np.linspace(horsepower_min, horsepower_max, 200)\nfig, ax = plt.subplots(figsize=(8,6))\nfor idx, ft in enumerate(fueltypes):\n    hp = df[df['fueltype'] == ft]['horsepower']\n    kde = gaussian_kde(hp)\n    y = kde(x_grid)\n    ax.plot(x_grid, y, color=colors.colors[idx], lw=2, alpha=0.8, label=\"fueltype: \" + ft)\nax.set_xlabel(\"horsepower\")\nax.set_ylabel(\"Density (KDE estimate)\")\nax.set_title(\"Overlay KDE: horsepower distribution\\nby fuel type (gas vs diesel)\")\nax.legend(loc=\"best\")\nax.grid(True, linestyle='--', alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

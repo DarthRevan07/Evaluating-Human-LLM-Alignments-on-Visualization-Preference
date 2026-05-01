@@ -1,0 +1,46 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Are there countries where the Agriculture Sector GDP Rank is significantly better than their overall Rank?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "rank comparison heatmap (Overall vs Agriculture)",
+      "design_rationale": "Comparing two ranks in a heatmap helps reveal patterns across all countries, not just the biggest outliers, while supporting easy scanning for countries with larger positive gaps. Sorting rows by the difference amplifies detection of significant cases. Using color intensity to encode the magnitude of difference gives an immediate visual overview of the spectrum, making hidden trends visible at scale.",
+      "target_insight": "Systematic visual mapping of all countries where agriculture outperforms overall economic ranking, including the nuanced relative gap.",
+      "output_fields": [
+        "Country/Economy",
+        "Rank",
+        "Agriculture Sector GDP Rank"
+      ],
+      "chart_encodings": {
+        "x": "['Overall Rank', 'Agriculture Rank'] (columns in heatmap)",
+        "y": "Country/Economy",
+        "color": "Difference (Rank - Agriculture Sector GDP Rank) as intensity",
+        "size": null,
+        "other_aesthetics": "row annotation for numeric difference; sorted by difference"
+      }
+    },
+    "transformations": [
+      "Filter rows with valid numeric ranks for both df['Rank'] and df['Agriculture Sector GDP Rank'].",
+      "Convert ranks to int.",
+      "Compute 'diff' = df['Rank'] - df['Agriculture Sector GDP Rank'].",
+      "Sort by 'diff' descending, keep top 20 countries where diff > 0.",
+      "Prepare a matrix with each country as row, columns: Overall Rank, Agriculture Rank."
+    ],
+    "data_preparation_steps": [
+      "dfh = df[df['Rank'].str.isnumeric() & df['Agriculture Sector GDP Rank'].str.isnumeric()].copy()",
+      "dfh['Rank'] = dfh['Rank'].astype(int)",
+      "dfh['Agriculture Sector GDP Rank'] = dfh['Agriculture Sector GDP Rank'].astype(int)",
+      "dfh['diff'] = dfh['Rank'] - dfh['Agriculture Sector GDP Rank']",
+      "dfh = dfh[dfh['diff'] > 0]",
+      "dfh = dfh.sort_values('diff', ascending=False).head(20)",
+      "heatmap_data = dfh[['Rank', 'Agriculture Sector GDP Rank']].values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndfh = df[df['Rank'].str.isnumeric() & df['Agriculture Sector GDP Rank'].str.isnumeric()].copy()\ndfh['Rank'] = dfh['Rank'].astype(int)\ndfh['Agriculture Sector GDP Rank'] = dfh['Agriculture Sector GDP Rank'].astype(int)\ndfh['diff'] = dfh['Rank'] - dfh['Agriculture Sector GDP Rank']\ndfh = dfh[dfh['diff'] > 0]\ndfh = dfh.sort_values('diff', ascending=False).head(20)\nheatmap_data = np.array(dfh[['Rank', 'Agriculture Sector GDP Rank']])\nfig, ax = plt.subplots(figsize=(6,9))\ncmap = mpl.colormaps['YlGnBu']\nim = ax.imshow(heatmap_data, cmap=cmap, aspect='auto')\nax.set_yticks(np.arange(heatmap_data.shape[0]))\nax.set_yticklabels(dfh['Country/Economy'])\nax.set_xticks([0,1])\nax.set_xticklabels(['Overall Rank','Agriculture Rank'])\nfor i in range(heatmap_data.shape[0]):\n    diff_val = dfh.iloc[i]['diff']\n    ax.text(2.2, i, f'+{diff_val}', va='center', ha='left', fontsize=10, color='maroon')\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Rank Value')\nax.set_title('Heatmap: Overall vs Agriculture Sector GDP Rank\\nTop 20 countries with largest positive difference')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

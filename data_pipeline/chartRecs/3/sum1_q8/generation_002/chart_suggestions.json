@@ -1,0 +1,381 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\3\\sum1_q8\\generation_002",
+  "schema_context": "Table: Global Rice Production Statistics Dataset\nRows: 119\nColumns: 9\n\nFIELD INFORMATION:\nField: Country\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field identifies the specific country associated with each record of rice production statistics, representing national-level data within the global agriculture domain.\n\nField: Rice Production (Tons)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 109\n  - Semantic Meaning: This field represents the quantity of rice produced, measured in tons, for each observational unit (such as a country or region) recorded as rounded strings with numeric abbreviations (K for thousands, M for millions) in global rice production statistics.\n\nField: Rank of Rice Production\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the global ranking position of a country or entity based on its rice production volume, with 1.0 representing the highest producer and 118.0 the lowest in the dataset.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nField: Rice Production Per Person (Kg)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 109\n  - Semantic Meaning: This field represents the annual amount of rice produced per person, measured in kilograms, indicating the average rice production relative to population size for different regions or countries.\n\nField: Rank of Rice Production Per Person\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field represents the ranking position of countries based on their rice production output per capita, indicating how each country compares to others in rice production efficiency relative to its population.\n  - Value Range: 1.0 to 119.0\n  - Mean: 60.00\n\nField: Rice Acreage (Hectare)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 114\n  - Semantic Meaning: This field records the total land area, in hectares, dedicated to rice cultivation per region or entity, often using shorthand notation (K for thousand, M for million), reflecting the scale of rice farming in global agricultural statistics.\n\nField: Rank of Rice Acreage\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the ranking position of countries or regions based on the total acreage dedicated to rice cultivation, with 1 representing the largest area and ascending numbers representing smaller areas within the global rice production context.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nField: Rice Yield (Kg / Hectare)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field represents the average amount of rice harvested per hectare of land, measured in kilograms, indicating agricultural productivity for different regions or time periods.\n\nField: Rank of Rice Yield\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the ranking position of a country or entity based on rice yield, with 1.0 representing the highest yield and 118.0 the lowest, within the context of global rice production statistics.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Country\"\n  2. \"Rice Production (Tons)\"\n  3. \"Rank of Rice Production\"\n  4. \"Rice Production Per Person (Kg)\"\n  5. \"Rank of Rice Production Per Person\"\n  6. \"Rice Acreage (Hectare)\"\n  7. \"Rank of Rice Acreage\"\n  8. \"Rice Yield (Kg / Hectare)\"\n  9. \"Rank of Rice Yield\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Country'], df['Rice Production (Tons)']",
+  "table_metadata": {
+    "table_name": "Global Rice Production Statistics Dataset",
+    "file_path": "csv_c_squared\\3.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 3.csv (Dataset: Global Rice Production Statistics Dataset)",
+    "original_filename": "3.csv",
+    "dataset_name": "Global Rice Production Statistics Dataset",
+    "row_count": 119,
+    "column_count": 9,
+    "table_hash": 4716307919827563000,
+    "fields": [
+      {
+        "name": "Country",
+        "clean_name": "Country",
+        "camel_case_name": "country",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 119,
+        "sample_values": "Afghanistan, Albania, Algeria, Angola, Argentina, ..., Uzbekistan, Venezuela, Vietnam, Zambia, Zimbabwe",
+        "inferred_semantic_summary": "This field identifies the specific country associated with each record of rice production statistics, representing national-level data within the global agriculture domain."
+      },
+      {
+        "name": "Rice Production (Tons)",
+        "clean_name": "Rice_Production__Tons_",
+        "camel_case_name": "riceProductionTons",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 109,
+        "sample_values": " 1.0K,  1.1K,  1.2K,  1.5K,  1.6K, ..., 585, 6.7M, 8.4M, 853, 88",
+        "inferred_semantic_summary": "This field represents the quantity of rice produced, measured in tons, for each observational unit (such as a country or region) recorded as rounded strings with numeric abbreviations (K for thousands, M for millions) in global rice production statistics."
+      },
+      {
+        "name": "Rank of Rice Production",
+        "clean_name": "Rank_of_Rice_Production",
+        "camel_case_name": "rankOfRiceProduction",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 1,
+        "non_null_count": 118,
+        "unique_values": 118,
+        "min_value": 1.0,
+        "max_value": 118.0,
+        "mean_value": 59.5,
+        "median_value": 59.5,
+        "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+        "inferred_semantic_summary": "This field indicates the global ranking position of a country or entity based on its rice production volume, with 1.0 representing the highest producer and 118.0 the lowest in the dataset."
+      },
+      {
+        "name": "Rice Production Per Person (Kg)",
+        "clean_name": "Rice_Production_Per_Person__Kg_",
+        "camel_case_name": "riceProductionPerPersonKg",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 109,
+        "sample_values": "0.01, 0.02, 0.05, 0.08, 0.10, ..., 83.2, 89.2, 9.6, 96.1, 97.1",
+        "inferred_semantic_summary": "This field represents the annual amount of rice produced per person, measured in kilograms, indicating the average rice production relative to population size for different regions or countries."
+      },
+      {
+        "name": "Rank of Rice Production Per Person",
+        "clean_name": "Rank_of_Rice_Production_Per_Person",
+        "camel_case_name": "rankOfRiceProductionPerPerson",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 119,
+        "min_value": 1.0,
+        "max_value": 119.0,
+        "mean_value": 60.0,
+        "median_value": 60.0,
+        "sample_values": "1, 2, 3, 4, 5, ..., 115, 116, 117, 118, 119",
+        "inferred_semantic_summary": "This field represents the ranking position of countries based on their rice production output per capita, indicating how each country compares to others in rice production efficiency relative to its population."
+      },
+      {
+        "name": "Rice Acreage (Hectare)",
+        "clean_name": "Rice_Acreage__Hectare_",
+        "camel_case_name": "riceAcreageHectare",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 114,
+        "sample_values": " 1.1K,  1.8K,  1.9K,  10.5K,  102.0K, ..., 601, 7.5M, 773, 9.7M, 99",
+        "inferred_semantic_summary": "This field records the total land area, in hectares, dedicated to rice cultivation per region or entity, often using shorthand notation (K for thousand, M for million), reflecting the scale of rice farming in global agricultural statistics."
+      },
+      {
+        "name": "Rank of Rice Acreage",
+        "clean_name": "Rank_of_Rice_Acreage",
+        "camel_case_name": "rankOfRiceAcreage",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 1,
+        "non_null_count": 118,
+        "unique_values": 118,
+        "min_value": 1.0,
+        "max_value": 118.0,
+        "mean_value": 59.5,
+        "median_value": 59.5,
+        "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+        "inferred_semantic_summary": "This field indicates the ranking position of countries or regions based on the total acreage dedicated to rice cultivation, with 1 representing the largest area and ascending numbers representing smaller areas within the global rice production context."
+      },
+      {
+        "name": "Rice Yield (Kg / Hectare)",
+        "clean_name": "Rice_Yield__Kg___Hectare_",
+        "camel_case_name": "riceYieldKgHectare",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 119,
+        "unique_values": 119,
+        "sample_values": "\"1,000.0\", \"1,014.2\", \"1,166.4\", \"1,193.1\", \"1,203.8\", ..., \"8,275.9\", \"8,372.6\", \"8,373.5\", \"8,588.2\", \"8,771.0\"",
+        "inferred_semantic_summary": "This field represents the average amount of rice harvested per hectare of land, measured in kilograms, indicating agricultural productivity for different regions or time periods."
+      },
+      {
+        "name": "Rank of Rice Yield",
+        "clean_name": "Rank_of_Rice_Yield",
+        "camel_case_name": "rankOfRiceYield",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 1,
+        "non_null_count": 118,
+        "unique_values": 118,
+        "min_value": 1.0,
+        "max_value": 118.0,
+        "mean_value": 59.5,
+        "median_value": 59.5,
+        "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+        "inferred_semantic_summary": "This field indicates the ranking position of a country or entity based on rice yield, with 1.0 representing the highest yield and 118.0 the lowest, within the context of global rice production statistics."
+      }
+    ],
+    "formatted_summary": "## Table 1: Global_Rice_Production_Statistics_Dataset (119 rows × 9 columns)\n\n### Description\nData loaded from CSV file: 3.csv (Dataset: Global Rice Production Statistics Dataset)\n\n### Schema (9 fields)\n  - Country -- type: object, values: Afghanistan, Albania, Algeria, Angola, Argentina, ..., Uzbekistan, Venezuela, Vietnam, Zambia, Zimbabwe\n  - Rice Production (Tons) -- type: object, values:  1.0K,  1.1K,  1.2K,  1.5K,  1.6K, ..., 585, 6.7M, 8.4M, 853, 88\n  - Rank of Rice Production -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n  - Rice Production Per Person (Kg) -- type: object, values: 0.01, 0.02, 0.05, 0.08, 0.10, ..., 83.2, 89.2, 9.6, 96.1, 97.1\n  - Rank of Rice Production Per Person -- type: int64, values: 1, 2, 3, 4, 5, ..., 115, 116, 117, 118, 119\n  - Rice Acreage (Hectare) -- type: object, values:  1.1K,  1.8K,  1.9K,  10.5K,  102.0K, ..., 601, 7.5M, 773, 9.7M, 99\n  - Rank of Rice Acreage -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n  - Rice Yield (Kg / Hectare) -- type: object, values: \"1,000.0\", \"1,014.2\", \"1,166.4\", \"1,193.1\", \"1,203.8\", ..., \"8,275.9\", \"8,372.6\", \"8,373.5\", \"8,588.2\", \"8,771.0\"\n  - Rank of Rice Yield -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n\n### Sample Data (first 5 rows)\n```\n      Country Rice Production (Tons)  Rank of Rice Production Rice Production Per Person (Kg)  Rank of Rice Production Per Person Rice Acreage (Hectare)  Rank of Rice Acreage Rice Yield (Kg / Hectare)  Rank of Rice Yield\n0       Chile                 174.9K                     65.0                            10.0                                  76                  26.2K                  77.0                   6,664.8                16.0\n1  Mauritania                 383.0K                     50.0                            96.1                                  26                  73.0K                  63.0                   5,249.2                36.0\n2      Turkey                   1.0M                     40.0                            12.4                                  68                 126.4K                  52.0                   7,910.2                 7.0\n3  Kyrgyzstan                  41.2K                     87.0                             6.5                                  81                  11.3K                  89.0                   3,646.4                63.0\n4        Laos                   3.4M                     21.0                           493.9                                   3                 783.8K                  23.0                   4,386.5                49.0\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "3",
+      "summary_idx": 1,
+      "question_idx": 8,
+      "question": "What are the top five countries for rice yield per hectare, and what are their corresponding ranks in rice acreage and total production?",
+      "column_combination": [
+        "Country",
+        "Rice Production (Tons)",
+        "Rank of Rice Production",
+        "Rice Production Per Person (Kg)",
+        "Rank of Rice Production Per Person",
+        "Rice Acreage (Hectare)",
+        "Rank of Rice Acreage",
+        "Rice Yield (Kg / Hectare)",
+        "Rank of Rice Yield"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Horizontal Bar Chart",
+            "design_rationale": "A horizontal bar chart ranks the top five countries by rice yield (Kg / Hectare) for direct comparison and clarity. Beside each country, annotate their ranks in acreage and production for contextual insight. This presentation focuses the viewer on agricultural productivity while making it easy to see how these most efficient countries fare in terms of total area cultivated and output. Horizontal bars maximize space for annotation and legibility given potentially long country names.",
+            "target_insight": "Who are the most efficient rice-producing countries, and how do they compare in terms of land under rice and overall production?",
+            "output_fields": [
+              "Country",
+              "Rice Yield (Kg / Hectare)",
+              "Rank of Rice Acreage",
+              "Rank of Rice Production"
+            ],
+            "chart_encodings": {
+              "x": "Rice Yield (Kg / Hectare)",
+              "y": "Country",
+              "color": "null",
+              "size": "null",
+              "other_aesthetics": "annotate each bar with rank in rice acreage and production; bold font for countries"
+            }
+          },
+          "transformations": [
+            "Convert 'Rice Yield (Kg / Hectare)' to numeric for sorting.",
+            "Sort descending by 'Rice Yield (Kg / Hectare)'.",
+            "Select top 5 rows.",
+            "Prepare country labels and annotate bars with 'Rank of Rice Acreage' and 'Rank of Rice Production'."
+          ],
+          "data_preparation_steps": [
+            "Load df from csv_c_squared\\3.csv.",
+            "Replace 'Rice Yield (Kg / Hectare)' K/M abbreviations, convert to numeric.",
+            "Sort by 'Rice Yield (Kg / Hectare)' descending.",
+            "Select top 5 countries.",
+            "Extract values for 'Country', 'Rice Yield (Kg / Hectare)', 'Rank of Rice Acreage', 'Rank of Rice Production'."
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\n# Convert 'Rice Yield (Kg / Hectare)' to numeric\nyield_col = \"Rice Yield (Kg / Hectare)\"\ndef parse_shorthand(s):\n    if isinstance(s, str):\n        s = s.upper().replace(',', '')\n        if s.endswith('M'):\n            return float(s[:-1]) * 1e6\n        elif s.endswith('K'):\n            return float(s[:-1]) * 1e3\n        else:\n            return float(s)\n    return np.nan\ndf[yield_col] = df[yield_col].apply(parse_shorthand)\ndf_top = df.sort_values(by=yield_col, ascending=False).head(5)\nfig, ax = plt.subplots(figsize=(8, 6))\nbars = ax.barh(\n    df_top[\"Country\"],\n    df_top[yield_col],\n    color=\"#386cb0\"\n)\nfor i, (country, yld, acre_rank, prod_rank) in enumerate(zip(\n    df_top[\"Country\"],\n    df_top[yield_col],\n    df_top[\"Rank of Rice Acreage\"],\n    df_top[\"Rank of Rice Production\"]\n)):\n    annotation = \"Acreage rank: \" + str(int(acre_rank)) + \"  |  Production rank: \" + str(int(prod_rank))\n    ax.text(\n        yld + yld * 0.03,\n        i,\n        annotation,\n        va=\"center\",\n        ha=\"left\",\n        fontsize=11,\n        color=\"#333333\"\n    )\nax.set_xlabel(\"Rice Yield (Kg / Hectare)\", fontsize=12)\nax.set_ylabel(\"Country\", fontsize=12)\nax.set_yticklabels(df_top[\"Country\"], fontweight=\"bold\")\nplt.title(\"Top 5 Countries for Rice Yield per Hectare\\nwith Acreage and Production Ranks\", fontsize=14, fontweight=\"bold\")\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Scatter Plot with Color and Size Encoding",
+            "design_rationale": "A scatter plot uses visual position, color, and size to show multidimensional relationships among the top-yield countries. Each point is a country: x-axis is rice acreage rank, y-axis is rice production rank (lower is 'better'), color represents rice yield, and point size encodes total rice production. This makes it easy to compare countries on efficiency, production, and cultivated area simultaneously, revealing whether high efficiency is linked to larger production or acreage.",
+            "target_insight": "How do the top rice yield countries' ranks in acreage and production relate, and does high yield coincide with high total output or cultivated area?",
+            "output_fields": [
+              "Country",
+              "Rice Yield (Kg / Hectare)",
+              "Rank of Rice Acreage",
+              "Rank of Rice Production",
+              "Rice Production (Tons)"
+            ],
+            "chart_encodings": {
+              "x": "Rank of Rice Acreage",
+              "y": "Rank of Rice Production",
+              "color": "Rice Yield (Kg / Hectare) (cmap: viridis, higher yield = lighter color)",
+              "size": "Rice Production (Tons) (normalized for point size)",
+              "other_aesthetics": "country label for each point; grid; colorbar for yield"
+            }
+          },
+          "transformations": [
+            "Convert 'Rice Yield (Kg / Hectare)' and 'Rice Production (Tons)' to numeric.",
+            "Sort descending by 'Rice Yield (Kg / Hectare)'.",
+            "Select top 5 rows.",
+            "Normalize 'Rice Production (Tons)' for marker sizing."
+          ],
+          "data_preparation_steps": [
+            "Load df from csv_c_squared\\3.csv.",
+            "Parse 'Rice Yield (Kg / Hectare)' and 'Rice Production (Tons)' into numeric values.",
+            "Sort by 'Rice Yield (Kg / Hectare)' descending; select top 5.",
+            "Normalize 'Rice Production (Tons)' for marker size (min 200, max 1200).",
+            "Extract 'Country', yield, acreage rank, production rank, and production for plotting."
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndef parse_shorthand(s):\n    if isinstance(s, str):\n        s = s.upper().replace(',', '')\n        if s.endswith('M'):\n            return float(s[:-1]) * 1e6\n        elif s.endswith('K'):\n            return float(s[:-1]) * 1e3\n        else:\n            return float(s)\n    return np.nan\ndf[\"Rice Yield (Kg / Hectare)\"] = df[\"Rice Yield (Kg / Hectare)\"].apply(parse_shorthand)\ndf[\"Rice Production (Tons)\"] = df[\"Rice Production (Tons)\"].apply(parse_shorthand)\ndf_top = df.sort_values(by=\"Rice Yield (Kg / Hectare)\", ascending=False).head(5)\n# Normalize production to marker size [200,1200]\np_min = df_top[\"Rice Production (Tons)\"].min()\np_max = df_top[\"Rice Production (Tons)\"].max()\nsize = 200 + 1000 * ((df_top[\"Rice Production (Tons)\"] - p_min) / (p_max - p_min + 1e-9))\ncmap = mpl.colormaps[\"viridis\"]\nyields = df_top[\"Rice Yield (Kg / Hectare)\"]\nfig, ax = plt.subplots(figsize=(8, 6))\nsc = ax.scatter(\n    df_top[\"Rank of Rice Acreage\"],\n    df_top[\"Rank of Rice Production\"],\n    c=yields,\n    s=size,\n    cmap=cmap,\n    edgecolor=\"#222222\",\n    alpha=0.85\n)\nfor i, row in df_top.iterrows():\n    ax.text(\n        row[\"Rank of Rice Acreage\"] + 1.2,\n        row[\"Rank of Rice Production\"] + 0.5,\n        row[\"Country\"],\n        fontsize=12,\n        fontweight=\"bold\",\n        color=\"#222222\"\n    )\ncb = plt.colorbar(sc, ax=ax, orientation=\"vertical\")\ncb.set_label(\"Rice Yield (Kg / Hectare)\", fontsize=12)\nax.set_xlabel(\"Rank of Rice Acreage\\n(1 = largest)\", fontsize=12)\nax.set_ylabel(\"Rank of Rice Production\\n(1 = highest output)\", fontsize=12)\nax.grid(True, linestyle=\"--\", alpha=0.25)\nplt.title(\"Top 5 Rice Yield Countries:\\nRelationship of Yield, Production & Acreage Ranks\", fontsize=14, fontweight=\"bold\")\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T17:36:33.211981",
+      "schema_context": "Table: Global Rice Production Statistics Dataset\nRows: 119\nColumns: 9\n\nFIELD INFORMATION:\nField: Country\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field identifies the specific country associated with each record of rice production statistics, representing national-level data within the global agriculture domain.\n\nField: Rice Production (Tons)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 109\n  - Semantic Meaning: This field represents the quantity of rice produced, measured in tons, for each observational unit (such as a country or region) recorded as rounded strings with numeric abbreviations (K for thousands, M for millions) in global rice production statistics.\n\nField: Rank of Rice Production\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the global ranking position of a country or entity based on its rice production volume, with 1.0 representing the highest producer and 118.0 the lowest in the dataset.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nField: Rice Production Per Person (Kg)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 109\n  - Semantic Meaning: This field represents the annual amount of rice produced per person, measured in kilograms, indicating the average rice production relative to population size for different regions or countries.\n\nField: Rank of Rice Production Per Person\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field represents the ranking position of countries based on their rice production output per capita, indicating how each country compares to others in rice production efficiency relative to its population.\n  - Value Range: 1.0 to 119.0\n  - Mean: 60.00\n\nField: Rice Acreage (Hectare)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 114\n  - Semantic Meaning: This field records the total land area, in hectares, dedicated to rice cultivation per region or entity, often using shorthand notation (K for thousand, M for million), reflecting the scale of rice farming in global agricultural statistics.\n\nField: Rank of Rice Acreage\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the ranking position of countries or regions based on the total acreage dedicated to rice cultivation, with 1 representing the largest area and ascending numbers representing smaller areas within the global rice production context.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nField: Rice Yield (Kg / Hectare)\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 119\n  - Semantic Meaning: This field represents the average amount of rice harvested per hectare of land, measured in kilograms, indicating agricultural productivity for different regions or time periods.\n\nField: Rank of Rice Yield\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 1\n  - Unique Values: 118\n  - Semantic Meaning: This field indicates the ranking position of a country or entity based on rice yield, with 1.0 representing the highest yield and 118.0 the lowest, within the context of global rice production statistics.\n  - Value Range: 1.0 to 118.0\n  - Mean: 59.50\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Country\"\n  2. \"Rice Production (Tons)\"\n  3. \"Rank of Rice Production\"\n  4. \"Rice Production Per Person (Kg)\"\n  5. \"Rank of Rice Production Per Person\"\n  6. \"Rice Acreage (Hectare)\"\n  7. \"Rank of Rice Acreage\"\n  8. \"Rice Yield (Kg / Hectare)\"\n  9. \"Rank of Rice Yield\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Country'], df['Rice Production (Tons)']",
+      "table_metadata": {
+        "table_name": "Global Rice Production Statistics Dataset",
+        "file_path": "csv_c_squared\\3.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 3.csv (Dataset: Global Rice Production Statistics Dataset)",
+        "original_filename": "3.csv",
+        "dataset_name": "Global Rice Production Statistics Dataset",
+        "row_count": 119,
+        "column_count": 9,
+        "table_hash": 4716307919827563000,
+        "fields": [
+          {
+            "name": "Country",
+            "clean_name": "Country",
+            "camel_case_name": "country",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 119,
+            "sample_values": "Afghanistan, Albania, Algeria, Angola, Argentina, ..., Uzbekistan, Venezuela, Vietnam, Zambia, Zimbabwe",
+            "inferred_semantic_summary": "This field identifies the specific country associated with each record of rice production statistics, representing national-level data within the global agriculture domain."
+          },
+          {
+            "name": "Rice Production (Tons)",
+            "clean_name": "Rice_Production__Tons_",
+            "camel_case_name": "riceProductionTons",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 109,
+            "sample_values": " 1.0K,  1.1K,  1.2K,  1.5K,  1.6K, ..., 585, 6.7M, 8.4M, 853, 88",
+            "inferred_semantic_summary": "This field represents the quantity of rice produced, measured in tons, for each observational unit (such as a country or region) recorded as rounded strings with numeric abbreviations (K for thousands, M for millions) in global rice production statistics."
+          },
+          {
+            "name": "Rank of Rice Production",
+            "clean_name": "Rank_of_Rice_Production",
+            "camel_case_name": "rankOfRiceProduction",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 1,
+            "non_null_count": 118,
+            "unique_values": 118,
+            "min_value": 1.0,
+            "max_value": 118.0,
+            "mean_value": 59.5,
+            "median_value": 59.5,
+            "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+            "inferred_semantic_summary": "This field indicates the global ranking position of a country or entity based on its rice production volume, with 1.0 representing the highest producer and 118.0 the lowest in the dataset."
+          },
+          {
+            "name": "Rice Production Per Person (Kg)",
+            "clean_name": "Rice_Production_Per_Person__Kg_",
+            "camel_case_name": "riceProductionPerPersonKg",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 109,
+            "sample_values": "0.01, 0.02, 0.05, 0.08, 0.10, ..., 83.2, 89.2, 9.6, 96.1, 97.1",
+            "inferred_semantic_summary": "This field represents the annual amount of rice produced per person, measured in kilograms, indicating the average rice production relative to population size for different regions or countries."
+          },
+          {
+            "name": "Rank of Rice Production Per Person",
+            "clean_name": "Rank_of_Rice_Production_Per_Person",
+            "camel_case_name": "rankOfRiceProductionPerPerson",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 119,
+            "min_value": 1.0,
+            "max_value": 119.0,
+            "mean_value": 60.0,
+            "median_value": 60.0,
+            "sample_values": "1, 2, 3, 4, 5, ..., 115, 116, 117, 118, 119",
+            "inferred_semantic_summary": "This field represents the ranking position of countries based on their rice production output per capita, indicating how each country compares to others in rice production efficiency relative to its population."
+          },
+          {
+            "name": "Rice Acreage (Hectare)",
+            "clean_name": "Rice_Acreage__Hectare_",
+            "camel_case_name": "riceAcreageHectare",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 114,
+            "sample_values": " 1.1K,  1.8K,  1.9K,  10.5K,  102.0K, ..., 601, 7.5M, 773, 9.7M, 99",
+            "inferred_semantic_summary": "This field records the total land area, in hectares, dedicated to rice cultivation per region or entity, often using shorthand notation (K for thousand, M for million), reflecting the scale of rice farming in global agricultural statistics."
+          },
+          {
+            "name": "Rank of Rice Acreage",
+            "clean_name": "Rank_of_Rice_Acreage",
+            "camel_case_name": "rankOfRiceAcreage",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 1,
+            "non_null_count": 118,
+            "unique_values": 118,
+            "min_value": 1.0,
+            "max_value": 118.0,
+            "mean_value": 59.5,
+            "median_value": 59.5,
+            "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+            "inferred_semantic_summary": "This field indicates the ranking position of countries or regions based on the total acreage dedicated to rice cultivation, with 1 representing the largest area and ascending numbers representing smaller areas within the global rice production context."
+          },
+          {
+            "name": "Rice Yield (Kg / Hectare)",
+            "clean_name": "Rice_Yield__Kg___Hectare_",
+            "camel_case_name": "riceYieldKgHectare",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 119,
+            "unique_values": 119,
+            "sample_values": "\"1,000.0\", \"1,014.2\", \"1,166.4\", \"1,193.1\", \"1,203.8\", ..., \"8,275.9\", \"8,372.6\", \"8,373.5\", \"8,588.2\", \"8,771.0\"",
+            "inferred_semantic_summary": "This field represents the average amount of rice harvested per hectare of land, measured in kilograms, indicating agricultural productivity for different regions or time periods."
+          },
+          {
+            "name": "Rank of Rice Yield",
+            "clean_name": "Rank_of_Rice_Yield",
+            "camel_case_name": "rankOfRiceYield",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 1,
+            "non_null_count": 118,
+            "unique_values": 118,
+            "min_value": 1.0,
+            "max_value": 118.0,
+            "mean_value": 59.5,
+            "median_value": 59.5,
+            "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan",
+            "inferred_semantic_summary": "This field indicates the ranking position of a country or entity based on rice yield, with 1.0 representing the highest yield and 118.0 the lowest, within the context of global rice production statistics."
+          }
+        ],
+        "formatted_summary": "## Table 1: Global_Rice_Production_Statistics_Dataset (119 rows × 9 columns)\n\n### Description\nData loaded from CSV file: 3.csv (Dataset: Global Rice Production Statistics Dataset)\n\n### Schema (9 fields)\n  - Country -- type: object, values: Afghanistan, Albania, Algeria, Angola, Argentina, ..., Uzbekistan, Venezuela, Vietnam, Zambia, Zimbabwe\n  - Rice Production (Tons) -- type: object, values:  1.0K,  1.1K,  1.2K,  1.5K,  1.6K, ..., 585, 6.7M, 8.4M, 853, 88\n  - Rank of Rice Production -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n  - Rice Production Per Person (Kg) -- type: object, values: 0.01, 0.02, 0.05, 0.08, 0.10, ..., 83.2, 89.2, 9.6, 96.1, 97.1\n  - Rank of Rice Production Per Person -- type: int64, values: 1, 2, 3, 4, 5, ..., 115, 116, 117, 118, 119\n  - Rice Acreage (Hectare) -- type: object, values:  1.1K,  1.8K,  1.9K,  10.5K,  102.0K, ..., 601, 7.5M, 773, 9.7M, 99\n  - Rank of Rice Acreage -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n  - Rice Yield (Kg / Hectare) -- type: object, values: \"1,000.0\", \"1,014.2\", \"1,166.4\", \"1,193.1\", \"1,203.8\", ..., \"8,275.9\", \"8,372.6\", \"8,373.5\", \"8,588.2\", \"8,771.0\"\n  - Rank of Rice Yield -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., 115.0, 116.0, 117.0, 118.0, nan\n\n### Sample Data (first 5 rows)\n```\n      Country Rice Production (Tons)  Rank of Rice Production Rice Production Per Person (Kg)  Rank of Rice Production Per Person Rice Acreage (Hectare)  Rank of Rice Acreage Rice Yield (Kg / Hectare)  Rank of Rice Yield\n0       Chile                 174.9K                     65.0                            10.0                                  76                  26.2K                  77.0                   6,664.8                16.0\n1  Mauritania                 383.0K                     50.0                            96.1                                  26                  73.0K                  63.0                   5,249.2                36.0\n2      Turkey                   1.0M                     40.0                            12.4                                  68                 126.4K                  52.0                   7,910.2                 7.0\n3  Kyrgyzstan                  41.2K                     87.0                             6.5                                  81                  11.3K                  89.0                   3,646.4                63.0\n4        Laos                   3.4M                     21.0                           493.9                                   3                 783.8K                  23.0                   4,386.5                49.0\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

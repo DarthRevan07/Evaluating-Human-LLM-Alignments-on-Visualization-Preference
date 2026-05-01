@@ -1,0 +1,38 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How does Space Walks (hr) vary between male and female astronauts?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is ideal for comparing the distribution of Space Walks (hr) between male and female astronauts. Given that 'Space Walks (hr)' may have outliers and a skewed distribution, the boxplot will visually convey the spread, median, and potential extremes for each gender. This answers the question directly by showing how typical and exceptional spacewalk durations differ between genders in the dataset.",
+      "target_insight": "This visualization reveals whether male or female astronauts tend to spend more time on spacewalks, exposes differences in spread and maximum values, and indicates outlier presence.",
+      "output_fields": [
+        "Gender",
+        "Space Walks (hr)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Space Walks (hr)",
+        "color": "Gender (distinct box coloring)",
+        "size": null,
+        "other_aesthetics": "box edge color by Gender; alpha for box fill"
+      }
+    },
+    "transformations": [
+      "Filter rows where 'Space Walks (hr)' is not null (all rows, since it's non-null)",
+      "Group by 'Gender' and aggregate distributions for 'Space Walks (hr)'"
+    ],
+    "data_preparation_steps": [
+      "Read data from 'csv_c_squared\\261.csv' into df",
+      "Extract 'Gender' and 'Space Walks (hr)' columns from df",
+      "Ensure there are only two Groups ('Male', 'Female') in 'Gender'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ngenders = df['Gender'].unique()\ndata_to_plot = [df[df['Gender'] == gender]['Space Walks (hr)'].values for gender in genders]\nfig, ax = plt.subplots(figsize=(8,6))\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=genders)\ncolors = [\"#1f77b4\", \"#ff7f0e\"]\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.5)\nfor median in box['medians']:\n    median.set_color(\"black\")\nax.set_xlabel(\"Gender\")\nax.set_ylabel(\"Space Walks (hr)\")\nax.set_title(\"Distribution of Space Walks (hr) by Gender\\nNASA Astronauts 1959-Present\")\nax.grid(True, linestyle=\"--\", linewidth=0.5, alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

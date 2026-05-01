@@ -1,0 +1,41 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How do sales in Japan for role-playing games compare to sales in North America for the same genre?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "side-by-side bar chart (mean sales per region)",
+      "design_rationale": "This visualization aggregates and compares the average sales of role-playing games in Japan and North America, giving a clear direct side-by-side comparison of market strength for the genre in each region. Bar charts are ideal for this numeric comparison, providing a perceptually straightforward overview. Using means helps control for outlier effects given the large dataset, and focuses the insight on general market performance. This approach is familiar and readable, grounded in the schema's numerical sales data.",
+      "target_insight": "The visualization reveals whether role-playing games tend to sell better in Japan or North America on average, highlighting which region is more lucrative for this genre.",
+      "output_fields": [
+        "Genre",
+        "JP_Sales",
+        "NA_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Region (Japan, North America)",
+        "y": "Average sales ('JP_Sales' and 'NA_Sales') for Genre == 'Role-Playing'",
+        "color": "None (distinct bars for each region)",
+        "size": "None",
+        "other_aesthetics": "Bar width, bar labels, gridlines, classic color palette"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Genre'] == 'Role-Playing'",
+      "Compute mean of df['JP_Sales'] for filtered rows",
+      "Compute mean of df['NA_Sales'] for filtered rows"
+    ],
+    "data_preparation_steps": [
+      "Select df rows with df['Genre'] == 'Role-Playing'",
+      "Calculate mean of df['JP_Sales'] as jp_mean",
+      "Calculate mean of df['NA_Sales'] as na_mean",
+      "Construct summary DataFrame with ['Region', 'Mean Sales'] for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_filtered = df[df['Genre'] == 'Role-Playing']\njp_mean = df_filtered['JP_Sales'].mean()\nna_mean = df_filtered['NA_Sales'].mean()\ndata = {'Region': ['Japan', 'North America'], 'Mean Sales': [jp_mean, na_mean]}\ndf_plot = pd.DataFrame(data)\nfig, ax = plt.subplots(figsize=(6,4))\nbars = ax.bar(df_plot['Region'], df_plot['Mean Sales'], color=['#4575b4', '#d73027'], width=0.6)\nfor bar in bars:\n    height = bar.get_height()\n    ax.text(bar.get_x()+bar.get_width()/2, height+0.01, f'{height:.2f}', ha='center', va='bottom', fontsize=11)\nax.set_ylabel('Average Sales (millions)')\nax.set_title('Average Sales of Role-Playing Games\\nin Japan vs North America')\nax.set_ylim(0, max(df_plot['Mean Sales'])*1.25)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

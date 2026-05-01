@@ -1,0 +1,40 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What pricing trends can be observed for various car categories over different production years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (faceted by Category, grouped on major production decades)",
+      "design_rationale": "A boxplot grouped by production decade and faceted by Category offers a nuanced view of price distribution and spread within each car type, revealing outliers and volatility. By grouping 'Prod. year' into decades, the viewer can track both central tendency and spread (e.g., IQR, outliers) for each category over larger time intervals, mitigating noise from individual years and supporting comparative analysis across types.",
+      "target_insight": "How price distributions (median, IQR, outliers) for each car category shift across decades, showing categories with most/least price volatility and historical pricing patterns.",
+      "output_fields": [
+        "Price",
+        "Prod. year",
+        "Category"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year (binned into decades)",
+        "y": "Price (distribution)",
+        "color": "Category (one subplot per category; consistent coloring within each boxplot)",
+        "size": null,
+        "other_aesthetics": "Facets per Category; boxplot styling; show outliers"
+      }
+    },
+    "transformations": [
+      "Create decade bins from 'Prod. year' (e.g., 1990-1999, 2000-2009, etc.)",
+      "Assign each row to its decade bin",
+      "For each Category, boxplot Price by decade"
+    ],
+    "data_preparation_steps": [
+      "df['Decade'] = (df['Prod. year']//10)*10",
+      "categories = df['Category'].unique()",
+      "Order categories by overall count (for aesthetics, optional)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf['Decade'] = (df['Prod. year']//10)*10\ncategories = df['Category'].unique()\nncats = len(categories)\nfig, axes = plt.subplots(nrows=(ncats+2)//3, ncols=3, figsize=(18, ncats*2.5), sharey=True)\naxes = axes.flatten()\ncmap = mpl.colormaps['tab10'].resampled(ncats)\nfor idx, cat in enumerate(categories):\n    ax = axes[idx]\n    data = df[df['Category']==cat]\n    decades = sorted(data['Decade'].unique())\n    boxdata = [data[data['Decade']==dec]['Price'] for dec in decades]\n    bp = ax.boxplot(boxdata, patch_artist=True, labels=[str(dec) for dec in decades], widths=0.7, showfliers=True)\n    for patch in bp['boxes']:\n        patch.set_facecolor(cmap(idx))\n        patch.set_alpha(0.6)\n    ax.set_title(cat)\n    ax.set_xlabel(\"Decade\")\n    if idx % 3 == 0:\n        ax.set_ylabel(\"Price distribution\")\nfor k in range(len(categories), len(axes)):\n    axes[k].axis('off')\nfig.suptitle(\"Car Price Distribution across Decades for Each Category\", fontsize=16)\nplt.tight_layout(rect=[0, 0.03, 1, 0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "206",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "How does the distribution of houses with guestrooms compare between preferred and non-preferred areas?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Stacked Bar Chart",
+      "design_rationale": "A stacked bar chart presents a clear comparison of the counts and proportions of houses with and without guestrooms across preferred and non-preferred areas. Both 'guestroom' and 'prefarea' are binary categorical fields, so stacking by 'guestroom' within each 'prefarea' group efficiently displays how the presence of guestrooms varies by area preference. This approach is intuitive for audiences to directly compare the relative and absolute frequencies.",
+      "target_insight": "The visualization reveals whether preferred areas have a higher fraction of houses with guestrooms compared to non-preferred areas, and quantifies this difference.",
+      "output_fields": [
+        "guestroom",
+        "prefarea"
+      ],
+      "chart_encodings": {
+        "x": "prefarea",
+        "y": "Count of houses",
+        "color": "guestroom",
+        "size": null,
+        "other_aesthetics": "Stacked bars for each 'prefarea', legend for 'guestroom', bold axis labels"
+      }
+    },
+    "transformations": [
+      "Group data by 'prefarea' and 'guestroom'",
+      "Aggregate counts for each group",
+      "Reshape data for stacked bar chart (each 'prefarea' category as x, stacks as 'guestroom')"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['prefarea', 'guestroom']).size().unstack(fill_value=0)",
+      "Set order for 'prefarea' (e.g., ['yes', 'no']) and 'guestroom' (e.g., ['yes', 'no']) for consistent plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\206.csv')\n\ndf_grouped = df.groupby(['prefarea', 'guestroom']).size().unstack(fill_value=0)\npreferred_order = ['yes', 'no']\nguestroom_order = ['yes', 'no']\ndf_grouped = df_grouped.reindex(preferred_order)\nbar_width = 0.5\nfig, ax = plt.subplots(figsize=(8, 6))\nindices = np.arange(len(preferred_order))\n\ny_offset = np.zeros(len(preferred_order))\ncolors = {'yes': '#2ca02c', 'no': '#d62728'}\nfor guestroom_val in guestroom_order:\n    vals = df_grouped[guestroom_val].values\n    ax.bar(indices, vals, bar_width, bottom=y_offset, label='Guestroom: '+guestroom_val, color=colors[guestroom_val])\n    y_offset += vals\n\nax.set_xticks(indices)\nax.set_xticklabels(['Preferred Area', 'Non-Preferred Area'], fontsize=12)\nax.set_ylabel('Number of Houses', fontsize=12, weight='bold')\nax.set_xlabel('Area Preference', fontsize=12, weight='bold')\nplt.title('Distribution of Houses with Guestrooms\\nby Area Preference', fontsize=14, weight='bold')\nax.legend(title='Guestroom Availability', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

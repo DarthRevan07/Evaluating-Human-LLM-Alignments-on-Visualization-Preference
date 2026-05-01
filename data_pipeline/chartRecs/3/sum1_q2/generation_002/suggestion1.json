@@ -1,0 +1,42 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "How does rice production per person vary across different countries, and are there any countries where this value significantly exceeds or falls below the global average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar plot",
+      "design_rationale": "A horizontal bar chart provides a clear ranked overview of rice production per person across all countries, leveraging the categorical nature of 'Country' and numeric comparison of 'Rice Production Per Person (Kg)'. It accommodates many countries (119 rows), avoids label overlap, and directly highlights countries far above or below the global average. Overlaying the global mean as a reference line enables immediate detection of outliers and significant deviations.",
+      "target_insight": "Countries ranked by rice production per person, with identification of those exceeding or falling below the global average; visual context to assess distribution and extremity.",
+      "output_fields": [
+        "Country",
+        "Rice Production Per Person (Kg)",
+        "Rank of Rice Production Per Person"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg)",
+        "y": "Country",
+        "color": "Highlight countries >1 std dev above/below global mean",
+        "size": "null",
+        "other_aesthetics": "Global mean marker, grid lines for readability"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Production Per Person (Kg)' from string to numeric (float) for computation.",
+      "Calculate global mean and standard deviation of 'Rice Production Per Person (Kg)'.",
+      "Classify countries as: 'High Outlier' (>1 std dev above mean), 'Low Outlier' (<1 std dev below mean), 'Average' (within 1 std dev)."
+    ],
+    "data_preparation_steps": [
+      "Copy df for new DataFrame df_plot.",
+      "Convert 'Rice Production Per Person (Kg)' to float, store in new column.",
+      "Compute mean and std deviation.",
+      "Assign outlier categories based on computed thresholds.",
+      "Sort df_plot by 'Rice Production Per Person (Kg)' descending."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf_plot = df.copy()\ndf_plot['Rice Production Per Person (Kg)_numeric'] = pd.to_numeric(df_plot['Rice Production Per Person (Kg)'].str.replace(',', ''), errors='coerce')\nmean_val = df_plot['Rice Production Per Person (Kg)_numeric'].mean()\nstd_val = df_plot['Rice Production Per Person (Kg)_numeric'].std()\ndef outlier_category(x):\n    if x > mean_val + std_val:\n        return 'High Outlier'\n    elif x < mean_val - std_val:\n        return 'Low Outlier'\n    else:\n        return 'Average'\ndf_plot['Outlier Category'] = df_plot['Rice Production Per Person (Kg)_numeric'].apply(outlier_category)\ndf_plot = df_plot.sort_values('Rice Production Per Person (Kg)_numeric', ascending=False)\ncolor_map = {'High Outlier': '#2E86AB', 'Low Outlier': '#E94F37', 'Average': '#FFD700'}\nbar_colors = df_plot['Outlier Category'].map(color_map)\nplt.figure(figsize=(12, 18))\nax = plt.gca()\nbars = ax.barh(df_plot['Country'], df_plot['Rice Production Per Person (Kg)_numeric'], color=bar_colors)\nax.axvline(mean_val, color='gray', linewidth=2, linestyle='--', label='Global Mean')\nfor i, (idx, row) in enumerate(df_plot.iterrows()):\n    if row['Outlier Category'] != 'Average':\n        ax.text(row['Rice Production Per Person (Kg)_numeric'] + 2, i, row['Country'], color=color_map[row['Outlier Category']], va='center', fontsize=8)\nax.set_xlabel('Rice Production Per Person (Kg)')\nax.set_ylabel('Country')\nax.set_title('Rice Production Per Person Across Countries\\nWith Global Outlier Highlighting and Mean Reference')\nplt.legend(['Global Mean'])\nplt.grid(axis='x', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What trends can be observed in wind speed over time for each location?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Multi-Line Time Series Chart",
+      "design_rationale": "A line plot is ideal for depicting wind speed changes over time. By plotting each city ('Location') as a separate line, viewers can easily compare wind speed patterns across locations. Given only 7 unique observation times and 8 cities, showing all on a single axis maximizes clarity and enables side-by-side trend comparison. Color coding each city leverages categorical encoding, revealing both temporal and spatial wind speed dynamics.",
+      "target_insight": "How wind speed varies across time for each city, highlighting similarities, differences, and potential spikes or dips in wind speed per city.",
+      "output_fields": [
+        "Observation Time",
+        "Wind Speed (kph)",
+        "Location"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Wind Speed (kph)",
+        "color": "Location",
+        "size": null,
+        "other_aesthetics": "Legend for city color, clear x-tick rotation for timestamps, large font for clarity"
+      }
+    },
+    "transformations": [
+      "Convert df['Observation Time'] to pandas datetime for accurate ordering",
+      "Sort dataframe by df['Observation Time'] and df['Location']",
+      "Group by df['Location'] and plot each city's wind speed trend across sorted observation times"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "df.sort_values(['Observation Time', 'Location'], inplace=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\ndf.sort_values(['Observation Time', 'Location'], inplace=True)\nlocations = df['Location'].unique()\ncolors = mpl.colormaps['tab10'].resampled(len(locations)).colors\nfig, ax = plt.subplots(figsize=(10,6))\nfor i, loc in enumerate(locations):\n    df_loc = df[df['Location'] == loc]\n    ax.plot(df_loc['Observation Time'], df_loc['Wind Speed (kph)'], label=loc, color=colors[i], linewidth=2)\nax.set_xlabel(\"Observation Time\", fontsize=13)\nax.set_ylabel(\"Wind Speed (kph)\", fontsize=13)\nax.set_title(\"Wind Speed Trends Over Time for Each Location\", fontsize=15)\nax.legend(title=\"Location\", bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.xticks(rotation=45, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

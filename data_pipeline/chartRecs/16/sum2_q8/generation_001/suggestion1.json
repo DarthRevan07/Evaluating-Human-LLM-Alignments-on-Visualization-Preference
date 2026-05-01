@@ -1,0 +1,37 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "Is there a significant difference in Attack between Pokémon of different primary types (Type 1)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot is ideal for comparing the distribution, spread, and central tendency of Attack values across each primary type (Type 1). This allows the user to see not just means but also medians, quartiles, outlier frequencies, and the variance for each category. The dense dataset (800 rows, 18 types) makes boxplots preferable to summarize and visually compare all groups side-by-side. No color encoding is needed as categorical separation is sufficient; each type is shown as a separate box on the x-axis.",
+      "target_insight": "This visualization reveals whether some primary types are consistently stronger offensively, and highlights the degree of variability and overlap in Attack stat across all types.",
+      "output_fields": [
+        "Type 1",
+        "Attack"
+      ],
+      "chart_encodings": {
+        "x": "Type 1",
+        "y": "Attack",
+        "color": "None (all boxes same color unless customization applied)",
+        "size": "None",
+        "other_aesthetics": "box styling, outlier markers"
+      }
+    },
+    "transformations": [
+      "Group data by 'Type 1'",
+      "For each group, summarize distribution of 'Attack' (showing quartiles, median, min, max, and outliers)"
+    ],
+    "data_preparation_steps": [
+      "Load data",
+      "Set order of 'Type 1' according to median Attack or alphabetical (choose one for clarity)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\n# Prepare sorted type order by median Attack for better visualization\ntype_order = df.groupby('Type 1')['Attack'].median().sort_values(ascending=False).index.tolist()\ndata = [df[df['Type 1'] == t]['Attack'] for t in type_order]\nfig, ax = plt.subplots(figsize=(12, 7))\nbp = ax.boxplot(data, patch_artist=True, labels=type_order, showfliers=True, boxprops={'facecolor': '#C7E9F4', 'edgecolor': '#367DB7'}, medianprops={'color': '#E17C4A', 'linewidth': 2}, whiskerprops={'color': '#367DB7'}, capprops={'color': '#367DB7'}, flierprops={'marker': 'o', 'color': '#C77C3B', 'alpha': 0.5})\nax.set_xlabel('Type 1')\nax.set_ylabel('Attack')\nax.set_title('Distribution of Attack Stat by Primary Pokémon Type (Type 1)')\nplt.xticks(rotation=45)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

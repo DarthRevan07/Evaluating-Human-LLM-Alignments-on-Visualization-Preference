@@ -1,0 +1,35 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Do customers who avail more discounts tend to have higher purchase rates?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Plot (Purchase Rate by Discounts Availed Level)",
+      "design_rationale": "This approach aggregates data by the 'DiscountsAvailed' field, calculating the average purchase rate ('PurchaseStatus') for each distinct discount count. A bar plot succinctly visualizes the relationship between the number of discounts used and an aggregate probability of completing a purchase. This is appropriate since both variables are discrete and the relationship between number of discounts availed and purchase rate is central to the analytical question. Using color to highlight the purchase rate further emphasizes the trend and allows for quick comparisons.",
+      "target_insight": "Whether increasing the number of discounts availed corresponds with a higher likelihood of purchase—as shown by average purchase rates per discount count.",
+      "output_fields": [
+        "DiscountsAvailed",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "DiscountsAvailed",
+        "y": "Average PurchaseStatus",
+        "color": "bar color mapped to average purchase rate (using sequential colormap)",
+        "size": null,
+        "other_aesthetics": "Grid, value annotation on bars"
+      }
+    },
+    "transformations": [
+      "Group df by 'DiscountsAvailed' and compute mean of 'PurchaseStatus' for each group"
+    ],
+    "data_preparation_steps": [
+      "discounts_purchase_rate = df.groupby('DiscountsAvailed')['PurchaseStatus'].mean().reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndiscounts_purchase_rate = df.groupby('DiscountsAvailed')['PurchaseStatus'].mean().reset_index()\ncmap = mpl.colormaps['viridis']\ncolors = cmap(discounts_purchase_rate['PurchaseStatus'].values / discounts_purchase_rate['PurchaseStatus'].max())\nfig, ax = plt.subplots(figsize=(8,5))\nbars = ax.bar(discounts_purchase_rate['DiscountsAvailed'], discounts_purchase_rate['PurchaseStatus'], color=colors, edgecolor='black')\nax.set_xlabel('DiscountsAvailed')\nax.set_ylabel('Average Purchase Rate (PurchaseStatus)')\nax.set_title('Purchase Rate by Number of Discounts Availed')\nax.grid(axis='y', linestyle='--', alpha=0.6)\nfor idx, val in enumerate(discounts_purchase_rate['PurchaseStatus']):\n    ax.text(discounts_purchase_rate['DiscountsAvailed'][idx], val + 0.02, f'{val:.2f}', ha='center', va='bottom', fontsize=9)\nnorm = mpl.colors.Normalize(vmin=discounts_purchase_rate['PurchaseStatus'].min(), vmax=discounts_purchase_rate['PurchaseStatus'].max())\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, pad=0.02)\ncbar.set_label('Average Purchase Rate')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

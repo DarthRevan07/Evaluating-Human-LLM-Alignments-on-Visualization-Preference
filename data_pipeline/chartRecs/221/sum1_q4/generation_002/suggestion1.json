@@ -1,0 +1,39 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How does the duration of trips differ among travelers selecting hotels versus Airbnbs?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (side-by-side)",
+      "design_rationale": "A boxplot provides a robust comparative display of trip duration distributions between travelers who selected hotels and those who opted for Airbnbs. This allows for an immediate visual assessment of central tendency (median), spread (IQR), and the presence of outliers, all of which are valuable for understanding the difference in trip duration choices according to accommodation preference. The boxplot leverages the numeric 'Duration (days)' field and the categorical 'Accommodation type', making it ideal for the schema structure (moderate row count, distinct accommodation types, and limited duration values).",
+      "target_insight": "Displays the median, spread, and outliers of trip durations for Hotel vs Airbnb travelers, revealing differences in typical stay length and trip duration variability.",
+      "output_fields": [
+        "Duration (days)",
+        "Accommodation type"
+      ],
+      "chart_encodings": {
+        "x": "Accommodation type",
+        "y": "Duration (days)",
+        "color": "Accommodation type (for box color differentiation, e.g., blue for Hotel, orange for Airbnb)",
+        "size": null,
+        "other_aesthetics": "Box width, median line visibility, outlier markers, gridlines, legend"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Accommodation type'] is either 'Hotel' or 'Airbnb'",
+      "Remove rows with missing values in df['Duration (days)'] and df['Accommodation type']",
+      "Group data by df['Accommodation type'] to extract trip durations per group (Hotel, Airbnb)"
+    ],
+    "data_preparation_steps": [
+      "df_filtered = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]",
+      "df_filtered = df_filtered.dropna(subset=['Duration (days)', 'Accommodation type'])",
+      "duration_groups = [df_filtered[df_filtered['Accommodation type'] == 'Hotel']['Duration (days)'], df_filtered[df_filtered['Accommodation type'] == 'Airbnb']['Duration (days)']]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_filtered = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]\ndf_filtered = df_filtered.dropna(subset=['Duration (days)', 'Accommodation type'])\nduration_groups = [df_filtered[df_filtered['Accommodation type'] == 'Hotel']['Duration (days)'], df_filtered[df_filtered['Accommodation type'] == 'Airbnb']['Duration (days)']]\nfig, ax = plt.subplots(figsize=(7,5))\nbox = ax.boxplot(duration_groups, patch_artist=True, labels=['Hotel', 'Airbnb'], widths=0.5, medianprops={'color':'black','linewidth':2}, boxprops={'edgecolor':'darkgrey','linewidth':1})\ncolors = ['#3277b0', '#ff9000']\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xticklabels(['Hotel', 'Airbnb'], fontsize=12)\nax.set_ylabel('Duration (days)', fontsize=13)\nax.set_xlabel('Accommodation type', fontsize=13)\nax.set_title('Trip Duration Distribution by Accommodation Type\\n(Hotel vs Airbnb)', fontsize=14)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

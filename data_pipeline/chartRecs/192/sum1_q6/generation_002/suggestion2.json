@@ -1,0 +1,38 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "How does Star color correlate with Temperature?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot with color encoding",
+      "design_rationale": "A scatter plot with 'Temperature (K)' on the x-axis and each star represented as a point, with color indicating the assigned 'Star color', effectively visualizes the mapping between categorical color assignments and temperature values. This design reveals overlap, clusters, and the 'gradient' relationship from cooler to hotter colors. Using unique categorical colors for each star color allows users to visually trace how colors are distributed across the temperature spectrum.",
+      "target_insight": "Directly see how 'Star color' classification aligns to measured temperature values, observe mixing or separation of colors, and identify whether the color categorical assignment reflects a clear progression in temperature.",
+      "output_fields": [
+        "Temperature (K)",
+        "Star color"
+      ],
+      "chart_encodings": {
+        "x": "Temperature (K)",
+        "y": "Star color",
+        "color": "categorical color mapping for 'Star color' using plt.cm.tab20",
+        "size": "fixed point size for clarity",
+        "other_aesthetics": "alpha transparency, jitter in y if needed to reduce overplotting"
+      }
+    },
+    "transformations": [
+      "Map 'Star color' to integer codes for discrete colormap",
+      "Optional: Add vertical jitter to y-axis for visual separation if desired"
+    ],
+    "data_preparation_steps": [
+      "Extract unique 'Star color' values, assign integer codes",
+      "Map integer codes to colors using mpl.colormaps['tab20']",
+      "Create arrays of x (Temperature (K)), y ('Star color' code), and color for scatter plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared/192.csv')\nunique_colors = sorted(df['Star color'].unique())\ncolor_codes = {c: i for i, c in enumerate(unique_colors)}\ndf['color_code'] = df['Star color'].map(color_codes)\ncmap = mpl.colormaps['tab20']\npoint_colors = df['color_code'].apply(lambda i: cmap(i % 20)).tolist()\ny_jitter = df['color_code'] + np.random.uniform(-0.1, 0.1, size=len(df))\nfig, ax = plt.subplots(figsize=(14,7))\nscatter = ax.scatter(df['Temperature (K)'], y_jitter, c=point_colors, s=40, alpha=0.75, edgecolor='k', linewidth=0.4)\nax.set_yticks(range(len(unique_colors)))\nax.set_yticklabels(unique_colors)\nax.set_xlabel('Temperature (K)', fontsize=12)\nax.set_ylabel('Star color', fontsize=12)\nax.set_title('Scatter Plot: Temperature (K) vs Star Color\\nColor encodes observed categories', fontsize=17)\nax.grid(axis='x', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

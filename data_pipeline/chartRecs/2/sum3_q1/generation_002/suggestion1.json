@@ -1,0 +1,45 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How have methane emissions changed in the Energy sector across different countries between 1990 and 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart (Multiseries)",
+      "design_rationale": "A line chart provides a clear visualization of changes in methane emissions for the Energy sector across multiple countries over time. Using multiseries lines allows direct comparison of national trends from 1990 to 2018. The schema includes year columns as numeric values, which are ideal for time-series analysis. Selecting key countries provides enough detail while avoiding clutter.",
+      "target_insight": "This visualization reveals which countries have increased, decreased, or maintained their methane emissions in the Energy sector over the nearly three-decade period, directly highlighting temporal patterns and cross-country differences.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "2018",
+        "All-Year Columns"
+      ],
+      "chart_encodings": {
+        "x": "Year (columns: 1990-2018)",
+        "y": "Methane emissions (numeric value per year)",
+        "color": "Country (distinct color per country)",
+        "size": null,
+        "other_aesthetics": "Legend for countries, grid lines, annotated start/end points for major countries"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Sector'] == 'Energy'",
+      "Select columns: 'Country' and all years from '1990' to '2018'",
+      "Choose top 6 countries by total emissions in 2018 (to avoid overcrowding, but still informative)",
+      "Reshape DataFrame from wide to long format: melt years as 'Year', values as 'Methane Emissions'"
+    ],
+    "data_preparation_steps": [
+      "df_energy = df[df['Sector'] == 'Energy']",
+      "year_cols = [str(y) for y in range(1990, 2019)]",
+      "top_countries = df_energy.sort_values('2018', ascending=False)['Country'].unique()[:6]",
+      "df_energy_top = df_energy[df_energy['Country'].isin(top_countries)]",
+      "df_long = df_energy_top.melt(id_vars=['Country'], value_vars=year_cols, var_name='Year', value_name='Methane Emissions')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_energy = df[df['Sector'] == 'Energy']\nyear_cols = [str(y) for y in range(1990, 2019)]\ntop_countries = df_energy.sort_values('2018', ascending=False)['Country'].unique()[:6]\ndf_energy_top = df_energy[df_energy['Country'].isin(top_countries)]\ndf_long = df_energy_top.melt(id_vars=['Country'], value_vars=year_cols, var_name='Year', value_name='Methane Emissions')\ndf_long['Year'] = df_long['Year'].astype(int)\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['tab10']\nfor idx, country in enumerate(top_countries):\n    subset = df_long[df_long['Country'] == country]\n    ax.plot(subset['Year'], subset['Methane Emissions'], label=country, color=cmap(idx))\n    ax.scatter([1990, 2018], [subset[subset['Year']==1990]['Methane Emissions'].values[0], subset[subset['Year']==2018]['Methane Emissions'].values[0]], color=cmap(idx), s=60)\nplt.title('Methane Emissions in Energy Sector\\nTop Countries, 1990-2018', fontsize=16)\nplt.xlabel('Year', fontsize=13)\nplt.ylabel('Methane Emissions (MTCO2e)', fontsize=13)\nplt.grid(True, alpha=0.3)\nplt.legend(title='Country', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

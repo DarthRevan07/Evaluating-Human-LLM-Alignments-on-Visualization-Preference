@@ -1,0 +1,37 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Among different enginetypes, which are associated with higher average prices?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart (Sorted)",
+      "design_rationale": "A bar chart provides a clear, comparative overview of average car prices across each enginetype. By aggregating data on enginetype and sorting the bars by average price, viewers can directly see which types are associated with higher prices. With only 7 unique engine types, this approach gives precise ranking, making it easy to answer the question and facilitating fast scanning and decision-making. Color can be used to accentuate price differences.",
+      "target_insight": "Reveals which enginetypes have the highest average prices and the relative ranking of each type.",
+      "output_fields": [
+        "enginetype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginetype",
+        "y": "price (mean)",
+        "color": "price (mean)--mapped with continuous colormap for visual emphasis",
+        "size": null,
+        "other_aesthetics": "Sort bars descending; value labels on bars; tight layout"
+      }
+    },
+    "transformations": [
+      "Group df by 'enginetype' and compute mean of 'price'",
+      "Sort resulting DataFrame by 'price' (mean) in descending order"
+    ],
+    "data_preparation_steps": [
+      "df_group = df.groupby('enginetype', as_index=False)['price'].mean()",
+      "df_group_sorted = df_group.sort_values(by='price', ascending=False)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf_group = df.groupby('enginetype', as_index=False)['price'].mean()\ndf_group_sorted = df_group.sort_values(by='price', ascending=False)\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df_group_sorted['price'].min(), vmax=df_group_sorted['price'].max())\ncolors = cmap(norm(df_group_sorted['price']))\nbars = ax.bar(df_group_sorted['enginetype'], df_group_sorted['price'], color=colors)\nfor bar, price in zip(bars, df_group_sorted['price']):\n    ax.text(bar.get_x() + bar.get_width()/2, bar.get_height()-1000, f'{int(price):,}', ha='center', va='top', color='white', fontsize=12)\nsm = mpl.cm.ScalarMappable(norm=norm, cmap=cmap)\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Average Price', fontsize=14)\nax.set_xlabel('enginetype', fontsize=14)\nax.set_ylabel('Average Price', fontsize=14)\nax.set_title('Average Car Price by Engine Type\\n(Sorted Highest to Lowest)', fontsize=16)\nplt.xticks(fontsize=13)\nplt.yticks(fontsize=13)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

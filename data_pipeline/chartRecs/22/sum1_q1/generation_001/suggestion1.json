@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does car price differ across various carbody types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot provides a robust overview of price distribution for each carbody type, visually capturing median, interquartile range, and outliers. Given the 'carbody' field is categorical with only 5 unique values, and 'price' is continuous with wide range, boxplots efficiently summarize differences in central tendency and spread. This also reveals variability and potential outlier cars per segment.",
+      "target_insight": "Compares price dispersion and median across each carbody style, helping identify types associated with higher or more volatile pricing.",
+      "output_fields": [
+        "carbody",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "carbody",
+        "y": "price",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "showfliers=True for clear outlier visibility; gridlines; high aspect ratio for readability"
+      }
+    },
+    "transformations": [
+      "No aggregation: just group 'price' values by 'carbody'",
+      "Remove missing prices (though field indicates no nulls)",
+      "Sort carbody groups by median price for visual clarity"
+    ],
+    "data_preparation_steps": [
+      "Create list of unique carbody values, sorting by median price",
+      "Prepare ordered list of price arrays for each carbody"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\22.csv')\ncarbody_order = df.groupby('carbody')['price'].median().sort_values(ascending=False).index.tolist()\ncarbody_price_arrays = [df.loc[df['carbody']==cb, 'price'].values for cb in carbody_order]\nfig, ax = plt.subplots(figsize=(10,6))\nbp = ax.boxplot(carbody_price_arrays, labels=carbody_order, patch_artist=True, showfliers=True)\nfor box in bp['boxes']:\n    box.set(facecolor='#78c4d4', alpha=0.5)\nax.set_xlabel('carbody')\nax.set_ylabel('price')\nax.set_title('Distribution of Car Prices Across Carbody Types')\nax.grid(True, axis='y', linestyle='--', color='#aaaaaa', alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

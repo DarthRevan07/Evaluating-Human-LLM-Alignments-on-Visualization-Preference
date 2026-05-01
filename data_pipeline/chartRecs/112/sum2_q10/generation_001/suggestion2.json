@@ -1,0 +1,37 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "How do average caffeine contents compare across drink types, and what might this indicate about consumer preferences?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Box Plot (Distribution of Caffeine Content per Drink Type)",
+      "design_rationale": "Box plots allow exploration beyond averages, revealing spread, medians, and outliers for each drink type. This visualization assesses whether certain drink types have consistently high or variable caffeine, showing consumer preference volatility and choice diversity. This chart leverages the categorical nature of 'type' and the quantitative range of 'Caffeine (mg)', providing nuanced insight into stimulate content variability within types.",
+      "target_insight": "How caffeine content varies within each drink type—detecting consistent patterns, exceptions, and overlap that inform consumer decision-making and product differentiation.",
+      "output_fields": [
+        "type",
+        "Caffeine (mg)"
+      ],
+      "chart_encodings": {
+        "x": "type",
+        "y": "Caffeine (mg)",
+        "color": "Box color by type (categorical palette)",
+        "size": null,
+        "other_aesthetics": "Whiskers show range, outlier points plotted"
+      }
+    },
+    "transformations": [
+      "No aggregation: retain all df['Caffeine (mg)'] values for each df['type'] to display distribution",
+      "Map each unique type to a unique categorical color for boxplot"
+    ],
+    "data_preparation_steps": [
+      "Prepare list of caffeine arrays for each unique df['type']",
+      "Assign categorical colors for each type"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ntypes = df['type'].unique()\ntypes_sorted = sorted(types)\ndata = [df.loc[df['type']==t, 'Caffeine (mg)'].values for t in types_sorted]\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(types_sorted))]\nfig, ax = plt.subplots(figsize=(10, 6))\nbox = ax.boxplot(data, patch_artist=True, vert=True, labels=types_sorted, medianprops={'color':'black'}, boxprops={'facecolor':'white', 'edgecolor':'black'})\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xlabel('Drink Type')\nax.set_ylabel('Caffeine (mg)')\nax.set_title('Distribution of Caffeine Content by Drink Type\\n(Boxplots show spread, medians, and outliers)')\nfor i, type_name in enumerate(types_sorted):\n    ax.text(i+1, np.max(data[i])+10, type_name, ha='center', fontsize=9)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

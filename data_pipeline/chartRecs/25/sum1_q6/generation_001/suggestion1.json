@@ -1,0 +1,38 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable relationship between a stock’s Open price and its High price in the current period?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Regression Line",
+      "design_rationale": "A scatter plot is ideal for visualizing the relationship between two continuous quantitative variables, especially since both 'Open' and 'High' are numeric string fields per stock. Including a linear regression line directly addresses the question of whether a systematic relationship exists between these variables. Each point represents a NIFTY-50 stock, ensuring data completeness and maximizing insight.",
+      "target_insight": "Whether 'Open' and 'High' prices for each stock are closely correlated; the spread, clustering, or outliers will reveal if the day's high price tends to move in lockstep with the opening price.",
+      "output_fields": [
+        "Open",
+        "High",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "Open",
+        "y": "High",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Display each stock as a point labeled with its 'Symbol' on hover; add a regression line with confidence interval shading for trend visibility."
+      }
+    },
+    "transformations": [
+      "Convert 'Open' and 'High' fields from string monetary values to floats, handling any commas or formatting.",
+      "Remove any rows with parse errors or missing values in 'Open' or 'High'."
+    ],
+    "data_preparation_steps": [
+      "df['Open'] = df['Open'].replace(',', '', regex=True).astype(float)",
+      "df['High'] = df['High'].replace(',', '', regex=True).astype(float)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom scipy.stats import linregress\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\ndf[\"Open\"] = df[\"Open\"].replace(',', '', regex=True).astype(float)\ndf[\"High\"] = df[\"High\"].replace(',', '', regex=True).astype(float)\nfig, ax = plt.subplots(figsize=(8,6))\nax.scatter(df[\"Open\"], df[\"High\"], alpha=0.8, edgecolor=\"k\")\n# Regression line\nslope, intercept, r_value, p_value, std_err = linregress(df[\"Open\"], df[\"High\"])\nx_vals = np.array(ax.get_xlim())\ny_vals = intercept + slope * x_vals\nax.plot(x_vals, y_vals, color='red', lw=2, label=f\"Regression line (R²={r_value**2:.2f})\")\n# Confidence band\npred_y = intercept + slope*df[\"Open\"]\nresiduals = df[\"High\"] - pred_y\nstd_err = np.std(residuals)\nax.fill_between(x_vals, y_vals - 2*std_err, y_vals + 2*std_err, color='red', alpha=0.15, label='95% CI')\nax.set_xlabel(\"Open Price (INR)\")\nax.set_ylabel(\"High Price (INR)\")\nax.set_title(\"Relationship between Open and High Prices for NIFTY-50 Stocks\")\nax.legend(loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

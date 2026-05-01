@@ -1,0 +1,45 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which undergraduate majors are most common among astronauts, and how does this distribution differ by gender?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Stacked Percentage Bar Chart",
+      "design_rationale": "The stacked percentage bar chart shows, for each gender, what proportion of astronauts studied each of the top undergraduate majors. By normalizing counts to percentages, this visualization highlights not only absolute but relative preferences and distributions. This answers whether certain majors make up a larger share of one gender compared to another and is effective for comparing categorical breakdowns within each gender.",
+      "target_insight": "How the composition of undergraduate majors differs as a share of male vs female astronauts, surfacing gender-major affinities beyond just absolute counts.",
+      "output_fields": [
+        "Gender",
+        "Undergraduate Major",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "df['Gender'] (two bars: 'Male', 'Female')",
+        "y": "percentage of astronauts within each gender for each df['Undergraduate Major']",
+        "color": "df['Undergraduate Major'] (top 8 majors, distinctly colored)",
+        "size": null,
+        "other_aesthetics": "stacked bar segments (percentage scale), legend for major, percentage labels on segments"
+      }
+    },
+    "transformations": [
+      "Drop rows with null in df['Undergraduate Major'] and df['Gender']",
+      "Group by df['Undergraduate Major'], count total astronauts, select top 8 majors overall",
+      "Within each gender, count astronauts for top majors",
+      "For each gender, calculate percentage of astronauts in each major relative to their gender total"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=[\"Undergraduate Major\", \"Gender\"])",
+      "major_counts = df_clean['Undergraduate Major'].value_counts()",
+      "top_majors = major_counts.nlargest(8).index.tolist()",
+      "df_top = df_clean[df_clean['Undergraduate Major'].isin(top_majors)]",
+      "gender_major = df_top.groupby([\"Gender\", \"Undergraduate Major\"]).size().unstack(fill_value=0)",
+      "gender_totals = gender_major.sum(axis=1)",
+      "gender_major_pct = gender_major.div(gender_totals, axis=0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf_clean = df.dropna(subset=[\"Undergraduate Major\", \"Gender\"])\nmajor_counts = df_clean[\"Undergraduate Major\"].value_counts()\ntop_majors = major_counts.nlargest(8).index.tolist()\ndf_top = df_clean[df_clean[\"Undergraduate Major\"].isin(top_majors)]\ngender_major = df_top.groupby([\"Gender\", \"Undergraduate Major\"]).size().unstack(fill_value=0)\ngender_totals = gender_major.sum(axis=1)\ngender_major_pct = gender_major.div(gender_totals, axis=0)\nmajors = top_majors\ngenders = gender_major_pct.index.tolist()\ncmap = mpl.colormaps[\"tab20\"].resampled(len(majors))\ncolors = [cmap(i) for i in range(len(majors))]\nfig, ax = plt.subplots(figsize=(7, 7))\nleft = np.zeros(len(genders))\nfor i, major in enumerate(majors):\n    values = gender_major_pct[major].values\n    ax.bar(genders, values, bottom=left, color=colors[i], label=major)\n    left += values\nax.set_ylabel(\"Share of Astronauts per Gender\")\nax.set_xlabel(\"Gender\")\nax.set_title(\"Undergraduate Major Distribution among NASA Astronauts\\nby Gender (Percentage of Each Gender)\")\nax.set_ylim(0,1)\nax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y,_: f\"{int(y*100)}%\"))\nax.legend(title=\"Undergraduate Major\", bbox_to_anchor=(1,1), loc=\"upper left\")\nfor i, gender in enumerate(genders):\n    cur_bottom = 0\n    for j, major in enumerate(majors):\n        val = gender_major_pct.iloc[i,j]\n        if val > 0.05:\n            ax.text(i, cur_bottom + val/2, f\"{int(val*100)}%\", ha=\"center\", va=\"center\", color=\"white\", fontsize=9)\n        cur_bottom += val\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

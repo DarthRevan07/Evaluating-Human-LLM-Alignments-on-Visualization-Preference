@@ -1,0 +1,49 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which sectors contribute the most to total methane emissions in a specific country, and how has this changed from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Clustered Bar Chart (Side-by-side comparison: 1990 vs 2018)",
+      "design_rationale": "A clustered bar chart provides a clear before-and-after comparison of absolute methane emissions by sector for a specific country between 1990 and 2018. This approach directly showcases which sectors are the largest contributors in each of these two key years, and immediately reveals shifts in ranking and magnitude. It addresses both the 'which sectors' and 'how has this changed' parts of the question in a straightforward, perceptually accurate bar-length comparison. The side-by-side display helps users quickly see increases and decreases sector by sector.",
+      "target_insight": "The change in total methane emissions by sector for a given country from 1990 (historical baseline) to 2018 (latest year), explicitly showing absolute (not proportional) shifts and the top contributing sectors.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Sector",
+        "y": "Methane emissions (absolute; units from 'Unit')",
+        "color": "Year (1990=one color, 2018=another color)",
+        "size": null,
+        "other_aesthetics": "bar width=0.35, legend: Year, bars grouped by sector"
+      }
+    },
+    "transformations": [
+      "Filter df to a specific country using df['Country']",
+      "Select ['Sector', '1990', '2018'] columns for that country",
+      "Drop rows with all-zeroes or missing for both 1990 and 2018 (likely 1990 may have nulls for some sectors)",
+      "Replace nulls/NaNs in emissions with 0 (or, optionally, do not plot those sectors if they are truly missing data in both years)",
+      "Sort sectors by 2018 value (for bar ordering, as most recent is more relevant to current contributions)"
+    ],
+    "data_preparation_steps": [
+      "country = 'United States'  # or prompt user",
+      "df_country = df[df['Country'] == country][['Sector','1990','2018']]",
+      "df_country = df_country[(df_country['1990'].notna()) | (df_country['2018'].notna())]",
+      "df_country = df_country.fillna(0)",
+      "df_country = df_country.sort_values('2018', ascending=False)",
+      "sectors = df_country['Sector'].values",
+      "bar_width = 0.35",
+      "y_1990 = df_country['1990'].values",
+      "y_2018 = df_country['2018'].values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\ncountry = 'United States'  # Change as desired\ndf_country = df[df['Country'] == country][['Sector','1990','2018']]\ndf_country = df_country[(df_country['1990'].notna()) | (df_country['2018'].notna())]\ndf_country = df_country.fillna(0)\ndf_country = df_country.sort_values('2018', ascending=False)\nsectors = df_country['Sector'].values\nn = len(sectors)\nbar_width = 0.35\nx = np.arange(n)\ny_1990 = df_country['1990'].values\ny_2018 = df_country['2018'].values\nfig, ax = plt.subplots(figsize=(12,6))\nax.bar(x-bar_width/2, y_1990, width=bar_width, label='1990', color='#a6cee3')\nax.bar(x+bar_width/2, y_2018, width=bar_width, label='2018', color='#1f78b4')\nax.set_xticks(x)\nax.set_xticklabels(sectors, rotation=30, ha='right')\nax.set_ylabel('Methane Emissions (MTCO2e)')\ntitle = 'Methane Emissions by Sector in ' + country + '\\nComparison: 1990 vs 2018 (Absolute Values)'\nax.set_title(title)\nax.legend(title='Year')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How does methane emission from the Waste sector in 2018 vary across different countries?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart presents a clear, ranked comparison of methane emissions from the Waste sector in 2018 by country. The field '2018' is numeric, and 'Country' is categorical with moderate cardinality (195 unique values). Sorting bars from highest to lowest enables users to quickly identify countries with the largest and smallest emissions, while facilitating easy reading of long country names. This format maximizes clarity and allows rapid insight into emission distribution across all countries.",
+      "target_insight": "Highlights the ranking and absolute values of methane emissions from the Waste sector in 2018 for each country, revealing the range and disparity across countries.",
+      "output_fields": [
+        "Country",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "2018",
+        "y": "Country",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Sort bars descending by '2018'; gridlines for readability; tight layout for country labels"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where df['Sector']=='Waste'",
+      "Remove rows where df['Country']=='World' to avoid global aggregate skew",
+      "Sort df by '2018' descending",
+      "Keep top 30 countries for visual clarity (if full list too long for one view)"
+    ],
+    "data_preparation_steps": [
+      "df_waste = df[df['Sector']=='Waste']",
+      "df_waste = df_waste[df_waste['Country']!='World']",
+      "df_waste_sorted = df_waste.sort_values('2018', ascending=False)",
+      "df_waste_top30 = df_waste_sorted.head(30)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\ndf_waste = df[df['Sector']=='Waste']\ndf_waste = df_waste[df_waste['Country']!='World']\ndf_waste_sorted = df_waste.sort_values('2018', ascending=False)\ndf_waste_top30 = df_waste_sorted.head(30)\nfig, ax = plt.subplots(figsize=(10,12))\nax.barh(df_waste_top30['Country'], df_waste_top30['2018'], color='#4682b4')\nax.set_xlabel(\"Methane Emissions (MTCO2e) in 2018\")\nax.set_ylabel(\"Country\")\nax.set_title(\"Top 30 Countries by Methane Emissions from Waste Sector in 2018\")\nax.grid(axis='x', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

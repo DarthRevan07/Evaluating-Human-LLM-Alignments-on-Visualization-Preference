@@ -1,0 +1,38 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does the Total stat differ between Pokémon with and without a secondary type (Type 2)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "strip/jittered scatter plot",
+      "design_rationale": "A strip plot with jitter spreads individual Pokémon horizontally within each category (with/without secondary type). This method emphasizes the detailed distribution of Total stat, visualizes density, and uncovers concentration patterns, gaps, and clustering nuances missed by summary statistics. Using alternate marker colors for each category boosts interpretability and reveals fine structure in the stat distribution.",
+      "target_insight": "The visualization shows the spread and concentration of Total stat scores for individual Pokémon within each type-group, highlighting possible stat clustering, gaps, or overlapping ranges between groups.",
+      "output_fields": [
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "\"Has Secondary Type\" (categorical grouping derived from \"Type 2\")",
+        "y": "\"Total\"",
+        "color": "\"Has Secondary Type\" (alternating marker color for 'Yes' vs 'No')",
+        "size": null,
+        "other_aesthetics": "Jitter on x for clarity, transparency (alpha) to reduce overplotting"
+      }
+    },
+    "transformations": [
+      "Create a new column 'Has Secondary Type' (as above), grouping Pokémon into 'Yes' and 'No'",
+      "For each Pokémon, assign x-position as 0 (No Secondary Type) or 1 (Yes), plus small random jitter for visualization clarity"
+    ],
+    "data_preparation_steps": [
+      "Load dataframe from provided file",
+      "Create 'Has Secondary Type' column: df['Has Secondary Type'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')",
+      "Assign x-value: map 'No' to 0, 'Yes' to 1; add random jitter within [-0.16, 0.16], generating df['x_jitter'] column"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf['Has Secondary Type'] = np.where(df['Type 2'].notnull(), 'Yes', 'No')\nx_map = {'No':0, 'Yes':1}\ndf['x_base'] = df['Has Secondary Type'].map(x_map)\ndf['x_jitter'] = df['x_base'] + np.random.uniform(-0.16, 0.16, size=len(df))\nfig, ax = plt.subplots(figsize=(7,6))\ncolors = {0:'#4363d8', 1:'#ffd649'}\nfor group in ['No','Yes']:\n    gidx = df['Has Secondary Type'] == group\n    ax.scatter(df.loc[gidx,'x_jitter'], df.loc[gidx,'Total'],\n               c=colors[x_map[group]], label=group,\n               alpha=0.33, edgecolor='k', s=38)\nax.set_xticks([0,1])\nax.set_xticklabels(['No Secondary Type','Has Secondary Type'])\nax.set_xlabel('Has Secondary Type')\nax.set_ylabel('Total Stat')\nax.set_title('Individual Pokémon Total Stat Distribution\\nby Secondary Type Presence')\nax.legend(title='Has Secondary Type')\nax.grid(axis='y', linestyle='--', alpha=0.35)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

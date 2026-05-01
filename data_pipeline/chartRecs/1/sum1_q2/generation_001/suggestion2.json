@@ -1,0 +1,43 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "How do the industry sector's percentage contribution to GDP differ across countries with the highest and lowest GDP rankings?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "boxplot with strip swarm overlay",
+      "design_rationale": "A boxplot overlaid with a strip swarm plot succinctly captures the distribution and spread of 'Industry%ofGDP' values within the top and bottom GDP country groups. This visualization not only reveals medians and variability at a glance, but also allows for outlier detection and individual country values to shine, communicating sectoral diversity within each group.",
+      "target_insight": "Show variations and similarities in industry GDP percentage distribution between the top 10 and bottom 10 countries, highlighting if highly ranked or low-ranked economies are more variable or consistent in industrial sector reliance.",
+      "output_fields": [
+        "Industry%ofGDP",
+        "Group (Top 10 GDP / Bottom 10 GDP)"
+      ],
+      "chart_encodings": {
+        "x": "Group (Top 10 GDP / Bottom 10 GDP)",
+        "y": "Industry%ofGDP",
+        "color": "Group",
+        "size": null,
+        "other_aesthetics": "overlay jittered strip swarm for individual country visibility"
+      }
+    },
+    "transformations": [
+      "Convert 'GDP (millions of $)' and 'Industry%ofGDP' values to numeric",
+      "Isolate top 10 and bottom 10 countries by GDP, create 'Group' column",
+      "Stack values for boxplot by 'Group'"
+    ],
+    "data_preparation_steps": [
+      "df['GDP (millions of $)'] = pd.to_numeric(df['GDP (millions of $)'].str.replace(',', '').str.replace('$', ''), errors='coerce')",
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'].str.replace('%', ''), errors='coerce')",
+      "df_top = df.sort_values('GDP (millions of $)', ascending=False).head(10).copy()",
+      "df_top['Group'] = 'Top 10 GDP'",
+      "df_bottom = df.sort_values('GDP (millions of $)', ascending=True).head(10).copy()",
+      "df_bottom['Group'] = 'Bottom 10 GDP'",
+      "df_plot = pd.concat([df_top, df_bottom], ignore_index=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\nfrom matplotlib import cm\n\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['GDP (millions of $)'] = pd.to_numeric(df['GDP (millions of $)'].str.replace(',', '').str.replace('$', ''), errors='coerce')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'].str.replace('%', ''), errors='coerce')\ndf_top = df.sort_values('GDP (millions of $)', ascending=False).head(10).copy()\ndf_top['Group'] = 'Top 10 GDP'\ndf_bottom = df.sort_values('GDP (millions of $)', ascending=True).head(10).copy()\ndf_bottom['Group'] = 'Bottom 10 GDP'\ndf_plot = pd.concat([df_top, df_bottom], ignore_index=True)\n\nfig, ax = plt.subplots(figsize=(8, 6))\ngroups = ['Top 10 GDP', 'Bottom 10 GDP']\ncolors = ['#2874A6', '#F39C12']\ndata = [df_plot[df_plot['Group']==g]['Industry%ofGDP'].dropna().values for g in groups]\nbp = ax.boxplot(data,\n                patch_artist=True,\n                labels=groups)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\n# Overlay strip swarm\nfor i, group in enumerate(groups):\n    y = df_plot[df_plot['Group']==group]['Industry%ofGDP'].dropna().values\n    x = np.random.normal(i+1, 0.07, size=len(y))\n    ax.scatter(x, y,\n               alpha=0.85,\n               s=55,\n               color=colors[i],\n               edgecolor='black',\n               linewidth=0.7,\n               zorder=2)\nax.set_ylabel('Industry Sector % Contribution to GDP')\nax.set_title('Distribution of Industry Sector % Contribution to GDP\\nTop 10 vs Bottom 10 Countries')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

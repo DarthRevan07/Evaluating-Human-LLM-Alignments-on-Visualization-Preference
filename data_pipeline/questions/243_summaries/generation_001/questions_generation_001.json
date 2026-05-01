@@ -1,0 +1,167 @@
+{
+  "table_name": "Global Metropolis Weather Dataset",
+  "generation_dir": "c2_summaries_run2\\243_summaries\\generation_001",
+  "total_summaries_processed": 4,
+  "questions_per_summary": 8,
+  "schema_context": "## Table 1: Global_Metropolis_Weather_Dataset (800 rows × 11 columns)\n\n### Description\nData loaded from CSV file: 243.csv (Dataset: Global Metropolis Weather Dataset)\n\n### Schema (11 fields)\n  - Location -- type: object, values: Dubai, Hong Kong, London, New York, Paris, Rome, Sydney, Tokyo\n  - Observation Time -- type: object, values: 4/5/2024 14:15, 4/5/2024 19:30, 4/5/2024 20:30, 4/5/2024 22:30, 4/6/2024 2:30, 4/6/2024 3:30, 4/6/2024 5:30\n  - Temperature (°C) -- type: float64, values: 8.3, 10.0, 15.0, 16.0, 19.0, 24.0, 25.0\n  - Feels Like (°C) -- type: float64, values: 4.5, 8.1, 13.8, 15.8, 16.0, 19.0, 25.5, 27.8\n  - Humidity (%) -- type: int64, values: 40, 65, 67, 72, 76, 79, 88, 100\n  - Wind Speed (kph) -- type: float64, values: 3.6, 6.1, 6.8, 9.0, 20.2, 24.1, 29.9\n  - Weather Condition -- type: object, values: Clear, Light rain, Partly cloudy\n  - Cloud Cover (%) -- type: int64, values: 0, 50, 75\n  - Pressure (mb) -- type: int64, values: 1003, 1006, 1012, 1013, 1014, 1021, 1024\n  - UV Index -- type: int64, values: 1, 2, 3, 4\n  - Visibility (km) -- type: int64, values: 10, 16\n\n### Sample Data (first 5 rows)\n```\n   Location Observation Time  Temperature (°C)  Feels Like (°C)  Humidity (%)  Wind Speed (kph) Weather Condition  Cloud Cover (%)  Pressure (mb)  UV Index  Visibility (km)\n0  New York   4/5/2024 14:15               8.3              4.5            40              29.9     Partly cloudy               75           1003         2               16\n1  New York   4/5/2024 14:15               8.3              4.5            40              29.9     Partly cloudy               75           1003         2               16\n2  New York   4/5/2024 14:15               8.3              4.5            40              29.9     Partly cloudy               75           1003         2               16\n3  New York   4/5/2024 14:15               8.3              4.5            40              29.9     Partly cloudy               75           1003         2               16\n4  New York   4/5/2024 14:15               8.3              4.5            40              29.9     Partly cloudy               75           1003         2               16\n```\n",
+  "table_metadata": {
+    "total_rows": 800,
+    "total_columns": 11,
+    "source_file": "csv_c_squared\\243.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Global Metropolis Weather Dataset",
+      "summary_idx": 1,
+      "column_combination": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)",
+        "Feels Like (°C)",
+        "Humidity (%)",
+        "Wind Speed (kph)",
+        "Weather Condition",
+        "Cloud Cover (%)",
+        "Pressure (mb)",
+        "UV Index",
+        "Visibility (km)"
+      ],
+      "questions": [
+        "How does temperature vary across different metropolitan locations at specific observation times?",
+        "What is the relationship between humidity and wind speed in cities experiencing clear weather conditions?",
+        "How does the 'feels like' temperature compare to the actual temperature in each city?",
+        "Are there noticeable differences in cloud cover among locations with high or low humidity?",
+        "How does the UV Index change throughout the observation times for each city?",
+        "Which cities exhibit the highest wind speeds, and what are their corresponding weather conditions?",
+        "Are there any anomalies in visibility levels compared to pressure readings across different locations?",
+        "What patterns can be observed in temperature trends for major cities over the series of observation times?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 800,
+          "total_columns": 11,
+          "source_file": "csv_c_squared\\243.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Global Metropolis Weather Dataset",
+      "summary_idx": 2,
+      "column_combination": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)",
+        "Feels Like (°C)",
+        "Humidity (%)",
+        "Wind Speed (kph)",
+        "Weather Condition",
+        "Cloud Cover (%)",
+        "Pressure (mb)",
+        "UV Index",
+        "Visibility (km)"
+      ],
+      "questions": [
+        "How does temperature vary across different locations during the observed time periods?",
+        "What is the relationship between humidity and cloud cover in each city?",
+        "Are there any noticeable anomalies between pressure and wind speed readings in certain locations?",
+        "How does the UV index change relative to cloud cover levels throughout the dataset?",
+        "What patterns emerge in feels like temperature compared to actual temperature across various weather conditions?",
+        "How do visibility values compare across different weather conditions within the dataset?",
+        "Does higher humidity correspond to lower visibility in specific urban areas?",
+        "What trends can be observed in wind speed over time for each location?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 800,
+          "total_columns": 11,
+          "source_file": "csv_c_squared\\243.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Global Metropolis Weather Dataset",
+      "summary_idx": 3,
+      "column_combination": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)",
+        "Feels Like (°C)",
+        "Humidity (%)",
+        "Wind Speed (kph)",
+        "Weather Condition",
+        "Cloud Cover (%)",
+        "Pressure (mb)",
+        "UV Index",
+        "Visibility (km)"
+      ],
+      "questions": [
+        "How does Wind Speed (kph) vary across different Locations?",
+        "What patterns can be observed in Temperature (°C) by Observation Time within each city?",
+        "Is there a relationship between Cloud Cover (%) and Weather Condition across all cities?",
+        "How do Visibility (km) levels compare during periods of Light rain versus Clear conditions?",
+        "Are there any notable anomalies in Humidity (%) for specific Locations?",
+        "What is the distribution of UV Index values across the different Weather Conditions?",
+        "How does Feels Like (°C) differ from Temperature (°C) for each Location?",
+        "Do higher Wind Speed (kph) values correspond with lower Visibility (km) at certain times of day?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 800,
+          "total_columns": 11,
+          "source_file": "csv_c_squared\\243.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "Global_Metropolis_Weather_Dataset",
+      "summary_idx": 4,
+      "column_combination": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)",
+        "Feels Like (°C)",
+        "Humidity (%)",
+        "Wind Speed (kph)",
+        "Weather Condition",
+        "Cloud Cover (%)",
+        "Pressure (mb)",
+        "UV Index",
+        "Visibility (km)"
+      ],
+      "questions": [
+        "How does humidity (%) vary across different locations, and which locations tend to experience higher humidity levels?",
+        "What is the relationship between UV Index and visibility (km), and are there periods or locations where both are notably high or low?",
+        "How does temperature (°C) change throughout the different observation times in one location?",
+        "Are there any notable outliers in wind speed (kph) for particular weather conditions?",
+        "How does cloud cover (%) relate to the weather condition reported, and which conditions are associated with the highest or lowest cloud cover?",
+        "Is there a pattern in pressure (mb) across the observation times, and do certain times correspond to higher or lower pressure readings?",
+        "What is the distribution of 'Feels Like' temperature across locations, and which locations have the widest range?",
+        "How does humidity (%) relate to temperature (°C), and are there combinations where exposure risks may be elevated?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 800,
+          "total_columns": 11,
+          "source_file": "csv_c_squared\\243.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What trends can be observed in medical charges as age increases, and do these trends differ by smoking status?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Plot with Dual Smoking Status",
+      "design_rationale": "A line plot allows us to visualize the trend of average medical charges as age increases, split by smoking status. By aggregating charges per age and smoker group, we clearly see how charges evolve across the age spectrum for both smokers and non-smokers, and compare their slopes and levels. Each line represents a group, revealing both overall pattern and differences induced by smoking status.",
+      "target_insight": "The visualization reveals whether medical charges increase with age, and if the increase is steeper for smokers compared to non-smokers, directly answering the question.",
+      "output_fields": [
+        "age",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age",
+        "y": "charges (mean per age and smoker group)",
+        "color": "smoker (each line distinct color)",
+        "size": null,
+        "other_aesthetics": "Lines for each group; markers showing computed mean per age"
+      }
+    },
+    "transformations": [
+      "Group the dataset by df['age'] and df['smoker']",
+      "Compute mean of df['charges'] for each group"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['age', 'smoker'])['charges'].mean().reset_index()",
+      "Create a pivot table or separate arrays for plotting smoker='yes' and 'no'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\32.csv')\ndf_grouped = df.groupby(['age', 'smoker'])['charges'].mean().reset_index()\nsmoker_yes = df_grouped[df_grouped['smoker']=='yes']\nsmoker_no = df_grouped[df_grouped['smoker']=='no']\nfig, ax = plt.subplots(figsize=(10, 6))\nx_vals = smoker_no['age']\ny_no = smoker_no['charges']\ny_yes = smoker_yes['charges']\nax.plot(x_vals, y_no, color='royalblue', marker='o', label='Non-Smoker')\nax.plot(smoker_yes['age'], y_yes, color='darkorange', marker='o', label='Smoker')\nax.set_xlabel('Age')\nax.set_ylabel('Average Medical Charges')\nax.set_title('Average Medical Charges vs Age\\nSplit by Smoking Status')\nax.legend(title='Smoking Status')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

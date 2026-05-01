@@ -1,0 +1,89 @@
+{
+  "table_name": "Students Performance in Exams",
+  "generation_dir": "secondIter\\summaries\\75_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: Students_Performance_in_Exams (1,000 rows × 8 columns)\n\n### Description\nData loaded from CSV file: 75.csv (Dataset: Students Performance in Exams)\n\n### Schema (8 fields)\n  - gender -- type: object, values: female, male\n  - race/ethnicity -- type: object, values: group A, group B, group C, group D, group E\n  - parental level of education -- type: object, values: associate's degree, bachelor's degree, high school, master's degree, some college, some high school\n  - lunch -- type: object, values: free/reduced, standard\n  - test preparation course -- type: object, values: completed, none\n  - math score -- type: int64, values: 0, 8, 18, 19, 22, ..., 96, 97, 98, 99, 100\n  - reading score -- type: int64, values: 17, 23, 24, 26, 28, ..., 95, 96, 97, 99, 100\n  - writing score -- type: int64, values: 10, 15, 19, 22, 23, ..., 96, 97, 98, 99, 100\n\n### Sample Data (first 5 rows)\n```\n   gender race/ethnicity parental level of education         lunch test preparation course  math score  reading score  writing score\n0  female        group B           bachelor's degree      standard                    none          72             72             74\n1  female        group C                some college      standard               completed          69             90             88\n2  female        group B             master's degree      standard                    none          90             95             93\n3    male        group A          associate's degree  free/reduced                    none          47             57             44\n4    male        group C                some college      standard                    none          76             78             75\n```\n",
+  "table_metadata": {
+    "total_rows": 1000,
+    "total_columns": 8,
+    "source_file": "csv_c2_sec\\75.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Students_Performance_in_Exams",
+      "summary_idx": 1,
+      "column_combination": [
+        "gender",
+        "race/ethnicity",
+        "parental level of education",
+        "lunch",
+        "test preparation course",
+        "math score",
+        "reading score",
+        "writing score"
+      ],
+      "questions": [
+        "How do average math scores differ between students who completed the test preparation course versus those who did not?",
+        "What differences are observed in reading scores across the various lunch status groups?",
+        "Does parental level of education appear to impact writing scores among students of the same race/ethnicity?",
+        "Is there a gap in math score performance between male and female students?",
+        "How do writing scores vary among the different race/ethnicity groups?",
+        "Do students with free/reduced lunch demonstrate lower or higher reading scores compared to those with standard lunch?",
+        "Within each gender, how does completion of the test preparation course relate to math score outcomes?",
+        "Are there particular parental education levels associated with higher average scores in math?",
+        "What patterns emerge when comparing writing scores of students with different lunch status within each race/ethnicity group?",
+        "Do students from group C outperform or underperform other groups in reading scores, and how is this influenced by test preparation course completion?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 1000,
+          "total_columns": 8,
+          "source_file": "csv_c2_sec\\75.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "Students_Performance_in_Exams",
+      "summary_idx": 2,
+      "column_combination": [
+        "gender",
+        "race/ethnicity",
+        "parental level of education",
+        "lunch",
+        "test preparation course",
+        "math score",
+        "reading score",
+        "writing score"
+      ],
+      "questions": [
+        "How do math scores differ between students who completed the test preparation course and those who did not?",
+        "What is the average writing score for each parental level of education category?",
+        "Does lunch type (free/reduced vs standard) influence reading scores, and if so, how?",
+        "Are there notable differences in math scores between males and females?",
+        "How does the race/ethnicity category relate to average writing scores?",
+        "Is there a correlation between parental level of education and math scores among students who completed the test preparation course?",
+        "What are the distributions of reading scores for students with 'standard' lunch versus 'free/reduced' lunch?",
+        "Among the different parental education levels, which shows the highest average reading score?",
+        "Do students in any specific race/ethnicity group show outlier performance (exceptionally high or low scores) in math?",
+        "Is there a pattern in writing score outcomes for students who received 'none' versus 'completed' test preparation course across gender?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 1000,
+          "total_columns": 8,
+          "source_file": "csv_c2_sec\\75.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the distribution of Numerical Aptitude scores differ across various Career groupings?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxen Plot (Letter-value boxplot) of Numerical Aptitude by Career Field Group",
+      "design_rationale": "Given the high cardinality of 'Career', most job titles are unique. To enable a meaningful group-wise comparison, we cluster careers into broader 'fields' (e.g., Engineering, Medical, IT, etc.), inferred from common substrings in the career names. This allows us to compare score distributions across functional groups, reducing visual clutter. A boxen plot better reveals distribution shape and outliers than a simple boxplot—useful for spotting group-based differences in numerical aptitude.",
+      "target_insight": "This chart reveals not only medians and interquartile ranges of numerical aptitude within each career field/grouping, but also the presence and skewness of outliers, highlighting which fields attract high- or low-scoring individuals.",
+      "output_fields": [
+        "Career",
+        "Numerical Aptitude"
+      ],
+      "chart_encodings": {
+        "x": "Career Field Group (derived from Career)",
+        "y": "Numerical Aptitude",
+        "color": "Distinct color per Career Field Group",
+        "size": null,
+        "other_aesthetics": "Boxen plot shape, rotated x-axis labels, jittered overlaid stripplot for datapoint density, muted color palette"
+      }
+    },
+    "transformations": [
+      "Define broader career field groupings (e.g., 'Engineering', 'Medical', 'IT', 'Business', 'Education', 'Arts') by matching keywords in df['Career'] strings.",
+      "Map each row in df to its career field group in a new column 'Career Field Group'."
+    ],
+    "data_preparation_steps": [
+      "Create a mapping function that categorizes each value in df['Career'] into a broader field group via keyword matching.",
+      "Apply this function to df['Career'] to create a new column 'Career Field Group'.",
+      "Order the groups by median 'Numerical Aptitude' score for improved interpretability in the plot."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\n\ndef map_career_field(career):\n    s = str(career).lower()\n    if \"engineer\" in s or \"developer\" in s or \"it\" in s or \"software\" in s or \"technology\" in s:\n        return \"Engineering/IT\"\n    elif \"doctor\" in s or \"medical\" in s or \"nurse\" in s or \"medicine\" in s or \"health\" in s or \"dentist\" in s:\n        return \"Medical/Healthcare\"\n    elif \"teacher\" in s or \"professor\" in s or \"education\" in s or \"lecturer\" in s or \"school\" in s or \"trainer\" in s:\n        return \"Education\"\n    elif \"business\" in s or \"finance\" in s or \"manager\" in s or \"marketing\" in s or \"account\" in s or \"analyst\" in s:\n        return \"Business/Finance\"\n    elif \"artist\" in s or \"writer\" in s or \"designer\" in s or \"musician\" in s or \"art\" in s or \"actor\" in s or \"creative\" in s:\n        return \"Arts/Creative\"\n    elif \"lawyer\" in s or \"legal\" in s or \"law\" in s:\n        return \"Law\"\n    elif \"scientist\" in s or \"science\" in s or \"research\" in s:\n        return \"Science/Research\"\n    else:\n        return \"Other\"\n\ndf[\"Career Field Group\"] = df[\"Career\"].apply(map_career_field)\n\ngroup_order = df.groupby(\"Career Field Group\")[\"Numerical Aptitude\"].median().sort_values(ascending=False).index.tolist()\nunique_groups = df[\"Career Field Group\"].dropna().unique()\npalette = mpl.colormaps[\"Set2\"].colors\ncolor_dict = {group: palette[i % len(palette)] for i, group in enumerate(group_order)}\nplt.figure(figsize=(10,6))\n# Create boxenplot (drawn as nested boxplots)\nimport seaborn as sns\nsns.set(style=\"whitegrid\", font_scale=1.06)\nax = sns.boxenplot(\n    data=df,\n    x=\"Career Field Group\",\n    y=\"Numerical Aptitude\",\n    order=group_order,\n    palette=color_dict,\n    showfliers=True,\n    linewidth=1.5\n)\n# Overlay jittered stripplot for density\nsns.stripplot(data=df,\n              x=\"Career Field Group\",\n              y=\"Numerical Aptitude\",\n              order=group_order,\n              color=\"#353535\",\n              size=3,\n              alpha=0.36,\n              jitter=0.22,\n              dodge=False,\n              ax=ax)\nax.set_ylabel(\"Numerical Aptitude Score\", fontsize=12)\nax.set_xlabel(\"Career Field Group\", fontsize=12)\nplt.title(\"Distribution of Numerical Aptitude Scores\\nacross Major Career Field Groupings\", fontsize=14, fontweight=\"bold\")\nplt.xticks(rotation=24, ha=\"right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

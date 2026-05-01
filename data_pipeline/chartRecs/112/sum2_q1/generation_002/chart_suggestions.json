@@ -1,0 +1,263 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "generation_dir": "secondIter\\chartRecs\\112\\sum2_q1\\generation_002",
+  "schema_context": "Table: Caffeine Content of Drinks\nRows: 610\nColumns: 5\n\nFIELD INFORMATION:\nField: drink\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 610\n  - Semantic Meaning: This field identifies the specific brand and variety of beverage products—including energy drinks, sodas, water, and drink mixes—whose caffeine content is being measured or analyzed in the dataset.\n\nField: Volume (ml)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 70\n  - Semantic Meaning: This field represents the measured liquid volume, in milliliters, of individual drink servings in the context of analyzing caffeine content across various beverage products.\n  - Value Range: 7.393375 to 1419.528\n  - Mean: 346.54\n\nField: Calories\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 98\n  - Semantic Meaning: This field represents the number of calories contained in each drink, quantifying the energy provided per serving, which is relevant for nutrition and health tracking in beverages.\n  - Value Range: 0.0 to 830.0\n  - Mean: 75.53\n\nField: Caffeine (mg)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 162\n  - Semantic Meaning: This field represents the measured amount of caffeine, in milligrams, contained in various beverages, indicating their stimulant potency for dietary or health considerations.\n  - Value Range: 0.0 to 1555.0\n  - Mean: 134.69\n\nField: type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field categorizes beverages by their general drink type, indicating the classification of each entry (e.g., coffee, tea, water) within the context of analyzing caffeine content.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"drink\"\n  2. \"Volume (ml)\"\n  3. \"Calories\"\n  4. \"Caffeine (mg)\"\n  5. \"type\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['drink'], df['Volume (ml)']",
+  "table_metadata": {
+    "table_name": "Caffeine Content of Drinks",
+    "file_path": "csv_c2_sec\\112.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 112.csv (Dataset: Caffeine Content of Drinks)",
+    "original_filename": "112.csv",
+    "dataset_name": "Caffeine Content of Drinks",
+    "row_count": 610,
+    "column_count": 5,
+    "table_hash": 164898281760500678,
+    "fields": [
+      {
+        "name": "drink",
+        "clean_name": "drink",
+        "camel_case_name": "drink",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 610,
+        "unique_values": 610,
+        "sample_values": "28 Black Energy Drink, 3 Water, 3D Energy Drink, 4 Purpose Energy Drink, 4C Energy Drink Mix, ..., ZipFizz Energy Drink Mix, Zoa Energy Drink, Zola Coconut Water Espresso, Zombie Blood Energy Potion, doc Soda",
+        "inferred_semantic_summary": "This field identifies the specific brand and variety of beverage products—including energy drinks, sodas, water, and drink mixes—whose caffeine content is being measured or analyzed in the dataset."
+      },
+      {
+        "name": "Volume (ml)",
+        "clean_name": "Volume__ml_",
+        "camel_case_name": "volumeMl",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 610,
+        "unique_values": 70,
+        "min_value": 7.393375,
+        "max_value": 1419.528,
+        "mean_value": 346.54363047213116,
+        "median_value": 354.882,
+        "sample_values": "7.393375, 12.716605, 14.78675, 18.039835, 29.5735, ..., 694.97725, 709.764, 751.1668999999999, 946.352, 1419.528",
+        "inferred_semantic_summary": "This field represents the measured liquid volume, in milliliters, of individual drink servings in the context of analyzing caffeine content across various beverage products."
+      },
+      {
+        "name": "Calories",
+        "clean_name": "Calories",
+        "camel_case_name": "calories",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 610,
+        "unique_values": 98,
+        "min_value": 0.0,
+        "max_value": 830.0,
+        "mean_value": 75.52786885245902,
+        "median_value": 25.0,
+        "sample_values": "0, 2, 3, 4, 5, ..., 390, 410, 429, 470, 830",
+        "inferred_semantic_summary": "This field represents the number of calories contained in each drink, quantifying the energy provided per serving, which is relevant for nutrition and health tracking in beverages."
+      },
+      {
+        "name": "Caffeine (mg)",
+        "clean_name": "Caffeine__mg_",
+        "camel_case_name": "caffeineMg",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 610,
+        "unique_values": 162,
+        "min_value": 0.0,
+        "max_value": 1555.0,
+        "mean_value": 134.6934426229508,
+        "median_value": 100.0,
+        "sample_values": "0, 2, 4, 5, 6, ..., 1150, 1182, 1325, 1350, 1555",
+        "inferred_semantic_summary": "This field represents the measured amount of caffeine, in milligrams, contained in various beverages, indicating their stimulant potency for dietary or health considerations."
+      },
+      {
+        "name": "type",
+        "clean_name": "type",
+        "camel_case_name": "type",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 610,
+        "unique_values": 6,
+        "sample_values": "Coffee, Energy Drinks, Energy Shots, Soft Drinks, Tea, Water",
+        "inferred_semantic_summary": "This field categorizes beverages by their general drink type, indicating the classification of each entry (e.g., coffee, tea, water) within the context of analyzing caffeine content."
+      }
+    ],
+    "formatted_summary": "## Table 1: Caffeine_Content_of_Drinks (610 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 112.csv (Dataset: Caffeine Content of Drinks)\n\n### Schema (5 fields)\n  - drink -- type: object, values: 28 Black Energy Drink, 3 Water, 3D Energy Drink, 4 Purpose Energy Drink, 4C Energy Drink Mix, ..., ZipFizz Energy Drink Mix, Zoa Energy Drink, Zola Coconut Water Espresso, Zombie Blood Energy Potion, doc Soda\n  - Volume (ml) -- type: float64, values: 7.393375, 12.716605, 14.78675, 18.039835, 29.5735, ..., 694.97725, 709.764, 751.1668999999999, 946.352, 1419.528\n  - Calories -- type: int64, values: 0, 2, 3, 4, 5, ..., 390, 410, 429, 470, 830\n  - Caffeine (mg) -- type: int64, values: 0, 2, 4, 5, 6, ..., 1150, 1182, 1325, 1350, 1555\n  - type -- type: object, values: Coffee, Energy Drinks, Energy Shots, Soft Drinks, Tea, Water\n\n### Sample Data (first 5 rows)\n```\n                         drink  Volume (ml)  Calories  Caffeine (mg)    type\n0                 Costa Coffee   256.993715         0            277  Coffee\n1  Coffee Friend Brewed Coffee   250.191810         0            145  Coffee\n2           Hell Energy Coffee   250.191810       150            100  Coffee\n3           Killer Coffee (AU)   250.191810         0            430  Coffee\n4                 Nescafe Gold   250.191810         0             66  Coffee\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "112",
+      "summary_idx": 2,
+      "question_idx": 1,
+      "question": "How do caffeine levels vary among different drink types, such as coffee, tea, energy drinks, and soft drinks?",
+      "column_combination": [
+        "drink",
+        "Volume (ml)",
+        "Calories",
+        "Caffeine (mg)",
+        "type"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Boxplot",
+            "design_rationale": "A boxplot is highly effective for visualizing the distribution and variation in caffeine content across different drink types, given the categorical 'type' field and wide range in 'Caffeine (mg)'. Boxplots offer a clear view of medians, spread, and outliers, allowing the audience to immediately see which drink types tend toward higher or lower caffeine, and which have the greatest variability within their category. The large number of unique drinks (610) means a boxplot will summarize the complex data compactly.",
+            "target_insight": "Shows central tendency, spread, and outliers of caffeine levels for each major drink type to reveal which categories contain the most, the least, and the widest variance in caffeine content.",
+            "output_fields": [
+              "type",
+              "Caffeine (mg)"
+            ],
+            "chart_encodings": {
+              "x": "type",
+              "y": "Caffeine (mg)",
+              "color": "type (distinct color per category)",
+              "size": null,
+              "other_aesthetics": "show outliers, use grid for easier comparison"
+            }
+          },
+          "transformations": [
+            "Group by 'type' and summarize distribution of 'Caffeine (mg)' for each drink type",
+            "Filter: Only show drink types relevant to comparison (e.g., exclude water, drink mixes if not meaningful for caffeine)"
+          ],
+          "data_preparation_steps": [
+            "Determine relevant drink types for caffeine comparison (e.g., coffee, tea, energy drinks, soft drinks)",
+            "Subset df to exclude any types with zero caffeine or irrelevant to the question (such as water and drink mixes)",
+            "Prepare a list of colors for each drink 'type'"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\112.csv')\n# Filter to relevant types for caffeine comparison\nrelevant_types = ['Coffee', 'Tea', 'Energy Drink', 'Soft Drink']\ndf_plot = df[df['type'].isin(relevant_types)]\n# Create color mapping for each drink type\ncolor_list = ['#B7791B', '#4B8B3B', '#3366CF', '#E54444']\ntype_order = relevant_types\ncolor_dict = dict(zip(type_order, color_list))\nplt.figure(figsize=(8, 6))\nboxplot = plt.boxplot([df_plot[df_plot['type']==t]['Caffeine (mg)'] for t in type_order],\n                     patch_artist=True,\n                     labels=type_order)\nfor patch, t in zip(boxplot['boxes'], type_order):\n    patch.set_facecolor(color_dict[t])\nplt.title('Caffeine Content Distribution by Drink Type\\n(Outliers, Medians, Spread)', fontsize=14)\nplt.xlabel('Drink Type', fontsize=12)\nplt.ylabel('Caffeine (mg)', fontsize=12)\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.xticks(fontsize=11)\nplt.yticks(fontsize=11)\n# Create legend manually\nfrom matplotlib.patches import Patch\nlegend_handles = [Patch(facecolor=color_dict[t], label=t) for t in type_order]\nplt.legend(handles=legend_handles, title='Drink Type')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Scatter plot (normalized caffeine per ml vs volume)",
+            "design_rationale": "A scatter plot mapping 'Volume (ml)' versus 'Caffeine (mg) per ml', colored by drink type, provides insight into how caffeine concentration and serving size interplay across beverage categories. This is unconventional, revealing how some drinks pack intense caffeine in smaller volumes, while others deliver milder doses by serving size. It allows the viewer to see both the spread and clustering of types, and compare high-concentration drinks to large-serving beverages; this approach bridges nutritional and practical consumption contexts.",
+            "target_insight": "Reveals which drink types offer the highest caffeine concentration and how serving size correlates with caffeine potency, uncovering standout drinks and hidden clustering among types.",
+            "output_fields": [
+              "type",
+              "Volume (ml)",
+              "Caffeine (mg)"
+            ],
+            "chart_encodings": {
+              "x": "Volume (ml)",
+              "y": "Caffeine (mg) per ml (computed)",
+              "color": "type (distinct color per category)",
+              "size": null,
+              "other_aesthetics": "alpha=0.65 for overlap, legend for type"
+            }
+          },
+          "transformations": [
+            "Create new column: 'Caffeine (mg) per ml' = df['Caffeine (mg)'] / df['Volume (ml)']",
+            "Filter: Exclude drinks with zero caffeine or volume where appropriate",
+            "Subset to relevant drink types (coffee, tea, energy drink, soft drink)"
+          ],
+          "data_preparation_steps": [
+            "Compute caffeine concentration for every entry",
+            "Exclude null or zero values in 'Caffeine (mg)', 'Volume (ml)'",
+            "Filter df to only include relevant drink types for comparison",
+            "Assign color mapping for each type"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\112.csv')\n# Compute caffeine concentration per ml\nmask = (df['Volume (ml)'] > 0) & (df['Caffeine (mg)'] > 0)\ndf_plot = df[mask].copy()\ndf_plot['Caffeine (mg) per ml'] = df_plot['Caffeine (mg)'] / df_plot['Volume (ml)']\nrelevant_types = ['Coffee', 'Tea', 'Energy Drink', 'Soft Drink']\ndf_plot = df_plot[df_plot['type'].isin(relevant_types)]\n# Assign colors\ncolor_list = ['#B7791B', '#4B8B3B', '#3366CF', '#E54444']\ncolor_dict = dict(zip(relevant_types, color_list))\nplt.figure(figsize=(8, 6))\nfor t in relevant_types:\n    subset = df_plot[df_plot['type'] == t]\n    plt.scatter(subset['Volume (ml)'], subset['Caffeine (mg) per ml'], \n                color=color_dict[t], label=t, alpha=0.65, s=45)\nplt.xlabel('Volume (ml)', fontsize=12)\nplt.ylabel('Caffeine (mg) per ml', fontsize=12)\nplt.title('Caffeine Concentration vs. Volume\\nColored by Drink Type', fontsize=14)\nplt.legend(title='Drink Type')\nplt.grid(True, linestyle='--', alpha=0.4)\nplt.xticks(fontsize=11)\nplt.yticks(fontsize=11)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T14:20:28.639163",
+      "schema_context": "Table: Caffeine Content of Drinks\nRows: 610\nColumns: 5\n\nFIELD INFORMATION:\nField: drink\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 610\n  - Semantic Meaning: This field identifies the specific brand and variety of beverage products—including energy drinks, sodas, water, and drink mixes—whose caffeine content is being measured or analyzed in the dataset.\n\nField: Volume (ml)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 70\n  - Semantic Meaning: This field represents the measured liquid volume, in milliliters, of individual drink servings in the context of analyzing caffeine content across various beverage products.\n  - Value Range: 7.393375 to 1419.528\n  - Mean: 346.54\n\nField: Calories\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 98\n  - Semantic Meaning: This field represents the number of calories contained in each drink, quantifying the energy provided per serving, which is relevant for nutrition and health tracking in beverages.\n  - Value Range: 0.0 to 830.0\n  - Mean: 75.53\n\nField: Caffeine (mg)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 162\n  - Semantic Meaning: This field represents the measured amount of caffeine, in milligrams, contained in various beverages, indicating their stimulant potency for dietary or health considerations.\n  - Value Range: 0.0 to 1555.0\n  - Mean: 134.69\n\nField: type\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field categorizes beverages by their general drink type, indicating the classification of each entry (e.g., coffee, tea, water) within the context of analyzing caffeine content.\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"drink\"\n  2. \"Volume (ml)\"\n  3. \"Calories\"\n  4. \"Caffeine (mg)\"\n  5. \"type\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['drink'], df['Volume (ml)']",
+      "table_metadata": {
+        "table_name": "Caffeine Content of Drinks",
+        "file_path": "csv_c2_sec\\112.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 112.csv (Dataset: Caffeine Content of Drinks)",
+        "original_filename": "112.csv",
+        "dataset_name": "Caffeine Content of Drinks",
+        "row_count": 610,
+        "column_count": 5,
+        "table_hash": 164898281760500678,
+        "fields": [
+          {
+            "name": "drink",
+            "clean_name": "drink",
+            "camel_case_name": "drink",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 610,
+            "unique_values": 610,
+            "sample_values": "28 Black Energy Drink, 3 Water, 3D Energy Drink, 4 Purpose Energy Drink, 4C Energy Drink Mix, ..., ZipFizz Energy Drink Mix, Zoa Energy Drink, Zola Coconut Water Espresso, Zombie Blood Energy Potion, doc Soda",
+            "inferred_semantic_summary": "This field identifies the specific brand and variety of beverage products—including energy drinks, sodas, water, and drink mixes—whose caffeine content is being measured or analyzed in the dataset."
+          },
+          {
+            "name": "Volume (ml)",
+            "clean_name": "Volume__ml_",
+            "camel_case_name": "volumeMl",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 610,
+            "unique_values": 70,
+            "min_value": 7.393375,
+            "max_value": 1419.528,
+            "mean_value": 346.54363047213116,
+            "median_value": 354.882,
+            "sample_values": "7.393375, 12.716605, 14.78675, 18.039835, 29.5735, ..., 694.97725, 709.764, 751.1668999999999, 946.352, 1419.528",
+            "inferred_semantic_summary": "This field represents the measured liquid volume, in milliliters, of individual drink servings in the context of analyzing caffeine content across various beverage products."
+          },
+          {
+            "name": "Calories",
+            "clean_name": "Calories",
+            "camel_case_name": "calories",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 610,
+            "unique_values": 98,
+            "min_value": 0.0,
+            "max_value": 830.0,
+            "mean_value": 75.52786885245902,
+            "median_value": 25.0,
+            "sample_values": "0, 2, 3, 4, 5, ..., 390, 410, 429, 470, 830",
+            "inferred_semantic_summary": "This field represents the number of calories contained in each drink, quantifying the energy provided per serving, which is relevant for nutrition and health tracking in beverages."
+          },
+          {
+            "name": "Caffeine (mg)",
+            "clean_name": "Caffeine__mg_",
+            "camel_case_name": "caffeineMg",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 610,
+            "unique_values": 162,
+            "min_value": 0.0,
+            "max_value": 1555.0,
+            "mean_value": 134.6934426229508,
+            "median_value": 100.0,
+            "sample_values": "0, 2, 4, 5, 6, ..., 1150, 1182, 1325, 1350, 1555",
+            "inferred_semantic_summary": "This field represents the measured amount of caffeine, in milligrams, contained in various beverages, indicating their stimulant potency for dietary or health considerations."
+          },
+          {
+            "name": "type",
+            "clean_name": "type",
+            "camel_case_name": "type",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 610,
+            "unique_values": 6,
+            "sample_values": "Coffee, Energy Drinks, Energy Shots, Soft Drinks, Tea, Water",
+            "inferred_semantic_summary": "This field categorizes beverages by their general drink type, indicating the classification of each entry (e.g., coffee, tea, water) within the context of analyzing caffeine content."
+          }
+        ],
+        "formatted_summary": "## Table 1: Caffeine_Content_of_Drinks (610 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 112.csv (Dataset: Caffeine Content of Drinks)\n\n### Schema (5 fields)\n  - drink -- type: object, values: 28 Black Energy Drink, 3 Water, 3D Energy Drink, 4 Purpose Energy Drink, 4C Energy Drink Mix, ..., ZipFizz Energy Drink Mix, Zoa Energy Drink, Zola Coconut Water Espresso, Zombie Blood Energy Potion, doc Soda\n  - Volume (ml) -- type: float64, values: 7.393375, 12.716605, 14.78675, 18.039835, 29.5735, ..., 694.97725, 709.764, 751.1668999999999, 946.352, 1419.528\n  - Calories -- type: int64, values: 0, 2, 3, 4, 5, ..., 390, 410, 429, 470, 830\n  - Caffeine (mg) -- type: int64, values: 0, 2, 4, 5, 6, ..., 1150, 1182, 1325, 1350, 1555\n  - type -- type: object, values: Coffee, Energy Drinks, Energy Shots, Soft Drinks, Tea, Water\n\n### Sample Data (first 5 rows)\n```\n                         drink  Volume (ml)  Calories  Caffeine (mg)    type\n0                 Costa Coffee   256.993715         0            277  Coffee\n1  Coffee Friend Brewed Coffee   250.191810         0            145  Coffee\n2           Hell Energy Coffee   250.191810       150            100  Coffee\n3           Killer Coffee (AU)   250.191810         0            430  Coffee\n4                 Nescafe Gold   250.191810         0             66  Coffee\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

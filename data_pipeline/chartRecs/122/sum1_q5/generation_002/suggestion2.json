@@ -1,0 +1,45 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there genres that dominate global sales in specific years, suggesting shifts in market demand or player preferences?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of Genre Dominance by Year (Unconventional)",
+      "design_rationale": "A heatmap allows direct visual identification of which genre had the highest global sales in each year and makes it easy to spot 'winning' genres over time. Instead of showing all proportions, it highlights the magnitude of top genre sales per year. This is effective in large tables with repeated categorical values and focuses attention on genre shifts, outliers, and periods of sustained dominance by the same genre.",
+      "target_insight": "This visualization exposes exactly which genre led the market each year in total global sales, showing how genre dominance shifts across decades.",
+      "output_fields": [
+        "Year",
+        "Genre",
+        "Global_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Genre",
+        "color": "Global Sales (Total, Log Scale)",
+        "size": null,
+        "other_aesthetics": "Square aspect, sales encoded by color intensity. Years ordered, genres ordered by peak sales."
+      }
+    },
+    "transformations": [
+      "Drop rows where 'Year' is null to focus on known release years.",
+      "Group by 'Year' and 'Genre', sum 'Global_Sales' as total sales for each genre, per year.",
+      "Pivot so rows are 'Genre', columns are 'Year', values are total 'Global_Sales'.",
+      "Replace missing values with 0 (no sales for that genre that year).",
+      "Use a log color scale to highlight both massive and smaller genres, reducing the squashing effect of outliers.",
+      "Order genres by their highest yearly sales to make prominent/dominant genres visually distinct."
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Year'])",
+      "genre_year = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()",
+      "pivot = genre_year.pivot(index='Genre', columns='Year', values='Global_Sales').fillna(0)",
+      "genre_order = pivot.max(axis=1).sort_values(ascending=False).index",
+      "pivot = pivot.loc[genre_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf = df.dropna(subset=['Year'])\ngenre_year = df.groupby(['Year', 'Genre'])['Global_Sales'].sum().reset_index()\npivot = genre_year.pivot(index='Genre', columns='Year', values='Global_Sales').fillna(0)\ngenre_order = pivot.max(axis=1).sort_values(ascending=False).index\npivot = pivot.loc[genre_order]\nfig, ax = plt.subplots(figsize=(18,7))\ncmap = mpl.colormaps['YlGnBu']\nnorm = mpl.colors.LogNorm(vmin=0.01, vmax=pivot.max().max())\nim = ax.imshow(pivot, aspect='auto', cmap=cmap, norm=norm)\nax.set_xticks(np.arange(len(pivot.columns)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels([str(int(y)) for y in pivot.columns], rotation=90)\nax.set_yticklabels(pivot.index)\nax.set_xlabel('Year', fontsize=13)\nax.set_ylabel('Genre', fontsize=13)\nax.set_title('Heatmap of Genre Dominance in Global Video Game Sales\\n(Darker = More Global Sales, Log Scale)', fontsize=16)\ncbar = plt.colorbar(im, ax=ax, orientation='vertical', fraction=0.02, pad=0.02)\ncbar.set_label('Total Global Sales (Millions, log scale)', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

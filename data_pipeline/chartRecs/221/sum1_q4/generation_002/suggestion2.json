@@ -1,0 +1,40 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does the duration of trips differ among travelers selecting hotels versus Airbnbs?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot (split, comparing distributions)",
+      "design_rationale": "A split violin plot elegantly visualizes both the density and distribution shape of trip durations for hotel and Airbnb travelers, including multimodality or subtle differences not easily captured with boxplots. The violin plot's density curves make full use of the small set of possible durations and moderate dataset size. Since precise outlier and distribution structure is important for discerning trip length preferences, this display offers finer nuance and a compelling visual comparison. For engagement, vertical split violins highlight two groups side-by-side, coloring each half distinctly.",
+      "target_insight": "Shows the full distribution and density (shape) of trip durations for travelers selecting hotels versus Airbnbs, revealing subtle differences such as preference peaks or broader/narrower ranges.",
+      "output_fields": [
+        "Duration (days)",
+        "Accommodation type"
+      ],
+      "chart_encodings": {
+        "x": "Accommodation type",
+        "y": "Duration (days)",
+        "color": "Accommodation type (distinct color for each half of the split violin)",
+        "size": null,
+        "other_aesthetics": "Split violin shape, alpha blending, median markers, grid"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Accommodation type'] is either 'Hotel' or 'Airbnb'",
+      "Remove rows with missing values in df['Duration (days)'] and df['Accommodation type']",
+      "Extract durations for each group for plotting"
+    ],
+    "data_preparation_steps": [
+      "df_filtered = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]",
+      "df_filtered = df_filtered.dropna(subset=['Duration (days)', 'Accommodation type'])",
+      "hotel_durations = df_filtered[df_filtered['Accommodation type'] == 'Hotel']['Duration (days)']",
+      "airbnb_durations = df_filtered[df_filtered['Accommodation type'] == 'Airbnb']['Duration (days)']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_filtered = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]\ndf_filtered = df_filtered.dropna(subset=['Duration (days)', 'Accommodation type'])\nhotel_durations = df_filtered[df_filtered['Accommodation type'] == 'Hotel']['Duration (days)']\nairbnb_durations = df_filtered[df_filtered['Accommodation type'] == 'Airbnb']['Duration (days)']\nfig, ax = plt.subplots(figsize=(7,5))\npositions = [1]\nparts1 = ax.violinplot([hotel_durations], positions=[1], showmeans=False, showextrema=False, widths=0.9)\nparts2 = ax.violinplot([airbnb_durations], positions=[1], showmeans=False, showextrema=False, widths=0.9)\nfor pc in parts1['bodies']:\n    pc.set_facecolor('#3277b0')\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.6)\n    pc.set_clip_path(plt.Circle((1, np.mean(hotel_durations)), 1000, transform=ax.transData), transform=ax.transData)\n    pc.set_zorder(2)\n    pc.set_transform(mpl.transforms.Affine2D().scale(0.5,1).translate(0,0) + ax.transData)\nfor pc in parts2['bodies']:\n    pc.set_facecolor('#ff9000')\n    pc.set_edgecolor('black')\n    pc.set_alpha(0.6)\n    pc.set_clip_path(plt.Circle((1, np.mean(airbnb_durations)), 1000, transform=ax.transData), transform=ax.transData)\n    pc.set_zorder(3)\n    pc.set_transform(mpl.transforms.Affine2D().scale(-0.5,1).translate(2,0) + ax.transData)\nmed_hotel = np.median(hotel_durations)\nmed_airbnb = np.median(airbnb_durations)\nax.plot([0.85,1],[med_hotel,med_hotel],color='#3277b0',linewidth=3)\nax.plot([1,1.15],[med_airbnb,med_airbnb],color='#ff9000',linewidth=3)\nax.set_xticks([1])\nax.set_xticklabels(['Hotel vs Airbnb'], fontsize=12)\nax.set_ylabel('Duration (days)', fontsize=13)\nax.set_xlabel('Accommodation (split: Hotel left, Airbnb right)', fontsize=13)\nax.set_title('Trip Duration Density by Accommodation Type\\nSplit Violin: Hotel vs Airbnb', fontsize=14)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,36 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do average medical charges differ between smokers and non-smokers across various regions?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart enables direct comparison of average medical charges between smokers and non-smokers for each region, clearly displaying differences in medical costs attributable to smoking status within each geographical area. The categorical 'smoker' and 'region' fields make this chart appropriate. The bar heights encode the average charges, with color distinguishing smoker status, allowing the viewer to quickly assess both inter-region and intra-region disparities.",
+      "target_insight": "How smoker status impacts average medical charges in each U.S. region; highlighting which regions exhibit the largest or smallest cost gaps.",
+      "output_fields": [
+        "region",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "charges",
+        "color": "smoker",
+        "size": null,
+        "other_aesthetics": "Grouped bars by 'region', bar color via smoker status, grid lines for clarity"
+      }
+    },
+    "transformations": [
+      "Aggregate df by 'region' and 'smoker', computing mean of 'charges'"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['region', 'smoker'])['charges'].mean().reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\32.csv')\ndf_grouped = df.groupby(['region', 'smoker'])['charges'].mean().reset_index()\nregions = df_grouped['region'].unique()\nsmoker_types = df_grouped['smoker'].unique()\nbar_width = 0.35\nx = np.arange(len(regions))\ncharge_means = {}\nfor smoker in smoker_types:\n    charge_means[smoker] = [df_grouped[(df_grouped['region'] == region) & (df_grouped['smoker'] == smoker)]['charges'].values[0] if ((df_grouped['region'] == region) & (df_grouped['smoker'] == smoker)).any() else 0 for region in regions]\nfig, ax = plt.subplots(figsize=(8,6))\ncolors = {'yes':'#e74c3c', 'no':'#2ecc71'}\nfor i, smoker in enumerate(smoker_types):\n    ax.bar(x + i*bar_width, charge_means[smoker], bar_width, label='Smoker: ' + smoker, color=colors[smoker])\nax.set_xticks(x + bar_width / 2)\nax.set_xticklabels(regions)\nax.set_xlabel('Region')\nax.set_ylabel('Average Medical Charges ($)')\ntitle = 'Average Medical Charges by Smoking Status\\nAcross Regions'\nax.set_title(title)\nax.legend(title='Smoker Status')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "Is there a noticeable relationship between a stock’s Open price and its High price in the current period?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Regression Line",
+      "design_rationale": "A scatter plot with a regression line is the most direct and interpretable way to examine the relationship between two continuous quantitative variables, especially for assessing linearity or correlation. Here, each point represents a NIFTY-50 stock with its Open price on the x-axis and High price on the y-axis, visually revealing whether there's a linear relationship. The regression line and its R-squared annotation help quantify both strength and significance of any relationship found.",
+      "target_insight": "The viewer can visually assess both the form and tightness of the relationship between Open and High prices for all NIFTY-50 stocks, and the regression fit quantifies correlation for further clarity.",
+      "output_fields": [
+        "Open",
+        "High"
+      ],
+      "chart_encodings": {
+        "x": "Open",
+        "y": "High",
+        "color": "Single color (blue) for points; regression line in red",
+        "size": "Uniform size",
+        "other_aesthetics": "Alpha transparency (0.7), grid for clarity, and regression line with R-squared annotation"
+      }
+    },
+    "transformations": [
+      "Convert df['Open'] and df['High'] from string to numeric using pd.to_numeric (remove commas and whitespace, coerce errors)",
+      "Remove rows where 'Open' or 'High' is missing or could not be converted to valid numeric"
+    ],
+    "data_preparation_steps": [
+      "df['Open'] = pd.to_numeric(df['Open'].str.replace(',', '').str.strip(), errors='coerce')",
+      "df['High'] = pd.to_numeric(df['High'].str.replace(',', '').str.strip(), errors='coerce')",
+      "df_clean = df.dropna(subset=['Open', 'High'])"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['Open'] = pd.to_numeric(df['Open'].str.replace(',', '').str.strip(), errors='coerce')\ndf['High'] = pd.to_numeric(df['High'].str.replace(',', '').str.strip(), errors='coerce')\ndf_clean = df.dropna(subset=['Open', 'High'])\n\nfig, ax = plt.subplots(figsize=(8,6))\n\nax.scatter(df_clean['Open'], df_clean['High'], color='blue', alpha=0.7, edgecolor='k')\n\n# Fit regression line\ncoef = np.polyfit(df_clean['Open'], df_clean['High'], 1)\npoly1d_fn = np.poly1d(coef)\nax.plot(df_clean['Open'], poly1d_fn(df_clean['Open']), color='red', linewidth=2, label='Regression line')\n\n# Compute R^2\nfrom sklearn.metrics import r2_score\nr2 = r2_score(df_clean['High'], poly1d_fn(df_clean['Open']))\n\nax.set_xlabel('Open')\nax.set_ylabel('High')\nax.set_title('Relationship between Open and High Prices of NIFTY-50 Stocks')\nax.grid(True, linestyle='--', alpha=0.4)\nax.legend()\nax.text(0.05, 0.95, f'R$^2$ = {r2:.2f}', transform=ax.transAxes, fontsize=12, va='top', ha='left', bbox=dict(boxstyle='round,pad=0.3', facecolor='white', edgecolor='gray', alpha=0.5))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

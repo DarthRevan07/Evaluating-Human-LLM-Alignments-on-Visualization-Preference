@@ -1,0 +1,217 @@
+{
+  "schema_dir": "c2_schemas",
+  "default_generations": 2,
+  "default_suggestions": 2,
+  "tables": [
+    {
+      "table_name": "1",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "1",
+      "summary_idx": 1,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "1",
+      "summary_idx": 2,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "1",
+      "summary_idx": 2,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "2",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "2",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "2",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 2
+    },
+    {
+      "table_name": "2",
+      "summary_idx": 2,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "2",
+      "summary_idx": 2,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "3",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "3",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "39",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "39",
+      "summary_idx": 1,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "160",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "160",
+      "summary_idx": 2,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "243",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "243",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "268",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "268",
+      "summary_idx": 1,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "269",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "269",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "269",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "269",
+      "summary_idx": 2,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "429",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "429",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "429",
+      "summary_idx": 2,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "generations": 3,
+      "suggestions": 2
+    },
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 3,
+      "generations": 3,
+      "suggestions": 3
+    },
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 4,
+      "generations": 3,
+      "suggestions": 3
+    }
+  ]
+}

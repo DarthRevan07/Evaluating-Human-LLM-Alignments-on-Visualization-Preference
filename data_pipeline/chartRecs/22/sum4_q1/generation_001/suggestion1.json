@@ -1,0 +1,42 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do car prices vary between different CarName brands, and are certain brands consistently in higher or lower price ranges?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (brand-level price distribution)",
+      "design_rationale": "A boxplot succinctly visualizes the distribution of car prices for each major brand, illustrating both the central tendency and variability in pricing. Since 'CarName' contains both brand and model, it's essential to extract the brand for aggregation purposes. This approach captures not just average prices, but the spread and outliers, revealing whether certain brands are consistently high, low, or widely dispersed in price.",
+      "target_insight": "Spot brands with narrow price ranges, high-price consistency, or more variability. See which brands dominate the high or low end, and which have overlap in price distribution.",
+      "output_fields": [
+        "CarName",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "CarName (parsed as brand only, sorted by median price)",
+        "y": "price",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "rotate x-axis labels, show outliers as points, highlight box edges"
+      }
+    },
+    "transformations": [
+      "Extract brand name from 'CarName' field (take first word before space)",
+      "Group by brand name",
+      "Filter brands with at least 5 car entries to ensure sufficient representation",
+      "Sort brands by median price"
+    ],
+    "data_preparation_steps": [
+      "df['brand'] = df['CarName'].str.split(' ').str[0]",
+      "brand_counts = df['brand'].value_counts()",
+      "selected_brands = brand_counts[brand_counts >= 5].index",
+      "df_filtered = df[df['brand'].isin(selected_brands)]",
+      "brand_order = df_filtered.groupby('brand')['price'].median().sort_values().index.tolist()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\ndf['brand'] = df['CarName'].str.split(' ').str[0]\nbrand_counts = df['brand'].value_counts()\nselected_brands = brand_counts[brand_counts >= 5].index\ndf_filtered = df[df['brand'].isin(selected_brands)]\nbrand_order = df_filtered.groupby('brand')['price'].median().sort_values().index.tolist()\ndata = [df_filtered[df_filtered['brand'] == b]['price'] for b in brand_order]\nfig, ax = plt.subplots(figsize=(13, 6))\nbp = ax.boxplot(data, patch_artist=True, showmeans=False, showfliers=True, medianprops={'color': 'blue'}, boxprops={'facecolor': 'lightgrey', 'edgecolor': 'black'}, whiskerprops={'color': 'grey'}, capprops={'color': 'grey'})\nax.set_xticklabels(brand_order, rotation=45, ha='right')\nax.set_ylabel(\"price\")\nax.set_xlabel(\"CarName (brand)\")\nax.set_title(\"Car price distributions across major brands\\nBoxplot: median, spread & outliers\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

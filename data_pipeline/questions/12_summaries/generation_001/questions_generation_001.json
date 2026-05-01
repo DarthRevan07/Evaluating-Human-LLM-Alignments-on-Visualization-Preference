@@ -1,0 +1,95 @@
+{
+  "table_name": "Career Prediction Dataset",
+  "generation_dir": "secondIter\\summaries\\12_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: Career_Prediction_Dataset (105 rows × 11 columns)\n\n### Description\nData loaded from CSV file: 12.csv (Dataset: Career Prediction Dataset)\n\n### Schema (11 fields)\n  - O_score -- type: float64, values: 2.67, 4.01, 4.34, 4.56, 5.12, ..., 8.89, 9.12, 9.23, 9.34, 9.45\n  - C_score -- type: float64, values: 3.56, 3.78, 4.23, 4.45, 5.67, ..., 8.67, 8.78, 8.89, 9.23, 9.45\n  - E_score -- type: float64, values: 2.89, 3.45, 3.67, 3.78, 3.89, ..., 8.12, 8.45, 8.67, 8.78, 9.34\n  - A_score -- type: float64, values: 3.23, 4.01, 4.23, 4.89, 5.12, ..., 8.56, 8.67, 9.12, 9.23, 9.34\n  - N_score -- type: float64, values: 2.89, 3.78, 4.01, 4.23, 4.34, ..., 6.01, 6.34, 6.45, 7.12, 8.12\n  - Numerical Aptitude -- type: float64, values: 2.89, 3.23, 3.45, 3.56, 3.78, ..., 8.89, 9.12, 9.23, 9.34, 9.45\n  - Spatial Aptitude -- type: float64, values: 2.34, 2.78, 2.89, 3.01, 3.12, ..., 8.23, 8.45, 8.67, 9.12, 9.23\n  - Perceptual Aptitude -- type: float64, values: 3.01, 3.12, 3.45, 3.56, 3.67, ..., 8.34, 8.45, 9.12, 9.23, 9.34\n  - Abstract Reasoning -- type: float64, values: 3.01, 3.12, 3.23, 3.45, 3.56, ..., 8.78, 8.89, 9.12, 9.23, 9.34\n  - Verbal Reasoning -- type: float64, values: 3.45, 4.01, 4.23, 4.45, 5.23, ..., 8.45, 8.67, 9.12, 9.23, 9.34\n  - Career -- type: object, values: Accountant, Administrative Officer, Advertising Executive, Aerospace Engineer, Air Traffic Controller, ..., Video Game Tester, Web Developer, Wildlife Biologist, Wildlife Conservationist, Zoologist\n\n### Sample Data (first 5 rows)\n```\n   O_score  C_score  E_score  A_score  N_score  Numerical Aptitude  Spatial Aptitude  Perceptual Aptitude  Abstract Reasoning  Verbal Reasoning              Career\n0     5.45     8.67     3.45     5.34     4.23                9.23              4.56                 6.78                7.89              6.12          Accountant\n1     8.78     5.67     4.56     6.45     4.23                5.12              8.45                 7.89                6.34              6.01    Graphic Designer\n2     6.12     6.78     9.34     7.56     5.01                6.23              4.23                 6.45                6.67              8.45         Salesperson\n3     9.12     8.78     4.23     5.67     4.56                7.89              5.34                 6.45                9.34              7.67  Research Scientist\n4     6.45     7.56     5.67     9.12     4.23                5.34              4.01                 6.23                5.78              8.67             Teacher\n```\n",
+  "table_metadata": {
+    "total_rows": 105,
+    "total_columns": 11,
+    "source_file": "csv_c2_sec\\12.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "Career_Prediction_Dataset",
+      "summary_idx": 1,
+      "column_combination": [
+        "O_score",
+        "C_score",
+        "E_score",
+        "A_score",
+        "N_score",
+        "Numerical Aptitude",
+        "Spatial Aptitude",
+        "Perceptual Aptitude",
+        "Abstract Reasoning",
+        "Verbal Reasoning",
+        "Career"
+      ],
+      "questions": [
+        "How does the distribution of Numerical Aptitude scores differ across various Career groupings?",
+        "What is the relationship between E_score and Verbal Reasoning for individuals in communication-focused Careers?",
+        "Are there particular combinations of O_score and Abstract Reasoning that are common among creative Career paths?",
+        "Do high C_score values correlate with high Numerical Aptitude scores within technical Careers?",
+        "Which Careers tend to have outliers in N_score, and how might these outliers impact career fit?",
+        "How do Spatial Aptitude scores vary among engineering-related versus design-oriented Careers?",
+        "Is there a noticeable difference in Perceptual Aptitude between Careers with strong analytical requirements and those that are more people-oriented?",
+        "For students with high A_score and low N_score, which Careers are most frequently predicted?",
+        "Within scientific Careers, how does the average Abstract Reasoning score compare to the average O_score?",
+        "Are there any Careers where both C_score and Verbal Reasoning scores are consistently higher than in others?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 105,
+          "total_columns": 11,
+          "source_file": "csv_c2_sec\\12.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "Career_Prediction_Dataset",
+      "summary_idx": 2,
+      "column_combination": [
+        "O_score",
+        "C_score",
+        "E_score",
+        "A_score",
+        "N_score",
+        "Numerical Aptitude",
+        "Spatial Aptitude",
+        "Perceptual Aptitude",
+        "Abstract Reasoning",
+        "Verbal Reasoning",
+        "Career"
+      ],
+      "questions": [
+        "How does Verbal Reasoning score differ across various Career categories?",
+        "What is the relationship between Numerical Aptitude and Career, and which careers require the highest numerical scores?",
+        "Are there noticeable trends in Spatial Aptitude scores among technical versus non-technical job titles?",
+        "Do higher Conscientiousness (C_score) values correspond with certain careers more than others?",
+        "How do Abstract Reasoning scores compare between managerial and creative job roles?",
+        "What is the distribution of Perceptual Aptitude scores for professions such as Air Traffic Controller or Video Game Tester?",
+        "Does Extraversion (E_score) tend to be higher in careers related to advertising or communications compared to others?",
+        "Are certain careers consistently associated with higher scores in Agreeableness (A_score) and Emotional Stability (N_score)?",
+        "Is there a correlation between Openness (O_score) and Spatial Aptitude within creative professions?",
+        "Which job titles show the most balanced combination of high Numerical Aptitude and high Verbal Reasoning scores?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 105,
+          "total_columns": 11,
+          "source_file": "csv_c2_sec\\12.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "12",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How do Abstract Reasoning scores compare between managerial and creative job roles?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is well-suited to comparing the distribution of Abstract Reasoning scores between two categorical career groups, especially for showing spread, central tendency, and possible outliers. With 105 rows and a numeric field ('Abstract Reasoning'), boxplots capture range and medians efficiently, revealing whether one group has higher or more varied scores.",
+      "target_insight": "Are Abstract Reasoning scores generally higher or more variable in managerial roles versus creative roles?",
+      "output_fields": [
+        "Career",
+        "Abstract Reasoning"
+      ],
+      "chart_encodings": {
+        "x": "Career Group",
+        "y": "Abstract Reasoning",
+        "color": "Career Group",
+        "size": null,
+        "other_aesthetics": "Show data points as jittered dots atop boxes for transparency and depth"
+      }
+    },
+    "transformations": [
+      "Create a new column 'Career Group' in the DataFrame categorizing careers as 'Managerial' or 'Creative' based on string matching in df['Career']",
+      "Filter df to keep only rows where 'Career Group' is 'Managerial' or 'Creative', dropping all others"
+    ],
+    "data_preparation_steps": [
+      "Map managerial job roles using keywords such as: 'Manager', 'Director', 'Supervisor', 'Administrator', 'Executive', 'Lead', 'Chief', 'Head', 'Coordinator'",
+      "Map creative job roles using keywords such as: 'Designer', 'Artist', 'Writer', 'Editor', 'Composer', 'Producer', 'Creative', 'Illustrator', 'Photographer', 'Animator', 'Musician', 'Fashion', 'Media', 'Marketing', 'Advertising', 'Brand', 'Art'",
+      "Apply new column 'Career Group' using these mappings",
+      "Select only the rows where 'Career Group' is not null"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\nmanagerial_keywords = [\"Manager\", \"Director\", \"Supervisor\", \"Administrator\", \"Executive\", \"Lead\", \"Chief\", \"Head\", \"Coordinator\"]\ncreative_keywords = [\"Designer\", \"Artist\", \"Writer\", \"Editor\", \"Composer\", \"Producer\", \"Creative\", \"Illustrator\", \"Photographer\", \"Animator\", \"Musician\", \"Fashion\", \"Media\", \"Marketing\", \"Advertising\", \"Brand\", \"Art\"]\ndef get_career_group(career):\n    if any(k in career for k in managerial_keywords):\n        return \"Managerial\"\n    elif any(k in career for k in creative_keywords):\n        return \"Creative\"\n    else:\n        return np.nan\ndf[\"Career Group\"] = df[\"Career\"].apply(get_career_group)\ndf_plot = df[df[\"Career Group\"].notna()]\ndata_mgr = df_plot[df_plot[\"Career Group\"] == \"Managerial\"][\"Abstract Reasoning\"].values\ndata_crea = df_plot[df_plot[\"Career Group\"] == \"Creative\"][\"Abstract Reasoning\"].values\nfig, ax = plt.subplots(figsize=(7, 5))\nboxprops = dict(facecolor=\"#b2df8a\", edgecolor=\"#1b7837\")\ncolors = [\"#bdd7ee\", \"#f6b7b7\"]\nax.boxplot([data_mgr, data_crea], positions=[0, 1], widths=0.5, patch_artist=True, boxprops=boxprops, medianprops=dict(color=\"#252525\"), whiskerprops=dict(color=\"#252525\"), capprops=dict(color=\"#252525\"))\nx_jitter_mgr = np.random.normal(0, 0.08, len(data_mgr))\nx_jitter_crea = np.random.normal(1, 0.08, len(data_crea))\nax.scatter(x_jitter_mgr, data_mgr, color=\"#377eb8\", alpha=0.7, edgecolor=\"#252525\", s=35, label=\"Managerial\")\nax.scatter(x_jitter_crea, data_crea, color=\"#e41a1c\", alpha=0.7, edgecolor=\"#252525\", s=35, label=\"Creative\")\nax.set_xticks([0, 1])\nax.set_xticklabels([\"Managerial\", \"Creative\"], fontsize=13)\nax.set_ylabel(\"Abstract Reasoning\", fontsize=13)\nax.set_title(\"Abstract Reasoning Scores: Managerial vs Creative Roles\", fontsize=15)\nax.legend(loc=\"upper right\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

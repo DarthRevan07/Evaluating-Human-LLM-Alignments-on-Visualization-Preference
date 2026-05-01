@@ -1,0 +1,44 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there any publishers whose games consistently perform well in a particular region compared to others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Spider/Radar plot",
+      "design_rationale": "A spider plot visually profiles each publisher's regional sales average across the four major regions, allowing intuitive comparison of regional 'performance signatures.' For selected publishers, each axis represents a region, and the shape highlights relative strengths/weaknesses. This approach directly answers the question of region-specific consistency and enables side-by-side comparison.",
+      "target_insight": "See at a glance which publishers dominate certain markets and maintain above-average performance consistently in one region versus others.",
+      "output_fields": [
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Region/axes ('NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales')",
+        "y": "Mean sales value (radius)",
+        "color": "Publisher (distinct color per publisher)",
+        "size": null,
+        "other_aesthetics": "Transparent fill, reproducible palette, plot 5-7 key publishers (by global sales)"
+      }
+    },
+    "transformations": [
+      "For each publisher, compute mean sales in each region: 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales'",
+      "Select the top 7 publishers by cumulative 'Global_Sales'",
+      "Organize data as vectors (length 4 regions) for radar plotting"
+    ],
+    "data_preparation_steps": [
+      "Filter df['Publisher'] non-null",
+      "Group by df['Publisher'], aggregate mean for regions",
+      "Calculate sum 'Global_Sales' to rank",
+      "Get top 7 publishers",
+      "Extract region mean sales for each for the radar plot"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_pubs = df[~df['Publisher'].isnull()]\ndf_pubgroup = df_pubs.groupby('Publisher').agg({'NA_Sales':'mean','EU_Sales':'mean','JP_Sales':'mean','Other_Sales':'mean','Global_Sales':'sum'})\ndf_pubgroup_sorted = df_pubgroup.sort_values('Global_Sales',ascending=False).head(7)\npublishers = df_pubgroup_sorted.index.tolist()\nregions = ['NA_Sales','EU_Sales','JP_Sales','Other_Sales']\nangles = np.linspace(0,2*np.pi,len(regions), endpoint=False).tolist()\nangles += angles[:1]\nfig, ax = plt.subplots(figsize=(7,7), subplot_kw={'polar':True})\ncmap = mpl.colormaps['tab10']\nfor idx, pub in enumerate(publishers):\n    values = df_pubgroup_sorted.loc[pub, regions].tolist()\n    values += values[:1]\n    ax.plot(angles, values, color=cmap(idx), linewidth=2, label=pub)\n    ax.fill(angles, values, color=cmap(idx), alpha=0.25)\nax.set_xticks(angles[:-1])\nax.set_xticklabels(regions)\nax.set_title('Publisher Regional Performance Profiles\\n(Top 7 by Global Sales)', fontsize=15)\nax.set_rlabel_position(0)\nplt.legend(bbox_to_anchor=(1.1,1.05), loc='upper left', fontsize=11)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

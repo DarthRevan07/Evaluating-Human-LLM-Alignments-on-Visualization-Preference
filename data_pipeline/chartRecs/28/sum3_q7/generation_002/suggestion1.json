@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do vehicles with higher mileage tend to have lower prices regardless of fuel type?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatterplot with color-coded fuel types",
+      "design_rationale": "A scatterplot provides a granular view of the relationship between vehicle mileage and price, directly visualizing the trend sought in the question. Overlaying fuel type as color encoding enables comparison across categories within the same axes, so viewers can see whether a negative correlation exists between Mileage and Price for all fuel types. Given Mileage and Price are both numeric and Fuel type is categorical, this arrangement presents individual data points, trends, and overlapping patterns at scale (19237 rows), revealing the core relationship regardless of fuel type.",
+      "target_insight": "Shows whether a downward trend exists between Mileage and Price for each fuel type, and if fuel type alters or preserves the trend.",
+      "output_fields": [
+        "Mileage",
+        "Price",
+        "Fuel type"
+      ],
+      "chart_encodings": {
+        "x": "Mileage",
+        "y": "Price",
+        "color": "Fuel type",
+        "size": null,
+        "other_aesthetics": "alpha=0.5 for point overlap clarity, legend for color mapping"
+      }
+    },
+    "transformations": [
+      "Convert Mileage string values to numeric (remove non-numeric characters and cast to float)",
+      "Remove rows where Mileage or Price are missing or not convertible",
+      "Filter out extreme outliers of Price (top 1%) for visual clarity",
+      "Map categorical Fuel type to discrete colors"
+    ],
+    "data_preparation_steps": [
+      "df['Mileage'] = df['Mileage'].str.replace('[^0-9]', '', regex=True).astype(float)",
+      "Remove rows with missing or invalid Mileage or Price values: df = df.dropna(subset=['Mileage', 'Price'])",
+      "Remove rows where Price > np.percentile(df['Price'], 99): price_cap = np.percentile(df['Price'], 99); df = df[df['Price'] <= price_cap]",
+      "Create color mapping for unique values in df['Fuel type']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf['Mileage'] = df['Mileage'].str.replace('[^0-9]', '', regex=True).astype(float)\ndf = df.dropna(subset=['Mileage', 'Price'])\nprice_cap = np.percentile(df['Price'], 99)\ndf = df[df['Price'] <= price_cap]\nfuel_types = df['Fuel type'].unique()\ncolors = mpl.colormaps['tab10'].colors\ncmap_dict = {ftype: colors[i % len(colors)] for i, ftype in enumerate(fuel_types)}\nplt.figure(figsize=(12, 7))\nfor ftype in fuel_types:\n    subset = df[df['Fuel type'] == ftype]\n    plt.scatter(subset['Mileage'], subset['Price'], c=[cmap_dict[ftype]], alpha=0.5, label=ftype, edgecolors='none', s=18)\nplt.xlabel('Mileage')\nplt.ylabel('Price')\ntitle_txt = 'Scatterplot of Mileage vs Price\\nColored by Fuel type\\nDo higher mileage vehicles consistently have lower prices across all fuel types?'\nplt.title(title_txt)\nplt.legend(title='Fuel type', loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

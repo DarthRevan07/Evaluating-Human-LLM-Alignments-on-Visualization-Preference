@@ -1,0 +1,44 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap of Decadal Population Change Indicators",
+      "design_rationale": "A heatmap juxtaposes multiple population change metrics ('Yearly % Change', 'Yearly Change', and 'Fertility Rate') across decades, revealing not just overall growth but dynamics within each decade and how demographic drivers evolved. Since all three fields are strings or floats and need numerical conversion, this design provides an unconventional, comparative perspective that surfaces outlier years and decade patterns.",
+      "target_insight": "Allows fast identification of which decades had highest growth rates, which saw declines in fertility, and how annual population increases shifted. Reveals correlations among growth, annual change, and fertility, with visual magnitude encoding via color.",
+      "output_fields": [
+        "Year",
+        "Yearly % Change",
+        "Yearly Change",
+        "Fertility Rate"
+      ],
+      "chart_encodings": {
+        "x": "Decade (grouped from 'Year')",
+        "y": "Population indicator ('Yearly % Change', 'Yearly Change', 'Fertility Rate')",
+        "color": "Normalized magnitude of value per indicator per decade",
+        "size": "null",
+        "other_aesthetics": "Annotations for highest/lowest decade values"
+      }
+    },
+    "transformations": [
+      "Convert df['Yearly % Change'] and df['Yearly Change'] from string to float or int",
+      "Assign each df['Year'] to its decade",
+      "Aggregate metrics per decade (median or mean per indicator per decade), creating a pivoted data structure"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%', '').str.strip().astype(float)",
+      "df['Yearly Change'] = df['Yearly Change'].str.replace(',', '').astype(int)",
+      "df['Decade'] = (df['Year']//10*10).astype(str) + 's'",
+      "decade_metrics = df.groupby('Decade').agg({ 'Yearly % Change': 'mean', 'Yearly Change': 'mean', 'Fertility Rate': 'mean' }).reset_index()",
+      "indicators = ['Yearly % Change', 'Yearly Change', 'Fertility Rate']",
+      "heatmap_data = decade_metrics[indicators].to_numpy().T"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%', '').str.strip().astype(float)\ndf['Yearly Change'] = df['Yearly Change'].str.replace(',', '').astype(int)\ndf['Decade'] = (df['Year']//10*10).astype(str) + 's'\ndecade_metrics = df.groupby('Decade').agg({ 'Yearly % Change': 'mean', 'Yearly Change': 'mean', 'Fertility Rate': 'mean' }).reset_index()\nindicators = ['Yearly % Change', 'Yearly Change', 'Fertility Rate']\nheatmap_data = decade_metrics[indicators].to_numpy().T\nfig, ax = plt.subplots(figsize=(9,4.5))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_data, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(decade_metrics['Decade'])))\nax.set_xticklabels(decade_metrics['Decade'], rotation=45)\nax.set_yticks(np.arange(len(indicators)))\nax.set_yticklabels(indicators)\nfor i in range(len(indicators)):\n    for j in range(len(decade_metrics['Decade'])):\n        val = heatmap_data[i, j]\n        ax.text(j, i, f'{val:.2f}', ha='center', va='center', color='white' if im.norm(val) > 0.5 else 'black', fontsize=10)\nax.set_title('Decadal Patterns in Population Change\\n\\nMean Indicator Values Per Decade', fontsize=15)\ncbar = plt.colorbar(im, ax=ax, label='Magnitude')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

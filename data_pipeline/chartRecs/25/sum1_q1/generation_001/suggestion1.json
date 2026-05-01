@@ -1,0 +1,42 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which stocks have demonstrated the largest positive or negative percentage changes over the past 30 days, and how do these changes compare to their 365-day percentage changes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart with Divergent Bars",
+      "design_rationale": "A divergent bar chart provides an intuitive and impactful overview of which NIFTY-50 stocks had the most significant positive and negative 30-day percentage changes. This approach leverages the categorical 'Symbol' for labeling and numerical '30 d % chng' for magnitude/directionality, supporting quick identification of extremes. Color encoding helps differentiate gains versus losses visually. Displaying the '365 d % chng' as a lighter secondary bar overlays allows direct visual comparison, answering the second part of the question for each stock.",
+      "target_insight": "Audience sees which stocks had the largest 30-day gains/losses and how these compare to longer-term (365-day) performance across all NIFTY-50 tickers.",
+      "output_fields": [
+        "Symbol",
+        "30 d % chng",
+        "365 d % chng"
+      ],
+      "chart_encodings": {
+        "x": "Symbol",
+        "y": "30 d % chng",
+        "color": "Positive/Negative based on '30 d % chng' (e.g., green/red)",
+        "size": null,
+        "other_aesthetics": "Overlay lighter bars for '365 d % chng', Legend for color direction"
+      }
+    },
+    "transformations": [
+      "Sort df by absolute value of df['30 d % chng'] in descending order to highlight the most extreme movers",
+      "Select top 10 positive and top 10 negative movers for focus (20 stocks total)",
+      "Extract df['Symbol'], df['30 d % chng'], and df['365 d % chng'] for these stocks",
+      "Determine bar color based on sign of '30 d % chng'"
+    ],
+    "data_preparation_steps": [
+      "Compute sort order for df['30 d % chng'] absolute values to find most extreme movers",
+      "Slice df to get top 10 stocks with highest positive and top 10 stocks with lowest negative '30 d % chng'",
+      "Create new dataframe 'df_plot' with columns 'Symbol', '30 d % chng', and '365 d % chng' in selected sort order",
+      "Assign bar colors: green for positive, red for negative '30 d % chng'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf_sorted = df.reindex(np.argsort(np.abs(df['30 d % chng']))[::-1])\npos_stocks = df_sorted[df_sorted['30 d % chng'] > 0].head(10)\nneg_stocks = df_sorted[df_sorted['30 d % chng'] < 0].head(10)\ndf_plot = pd.concat([pos_stocks, neg_stocks])\ndf_plot = df_plot.sort_values('30 d % chng')\nsymbols = df_plot['Symbol']\nbar_30d = df_plot['30 d % chng']\nbar_365d = df_plot['365 d % chng']\nbar_colors = ['green' if val > 0 else 'red' for val in bar_30d]\nfig, ax = plt.subplots(figsize=(12,8))\nax.bar(symbols, bar_30d, color=bar_colors, width=0.6, label='30 d % chng')\nax.bar(symbols, bar_365d, color='grey', width=0.3, alpha=0.5, label='365 d % chng')\nax.axhline(0, color='black', linewidth=1)\nax.set_ylabel('Percentage Change (%)')\nax.set_xlabel('Symbol')\nax.set_title('Most Extreme NIFTY-50 Movers: 30-day vs. 365-day % Change')\nlegend_handles = [mpl.patches.Patch(color='green', label='Positive 30 d % chng'), mpl.patches.Patch(color='red', label='Negative 30 d % chng'), mpl.patches.Patch(color='grey', alpha=0.5, label='365 d % chng')]\nax.legend(handles=legend_handles, loc='best')\nplt.xticks(rotation=45, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

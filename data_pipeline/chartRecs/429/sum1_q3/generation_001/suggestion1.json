@@ -1,0 +1,43 @@
+{
+  "table_name": "429",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any states or countries where the total volume of dogs is significantly higher or lower than the average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Deviation from Mean)",
+      "design_rationale": "A horizontal bar chart directly shows which states or countries have total dog volume significantly above or below the mean. Sorting by deviation makes it easy to spot extremes, using labels for location and color to encode whether volume is above or below average. With a moderate number of unique locations (90), horizontal bars provide clarity and legibility. This visualization highlights outliers and encourages quick comparison.",
+      "target_insight": "Identifies states/countries with notably high or low dog volumes versus average, clearly showing the magnitude and direction of deviation.",
+      "output_fields": [
+        "location",
+        "total"
+      ],
+      "chart_encodings": {
+        "x": "total - mean(total)",
+        "y": "location",
+        "color": "Above/Below Mean (above mean in one color, below in another)",
+        "size": null,
+        "other_aesthetics": "Sort bars, annotate the most extreme deviations"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['total'] is null",
+      "Calculate the mean of df['total'] (mean_total)",
+      "Create a column 'deviation' = df['total'] - mean_total",
+      "Create a column 'above_avg' = df['deviation'] > 0",
+      "Sort dataframe by 'deviation'"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df.dropna(subset=['total'])",
+      "mean_total = df_plot['total'].mean()",
+      "df_plot['deviation'] = df_plot['total'] - mean_total",
+      "df_plot['above_avg'] = df_plot['deviation'] > 0",
+      "df_plot = df_plot.sort_values('deviation', ascending=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\429.csv')\ndf_plot = df.dropna(subset=['total'])\nmean_total = df_plot['total'].mean()\ndf_plot['deviation'] = df_plot['total'] - mean_total\ndf_plot['above_avg'] = df_plot['deviation'] > 0\ndf_plot = df_plot.sort_values('deviation', ascending=True)\nfig, ax = plt.subplots(figsize=(10, 16))\ncolors = df_plot['above_avg'].map({True: '#3b8bfa', False: '#fa5a3b'})\nax.barh(df_plot['location'], df_plot['deviation'], color=colors)\nax.axvline(0, color='#666', linewidth=1, linestyle='--')\nax.set_xlabel('Deviation from Average Total Volume of Dogs')\nax.set_ylabel('Location')\nax.set_title('Locations with Total Dog Trade Volume Compared to Average (Deviation)')\n# Annotate most extreme outliers\ntop_high = df_plot.iloc[-1]\ntop_low = df_plot.iloc[0]\nax.text(top_high['deviation'], df_plot['location'].iloc[-1], f\"{top_high['location']}\\n+{int(top_high['deviation'])}\", va='center', ha='right', color='#3b8bfa', fontsize=10)\nax.text(top_low['deviation'], df_plot['location'].iloc[0], f\"{top_low['location']}\\n{int(top_low['deviation'])}\", va='center', ha='left', color='#fa5a3b', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

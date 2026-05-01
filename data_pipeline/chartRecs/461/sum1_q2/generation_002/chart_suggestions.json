@@ -1,0 +1,208 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\461\\sum1_q2\\generation_002",
+  "schema_context": "Table: Monthly highest temperature in Amherst\nRows: 140\nColumns: 3\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 12\n  - Semantic Meaning: This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015.\n  - Value Range: 2004.0 to 2015.0\n  - Mean: 2009.34\n\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 140\n  - Semantic Meaning: This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset.\n\nField: Temperature\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring.\n  - Value Range: 41.0 to 98.0\n  - Mean: 76.48\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Date\"\n  3. \"Temperature\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Date']",
+  "table_metadata": {
+    "table_name": "Monthly highest temperature in Amherst",
+    "file_path": "csv_c_squared\\461.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)",
+    "original_filename": "461.csv",
+    "dataset_name": "Monthly highest temperature in Amherst",
+    "row_count": 140,
+    "column_count": 3,
+    "table_hash": 556358794757910485,
+    "fields": [
+      {
+        "name": "Year",
+        "clean_name": "Year",
+        "camel_case_name": "year",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 12,
+        "min_value": 2004.0,
+        "max_value": 2015.0,
+        "mean_value": 2009.3428571428572,
+        "median_value": 2009.0,
+        "sample_values": "2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015",
+        "inferred_semantic_summary": "This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015."
+      },
+      {
+        "name": "Date",
+        "clean_name": "Date",
+        "camel_case_name": "date",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 140,
+        "sample_values": "2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1",
+        "inferred_semantic_summary": "This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset."
+      },
+      {
+        "name": "Temperature",
+        "clean_name": "Temperature",
+        "camel_case_name": "temperature",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 140,
+        "unique_values": 50,
+        "min_value": 41.0,
+        "max_value": 98.0,
+        "mean_value": 76.47857142857143,
+        "median_value": 80.0,
+        "sample_values": "41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98",
+        "inferred_semantic_summary": "This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring."
+      }
+    ],
+    "formatted_summary": "## Table 1: Monthly_highest_temperature_in_Amherst (140 rows × 3 columns)\n\n### Description\nData loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)\n\n### Schema (3 fields)\n  - Year -- type: int64, values: 2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015\n  - Date -- type: object, values: 2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1\n  - Temperature -- type: int64, values: 41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98\n\n### Sample Data (first 5 rows)\n```\n   Year      Date  Temperature\n0  2004  2004/1/1           49\n1  2004  2004/2/1           54\n2  2004  2004/3/1           89\n3  2004  2004/4/1           88\n4  2004  2004/5/1           92\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "461",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "question": "Are there any months or years where the highest temperature appears much higher or lower than the surrounding periods?",
+      "column_combination": [
+        "Year",
+        "Date",
+        "Temperature"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Line chart with highlighted anomalies",
+            "design_rationale": "A line chart details monthly highest temperatures across time, making it easy to spot spikes or dips in the data. By overlaying markers for periods where the temperature deviates strongly from the local median (using a rolling window), viewers can instantly identify unusual months or years. This technique is effective given the schema's monthly granularity and clear temporal ordering.",
+            "target_insight": "Visual identification of months where the highest temperature is an outlier relative to surrounding months, highlighting abnormal climate events.",
+            "output_fields": [
+              "Date",
+              "Temperature"
+            ],
+            "chart_encodings": {
+              "x": "Date",
+              "y": "Temperature",
+              "color": "Highlight points where deviation from local rolling median exceeds threshold",
+              "size": "null",
+              "other_aesthetics": "Anomaly points use red color; normal points use blue; line is gray; anomaly threshold set at 1.5 times the rolling median absolute deviation"
+            }
+          },
+          "transformations": [
+            "Sort df by 'Date' chronologically to preserve temporal order",
+            "Compute 3-month rolling median of 'Temperature' using 'Date' order",
+            "Calculate rolling median absolute deviation (MAD) for each month",
+            "Identify months where 'Temperature' deviates by more than 1.5 times local MAD from the rolling median"
+          ],
+          "data_preparation_steps": [
+            "Convert df['Date'] to pandas datetime to ensure correct sorting",
+            "Sort dataframe by df['Date'] ascending for chronological order",
+            "Calculate rolling median and rolling MAD of df['Temperature'] (window=3)",
+            "Create a boolean 'anomaly' mask for months with 'Temperature' exceeding threshold",
+            "Separate normal and anomaly data points for plotting"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')\ndf = df.sort_values('Date')\nwindow = 3\nrolling_median = df['Temperature'].rolling(window=window, center=True).median()\nmad = df['Temperature'].rolling(window=window, center=True).apply(lambda x: np.median(np.abs(x - np.median(x))), raw=True)\nthresh = 1.5\nanomaly_mask = np.abs(df['Temperature'] - rolling_median) > thresh * mad\nfig, ax = plt.subplots(figsize=(12,6))\nax.plot(df['Date'], df['Temperature'], color='gray', linewidth=1.5, label='Monthly Highest Temp')\nax.scatter(df.loc[~anomaly_mask, 'Date'], df.loc[~anomaly_mask, 'Temperature'], color='blue', s=40, label='Normal')\nax.scatter(df.loc[anomaly_mask, 'Date'], df.loc[anomaly_mask, 'Temperature'], color='red', s=80, marker='o', label='Anomaly')\nax.set_xlabel('Date')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Monthly Highest Temperatures in Amherst\\nAnomalies Highlighted (vs. Local Median)')\nax.legend()\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Yearly boxplot with individual months labeled outliers",
+            "design_rationale": "A boxplot for each year captures the yearly distribution and range of monthly highest temperatures, while accentuating months that are statistical outliers within their year (e.g., unusually hot or cold). This approach allows direct comparison across years as well as visibility of within-year extremes, addressing whether certain years have more pronounced anomalies.",
+            "target_insight": "Detection of years and months where highest temperatures diverge sharply from typical values, highlighting periods of extreme climate variability.",
+            "output_fields": [
+              "Year",
+              "Temperature",
+              "Date"
+            ],
+            "chart_encodings": {
+              "x": "Year",
+              "y": "Temperature",
+              "color": "Boxplot (year); outlier months as distinct black points; labeled with the 'Date'",
+              "size": "null",
+              "other_aesthetics": "Show box for each year; overlay outlier points with month labels for full context"
+            }
+          },
+          "transformations": [
+            "Group df by 'Year' to compute distribution (boxplot) of 'Temperature'",
+            "Statistically identify outlier months within each year using standard boxplot rules (outside 1.5x IQR)",
+            "Record 'Date' for each outlier to display as annotation"
+          ],
+          "data_preparation_steps": [
+            "For each year, calculate Q1, Q3, and IQR of monthly highest temperatures",
+            "Mark months where temperature falls outside [Q1 - 1.5*IQR, Q3 + 1.5*IQR] as outliers",
+            "Prepare boxplot data arrays and outlier points with respective years and 'Date' for annotation"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\nyears = sorted(df['Year'].unique())\nboxplot_data = [df[df['Year']==y]['Temperature'].values for y in years]\n# Compute outliers for annotation\noutlier_points = []\noutlier_labels = []\nfor i, y in enumerate(years):\n    temps = df[df['Year']==y]['Temperature']\n    q1, q3 = np.percentile(temps, [25, 75])\n    iqr = q3 - q1\n    lower = q1 - 1.5 * iqr\n    upper = q3 + 1.5 * iqr\n    mask = (temps < lower) | (temps > upper)\n    outlier_idxs = np.where(mask)[0]\n    for idx in outlier_idxs:\n        outlier_points.append((i, temps.values[idx]))\n        outlier_labels.append(df[df['Year']==y]['Date'].iloc[idx].strftime('%b-%Y'))\nfig, ax = plt.subplots(figsize=(10,6))\nax.boxplot(boxplot_data, positions=np.arange(len(years)), widths=0.6, patch_artist=True, boxprops=dict(facecolor='lightblue'))\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels([str(y) for y in years])\nax.set_xlabel('Year')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Yearly Distribution of Monthly Highest Temperatures\\nOutlier Monthly Temperatures Labeled')\n# Plot outlier points\nfor i, (x, y_temp) in enumerate(outlier_points):\n    ax.scatter(x, y_temp, color='black', s=70, marker='o', zorder=4)\n    label = outlier_labels[i]\n    ax.text(x+0.1, y_temp, label, fontsize=8, color='black', verticalalignment='bottom', zorder=5)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:45:25.583234",
+      "schema_context": "Table: Monthly highest temperature in Amherst\nRows: 140\nColumns: 3\n\nFIELD INFORMATION:\nField: Year\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 12\n  - Semantic Meaning: This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015.\n  - Value Range: 2004.0 to 2015.0\n  - Mean: 2009.34\n\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 140\n  - Semantic Meaning: This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset.\n\nField: Temperature\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 50\n  - Semantic Meaning: This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring.\n  - Value Range: 41.0 to 98.0\n  - Mean: 76.48\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Year\"\n  2. \"Date\"\n  3. \"Temperature\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Year'], df['Date']",
+      "table_metadata": {
+        "table_name": "Monthly highest temperature in Amherst",
+        "file_path": "csv_c_squared\\461.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)",
+        "original_filename": "461.csv",
+        "dataset_name": "Monthly highest temperature in Amherst",
+        "row_count": 140,
+        "column_count": 3,
+        "table_hash": 556358794757910485,
+        "fields": [
+          {
+            "name": "Year",
+            "clean_name": "Year",
+            "camel_case_name": "year",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 12,
+            "min_value": 2004.0,
+            "max_value": 2015.0,
+            "mean_value": 2009.3428571428572,
+            "median_value": 2009.0,
+            "sample_values": "2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015",
+            "inferred_semantic_summary": "This field records the calendar year for each monthly highest temperature observation in Amherst, identifying the time period from 2004 to 2015."
+          },
+          {
+            "name": "Date",
+            "clean_name": "Date",
+            "camel_case_name": "date",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 140,
+            "sample_values": "2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1",
+            "inferred_semantic_summary": "This field represents the specific month and year for which the highest recorded temperature in Amherst was measured, serving as a time identifier in a climatological dataset."
+          },
+          {
+            "name": "Temperature",
+            "clean_name": "Temperature",
+            "camel_case_name": "temperature",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 140,
+            "unique_values": 50,
+            "min_value": 41.0,
+            "max_value": 98.0,
+            "mean_value": 76.47857142857143,
+            "median_value": 80.0,
+            "sample_values": "41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98",
+            "inferred_semantic_summary": "This field records the monthly highest temperature (in degrees Fahrenheit) observed in Amherst, representing historical climate data for weather analysis or environmental monitoring."
+          }
+        ],
+        "formatted_summary": "## Table 1: Monthly_highest_temperature_in_Amherst (140 rows × 3 columns)\n\n### Description\nData loaded from CSV file: 461.csv (Dataset: Monthly highest temperature in Amherst)\n\n### Schema (3 fields)\n  - Year -- type: int64, values: 2004, 2005, 2006, 2007, 2008, ..., 2011, 2012, 2013, 2014, 2015\n  - Date -- type: object, values: 2004/1/1, 2004/10/1, 2004/11/1, 2004/12/1, 2004/2/1, ..., 2015/4/1, 2015/5/1, 2015/6/1, 2015/7/1, 2015/8/1\n  - Temperature -- type: int64, values: 41, 42, 44, 47, 49, ..., 94, 95, 96, 97, 98\n\n### Sample Data (first 5 rows)\n```\n   Year      Date  Temperature\n0  2004  2004/1/1           49\n1  2004  2004/2/1           54\n2  2004  2004/3/1           89\n3  2004  2004/4/1           88\n4  2004  2004/5/1           92\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

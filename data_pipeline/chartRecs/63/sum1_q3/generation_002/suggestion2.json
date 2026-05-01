@@ -1,0 +1,39 @@
+{
+  "table_name": "63",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "How do annual income levels relate to the likelihood of purchase?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Local Purchase Rate Coloring",
+      "design_rationale": "A scatter plot lets us visualize the distribution of AnnualIncome (continuous) for individuals, but encoding local purchase probability via color extracts deeper spatial insight in the data. By plotting each customer as a point on the x-axis (AnnualIncome) and adding a slight vertical jitter (y), coloring by rolling mean of PurchaseStatus (computed over sorted AnnualIncome), we reveal micro-trends and clusters: do purchase rates spike at certain income levels or show nonlinear behavior? The high cardinality makes binning less informative here—heat coloring enables nuanced, granular inspection.",
+      "target_insight": "Shows variability in purchase likelihood as a function of income at a granular level, identifying possible income ranges with atypical purchase probability, as well as overall trend and outliers.",
+      "output_fields": [
+        "AnnualIncome",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "AnnualIncome",
+        "y": "PurchaseStatus with vertical jitter for separation",
+        "color": "Rolling mean of PurchaseStatus over sorted AnnualIncome (centered window, mapped to viridis colormap)",
+        "size": "null",
+        "other_aesthetics": "Alpha=0.6; legend colorbar for purchase probability"
+      }
+    },
+    "transformations": [
+      "Sort df by df['AnnualIncome']",
+      "Compute rolling mean of df['PurchaseStatus'] with window=60, center=True; store as 'PurchaseStatusRolling'",
+      "Apply random vertical jitter to y: df['PurchaseStatus'] + np.random.normal(0, 0.04, size=len(df))"
+    ],
+    "data_preparation_steps": [
+      "df_sorted = df.sort_values('AnnualIncome').reset_index(drop=True)",
+      "df_sorted['PurchaseStatusRolling'] = df_sorted['PurchaseStatus'].rolling(window=60, center=True, min_periods=1).mean()",
+      "df_sorted['y_jittered'] = df_sorted['PurchaseStatus'] + np.random.normal(0, 0.04, size=len(df_sorted))"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\63.csv\")\ndf_sorted = df.sort_values('AnnualIncome').reset_index(drop=True)\ndf_sorted['PurchaseStatusRolling'] = df_sorted['PurchaseStatus'].rolling(window=60, center=True, min_periods=1).mean()\ndf_sorted['y_jittered'] = df_sorted['PurchaseStatus'] + np.random.normal(0, 0.04, size=len(df_sorted))\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df_sorted['PurchaseStatusRolling'].min(), vmax=df_sorted['PurchaseStatusRolling'].max())\nfig, ax = plt.subplots(figsize=(11,5))\nsc = ax.scatter(df_sorted['AnnualIncome'], df_sorted['y_jittered'], c=df_sorted['PurchaseStatusRolling'], cmap=cmap, norm=norm, alpha=0.6, s=30, edgecolors='none')\nax.set_ylim(-0.12, 1.12)\nax.set_yticks([0, 1])\nax.set_yticklabels(['Did Not Purchase', 'Purchased'])\nax.set_xlabel(\"Annual Income (currency units)\")\nax.set_ylabel(\"PurchaseStatus (with vertical jitter)\")\ntitle = \"Granular Purchase Probability by Income Level\\nColor: Rolling Mean Purchase Likelihood\"\nax.set_title(title, fontsize=13)\ncbar = plt.colorbar(sc, ax=ax)\ncbar.set_label(\"Rolling Purchase Likelihood (local mean)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,37 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "What trends are observed in the number of purchases among customers who are part of the loyalty program compared to those who are not?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "grouped bar chart",
+      "design_rationale": "A grouped bar chart offers an aggregate view by comparing the mean and median 'NumberOfPurchases' between loyalty program members and non-members. This approach makes the trend immediately clear to viewers (overview perspective), highlighting whether participation correlates with increased purchases. Including both mean and median bars per group (with slight offset) provides insight into both central tendency and the effect of potential skews/outliers in the data.",
+      "target_insight": "This visualization makes it easy to compare the average and median purchase activity between enrolled and not enrolled customers, quantifying how loyalty membership impacts overall purchasing trends.",
+      "output_fields": [
+        "LoyaltyProgram",
+        "NumberOfPurchases"
+      ],
+      "chart_encodings": {
+        "x": "LoyaltyProgram",
+        "y": "mean and median of NumberOfPurchases",
+        "color": "Statistic type (mean, median)",
+        "size": null,
+        "other_aesthetics": "bar width=.35; custom legend; grid lines"
+      }
+    },
+    "transformations": [
+      "Aggregate df by 'LoyaltyProgram', computing mean and median for 'NumberOfPurchases' per group."
+    ],
+    "data_preparation_steps": [
+      "Calculate means: [df[df['LoyaltyProgram']==0]['NumberOfPurchases'].mean(), df[df['LoyaltyProgram']==1]['NumberOfPurchases'].mean()]",
+      "Calculate medians: [df[df['LoyaltyProgram']==0]['NumberOfPurchases'].median(), df[df['LoyaltyProgram']==1]['NumberOfPurchases'].median()]",
+      "Set bar positions and labels."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\63.csv')\nlabels = ['Not Enrolled', 'Enrolled']\nmeans = [df[df['LoyaltyProgram']==0]['NumberOfPurchases'].mean(), df[df['LoyaltyProgram']==1]['NumberOfPurchases'].mean()]\nmedians = [df[df['LoyaltyProgram']==0]['NumberOfPurchases'].median(), df[df['LoyaltyProgram']==1]['NumberOfPurchases'].median()]\nx = np.arange(len(labels))\nwidth = 0.35\nfig, ax = plt.subplots(figsize=(8, 6))\nbar1 = ax.bar(x - width/2, means, width, label='Mean', color='#4C72B0', alpha=0.8, edgecolor='black')\nbar2 = ax.bar(x + width/2, medians, width, label='Median', color='#55A868', alpha=0.8, edgecolor='black')\nax.set_xticks(x)\nax.set_xticklabels(labels)\nax.set_ylabel('NumberOfPurchases')\nax.set_xlabel('LoyaltyProgram')\nax.legend()\nax.grid(True, linestyle='--', alpha=0.3)\nplt.title('Average vs Median NumberOfPurchases\\nby Loyalty Program Membership')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

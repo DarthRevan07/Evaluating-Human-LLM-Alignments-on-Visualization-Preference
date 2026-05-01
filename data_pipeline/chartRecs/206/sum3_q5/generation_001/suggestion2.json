@@ -1,0 +1,40 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Does the presence of a guestroom influence the price for homes with similar area?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with Trendlines",
+      "design_rationale": "A scatterplot of 'area' vs. 'price' colored by 'guestroom' presence allows us to explore the relationship for every observation. Overlaying a separate linear trendline (regression fit) for each guestroom group visualizes how the price-area relationship changes by guestroom. This 'regression split' approach shows, for same area, if price is systematically higher for 'guestroom = yes' homes AND how consistent this effect is across the area range. The scatterplot aids in identifying trends, outliers, and overlap between groups.",
+      "target_insight": "Directly visualizes difference in price for similar area between homes with and without a guestroom, both as overall relationship and in magnitude/trend, via parallel trendlines and point clouds.",
+      "output_fields": [
+        "area",
+        "price",
+        "guestroom"
+      ],
+      "chart_encodings": {
+        "x": "area",
+        "y": "price",
+        "color": "guestroom ('yes'=blue, 'no'=orange)",
+        "size": null,
+        "other_aesthetics": "separate regression line for each group, alpha=0.5 for points"
+      }
+    },
+    "transformations": [
+      "Split df into two subsets by 'guestroom' == 'yes' and 'guestroom' == 'no'",
+      "For each group, fit a linear regression: price ~ area (numpy polyfit, degree 1)",
+      "Overlay both regression lines on scatterplot with legend"
+    ],
+    "data_preparation_steps": [
+      "Read csv_c_squared\\206.csv into df",
+      "Drop any rows with nulls in ['area', 'price', 'guestroom'] (not expected, but for general safety)",
+      "Map 'guestroom' to categorical for color assignment"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\ndf = df.dropna(subset=[\"area\", \"price\", \"guestroom\"])\n\ncolors = {\"yes\": \"#3498db\", \"no\": \"#e67e22\"}\nguestroom_groups = [\"yes\", \"no\"]\n\nfig, ax = plt.subplots(figsize=(10,6))\nfor guestroom in guestroom_groups:\n    sub = df[df[\"guestroom\"] == guestroom]\n    ax.scatter(sub[\"area\"], sub[\"price\"], c=colors[guestroom], alpha=0.5, label=\"Guestroom: \" + guestroom, edgecolor=\"k\", s=40)\n    # Fit regression\n    if len(sub) >= 2:\n        p = np.polyfit(sub[\"area\"], sub[\"price\"], deg=1)\n        x_fit = np.linspace(sub[\"area\"].min(), sub[\"area\"].max(), 100)\n        y_fit = np.polyval(p, x_fit)\n        ax.plot(x_fit, y_fit, color=colors[guestroom], lw=2, label=\"Trend: \" + guestroom)\n\nax.set_xlabel(\"area\")\nax.set_ylabel(\"price\")\ntitle = \"Scatterplot of Price vs Area Colored by Guestroom Presence\"\nsubtitle = \"Separate trendlines (regression) illustrate price-area relationship by guestroom presence\\nPoint clouds reveal overlap and price differences for comparable sizes\"\nax.set_title(title + \"\\n\" + subtitle, fontsize=13)\nax.legend()\nax.grid(True, alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

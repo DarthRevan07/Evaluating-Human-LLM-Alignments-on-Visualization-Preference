@@ -1,0 +1,43 @@
+{
+  "table_name": "26",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "What are the most significant spikes or drops in Tesla's daily price range (the difference between High and Low), and when did they occur?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Monthly Heatmap of Price Range Spikes",
+      "design_rationale": "Aggregating the daily price ranges into month-year buckets and visualizing each month's maximum price range as a heatmap facilitates pattern recognition of persistent volatility spikes, seasonality, and market shifts. Months with unusually high spikes are visually clusterable, helping users spot periods with recurring or isolated extreme price action. The unconventional heatmap format allows rapid comparison and draws attention to volatility clusters.",
+      "target_insight": "Identification of months and years with clustered spikes; temporal overview of periods with extraordinary high-low differences. Highlights market transitions, crisis events, or high-activity seasons.",
+      "output_fields": [
+        "Date",
+        "High",
+        "Low"
+      ],
+      "chart_encodings": {
+        "x": "Year (extracted from Date)",
+        "y": "Month (extracted from Date)",
+        "color": "Heatmap cell intensity (colormap) encoding monthly maximum Daily Range",
+        "size": "null",
+        "other_aesthetics": "Colorbar showing the meaning of cell color; square cells; month labels; axis formatting; clear aspect ratio"
+      }
+    },
+    "transformations": [
+      "Calculate daily price range for each row as df['High'] - df['Low']",
+      "Extract 'Year' and 'Month' from df['Date']",
+      "Group by Year and Month, aggregate to get max Daily Range per month"
+    ],
+    "data_preparation_steps": [
+      "df['Daily Range'] = df['High'] - df['Low']",
+      "df['Date'] = pd.to_datetime(df['Date'])",
+      "df['Year'] = df['Date'].dt.year",
+      "df['Month'] = df['Date'].dt.month",
+      "monthly_range = df.groupby(['Year', 'Month']).agg({'Daily Range': 'max'}).reset_index()",
+      "Pivot to matrix form: rows=Month, cols=Year, values=monthly maximum price range"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\26.csv')\ndf['Daily Range'] = df['High'] - df['Low']\ndf['Date'] = pd.to_datetime(df['Date'])\ndf['Year'] = df['Date'].dt.year\ndf['Month'] = df['Date'].dt.month\nmonthly_range = df.groupby(['Year','Month']).agg({'Daily Range':'max'}).reset_index()\npivot = monthly_range.pivot(index='Month', columns='Year', values='Daily Range')\nfig, ax = plt.subplots(figsize=(12,7))\ncmap = mpl.colormaps['viridis']\nimg = ax.imshow(pivot.values, aspect='auto', cmap=cmap, vmin=np.nanmin(pivot.values), vmax=np.nanmax(pivot.values))\nax.set_xticks(np.arange(pivot.shape[1]))\nax.set_xticklabels(pivot.columns)\nax.set_yticks(np.arange(1,13))\nax.set_yticklabels(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'])\nax.set_xlabel('Year')\nax.set_ylabel('Month')\nplt.title('Tesla Monthly Maximum Price Range (High - Low) Heatmap: 2010–2020')\ncbar = plt.colorbar(img, ax=ax, fraction=0.035, pad=0.04)\ncbar.set_label('Max Daily Price Range (USD) per Month')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Are there any outliers or anomalies in the 365-day % change or 30-day % change values that stand out when compared across all stock symbols?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter plot (365 d % chng vs 30 d % chng), color by anomaly, label extreme cases",
+      "design_rationale": "A scatterplot mapping '365 d % chng' on the x-axis and '30 d % chng' on the y-axis allows for the detection of stocks whose annual performance is anomalous compared to their recent 30-day performance. Coloring points based on outlier status highlights anomalies. Annotating points that are extreme in either dimension makes the chart actionable and insightful for anomaly detection.",
+      "target_insight": "Reveal whether high annual returns correspond to recent returns, and distinctly flag stocks that exhibit outlier values in either field. Makes interpretation of joint anomalies intuitive.",
+      "output_fields": [
+        "365 d % chng",
+        "30 d % chng",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "365 d % chng",
+        "y": "30 d % chng",
+        "color": "outlier/anomaly status in either 365-day or 30-day % chng",
+        "size": "null",
+        "other_aesthetics": "annotate points with stock symbol for extreme outlier values; grid"
+      }
+    },
+    "transformations": [
+      "Ensure '365 d % chng' and '30 d % chng' are numeric",
+      "Outlier detection on both axes via IQR",
+      "Categorize each point: normal, 365d outlier, 30d outlier, both"
+    ],
+    "data_preparation_steps": [
+      "Define outlier cutoff for each column using IQR",
+      "Create a categorical color mapping based on outlier status",
+      "Select extreme outliers in either axis for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['365 d % chng'] = pd.to_numeric(df['365 d % chng'], errors='coerce')\ndf['30 d % chng'] = pd.to_numeric(df['30 d % chng'], errors='coerce')\ndef get_outlier_status(series):\n    q1 = series.quantile(0.25)\n    q3 = series.quantile(0.75)\n    iqr = q3 - q1\n    lower = q1 - 1.5*iqr\n    upper = q3 + 1.5*iqr\n    return (series < lower) | (series > upper)\nout_365 = get_outlier_status(df['365 d % chng'])\nout_30 = get_outlier_status(df['30 d % chng'])\n# Define anomaly category: 0=none, 1=365 only, 2=30 only, 3=both\nanomaly = np.zeros(len(df), dtype=int)\nanomaly[out_365 & ~out_30] = 1\nanomaly[~out_365 & out_30] = 2\nanomaly[out_365 & out_30] = 3\n# Color mapping\ngroup_colors = {0:'#90caf9',1:'#ffb300',2:'#d81b60',3:'#004d40'}\nlabel_map = {0:'Normal',1:'365d outlier',2:'30d outlier',3:'Both outliers'}\ncolors = [group_colors[a] for a in anomaly]\nfig, ax = plt.subplots(figsize=(8,6))\nsc = ax.scatter(df['365 d % chng'], df['30 d % chng'], c=colors, s=60, edgecolor='k', alpha=0.7)\n# Annotate extreme outliers\nfor i, a in enumerate(anomaly):\n    if a in [1,2,3]:\n        ax.text(df['365 d % chng'][i]+2, df['30 d % chng'][i], df['Symbol'][i], fontsize=9, color=group_colors[a])\n# Legend\nfrom matplotlib.lines import Line2D\nlegend_elements = [Line2D([0], [0], marker='o', color='w', label=label_map[a], markerfacecolor=group_colors[a], markersize=10) for a in [0,1,2,3]]\nax.legend(handles=legend_elements, loc='best', frameon=True)\nplt.title('Anomaly Detection in NIFTY-50 Stocks: 365d vs 30d % Change\\nOutliers Highlighted & Annotated', fontsize=13)\nplt.xlabel('365 d % chng')\nplt.ylabel('30 d % chng')\nax.grid(True, linestyle='--', linewidth=0.7, alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

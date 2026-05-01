@@ -1,0 +1,44 @@
+{
+  "table_name": "122",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any publishers whose games consistently perform well in a particular region compared to others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap enables comparison of publisher-region sales performance in a succinct matrix layout. Publishers as rows and regions as columns allow quick identification of those whose games sell disproportionately well in certain markets. Given the large publisher count, restricting to the top publishers by global sales targets consistent success, and region columns highlight comparative performance.",
+      "target_insight": "Spot publishers whose games have notably high sales concentration in specific regions versus others.",
+      "output_fields": [
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Region ('NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales')",
+        "y": "Publisher",
+        "color": "Average regional sales (millions)",
+        "size": null,
+        "other_aesthetics": "Sort publishers by total Global_Sales descending; label axis ticks; discrete colormap for clarity"
+      }
+    },
+    "transformations": [
+      "For each publisher, calculate the mean sales for each region: 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales'",
+      "Filter publishers to those with at least 10 games published for consistency",
+      "Select the top 15 publishers by cumulative 'Global_Sales' for readability"
+    ],
+    "data_preparation_steps": [
+      "df['Publisher'] non-null filtering",
+      "Group by df['Publisher'], compute mean for 'NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales', and sum for 'Global_Sales'",
+      "Filter groups where publisher released at least 10 games",
+      "Sort by summed 'Global_Sales', select top 15",
+      "Form a DataFrame with publisher rows and region columns (mean values)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_pubs = df[~df['Publisher'].isnull()]\ndf_pubcounts = df_pubs.groupby('Publisher').size()\ndf_majorpubs = df_pubcounts[df_pubcounts>=10].index.tolist()\ndf_pubs_group = df_pubs[df_pubs['Publisher'].isin(df_majorpubs)].groupby('Publisher').agg({'NA_Sales':'mean','EU_Sales':'mean','JP_Sales':'mean','Other_Sales':'mean','Global_Sales':'sum'})\ndf_pubs_group = df_pubs_group.sort_values('Global_Sales',ascending=False).head(15)\nregion_cols = ['NA_Sales','EU_Sales','JP_Sales','Other_Sales']\ndata_mat = df_pubs_group[region_cols].values\nfig, ax = plt.subplots(figsize=(10,8))\ncmap = mpl.colormaps['viridis'].resampled(7)\nim = ax.imshow(data_mat, cmap=cmap)\nax.set_xticks(np.arange(len(region_cols)))\nax.set_xticklabels(region_cols)\nax.set_yticks(np.arange(len(df_pubs_group)))\nax.set_yticklabels(df_pubs_group.index)\nfor i in range(data_mat.shape[0]):\n    for j in range(data_mat.shape[1]):\n        val = data_mat[i,j]\n        ax.text(j,i, f'{val:.2f}', ha='center', va='center', color='white' if val > data_mat.max()/2 else 'black', fontsize=10)\nplt.title('Mean Regional Sales per Publisher\\n(Top 15 by Global Sales)', fontsize=16)\ncbar = plt.colorbar(im, ax=ax, label='Mean Sales (millions)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,37 @@
+{
+  "table_name": "206",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Is there a noticeable trend in property prices based on the number of stories?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Mean Price Bar Chart with Error Bars",
+      "design_rationale": "A bar chart with error bars (showing standard deviation or standard error) provides an aggregate view of the mean property price for each 'stories' group, quickly conveying the central trend and statistical variation. With four unique 'stories' values and 545 rows, this offers a clear comparison without overwhelming detail, and accommodates the numerical skew present in 'price' (as per schema). Color encoding by stories emphasizes group differences, making the trend pattern immediately apparent.",
+      "target_insight": "This visualization reveals whether average property prices increase, decrease, or remain constant as the number of stories increases, and demonstrates the typical variability within each group.",
+      "output_fields": [
+        "stories",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "stories",
+        "y": "mean(price)",
+        "color": "stories (discrete, via palette)",
+        "size": "null",
+        "other_aesthetics": "error bars (standard deviation), bar width, clear axis labeling"
+      }
+    },
+    "transformations": [
+      "Group the data by 'stories'",
+      "Compute mean and standard deviation of 'price' for each 'stories' group"
+    ],
+    "data_preparation_steps": [
+      "Aggregate price statistics (mean and std) by unique 'stories'",
+      "Sort the stories for consistent display"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\206.csv\")\ngrouped = df.groupby('stories')['price'].agg(['mean', 'std']).reset_index()\nstories_sorted = grouped['stories'].values\ny_means = grouped['mean'].values\ny_stds = grouped['std'].values\ncmap = mpl.colormaps['viridis'].resampled(len(stories_sorted))\nfig, ax = plt.subplots(figsize=(8,6))\nbar_colors = [cmap(i/len(stories_sorted)) for i in range(len(stories_sorted))]\nbars = ax.bar([str(s) for s in stories_sorted], y_means, yerr=y_stds, color=bar_colors, capsize=8, edgecolor=\"black\")\nax.set_xlabel(\"stories\")\nax.set_ylabel(\"mean price\")\nax.set_title(\"Mean Property Price by Number of Stories\\n(Error Bars = Standard Deviation)\")\nax.grid(axis='y', alpha=0.2)\nlegend_handles = [mpl.patches.Patch(color=bar_colors[i], label=str(stories_sorted[i]) + \" stories\") for i in range(len(stories_sorted))]\nax.legend(handles=legend_handles, title=\"stories\", loc=\"best\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

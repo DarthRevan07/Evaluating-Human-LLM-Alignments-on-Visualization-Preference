@@ -1,0 +1,40 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do monthly highest temperatures in Amherst change over the years covered in the dataset?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line chart (multi-line, one line per year)",
+      "design_rationale": "Visualizing the monthly highest temperatures as multiple lines, each representing a year, allows for a direct comparison of monthly trends across years. Using lines for each year leverages the regularity and completeness of the data (12 unique years, 140 records), making it easy to spot anomalies, seasonal patterns, and inter-year shifts. The 'Date' field (representing months) on the x-axis and 'Temperature' on the y-axis together facilitate a month-by-month exploration of yearly variation. Color encoding shows each year's line distinctly, aiding trend interpretation.",
+      "target_insight": "This chart reveals how the monthly highest temperatures vary from year to year, highlights changes in seasonal patterns, and uncovers any shifts or extremes in climate across the timeline.",
+      "output_fields": [
+        "Date",
+        "Temperature",
+        "Year"
+      ],
+      "chart_encodings": {
+        "x": "Date",
+        "y": "Temperature",
+        "color": "Year",
+        "size": null,
+        "other_aesthetics": "Distinct color for each year, lineplot, legend for year"
+      }
+    },
+    "transformations": [
+      "Sort df by 'Date' to ensure chronological order for line plots",
+      "Extract month from 'Date' for potential x-axis tick labeling",
+      "Group df by 'Year' to align each lineplot"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c_squared\\461.csv')",
+      "Convert 'Date' to datetime to ensure correct ordering: df['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')",
+      "Sort df by 'Date': df = df.sort_values('Date')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf['Date'] = pd.to_datetime(df['Date'], format='%b-%Y')\ndf = df.sort_values('Date')\nyears = df['Year'].unique()\ncmap = mpl.colormaps['viridis'].resampled(len(years))\nfig, ax = plt.subplots(figsize=(14,6))\nfor idx, year in enumerate(years):\n    dftmp = df[df['Year'] == year]\n    ax.plot(dftmp['Date'], dftmp['Temperature'], label=str(year), color=cmap(idx))\nax.set_xlabel('Month-Year')\nax.set_ylabel('Monthly Highest Temperature (°F)')\nax.set_title('Monthly Highest Temperatures in Amherst by Year')\ndates_fmt = [dt.strftime('%b-%Y') for dt in df['Date'].unique()]\nax.set_xticks(df['Date'].unique())\nax.set_xticklabels(dates_fmt, rotation=45, ha='right', fontsize=9)\nax.legend(title='Year', bbox_to_anchor=(1.02,1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

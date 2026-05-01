@@ -1,0 +1,39 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which combination of enginetype and enginesize consistently leads to higher car prices?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatterplot with color facet",
+      "design_rationale": "A scatterplot of 'enginesize' versus 'price', with color-coded points by 'enginetype', allows direct exploration of how each engine type interacts with size to affect price. This design lets the user see clustering, linearity, and dispersion—clearly visualizing which engine types consistently have high prices at larger sizes. Overlaying trend lines for each 'enginetype' adds depth to recognize pricing consistency.",
+      "target_insight": "Reveals whether larger engines within specific 'enginetype' categories consistently fetch higher prices, and which engine types dominate the upper price range across all sizes.",
+      "output_fields": [
+        "enginetype",
+        "enginesize",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginesize",
+        "y": "price",
+        "color": "enginetype (distinct color per category)",
+        "size": null,
+        "other_aesthetics": "Trend lines for each 'enginetype'; legend for type; alpha transparency to reduce overplotting"
+      }
+    },
+    "transformations": [
+      "Plot each car as a point with x='enginesize', y='price', color by 'enginetype'.",
+      "For each 'enginetype', fit a linear regression/trend line of 'enginesize' vs 'price' and overlay."
+    ],
+    "data_preparation_steps": [
+      "Identify all unique enginetype categories.",
+      "For each enginetype, subset df and prepare points and compute trend line.",
+      "Plot all points and trend lines in a single axes with legend."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\nengine_types = df['enginetype'].unique()\ncolors = mpl.colormaps['tab10'].colors\nfig, ax = plt.subplots(figsize=(10, 7))\nfor idx, eng in enumerate(engine_types):\n    subset = df[df['enginetype'] == eng]\n    ax.scatter(subset['enginesize'], subset['price'], label=eng, color=colors[idx % len(colors)], alpha=0.6)\n    if subset.shape[0] > 2:\n        coef = np.polyfit(subset['enginesize'], subset['price'], 1)\n        xs = np.linspace(subset['enginesize'].min(), subset['enginesize'].max(), 50)\n        ys = coef[0] * xs + coef[1]\n        ax.plot(xs, ys, color=colors[idx % len(colors)], lw=2, alpha=0.7)\nplt.xlabel('enginesize')\nplt.ylabel('price')\nplt.title('Car Price vs enginesize by enginetype\\nTrend lines highlight consistent high-price combinations', fontsize=14)\nplt.legend(title='enginetype')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

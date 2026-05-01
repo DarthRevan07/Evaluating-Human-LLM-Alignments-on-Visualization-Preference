@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What pricing trends can be observed for various car categories over different production years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap visualizes multivariate relationships and is particularly effective in highlighting patterns of price concentration across categories and years. By binning 'Prod. year' (e.g., into 5-year intervals to reduce sparseness) and aggregating median 'Price' for each (category, time bin), the chart exposes which categories and time windows correspond to higher/lower typical prices. The color intensity directly encodes price, providing an unconventional but highly readable summary view across multiple car categories and their evolution in the market.",
+      "target_insight": "This visualization shows the relative pricing (median) for each car category across grouped production year intervals, exposing category-specific peaks, troughs, or stable periods in price over time.",
+      "output_fields": [
+        "Prod. year (binned)",
+        "Category",
+        "Price (median)"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year (binned into 5-year intervals)",
+        "y": "Category",
+        "color": "Median Price for (Category, Year Interval) shown via colorbar",
+        "size": null,
+        "other_aesthetics": "Custom colormap (continuous viridis), annotating each cell for median price, clear colorbar, rotated x-axis labels"
+      }
+    },
+    "transformations": [
+      "Bin 'Prod. year' into 5-year intervals using pd.cut.",
+      "Group by 'Category' and binned 'Prod. year', aggregate 'Price' as median.",
+      "Pivot to create a matrix with 'Category' as rows and year bins as columns."
+    ],
+    "data_preparation_steps": [
+      "Read in dataset from csv_c_squared\\28.csv using pandas.",
+      "Create 5-year bins for 'Prod. year' from min to max using pd.cut; label bins as intervals.",
+      "Group by ['Category', 'Prod. year_bin'], calculate median 'Price'.",
+      "Pivot data with 'Category' index and 'Prod. year_bin' columns.",
+      "Prepare matrix for heatmap and set labels."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\nprod_year_min = df[\"Prod. year\"].min()\nprod_year_max = df[\"Prod. year\"].max()\nbin_width = 5\nbins = np.arange(prod_year_min, prod_year_max+bin_width, bin_width)\nlabels = [f\"{int(bins[i])}-{int(bins[i+1]-1)}\" for i in range(len(bins)-1)]\ndf[\"Prod. year_bin\"] = pd.cut(df[\"Prod. year\"], bins=bins, labels=labels, include_lowest=True)\ndf_group = df.groupby([\"Category\", \"Prod. year_bin\"], as_index=False)[\"Price\"].median()\ndf_pivot = df_group.pivot(index=\"Category\", columns=\"Prod. year_bin\", values=\"Price\")\ncmap = mpl.colormaps[\"viridis\"]\nplt.figure(figsize=(14, 8))\nim = plt.imshow(df_pivot.values, aspect=\"auto\", cmap=cmap, interpolation=\"nearest\")\nplt.title(\"Car Category Pricing Heatmap by Production Year Interval\")\nplt.xlabel(\"Production Year Interval\")\nplt.ylabel(\"Category\")\nplt.xticks(ticks=np.arange(len(df_pivot.columns)), labels=list(df_pivot.columns), rotation=45)\nplt.yticks(ticks=np.arange(len(df_pivot.index)), labels=list(df_pivot.index))\nplt.colorbar(im, label=\"Median Price\")\n# Annotate each cell with price\nfor i in range(df_pivot.shape[0]):\n    for j in range(df_pivot.shape[1]):\n        price = df_pivot.values[i, j]\n        if not np.isnan(price):\n            plt.text(j, i, f\"{int(price)}\", ha=\"center\", va=\"center\", color=\"white\" if price > np.nanmedian(df_pivot.values) else \"black\", fontsize=8)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

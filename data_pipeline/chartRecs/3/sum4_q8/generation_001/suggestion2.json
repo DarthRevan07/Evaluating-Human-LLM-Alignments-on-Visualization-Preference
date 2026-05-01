@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which countries show emerging opportunities in the global rice trade based on low production rank but high yield per hectare?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Top yield countries with lowest production ranks)",
+      "design_rationale": "A bar chart ranking top yielders (lowest 'Rank of Rice Yield') among those with low production (high 'Rank of Rice Production'), showing their yield rates directly and visually highlighting trade potential. Sorting by yield provides actionable context for rice traders, governments, or NGOs.",
+      "target_insight": "Reveals specific names and performance of best yield countries underperforming in production, facilitating targeted trade expansion or agricultural investment decisions.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rank of Rice Production",
+        "Rank of Rice Yield"
+      ],
+      "chart_encodings": {
+        "x": "Rice Yield (Kg / Hectare)",
+        "y": "Country (ordered by yield descending)",
+        "color": "Yield gradient color",
+        "size": "null",
+        "other_aesthetics": "Bar annotation for Rank positions"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Yield (Kg / Hectare)', 'Rank of Rice Production', and 'Rank of Rice Yield' to numeric values",
+      "Filter to countries with 'Rank of Rice Production' > mean (59.5)",
+      "Sort filtered countries by 'Rice Yield (Kg / Hectare)' descending",
+      "Select top N (e.g., 10) countries"
+    ],
+    "data_preparation_steps": [
+      "df['Rice Yield (Kg / Hectare)'] converted to numeric (processing strings as needed)",
+      "Create subset for low production countries",
+      "Sort subset descending by 'Rice Yield (Kg / Hectare)'",
+      "Select top 10 entries",
+      "Prepare yield gradient color mapping"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef str_to_float(val):\n    val = str(val).replace(' ', '')\n    if val.endswith('K'):\n        return float(val[:-1]) * 1e3\n    elif val.endswith('M'):\n        return float(val[:-1]) * 1e6\n    else:\n        try:\n            return float(val)\n        except:\n            return np.nan\ndf['Rice Yield (Kg / Hectare)'] = df['Rice Yield (Kg / Hectare)'].apply(str_to_float)\ndf['Rank of Rice Production'] = pd.to_numeric(df['Rank of Rice Production'], errors='coerce')\nmean_prod = df['Rank of Rice Production'].mean()\nlow_prod_df = df[df['Rank of Rice Production'] > mean_prod].copy()\nlow_prod_df = low_prod_df.sort_values('Rice Yield (Kg / Hectare)', ascending=False).head(10)\ncolors = mpl.colormaps['viridis']((low_prod_df['Rice Yield (Kg / Hectare)'] - low_prod_df['Rice Yield (Kg / Hectare)'].min()) / (low_prod_df['Rice Yield (Kg / Hectare)'].max() - low_prod_df['Rice Yield (Kg / Hectare)'].min()))\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(low_prod_df['Country'], low_prod_df['Rice Yield (Kg / Hectare)'], color=colors)\nfor i, (yield_val, prod_rank, yield_rank) in enumerate(zip(low_prod_df['Rice Yield (Kg / Hectare)'], low_prod_df['Rank of Rice Production'], low_prod_df['Rank of Rice Yield'])):\n    ax.text(yield_val + 100, i, f'Prod Rank: {int(prod_rank)}, Yield Rank: {int(yield_rank)}', va='center', fontsize=9)\nsm = mpl.cm.ScalarMappable(cmap=mpl.colormaps['viridis'], norm=plt.Normalize(vmin=low_prod_df['Rice Yield (Kg / Hectare)'].min(), vmax=low_prod_df['Rice Yield (Kg / Hectare)'].max()))\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', label='Rice Yield (Kg / Hectare)')\nax.set_xlabel('Rice Yield (Kg / Hectare)')\nax.set_title('Top Rice Yielders (Kg/Hectare) Among Countries with Low Production\\nEmerging Trade Opportunities')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

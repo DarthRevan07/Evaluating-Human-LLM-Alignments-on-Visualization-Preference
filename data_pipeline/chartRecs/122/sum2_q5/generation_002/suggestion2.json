@@ -1,0 +1,42 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How do sales in Japan for role-playing games compare to sales in North America for the same genre?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "scatterplot (individual role-playing games, JP_Sales vs NA_Sales)",
+      "design_rationale": "A scatterplot displays the sales of individual role-playing games in Japan and North America, providing granular insight into game-specific successes or failures. This unconventional approach exposes overlap, outliers, and dual market strength (or weakness) for each title. By plotting each game, one can see whether high sales in one region correlate with high sales in another, and which market dominates on a per-game basis. Points above or below the y=x line visually signify greater success in one region. Color by platform supports further exploration.",
+      "target_insight": "The visualization uncovers sales distribution patterns and market dominance at the title level, highlighting whether certain games perform disproportionately well in one market and if any cross-region blockbusters exist.",
+      "output_fields": [
+        "Name",
+        "Platform",
+        "JP_Sales",
+        "NA_Sales"
+      ],
+      "chart_encodings": {
+        "x": "NA_Sales (horizontal axis)",
+        "y": "JP_Sales (vertical axis)",
+        "color": "Platform (categorical, discrete colormap)",
+        "size": "None",
+        "other_aesthetics": "Point transparency (alpha), legend for platforms, reference line (y=x)"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Genre'] == 'Role-Playing'",
+      "Drop rows with nulls in df['JP_Sales'] or df['NA_Sales']",
+      "Identify unique df['Platform'] values for coloring"
+    ],
+    "data_preparation_steps": [
+      "Select df rows with df['Genre'] == 'Role-Playing'",
+      "Remove any rows where df['JP_Sales'] or df['NA_Sales'] are null",
+      "Assign each unique df['Platform'] a color from a discrete colormap",
+      "Prepare scatterplot data: x=df['NA_Sales'], y=df['JP_Sales'], color=df['Platform']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_filtered = df[df['Genre'] == 'Role-Playing'].copy()\ndf_filtered = df_filtered.dropna(subset=['JP_Sales', 'NA_Sales', 'Platform'])\nplatforms = df_filtered['Platform'].unique()\nplatform_map = {plat: idx for idx, plat in enumerate(platforms)}\ndf_filtered['Platform_idx'] = df_filtered['Platform'].map(platform_map)\ncmap = mpl.colormaps['tab20'].resampled(len(platforms))\nfig, ax = plt.subplots(figsize=(8,6))\nsc = ax.scatter(df_filtered['NA_Sales'], df_filtered['JP_Sales'], c=df_filtered['Platform_idx'], cmap=cmap, alpha=0.7, s=38, edgecolor='k', linewidth=0.5)\nlims = [0, max(df_filtered['NA_Sales'].max(), df_filtered['JP_Sales'].max())*1.05]\nax.plot(lims, lims, 'k--', label='Japan = North America')\nax.set_xlim(lims)\nax.set_ylim(lims)\nax.set_xlabel('NA_Sales (millions)')\nax.set_ylabel('JP_Sales (millions)')\nax.set_title('Japan vs North America Sales\\nfor Individual Role-Playing Games')\nhandles = [plt.Line2D([0],[0], marker='o', color='w', label=plat,\n            markerfacecolor=cmap(idx), markeredgecolor='k', markersize=8)\n            for plat, idx in platform_map.items()]\nax.legend(handles=handles, title='Platform', loc='upper right', fontsize=10, title_fontsize=10)\nax.grid(alpha=0.3)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

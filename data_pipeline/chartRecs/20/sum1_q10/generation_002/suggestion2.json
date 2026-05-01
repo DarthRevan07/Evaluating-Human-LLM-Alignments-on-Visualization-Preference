@@ -1,0 +1,45 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Which genres appear most often during periods of stylistic transition, as indicated by overlapping or mixed genre entries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Genre co-occurrence heatmap",
+      "design_rationale": "A heatmap visualizes the pairwise co-occurrence of genres within transitional artworks, revealing which genre combinations are most characteristic of stylistic transitions. This approach leverages a matrix format to enable exploration of not just individual genres, but their association patterns, providing insight into how genres interact and overlap during transitional periods.",
+      "target_insight": "The visualization uncovers key genre pairs that define stylistic transitions, showing the strength and frequency of their co-occurrence among mixed genre entries.",
+      "output_fields": [
+        "genre",
+        "genre (pairwise)"
+      ],
+      "chart_encodings": {
+        "x": "genre",
+        "y": "genre",
+        "color": "pairwise co-occurrence count",
+        "size": "null",
+        "other_aesthetics": "annotate cells with counts"
+      }
+    },
+    "transformations": [
+      "Filter df to include only rows where df['genre'] contains signs of overlap (',' or '/').",
+      "Split genre strings into lists and enumerate all possible genre pairs per entry.",
+      "Aggregate pairwise co-occurrence counts across all transitional artworks.",
+      "Build a square matrix of genre vs. genre with counts as values."
+    ],
+    "data_preparation_steps": [
+      "filtered = df[df['genre'].str.contains(',') | df['genre'].str.contains('/')]",
+      "filtered['genre'] = filtered['genre'].str.replace('/', ',')",
+      "filtered = filtered.assign(genre=filtered['genre'].str.split(','))",
+      "filtered['genre'] = filtered['genre'].apply(lambda x: [g.strip() for g in x])",
+      "all_genres = sorted(set(sum(filtered['genre'].tolist(), [])))",
+      "pair_matrix = pd.DataFrame(0, index=all_genres, columns=all_genres)",
+      "for row in filtered['genre']:\n    for i in range(len(row)):\n        for j in range(len(row)):\n            if i != j:\n                pair_matrix.loc[row[i], row[j]] += 1",
+      "pair_matrix = pair_matrix.astype(int)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nfiltered = df[df['genre'].str.contains(',') | df['genre'].str.contains('/')].copy()\nfiltered['genre'] = filtered['genre'].str.replace('/', ',')\nfiltered = filtered.assign(genre=filtered['genre'].str.split(','))\nfiltered['genre'] = filtered['genre'].apply(lambda x: [g.strip() for g in x])\nall_genres = sorted(set(sum(filtered['genre'].tolist(), [])))\npair_matrix = pd.DataFrame(0, index=all_genres, columns=all_genres)\nfor row in filtered['genre']:\n    for i in range(len(row)):\n        for j in range(len(row)):\n            if i != j:\n                pair_matrix.loc[row[i], row[j]] += 1\npair_matrix = pair_matrix.astype(int)\nplt.figure(figsize=(11, 9))\ncmap = plt.cm.Blues\nim = plt.imshow(pair_matrix.values, cmap=cmap, vmin=0, vmax=pair_matrix.values.max())\nplt.xticks(np.arange(len(all_genres)), all_genres, rotation=45, ha='right')\nplt.yticks(np.arange(len(all_genres)), all_genres)\nplt.title('Genre Co-occurrence Heatmap\\nStylistic Transitions in Best Artworks of All Time')\nplt.colorbar(im, fraction=0.045, pad=0.04)\nfor i in range(len(all_genres)):\n    for j in range(len(all_genres)):\n        val = pair_matrix.values[i, j]\n        if val > 0:\n            plt.text(j, i, str(val), ha='center', va='center', fontsize=8, color='black')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

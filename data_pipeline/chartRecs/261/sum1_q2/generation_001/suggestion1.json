@@ -1,0 +1,44 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "Which undergraduate majors are most common among astronauts, and how does this distribution differ by gender?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Horizontal Bar Chart",
+      "design_rationale": "A grouped horizontal bar chart enables a clear comparison of the most common 'Undergraduate Major' fields among astronauts, segmented by 'Gender'. Horizontal bars are preferable given the large number of unique majors (83) and the need to easily read category labels. Grouping by gender within each major reveals both frequency and gender-based differences side by side, allowing quick identification of majors that are dominated by one gender or more balanced.",
+      "target_insight": "Which specific undergraduate majors have the highest representation among astronauts and how these distributions differ between male and female astronauts.",
+      "output_fields": [
+        "Undergraduate Major",
+        "Gender",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "count of df['Name'] for each df['Undergraduate Major'] and df['Gender']",
+        "y": "df['Undergraduate Major'] (sorted by total astronaut counts descending)",
+        "color": "df['Gender'] (distinct colors for 'Male' and 'Female')",
+        "size": null,
+        "other_aesthetics": "bar grouping by gender, rotated tick labels for readability, legend for gender"
+      }
+    },
+    "transformations": [
+      "Drop rows with null in df['Undergraduate Major']",
+      "Group by df['Undergraduate Major'] and df['Gender'], count astronauts in each group",
+      "Sort majors by total astronaut count in descending order",
+      "Select top N majors (e.g., top 12) for improved readability"
+    ],
+    "data_preparation_steps": [
+      "df_major_gender = df.dropna(subset=['Undergraduate Major'])",
+      "grouped = df_major_gender.groupby(['Undergraduate Major', 'Gender']).size().unstack(fill_value=0)",
+      "grouped['Total'] = grouped.sum(axis=1)",
+      "grouped_sorted = grouped.sort_values('Total', ascending=False)",
+      "top_n = 12; majors_top = grouped_sorted.head(top_n)",
+      "Prepare data for plotting: For each major (row), get male and female counts as lists"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf_major_gender = df.dropna(subset=[\"Undergraduate Major\"])\ngrouped = df_major_gender.groupby([\"Undergraduate Major\", \"Gender\"]).size().unstack(fill_value=0)\ngrouped[\"Total\"] = grouped.sum(axis=1)\ngrouped_sorted = grouped.sort_values(\"Total\", ascending=False)\ntop_n = 12\nmajors_top = grouped_sorted.head(top_n)\nmajors = majors_top.index.tolist()\nmale_counts = majors_top[\"Male\"].tolist() if \"Male\" in majors_top.columns else [0]*top_n\nfemale_counts = majors_top[\"Female\"].tolist() if \"Female\" in majors_top.columns else [0]*top_n\nind = np.arange(top_n)\nwidth = 0.35\nfig, ax = plt.subplots(figsize=(10,7))\nax.barh(ind - width/2, male_counts, width, label=\"Male\", color=\"#4682b4\")\nax.barh(ind + width/2, female_counts, width, label=\"Female\", color=\"#e377c2\")\nax.set_yticks(ind)\nax.set_yticklabels(majors)\nax.invert_yaxis()\nax.set_xlabel(\"Number of Astronauts\")\nax.set_title(\"Top Undergraduate Majors among NASA Astronauts\\nBreakdown by Gender\")\nax.legend(title=\"Gender\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

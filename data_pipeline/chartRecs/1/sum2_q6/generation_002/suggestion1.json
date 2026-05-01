@@ -1,0 +1,44 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 6,
+  "suggestion_id": 1,
+  "question": "In which countries does Agriculture GDP make up a disproportionately large share of total GDP (millions of $)?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart with countries sorted by their agriculture sector percentage contribution provides an immediate, clear ranking and highlights nations where agriculture forms a disproportionately large component of overall GDP. Using bars enables easy comparison across many countries, especially with a long dataset (230 rows). Colors can emphasize those that are clear outliers.",
+      "target_insight": "Identifies which countries have the highest agriculture sector share of GDP—those above a set threshold (e.g., 15%), visually separating them from the rest and directly answering the question.",
+      "output_fields": [
+        "Country/Economy",
+        "Agriculture Sector GDP of % Contribution"
+      ],
+      "chart_encodings": {
+        "x": "Agriculture Sector GDP of % Contribution",
+        "y": "Country/Economy",
+        "color": "Highlight countries above 15% (distinct color), others as default",
+        "size": null,
+        "other_aesthetics": "Sort descending; emphasize countries above threshold (bold bar color); annotate highest bar"
+      }
+    },
+    "transformations": [
+      "Convert df['Agriculture Sector GDP of % Contribution'] to numeric, handling errors",
+      "Filter out rows where df['Agriculture Sector GDP of % Contribution'] is null",
+      "Sort df by df['Agriculture Sector GDP of % Contribution'] descending",
+      "Create a boolean mask for countries with df['Agriculture Sector GDP of % Contribution'] > 15"
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df_filtered = df.dropna(subset=['Agriculture Sector GDP of % Contribution'])",
+      "df_sorted = df_filtered.sort_values(by='Agriculture Sector GDP of % Contribution', ascending=False)",
+      "mask = df_sorted['Agriculture Sector GDP of % Contribution'] > 15",
+      "countries = df_sorted['Country/Economy'].values",
+      "percentages = df_sorted['Agriculture Sector GDP of % Contribution'].values",
+      "colors = np.where(mask, 'tab:green', 'tab:gray')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf_filtered = df.dropna(subset=['Agriculture Sector GDP of % Contribution'])\ndf_sorted = df_filtered.sort_values(by='Agriculture Sector GDP of % Contribution', ascending=False)\nmask = df_sorted['Agriculture Sector GDP of % Contribution'] > 15\ncountries = df_sorted['Country/Economy'].values\npercentages = df_sorted['Agriculture Sector GDP of % Contribution'].values\ncolors = np.where(mask, 'tab:green', 'tab:gray')\nfig, ax = plt.subplots(figsize=(10, 16))\nax.barh(countries, percentages, color=colors, edgecolor='black')\nax.set_xlabel('Agriculture Sector GDP of % Contribution (%)')\nax.set_ylabel('Country/Economy')\nax.set_title('Countries where Agriculture GDP is a large share of the economy\\n(>15% shown in green)')\nfor i in range(len(countries)):\n    if mask.iloc[i]:\n        ax.text(percentages[i]+0.5, i, f'{percentages[i]:.1f}%', va='center', fontsize=9, color='darkgreen')\nax.invert_yaxis()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

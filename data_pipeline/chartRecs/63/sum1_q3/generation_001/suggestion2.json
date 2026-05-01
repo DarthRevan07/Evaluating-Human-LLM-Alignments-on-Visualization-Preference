@@ -1,0 +1,39 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "How do annual income levels relate to the likelihood of purchase?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Smooth Trend Line",
+      "design_rationale": "A scatter plot mapping each customer's AnnualIncome versus PurchaseStatus (binary: purchased or not), overlaid with a LOWESS trend line, visualizes both granular and overall relationship between income and purchase probability. This approach reveals non-linear patterns, outliers, and distribution spread, leveraging high cardinality in 'AnnualIncome'. Customers are scattered by income, color-coded for purchase status, while the trend line gives an at-a-glance summary of how purchase likelihood changes with increasing income.",
+      "target_insight": "Fine-grained relationship between annual income and purchase probability, including whether there are income thresholds, plateaus, or peaks where purchase likelihood shifts.",
+      "output_fields": [
+        "AnnualIncome",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "AnnualIncome",
+        "y": "PurchaseStatus",
+        "color": "PurchaseStatus (discrete: blue for No, orange for Yes)",
+        "size": "null",
+        "other_aesthetics": "Alpha for scatter; overlay LOWESS line for trend"
+      }
+    },
+    "transformations": [
+      "Map PurchaseStatus to colors: 0 (No) = blue, 1 (Yes) = orange.",
+      "Scatter plot of df['AnnualIncome'] vs df['PurchaseStatus'] (jitter y for visual separation).",
+      "Apply LOWESS smoothing to visualize the relationship."
+    ],
+    "data_preparation_steps": [
+      "Create color map for PurchaseStatus: {0: 'blue', 1: 'orange'}.",
+      "Add slight jitter to PurchaseStatus y-values for visual clarity.",
+      "Fit a LOWESS curve to AnnualIncome vs PurchaseStatus."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom statsmodels.nonparametric.smoothers_lowess import lowess\n\ndf = pd.read_csv('csv_c_squared\\63.csv')\n\n# Map PurchaseStatus to colors\ncolor_map = {0: 'blue', 1: 'orange'}\ncolors = df['PurchaseStatus'].map(color_map)\n\n# Add y-jitter for binary PurchaseStatus\nnp.random.seed(0)\ny_jitter = df['PurchaseStatus'] + np.random.uniform(-0.04, 0.04, size=len(df))\n\nfig, ax = plt.subplots(figsize=(10,6))\nscatter = ax.scatter(\ndf['AnnualIncome'],\ny_jitter,\nc=colors,\nalpha=0.35,\ns=40,\nedgecolor='grey',\nlinewidth=0.5\n)\n# Fit and plot LOWESS trend line\nlowess_fit = lowess(df['PurchaseStatus'], df['AnnualIncome'], frac=0.2)\nax.plot(\n    lowess_fit[:,0],\n    lowess_fit[:,1],\n    color='red',\n    linewidth=2,\n    label='LOWESS Trend'\n)\nax.set_xlabel('Annual Income')\nax.set_ylabel('PurchaseStatus (1=Purchased, 0=Not Purchased)')\nax.set_title('Annual Income vs Purchase Likelihood (Scatter with Trend)')\n# Handle legend manually\nfrom matplotlib.lines import Line2D\nlegend_elems = [\n    Line2D([0], [0], marker='o', color='w', label='Purchased', markersize=10, markerfacecolor='orange'),\n    Line2D([0], [0], marker='o', color='w', label='Not Purchased', markersize=10, markerfacecolor='blue'),\n    Line2D([0], [0], color='red', lw=2, label='LOWESS Trend')\n]\nax.legend(handles=legend_elems)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

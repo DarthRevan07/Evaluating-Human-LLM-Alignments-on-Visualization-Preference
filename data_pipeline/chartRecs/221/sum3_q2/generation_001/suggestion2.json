@@ -1,0 +1,46 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What is the distribution of traveler ages across various destinations?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap provides an intuitive overview of how traveler ages are distributed across destinations. By binning 'Traveler age' (e.g., 20-29, 30-39, etc.) and counting trips within each bin-destination pair, the heatmap visually reveals clusters and gaps: age groups predominant in certain destinations, and destinations attracting a broader or narrower range of ages. This unconventional chart type complements the boxplot with aggregate trends rather than detailed statistics.",
+      "target_insight": "Reveals which destinations appeal to specific age brackets, highlights age-group concentration, and uncovers demographic gaps or diversity across destinations.",
+      "output_fields": [
+        "Destination",
+        "Traveler age"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Traveler age bin",
+        "color": "Trip count (heatmap intensity)",
+        "size": null,
+        "other_aesthetics": "Viridis colormap; colorbar; show top 12 destinations to keep heatmap readable"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Traveler age' or 'Destination'",
+      "Group by 'Destination'; count trips per destination",
+      "Select top 12 destinations by trip count",
+      "Bin 'Traveler age' into intervals: 20–29, 30–39, 40–49, 50–60",
+      "Pivot table: rows=Traveler age bin, columns=Destination, values=trip count"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Traveler age', 'Destination'])",
+      "dest_counts = df_clean['Destination'].value_counts()",
+      "top_destinations = dest_counts.index[:12]",
+      "age_bins = [20, 30, 40, 50, 61]",
+      "age_labels = ['20-29', '30-39', '40-49', '50-60']",
+      "df_clean['Age Bin'] = pd.cut(df_clean['Traveler age'], bins=age_bins, labels=age_labels, right=False)",
+      "df_plot = df_clean[df_clean['Destination'].isin(top_destinations)]",
+      "heatmap_data = df_plot.groupby(['Age Bin', 'Destination']).size().unstack(fill_value=0).loc[age_labels, top_destinations]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Traveler age', 'Destination'])\ndest_counts = df_clean['Destination'].value_counts()\ntop_destinations = dest_counts.index[:12]\nage_bins = [20, 30, 40, 50, 61]\nage_labels = ['20-29', '30-39', '40-49', '50-60']\ndf_clean['Age Bin'] = pd.cut(df_clean['Traveler age'], bins=age_bins, labels=age_labels, right=False)\ndf_plot = df_clean[df_clean['Destination'].isin(top_destinations)]\nheatmap_data = df_plot.groupby(['Age Bin', 'Destination']).size().unstack(fill_value=0).loc[age_labels, top_destinations]\nfig, ax = plt.subplots(figsize=(12, 6))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_data.values, aspect='auto', cmap=cmap)\n# Axes labels and ticks\nax.set_xticks(np.arange(len(top_destinations)))\nax.set_xticklabels(top_destinations, rotation=45, ha='right')\nax.set_yticks(np.arange(len(age_labels)))\nax.set_yticklabels(age_labels)\nax.set_xlabel('Destination')\nax.set_ylabel('Traveler age group')\nax.set_title('Traveler Age Distribution Across Top 12 Destinations (Heatmap)')\n# Colorbar\ncbar = fig.colorbar(im, ax=ax, label='Number of Trips', shrink=0.85)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

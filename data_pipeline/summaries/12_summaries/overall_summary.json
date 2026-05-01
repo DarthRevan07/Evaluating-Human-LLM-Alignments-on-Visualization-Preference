@@ -1,0 +1,35 @@
+{
+  "table_name": "Career Prediction Dataset",
+  "file_index": "12",
+  "original_filename": "12.csv",
+  "total_rows": 105,
+  "total_columns": 11,
+  "column_names": [
+    "O_score",
+    "C_score",
+    "E_score",
+    "A_score",
+    "N_score",
+    "Numerical Aptitude",
+    "Spatial Aptitude",
+    "Perceptual Aptitude",
+    "Abstract Reasoning",
+    "Verbal Reasoning",
+    "Career"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\12_summaries",
+  "source_file": "csv_c2_sec\\12.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\12_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

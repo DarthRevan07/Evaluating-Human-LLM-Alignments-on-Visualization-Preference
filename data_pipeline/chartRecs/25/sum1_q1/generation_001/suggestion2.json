@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which stocks have demonstrated the largest positive or negative percentage changes over the past 30 days, and how do these changes compare to their 365-day percentage changes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot with Diagonal Reference Line",
+      "design_rationale": "A scatter plot maps '30 d % chng' to x and '365 d % chng' to y for all 50 stocks, enabling direct comparison of short-term vs. long-term returns per stock. Each point represents a stock. Color encoding reflects performance groups (e.g. high short-term gain, loss, or consistent trends) and can highlight stocks near or far from the diagonal (where 30d change matches annual change). This approach readily reveals patterns, outliers, and possible reversal stocks. Annotating most extreme movers provides additional context.",
+      "target_insight": "Identify stocks with extreme 30-day changes and determine if these changes align with, or diverge from, their longer-term (365-day) performance. Outliers and clusters inform about volatility and momentum.",
+      "output_fields": [
+        "Symbol",
+        "30 d % chng",
+        "365 d % chng"
+      ],
+      "chart_encodings": {
+        "x": "30 d % chng",
+        "y": "365 d % chng",
+        "color": "Performance group: positive/negative (e.g., blue/orange), optionally by sign match",
+        "size": null,
+        "other_aesthetics": "Diagonal reference line; Annotated extreme movers; grid lines"
+      }
+    },
+    "transformations": [
+      "For all 50 stocks, extract df['Symbol'], df['30 d % chng'], and df['365 d % chng']",
+      "Assign color groups: stocks with both positive 30d and 365d changes (momentum), stocks with negative 30d but positive 365d (pullback), stocks with positive 30d but negative 365d (reversal), and both negative (underperformers)",
+      "Identify and annotate the stocks with top 2 positive and negative '30 d % chng'"
+    ],
+    "data_preparation_steps": [
+      "Create color group mapping for each stock based on sign of '30 d % chng' and '365 d % chng'",
+      "Prepare point labels for top movers (highest and lowest '30 d % chng')",
+      "Set up scatter plot coordinates from '30 d % chng' (x) and '365 d % chng' (y) for all stocks"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndef perf_group(row):\n    if row['30 d % chng'] > 0 and row['365 d % chng'] > 0:\n        return 'momentum'\n    elif row['30 d % chng'] < 0 and row['365 d % chng'] > 0:\n        return 'pullback'\n    elif row['30 d % chng'] > 0 and row['365 d % chng'] < 0:\n        return 'reversal'\n    else:\n        return 'underperformer'\ndf['perf_group'] = df.apply(perf_group, axis=1)\ngroup_colors = {'momentum':'blue', 'pullback':'orange', 'reversal':'purple', 'underperformer':'grey'}\ncolors = df['perf_group'].map(group_colors)\nfig, ax = plt.subplots(figsize=(10,10))\nax.scatter(df['30 d % chng'], df['365 d % chng'], c=colors, s=80, edgecolor='black', alpha=0.8)\nlims = [min(df['30 d % chng'].min(), df['365 d % chng'].min()) - 5, max(df['30 d % chng'].max(), df['365 d % chng'].max()) + 5]\nax.plot(lims, lims, 'k--', alpha=0.6, label='x=y Diagonal')\nax.set_xlabel('30 d % chng')\nax.set_ylabel('365 d % chng')\nax.set_title('NIFTY-50: Scatter of 30d vs. 365d Percentage Changes')\nax.grid(True, linestyle='--', alpha=0.4)\nlegend_handles = [mpl.lines.Line2D([0],[0], marker='o', color='w', markerfacecolor=clr, label=lbl, markersize=10, markeredgecolor='black') for lbl, clr in group_colors.items()]\nlegend_handles.append(mpl.lines.Line2D([0],[0], color='k', linestyle='--', label='x=y Diagonal'))\nax.legend(handles=legend_handles, loc='best')\ntop_pos = df.nlargest(2, '30 d % chng')\ntop_neg = df.nsmallest(2, '30 d % chng')\nfor idx, row in pd.concat([top_pos, top_neg]).iterrows():\n    ax.annotate(row['Symbol'], (row['30 d % chng'], row['365 d % chng']), textcoords='offset points', xytext=(4,-10), ha='left', fontsize=11, fontweight='bold')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

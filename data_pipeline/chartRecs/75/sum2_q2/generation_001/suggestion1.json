@@ -1,0 +1,38 @@
+{
+  "table_name": "75",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the average writing score for each parental level of education category?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart succinctly shows the average writing score by each parental level of education category, making it easy to compare across all six unique categories. Horizontal orientation supports lengthier category names for 'parental level of education', reducing label overlap and improving readability. This conventional chart gives a clear overview and ranking of educational categories with respect to their children's writing performance.",
+      "target_insight": "Easily identify which parental education levels are associated with highest and lowest average writing scores; visually rank categories and spot patterns in score distribution.",
+      "output_fields": [
+        "parental level of education",
+        "writing score"
+      ],
+      "chart_encodings": {
+        "x": "Average of 'writing score'",
+        "y": "'parental level of education'",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "bar width, value labels at end of bars"
+      }
+    },
+    "transformations": [
+      "Group df by 'parental level of education'",
+      "Compute mean of 'writing score' for each group",
+      "Sort groups in descending order of mean writing score"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('parental level of education')['writing score'].mean().sort_values(ascending=False)",
+      "Assign df_grouped.index to y, df_grouped.values to x"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ndf_grouped = df.groupby('parental level of education')['writing score'].mean().sort_values(ascending=False)\nfig, ax = plt.subplots(figsize=(8, 6))\ny = df_grouped.index\nx = df_grouped.values\nbars = ax.barh(y, x, color='skyblue')\nfor i, v in enumerate(x):\n    ax.text(v + 1, i, f'{v:.2f}', va='center', fontsize=10)\nax.set_xlabel('Average Writing Score')\nax.set_ylabel('Parental Level of Education')\nax.set_title('Average Writing Score by Parental Level of Education')\nax.invert_yaxis()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Do higher Wind Speed (kph) values correspond with lower Visibility (km) at certain times of day?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Grouped Boxplot (Wind Speed binned, grouped by Observation Time; y=Visibility)",
+      "design_rationale": "Boxplots summarize the distribution of Visibility (km) for different ranges of Wind Speed (kph), grouped by times of day. By binning wind speeds and grouping boxplots for each Observation Time, this view reveals whether increased wind speed—within discrete bins—leads to lower visibility, and how this pattern varies by time. The boxplot approach is effective with moderate numeric unique values and categorical timestamps, highlighting changes in median and spread.",
+      "target_insight": "Are lower visibility values more common at higher wind speed bins, and does this relationship differ across times of day? The grouped boxplot makes this association clear, both visually and statistically.",
+      "output_fields": [
+        "Wind Speed (kph)",
+        "Visibility (km)",
+        "Observation Time"
+      ],
+      "chart_encodings": {
+        "x": "Wind Speed (kph) bins (categorical, grouped for each Observation Time)",
+        "y": "Visibility (km)",
+        "color": "Observation Time (distinct color for each group within bin)",
+        "size": null,
+        "other_aesthetics": "Boxplot grouping and color legend by Observation Time"
+      }
+    },
+    "transformations": [
+      "Discretize df['Wind Speed (kph)'] using pd.cut into 4 bins covering the value range (3.6 to 29.9).",
+      "Group data by both Wind Speed (kph) bins and Observation Time.",
+      "For each group, extract df['Visibility (km)'] to plot as boxplots."
+    ],
+    "data_preparation_steps": [
+      "Read data from 'csv_c_squared\\243.csv' into df.",
+      "Create wind speed bins: bins = np.linspace(df['Wind Speed (kph)'].min(), df['Wind Speed (kph)'].max(), 5)",
+      "Assign bin labels to df['Wind Speed Bin'] using pd.cut.",
+      "For each bin, collect visibility data split by Observation Time for boxplot grouping.",
+      "Generate boxplots for each bin, grouped horizontally, colored by Observation Time."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\nbins = np.linspace(df['Wind Speed (kph)'].min(), df['Wind Speed (kph)'].max(), 5)\nbin_labels = [f\"{round(bins[i],1)}-{round(bins[i+1],1)}\" for i in range(len(bins)-1)]\ndf['Wind Speed Bin'] = pd.cut(df['Wind Speed (kph)'], bins=bins, labels=bin_labels, include_lowest=True)\nobservation_times = df['Observation Time'].unique()\ncolor_map = mpl.colormaps['viridis'].resampled(len(observation_times))\n\npositions = []\nplot_data = []\ncolors = []\nlabels = []\nwidth = 0.7\nfor i, bin_label in enumerate(bin_labels):\n    df_bin = df[df['Wind Speed Bin'] == bin_label]\n    for j, obs_time in enumerate(observation_times):\n        visibility = df_bin[df_bin['Observation Time'] == obs_time]['Visibility (km)']\n        plot_data.append(visibility)\n        positions.append(i * len(observation_times) + j)\n        colors.append(color_map(j))\n        labels.append(f\"{bin_label} | {obs_time}\")\n\nfig, ax = plt.subplots(figsize=(16,8))\nbox = ax.boxplot(plot_data, positions=positions, patch_artist=True, widths=width)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n\nax.set_xticks([i * len(observation_times) + len(observation_times)/2 - 0.5 for i in range(len(bin_labels))])\nax.set_xticklabels(bin_labels)\nax.set_xlabel(\"Wind Speed (kph) bins\")\nax.set_ylabel(\"Visibility (km)\")\n\n# Add legend\nhandles = [plt.Line2D([0], [0], color=color_map(j), lw=8) for j in range(len(observation_times))]\nax.legend(handles, observation_times, title=\"Observation Time\", loc=\"upper right\")\n\nax.set_title(\"Visibility distributions by Wind Speed bins, grouped by Observation Time\\nAre lower visibility values more frequent at high wind speeds? Temporal differentiation shown.\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

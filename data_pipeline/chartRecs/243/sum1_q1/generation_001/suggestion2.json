@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does temperature vary across different metropolitan locations at specific observation times?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Locations x Observation Times; color encodes Temperature)",
+      "design_rationale": "A heatmap provides a compact overview of temperature variation across all cities and observation times, using color intensity to quickly highlight hotspots and cold spots. By mapping 'Location' on the y-axis and 'Observation Time' (ordered) on the x-axis, each cell encodes the temperature reading for that (city, time) combination. This approach is ideal for spotting patterns such as which cities are consistently warmer or cooler, and identifying time-specific anomalies across the global urban network. Heatmaps are highly interpretable for cross-sectional and time-based spatial comparison, especially with categorical axes and uniform data density.",
+      "target_insight": "The visualization reveals at-a-glance which cities have higher or lower temperatures at particular times, uncovers temporal clusters (hot/cold periods), and outliers, providing actionable context for geographic and time-based temperature differences.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Location",
+        "color": "Temperature (°C) (matplotlib colormap; value mapped to cell color)",
+        "size": null,
+        "other_aesthetics": "Colorbar for temperature; value overlays in each cell for precision; time axis ordered"
+      }
+    },
+    "transformations": [
+      "Convert 'Observation Time' to pandas datetime for correct ordering",
+      "Pivot table: rows='Location', columns='Observation Time', values='Temperature (°C)'",
+      "Ensure matrix ordering is consistent for locations and observation times"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "df_pivot = df.pivot(index='Location', columns='Observation Time', values='Temperature (°C)')",
+      "df_pivot = df_pivot.sort_index(axis=0).sort_index(axis=1)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\ndf_pivot = df.pivot(index='Location', columns='Observation Time', values='Temperature (°C)')\ndf_pivot = df_pivot.sort_index(axis=0).sort_index(axis=1)\nfig, ax = plt.subplots(figsize=(12, 6))\ncmap = mpl.colormaps['viridis']\nmin_temp = df['Temperature (°C)'].min()\nmax_temp = df['Temperature (°C)'].max()\nim = ax.imshow(df_pivot.values, aspect='auto', cmap=cmap, vmin=min_temp, vmax=max_temp)\nax.set_xticks(np.arange(df_pivot.shape[1]))\nax.set_xticklabels([dt.strftime('%Y-%m-%d %H:%M') for dt in df_pivot.columns], rotation=35)\nax.set_yticks(np.arange(df_pivot.shape[0]))\nax.set_yticklabels(df_pivot.index)\nax.set_xlabel('Observation Time')\nax.set_ylabel('Location')\nax.set_title('Temperature Variation Across Cities and Times (Heatmap)')\nfor i in range(df_pivot.shape[0]):\n    for j in range(df_pivot.shape[1]):\n        temp_val = df_pivot.iloc[i, j]\n        ax.text(j, i, f'{temp_val:.1f}', ha='center', va='center', color='white' if temp_val>(min_temp+max_temp)/2 else 'black', fontsize=8)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label='Temperature (°C)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

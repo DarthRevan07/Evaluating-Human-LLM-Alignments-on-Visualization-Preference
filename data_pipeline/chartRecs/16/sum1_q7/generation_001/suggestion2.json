@@ -1,0 +1,38 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do Pokémon with a secondary type (Type 2) generally have higher Total statistics than those without?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "violin plot",
+      "design_rationale": "A violin plot is a more nuanced variant of the boxplot, showing the full distribution and density for 'Total' statistics in each group. This allows for deeper insight into the shape of both distributions: whether there are multiple modes, skewness, or heavy tails. Using this unconventional plot highlights subtler differences in overall stat distributions for Pokémon with or without a secondary type.",
+      "target_insight": "This plot reveals the density and variability of Total statistics in both categories, enabling comparisons not only of typical values but also of the spread and concentration of stats.",
+      "output_fields": [
+        "Type 2",
+        "Total"
+      ],
+      "chart_encodings": {
+        "x": "Type 2 status ('Has Type 2' or 'Single Type')",
+        "y": "Total",
+        "color": "category distinction (violin color for each status)",
+        "size": null,
+        "other_aesthetics": "Distribution shape, kernel density, median line, quartiles"
+      }
+    },
+    "transformations": [
+      "Create the same 'Type 2 Status' categorical column as before",
+      "Partition 'Total' values for each 'Type 2 Status'",
+      "For violin plot, kernel density estimation applied to each group"
+    ],
+    "data_preparation_steps": [
+      "If not already, define df['Type 2 Status'] (as above)",
+      "Prepare groupings for Single Type and Has Type 2 as lists for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ndf[\"Type 2 Status\"] = np.where(df[\"Type 2\"].isnull(), \"Single Type\", \"Has Type 2\")\ndata_to_plot = [df[df[\"Type 2 Status\"] == \"Single Type\"][\"Total\"], df[df[\"Type 2 Status\"] == \"Has Type 2\"][\"Total\"]]\nfig, ax = plt.subplots(figsize=(8,5))\nparts = ax.violinplot(data_to_plot, showmeans=False, showmedians=True, showextrema=True, widths=0.8)\ncolors = [\"#4C72B0\", \"#55A868\"]\nfor i, pc in enumerate(parts[\"bodies\"]):\n    pc.set_facecolor(colors[i])\n    pc.set_edgecolor(\"black\")\n    pc.set_alpha(0.7)\nax.set_xticks([1,2])\nax.set_xticklabels([\"Single Type\", \"Has Type 2\"])\nax.set_ylabel(\"Total\")\nax.set_xlabel(\"Type 2 Status\")\nax.set_title(\"Stat Distribution for Pokémon: Secondary Type Presence\\nViolin Plot of Total Stats\")\nplt.grid(axis=\"y\", linestyle=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

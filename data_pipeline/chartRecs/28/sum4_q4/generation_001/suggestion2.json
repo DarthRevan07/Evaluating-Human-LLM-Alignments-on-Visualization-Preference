@@ -1,0 +1,39 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Do certain car colors command higher prices compared to others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Price Distribution per Color)",
+      "design_rationale": "A boxplot visualizes the distribution of prices for each car color, displaying medians, quartiles, and outliers. This approach answers whether certain colors have both higher average prices and higher price variability, highlighting outlier luxury cars or whether a color’s premium is robust across most listings. It is particularly suited to large samples with potential price skew (as seen in the schema: max price much larger than mean). Boxplots allow visual comparison of central tendency and spread.",
+      "target_insight": "Reveals both the typical price range and extreme values for each color, showing if expensive colors have consistently high prices or large disparities due to rare luxury listings.",
+      "output_fields": [
+        "Color",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Color",
+        "y": "Price",
+        "color": "Distinct color coding for each Color (same categorical colormap as previous, mapped to boxfill)",
+        "size": null,
+        "other_aesthetics": "Ordering of x-axis as mean price descending; outlier points displayed; rotated x-tick labels"
+      }
+    },
+    "transformations": [
+      "Group df by 'Color'",
+      "Order colors by mean price descending (for consistent ordering with previous plot)",
+      "Extract price lists for each color from the sorted color sequence"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('Color', as_index=False)['Price'].mean()",
+      "color_order = df_grouped.sort_values('Price', ascending=False)['Color'].tolist()",
+      "price_lists = [df[df['Color'] == color]['Price'] for color in color_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_grouped = df.groupby('Color', as_index=False)['Price'].mean()\ncolor_order = df_grouped.sort_values('Price', ascending=False)['Color'].tolist()\nprice_lists = [df[df['Color'] == color]['Price'] for color in color_order]\ncolors = mpl.colormaps['tab20'].resampled(len(color_order))\nbox_colors = colors(np.arange(len(color_order)))\nfig, ax = plt.subplots(figsize=(12, 6))\nboxplot = ax.boxplot(price_lists, patch_artist=True, labels=color_order, showfliers=True, widths=0.7)\nfor patch, color in zip(boxplot['boxes'], box_colors):\n    patch.set_facecolor(color)\nfor median in boxplot['medians']:\n    median.set_color('black')\nax.set_xlabel(\"Color\")\nax.set_ylabel(\"Price\")\nax.set_title(\"Car Price Distribution by Color\\nAre certain colors consistently more expensive?\")\nplt.xticks(rotation=40, ha='right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

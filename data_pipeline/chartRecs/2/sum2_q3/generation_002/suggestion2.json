@@ -1,0 +1,71 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "What trends can be observed in methane emissions for the Energy sector over the years 1990 to 2018 in selected countries?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Year vs Country)",
+      "design_rationale": "A heatmap visualizes emission values for selected countries across all years as color intensity, revealing both relative levels and temporal patterns in a compact, matrix form. This allows quick identification of periods with high or low emissions for each country, as well as structural trends (monotonic increases, sudden spikes, plateaus), and is especially effective given the wide year range and table structure. Country order can be set by 2018 emission magnitude to emphasize leading contributors.",
+      "target_insight": "Shows the temporal evolution, comparative contribution, and anomaly years in Energy sector methane emissions for selected countries; immediately highlights which countries and years are most significant.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (column order: 1990-2018)",
+        "y": "Country (ordered by 2018 emissions)",
+        "color": "Emission value intensity (methane, quantitative variable mapped to color)",
+        "size": null,
+        "other_aesthetics": "Colorbar shows emission scale; gridlines for clarity; country label font size increased for readability"
+      }
+    },
+    "transformations": [
+      "Filter rows: df['Sector'] == 'Energy'",
+      "Select top N countries by df['2018'] (e.g., N=10) for focused insight",
+      "Extract columns: ['Country', '1990', ..., '2018']",
+      "Reshape so matrix: rows=country, columns=years, values=emissions"
+    ],
+    "data_preparation_steps": [
+      "Create list of year columns (strings 1990-2018)",
+      "Filter DataFrame to df['Sector']=='Energy'",
+      "Sort by df['2018'], take top 10 countries; obtain ordered list",
+      "Create a 2D matrix (countries x years); values are emission values",
+      "Normalize values for color mapping; set up colorbar"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\nyears = [str(y) for y in range(1990, 2019)]\ndf_energy = df[df['Sector'] == 'Energy']\ndf_top = df_energy.sort_values('2018', ascending=False).head(10)\ncountries = df_top['Country'].values\nmat = df_top[years].values\ngrid_y, grid_x = np.arange(len(countries)), np.arange(len(years))\nfig, ax = plt.subplots(figsize=(13, 7))\ncmap = mpl.colormaps['viridis']\nimg = ax.imshow(mat, aspect='auto', cmap=cmap, interpolation='nearest', vmin=np.nanmin(mat), vmax=np.nanmax(mat))\nax.set_xticks(grid_x)\nax.set_xticklabels(years, rotation=90, fontsize=10)\nax.set_yticks(grid_y)\nax.set_yticklabels(countries, fontsize=12)\nax.set_xlabel('Year')\nax.set_ylabel('Country')\nax.set_title('Methane emissions heatmap: Energy sector by country and year (1990-2018)')\ncbar = plt.colorbar(img, ax=ax, orientation='vertical')\ncbar.set_label('Methane emissions (MTCO2e)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

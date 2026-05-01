@@ -1,0 +1,37 @@
+{
+  "table_name": "16",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does the Total stat differ between Pokémon with and without a secondary type (Type 2)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot (with KDE overlay)",
+      "design_rationale": "Violin plots visually convey both the distribution shape and density for 'Total' stat groups, and reveal subtle multimodal patterns or skew that boxplots may not. This approach leverages the large table size to generate nuanced probability density views, offering richer comparisons between single-type and dual-type Pokémon.",
+      "target_insight": "Whether dual-type and single-type Pokémon exhibit distinct underlying distributions or peaks in their 'Total' stats, highlighting the comparative density and range usage.",
+      "output_fields": [
+        "Total",
+        "Type 2"
+      ],
+      "chart_encodings": {
+        "x": "Has Secondary Type",
+        "y": "Total",
+        "color": "group color (single vs dual type)",
+        "size": null,
+        "other_aesthetics": "violin width reflects density, overlay central median, alpha"
+      }
+    },
+    "transformations": [
+      "Create new column 'Has Secondary Type': True if 'Type 2' is not null, False otherwise",
+      "Prepare data for plotting 'Total' stat distribution side-by-side for the two groups"
+    ],
+    "data_preparation_steps": [
+      "df['Has Secondary Type'] = ~df['Type 2'].isnull()",
+      "Extract arrays for 'Total' values for single and dual type groups"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c2_sec\\16.csv')\ndf['Has Secondary Type'] = ~df['Type 2'].isnull()\nsingle_total = df[df['Has Secondary Type'] == False]['Total']\ndual_total = df[df['Has Secondary Type'] == True]['Total']\nfig, ax = plt.subplots(figsize=(7, 5))\ndata = [single_total, dual_total]\nparts = ax.violinplot(data, showmeans=False, showmedians=True, showextrema=False, widths=0.7)\ncolors = ['#b5ead7', '#ffb7b2']\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.6)\nax.set_xticks([1, 2])\nax.set_xticklabels(['Single Type', 'Dual Type'])\nax.set_ylabel('Total')\nax.set_xlabel('Has Secondary Type')\nax.set_title('Violin Plot of Total Stat\\nfor Single vs Dual Type Pokémon')\nax.grid(True, axis='y', linestyle=':', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

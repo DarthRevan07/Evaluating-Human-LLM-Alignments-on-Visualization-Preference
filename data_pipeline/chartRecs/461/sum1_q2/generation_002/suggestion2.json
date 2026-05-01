@@ -1,0 +1,40 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Are there any months or years where the highest temperature appears much higher or lower than the surrounding periods?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Yearly boxplot with individual months labeled outliers",
+      "design_rationale": "A boxplot for each year captures the yearly distribution and range of monthly highest temperatures, while accentuating months that are statistical outliers within their year (e.g., unusually hot or cold). This approach allows direct comparison across years as well as visibility of within-year extremes, addressing whether certain years have more pronounced anomalies.",
+      "target_insight": "Detection of years and months where highest temperatures diverge sharply from typical values, highlighting periods of extreme climate variability.",
+      "output_fields": [
+        "Year",
+        "Temperature",
+        "Date"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Temperature",
+        "color": "Boxplot (year); outlier months as distinct black points; labeled with the 'Date'",
+        "size": "null",
+        "other_aesthetics": "Show box for each year; overlay outlier points with month labels for full context"
+      }
+    },
+    "transformations": [
+      "Group df by 'Year' to compute distribution (boxplot) of 'Temperature'",
+      "Statistically identify outlier months within each year using standard boxplot rules (outside 1.5x IQR)",
+      "Record 'Date' for each outlier to display as annotation"
+    ],
+    "data_preparation_steps": [
+      "For each year, calculate Q1, Q3, and IQR of monthly highest temperatures",
+      "Mark months where temperature falls outside [Q1 - 1.5*IQR, Q3 + 1.5*IQR] as outliers",
+      "Prepare boxplot data arrays and outlier points with respective years and 'Date' for annotation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\nyears = sorted(df['Year'].unique())\nboxplot_data = [df[df['Year']==y]['Temperature'].values for y in years]\n# Compute outliers for annotation\noutlier_points = []\noutlier_labels = []\nfor i, y in enumerate(years):\n    temps = df[df['Year']==y]['Temperature']\n    q1, q3 = np.percentile(temps, [25, 75])\n    iqr = q3 - q1\n    lower = q1 - 1.5 * iqr\n    upper = q3 + 1.5 * iqr\n    mask = (temps < lower) | (temps > upper)\n    outlier_idxs = np.where(mask)[0]\n    for idx in outlier_idxs:\n        outlier_points.append((i, temps.values[idx]))\n        outlier_labels.append(df[df['Year']==y]['Date'].iloc[idx].strftime('%b-%Y'))\nfig, ax = plt.subplots(figsize=(10,6))\nax.boxplot(boxplot_data, positions=np.arange(len(years)), widths=0.6, patch_artist=True, boxprops=dict(facecolor='lightblue'))\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels([str(y) for y in years])\nax.set_xlabel('Year')\nax.set_ylabel('Temperature (°F)')\nax.set_title('Yearly Distribution of Monthly Highest Temperatures\\nOutlier Monthly Temperatures Labeled')\n# Plot outlier points\nfor i, (x, y_temp) in enumerate(outlier_points):\n    ax.scatter(x, y_temp, color='black', s=70, marker='o', zorder=4)\n    label = outlier_labels[i]\n    ax.text(x+0.1, y_temp, label, fontsize=8, color='black', verticalalignment='bottom', zorder=5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

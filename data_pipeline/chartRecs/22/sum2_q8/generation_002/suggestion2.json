@@ -1,0 +1,42 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Which specific CarName entries stand out for combining high citympg with low price, and what fueltype do they use?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart (Sorted by citympg)",
+      "design_rationale": "By synthesizing the selection (top citympg and low price cars) into a horizontal bar chart, each bar represents a CarName, sorted by citympg. Bar segment color encodes fueltype, and a secondary visual cue (annotation or marker) is used to denote low price (e.g., stars for lowest prices). This provides an 'at-a-glance' ranked perspective of the most efficient, affordable cars, with categorical color for energy source.",
+      "target_insight": "Ranking of CarName entries that maximize city fuel efficiency (citympg) while being affordable (low price) and displaying their fueltype clearly. Users see which brands/models and fueltypes achieve these trade-offs.",
+      "output_fields": [
+        "CarName",
+        "citympg",
+        "price",
+        "fueltype"
+      ],
+      "chart_encodings": {
+        "x": "citympg (as bar length)",
+        "y": "CarName (sorted axis)",
+        "color": "fueltype (bar color map)",
+        "size": null,
+        "other_aesthetics": "Star marker overlay on bars for exceptionally low prices, grid lines for comparative ranks"
+      }
+    },
+    "transformations": [
+      "Filter to cars with citympg >= 75th percentile and price <= 25th percentile",
+      "Sort by citympg descending",
+      "Keep only relevant fields for plotting"
+    ],
+    "data_preparation_steps": [
+      "Subset df as in First Chart: select cars with high citympg/low price",
+      "Sort the resulting DataFrame by citympg descending",
+      "Assign color to bars based on fueltype",
+      "Overlay star marker for cars in price <= 10th percentile"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\22.csv')\n\nhigh_mpg_thr = df['citympg'].quantile(0.75)\nlow_price_thr = df['price'].quantile(0.25)\ndf_selected = df[(df['citympg'] >= high_mpg_thr) & (df['price'] <= low_price_thr)]\ndf_sorted = df_selected.sort_values('citympg', ascending=False)\n\nfueltype_categories = df_sorted['fueltype'].unique()\ncolors = mpl.colormaps['tab10'].colors\nfueltype_color_dict = {ft: colors[i % len(colors)] for i, ft in enumerate(fueltype_categories)}\nbar_colors = [fueltype_color_dict[ft] for ft in df_sorted['fueltype']]\n\nfig, ax = plt.subplots(figsize=(10,8))\ny_pos = np.arange(len(df_sorted))\nbarlist = ax.barh(y_pos, df_sorted['citympg'], color=bar_colors, edgecolor='k', alpha=0.85)\n\nax.set_yticks(y_pos)\nax.set_yticklabels(df_sorted['CarName'], fontsize=8)\nax.set_xlabel('citympg')\nax.set_title('Cars with High Citympg & Low Price\\nRanked by City Fuel Efficiency, Colored by Fueltype')\nax.grid(axis='x', alpha=0.15)\n\n# Overlay star for cars in price <= 10th percentile\nstar_price_thr = df['price'].quantile(0.10)\nfor i, (mpg, price) in enumerate(zip(df_sorted['citympg'], df_sorted['price'])):\n    if price <= star_price_thr:\n        ax.scatter(mpg + 2, y_pos[i], c='gold', marker='*', s=100, edgecolor='black', zorder=3)\n\nlegend_patches = [plt.Line2D([0], [0], marker='s', color='w', label=ft,\n                              markerfacecolor=fueltype_color_dict[ft], markersize=10) for ft in fueltype_categories]\nax.legend(handles=legend_patches, title='fueltype', loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Does higher humidity correspond to lower visibility in specific urban areas?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "City-wise Correlation Heatmap",
+      "design_rationale": "A heatmap of correlation coefficients (Pearson) between 'Humidity (%)' and 'Visibility (km)' for each city quantifies the humidity-visibility relationship, making it instantly clear where the inverse association is strongest or weakest. This is unconventional but compact, supports actionable comparison between cities, and leverages categorical grouping. The use of colorscales (red = strong negative) visually emphasizes cities with the most pronounced association.",
+      "target_insight": "Which cities show statistically meaningful negative correlation between humidity and visibility? Are there cities with neutral or even positive relationships?",
+      "output_fields": [
+        "Location",
+        "Humidity (%)",
+        "Visibility (km)",
+        "Correlation coefficient"
+      ],
+      "chart_encodings": {
+        "x": "Location",
+        "y": "Correlation coefficient (Humidity vs Visibility)",
+        "color": "Correlation value (colormap: diverging)",
+        "size": null,
+        "other_aesthetics": "annotate values, single-row heatmap, colorbar"
+      }
+    },
+    "transformations": [
+      "Group by 'Location'",
+      "Compute Pearson correlation between 'Humidity (%)' and 'Visibility (km)' within each Location"
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c_squared\\243.csv",
+      "For each unique city, compute the correlation coefficient between humidity and visibility",
+      "Build a DataFrame with 'Location' and correlation value"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\243.csv\")\ncities = df['Location'].unique()\ncorrelations = []\nfor city in cities:\n    subset = df[df['Location'] == city]\n    corr = subset['Humidity (%)'].corr(subset['Visibility (km)'])\n    correlations.append(corr)\nheatmap_df = pd.DataFrame({'Location': cities, 'Correlation': correlations})\nfig, ax = plt.subplots(figsize=(9,2))\ncmap = mpl.colormaps['RdBu']\ndata = heatmap_df['Correlation'].values.reshape(1, -1)\nim = ax.imshow(data, cmap=cmap, vmin=-1, vmax=1, aspect='auto')\nax.set_xticks(np.arange(len(cities)))\nax.set_xticklabels(cities, rotation=30, ha='right')\nax.set_yticks([0])\nax.set_yticklabels(['Correlation'])\nfor i in range(len(cities)):\n    text = ax.text(i, 0, f\"{data[0, i]:.2f}\", ha=\"center\", va=\"center\", color=\"black\", fontsize=12)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', pad=0.05)\ncbar.set_label(\"Pearson Correlation (Humidity vs Visibility)\")\nplt.title(\"City-wise Humidity-Visibility Correlation Heatmap\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

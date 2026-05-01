@@ -1,0 +1,42 @@
+{
+  "table_name": "192",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does Temperature vary across different Spectral Classes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "strip plot (jittered scatter plot)",
+      "design_rationale": "A strip plot (scatter with jitter along the categorical x-axis) gives a granular, detailed view of how individual stars' Temperature (K) values are distributed by Spectral Class. This design lets us spot clustering, gaps, and trends that might be hidden in summary statistics. By using vertical jitter/scatter on x-axis, each point represents a star, showing density and possible multimodality per class. Color encoding can highlight temperature gradients, adding another layer of insight to spot differences across Spectral Classes.",
+      "target_insight": "Shows the actual distribution of temperature values per Spectral Class and reveals density, clusters, and outliers, as well as overall temperature gradient across the spectral types.",
+      "output_fields": [
+        "Temperature (K)",
+        "Spectral Class"
+      ],
+      "chart_encodings": {
+        "x": "Spectral Class (categorical axis)",
+        "y": "Temperature (K) (continuous axis)",
+        "color": "Temperature (K), mapped to sequential colormap",
+        "size": null,
+        "other_aesthetics": "Jitter added to X-position for readability; transparency (alpha) for overlapping points; colorbar for temperature; ordered x-axis; clean axis labeling"
+      }
+    },
+    "transformations": [
+      "Sort df by Spectral Class according to standard sequence: O, B, A, F, G, K, M",
+      "Convert Spectral Class to ordered categorical",
+      "Map Temperature (K) to color for scatter plot",
+      "Add small random jitter to X-axis numeric positions for each Spectral Class to avoid overplotting"
+    ],
+    "data_preparation_steps": [
+      "Define ordered categories: ['O','B','A','F','G','K','M']",
+      "Convert df['Spectral Class'] to ordered categorical",
+      "Sort df by Spectral Class",
+      "Assign numeric X positions to Spectral Classes (e.g., 0 to 6) for plotting",
+      "Add random jitter to each X position for visual separation"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\192.csv')\nordered_classes = ['O','B','A','F','G','K','M']\ndf['Spectral Class'] = pd.Categorical(df['Spectral Class'], categories=ordered_classes, ordered=True)\ndf = df.sort_values('Spectral Class')\nclass_to_num = {cl:i for i,cl in enumerate(ordered_classes)}\nx_vals = df['Spectral Class'].map(class_to_num).values\njitter = np.random.uniform(-0.18, 0.18, size=len(x_vals))\nx_pos = x_vals + jitter\ntemps = df['Temperature (K)'].values\ncmap = mpl.colormaps['plasma']\nnorm = mpl.colors.Normalize(vmin=temps.min(), vmax=temps.max())\nfig, ax = plt.subplots(figsize=(10,6))\nsc = ax.scatter(x_pos, temps, c=temps, cmap=cmap, norm=norm, alpha=0.72, edgecolor='none', s=38)\nax.set_xticks(range(len(ordered_classes)))\nax.set_xticklabels(ordered_classes, fontsize=12)\nax.set_xlabel('Spectral Class', fontsize=13)\nax.set_ylabel('Temperature (K)', fontsize=13)\nax.set_title('Individual Star Temperatures by Spectral Class\\n(Strip Plot: Jittered Scatter, Color by Temperature)', fontsize=15)\ncbar = plt.colorbar(sc, ax=ax, orientation='vertical', pad=0.01)\ncbar.set_label('Temperature (K)', fontsize=12)\nax.grid(axis='y', linestyle='--', alpha=0.36)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

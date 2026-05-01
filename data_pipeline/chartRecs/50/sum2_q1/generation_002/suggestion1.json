@@ -1,0 +1,40 @@
+{
+  "table_name": "50",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the percentage of respondents influenced by each social platform vary across different segment types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "grouped bar chart",
+      "design_rationale": "A grouped bar chart enables direct comparison of the influence (percentage) of each social platform ('Answer') across multiple shopper segment types ('Segment Type'). Using groupings on the x-axis for 'Segment Type' and colored bars for 'Answer', this chart makes it easy to see patterns and variations in social platform impact among different segments. This approach leverages the categorical, discrete nature of both segment and platform fields, providing a straightforward overview.",
+      "target_insight": "Which social platforms hold greater influence in specific shopper segment types, highlighting any disproportionate impacts.",
+      "output_fields": [
+        "Segment Type",
+        "Answer",
+        "Percentage"
+      ],
+      "chart_encodings": {
+        "x": "Segment Type",
+        "y": "Percentage",
+        "color": "Answer",
+        "size": null,
+        "other_aesthetics": "Bar grouping by 'Segment Type', color differentiation by 'Answer', value labels above bars"
+      }
+    },
+    "transformations": [
+      "Filter to exclude rows with missing 'Answer' values",
+      "Group by 'Segment Type' and 'Answer' and aggregate mean 'Percentage' for each group",
+      "Sort bars within each group by mean 'Percentage' descending for clarity"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Answer'])",
+      "df_grouped = df_clean.groupby(['Segment Type', 'Answer'])['Percentage'].mean().reset_index()",
+      "pivot_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\50.csv')\ndf_clean = df.dropna(subset=['Answer'])\ndf_grouped = df_clean.groupby(['Segment Type','Answer'])['Percentage'].mean().reset_index()\npivot_df = df_grouped.pivot(index='Segment Type', columns='Answer', values='Percentage')\nplatforms = pivot_df.columns.tolist()\nsegment_types = pivot_df.index.tolist()\ncolors = mpl.colormaps['tab10'].resampled(len(platforms))\nbar_width = 0.15\nx = np.arange(len(segment_types))\nfig, ax = plt.subplots(figsize=(10,6))\nfor i, platform in enumerate(platforms):\n    values = pivot_df[platform].fillna(0)\n    ax.bar(x+i*bar_width, values, width=bar_width, color=colors(i), label=platform)\n    for j, val in enumerate(values):\n        ax.text(x[j]+i*bar_width, val+0.01, f'{val:.2f}', ha='center', va='bottom', fontsize=8)\nax.set_xticks(x+(bar_width*(len(platforms)-1)/2))\nax.set_xticklabels(segment_types, rotation=45, ha='right')\nax.set_ylabel('Mean Percentage Influenced')\nax.set_xlabel('Segment Type')\nax.set_title('Social Platform Influence Across Segment Types\\nMean Percentage of Respondents (Grouped Bar Chart)')\nax.legend(title='Social Platform', bbox_to_anchor=(1.02,1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,39 @@
+{
+  "table_name": "94",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How has the global population changed from 1955 to 2024, and what patterns emerge across different decades?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Multi-decade heatmap (unconventional): Year vs. Population Growth Rate",
+      "design_rationale": "Heatmaps are unconventional for longitudinal demographic data, but they can visually encode how growth rates ('Yearly % Change') evolve across decades. By binning years into decades and averaging 'Yearly % Change', the heatmap offers a compact summary that highlights which periods saw the highest or lowest growth rates, with a clear color gradation mapping directly to population change intensity. This is especially effective given the manageable row count and regular year spacing.",
+      "target_insight": "The visualization uncovers shifts in the rate of population growth across decades, pinpointing periods of acceleration/decline and making decade-to-decade comparisons immediately apparent.",
+      "output_fields": [
+        "Year",
+        "Yearly % Change"
+      ],
+      "chart_encodings": {
+        "x": "Decade (categorical)",
+        "y": "Year sampled in each decade",
+        "color": "Average 'Yearly % Change' (continuous colormap)",
+        "size": null,
+        "other_aesthetics": "Annotated cell values, viridis colormap"
+      }
+    },
+    "transformations": [
+      "Convert df['Yearly % Change'] (string, possibly with '%' symbol) to numeric for processing",
+      "Group df['Year'] into 'Decade'",
+      "Pivot/reshape so x = Decade, y = sampled Year, color = growth rate"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly_pct_num'] = df['Yearly % Change'].str.replace('%', '').astype(float)",
+      "df['Decade'] = (df['Year']//10)*10",
+      "heatmap_data = df.pivot(index='Year', columns='Decade', values='Yearly_pct_num')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly_pct_num'] = df['Yearly % Change'].str.replace('%', '').astype(float)\ndf['Decade'] = (df['Year']//10)*10\nheatmap_data = df.pivot(index='Year', columns='Decade', values='Yearly_pct_num')\nfig, ax = plt.subplots(figsize=(8, 6))\ncmap = mpl.colormaps['viridis']\nvmin = heatmap_data.min().min()\nvmax = heatmap_data.max().max()\nim = ax.imshow(heatmap_data.values, cmap=cmap, vmin=vmin, vmax=vmax, aspect='auto')\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels([str(int(c))+'s' for c in heatmap_data.columns], rotation=45, ha='right')\nax.set_yticklabels([str(int(y)) for y in heatmap_data.index])\nfor i in range(heatmap_data.shape[0]):\n    for j in range(heatmap_data.shape[1]):\n        val = heatmap_data.iloc[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, f'{val:.2f}%', ha='center', va='center', color='white' if val > (vmin+vmax)/2 else 'black', fontsize=10)\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Yearly % Change')\nax.set_xlabel('Decade')\nax.set_ylabel('Year')\nax.set_title('Heatmap of Global Population Growth Rates by Decade (1955–2024)', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

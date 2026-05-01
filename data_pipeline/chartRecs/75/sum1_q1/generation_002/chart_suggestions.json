@@ -1,0 +1,330 @@
+{
+  "table_name": "75",
+  "generation_id": 2,
+  "generation_dir": "secondIter\\chartRecs\\75\\sum1_q1\\generation_002",
+  "schema_context": "Table: Students Performance in Exams\nRows: 1000\nColumns: 8\n\nFIELD INFORMATION:\nField: gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified gender of each student, indicating whether they are female or male in the context of exam performance analysis.\n\nField: race/ethnicity\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 5\n  - Semantic Meaning: This field categorizes students into five demographic groups based on their race or ethnicity, likely for analyzing performance differences across these segments in educational assessments.\n\nField: parental level of education\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field records the highest educational attainment of a student's parent or guardian, reflecting their formal schooling level, which may be used to analyze its influence on student academic performance.\n\nField: lunch\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a student receives a free or reduced-price lunch (suggesting lower socioeconomic status) or a standard lunch, typically used to assess the impact of socioeconomic factors on academic performance.\n\nField: test preparation course\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a student has completed a test preparation course, reflecting their participation in exam-related academic support programs.\n\nField: math score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 81\n  - Semantic Meaning: This field represents each student's numerical score (ranging from 0 to 100) achieved in a math exam, indicating their performance or proficiency in mathematics within an academic assessment context.\n  - Value Range: 0.0 to 100.0\n  - Mean: 66.09\n\nField: reading score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 72\n  - Semantic Meaning: The \"reading score\" field represents a student's numerical score (from 17 to 100) on a reading assessment, indicating their proficiency in reading-related skills within an academic exam context.\n  - Value Range: 17.0 to 100.0\n  - Mean: 69.17\n\nField: writing score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 77\n  - Semantic Meaning: The \"writing score\" field represents each student's numerical performance result (on a scale of 10 to 100) in the writing section of an academic exam, reflecting their proficiency in written communication skills.\n  - Value Range: 10.0 to 100.0\n  - Mean: 68.05\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"gender\"\n  2. \"race/ethnicity\"\n  3. \"parental level of education\"\n  4. \"lunch\"\n  5. \"test preparation course\"\n  6. \"math score\"\n  7. \"reading score\"\n  8. \"writing score\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['gender'], df['race/ethnicity']",
+  "table_metadata": {
+    "table_name": "Students Performance in Exams",
+    "file_path": "csv_c2_sec\\75.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 75.csv (Dataset: Students Performance in Exams)",
+    "original_filename": "75.csv",
+    "dataset_name": "Students Performance in Exams",
+    "row_count": 1000,
+    "column_count": 8,
+    "table_hash": 1217861670544797299,
+    "fields": [
+      {
+        "name": "gender",
+        "clean_name": "gender",
+        "camel_case_name": "gender",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 2,
+        "sample_values": "female, male",
+        "inferred_semantic_summary": "This field records the self-identified gender of each student, indicating whether they are female or male in the context of exam performance analysis."
+      },
+      {
+        "name": "race/ethnicity",
+        "clean_name": "race_ethnicity",
+        "camel_case_name": "raceEthnicity",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 5,
+        "sample_values": "group A, group B, group C, group D, group E",
+        "inferred_semantic_summary": "This field categorizes students into five demographic groups based on their race or ethnicity, likely for analyzing performance differences across these segments in educational assessments."
+      },
+      {
+        "name": "parental level of education",
+        "clean_name": "parental_level_of_education",
+        "camel_case_name": "parentalLevelOfEducation",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 6,
+        "sample_values": "associate's degree, bachelor's degree, high school, master's degree, some college, some high school",
+        "inferred_semantic_summary": "This field records the highest educational attainment of a student's parent or guardian, reflecting their formal schooling level, which may be used to analyze its influence on student academic performance."
+      },
+      {
+        "name": "lunch",
+        "clean_name": "lunch",
+        "camel_case_name": "lunch",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 2,
+        "sample_values": "free/reduced, standard",
+        "inferred_semantic_summary": "This field indicates whether a student receives a free or reduced-price lunch (suggesting lower socioeconomic status) or a standard lunch, typically used to assess the impact of socioeconomic factors on academic performance."
+      },
+      {
+        "name": "test preparation course",
+        "clean_name": "test_preparation_course",
+        "camel_case_name": "testPreparationCourse",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 2,
+        "sample_values": "completed, none",
+        "inferred_semantic_summary": "This field indicates whether a student has completed a test preparation course, reflecting their participation in exam-related academic support programs."
+      },
+      {
+        "name": "math score",
+        "clean_name": "math_score",
+        "camel_case_name": "mathScore",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 81,
+        "min_value": 0.0,
+        "max_value": 100.0,
+        "mean_value": 66.089,
+        "median_value": 66.0,
+        "sample_values": "0, 8, 18, 19, 22, ..., 96, 97, 98, 99, 100",
+        "inferred_semantic_summary": "This field represents each student's numerical score (ranging from 0 to 100) achieved in a math exam, indicating their performance or proficiency in mathematics within an academic assessment context."
+      },
+      {
+        "name": "reading score",
+        "clean_name": "reading_score",
+        "camel_case_name": "readingScore",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 72,
+        "min_value": 17.0,
+        "max_value": 100.0,
+        "mean_value": 69.169,
+        "median_value": 70.0,
+        "sample_values": "17, 23, 24, 26, 28, ..., 95, 96, 97, 99, 100",
+        "inferred_semantic_summary": "The \"reading score\" field represents a student's numerical score (from 17 to 100) on a reading assessment, indicating their proficiency in reading-related skills within an academic exam context."
+      },
+      {
+        "name": "writing score",
+        "clean_name": "writing_score",
+        "camel_case_name": "writingScore",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 1000,
+        "unique_values": 77,
+        "min_value": 10.0,
+        "max_value": 100.0,
+        "mean_value": 68.054,
+        "median_value": 69.0,
+        "sample_values": "10, 15, 19, 22, 23, ..., 96, 97, 98, 99, 100",
+        "inferred_semantic_summary": "The \"writing score\" field represents each student's numerical performance result (on a scale of 10 to 100) in the writing section of an academic exam, reflecting their proficiency in written communication skills."
+      }
+    ],
+    "formatted_summary": "## Table 1: Students_Performance_in_Exams (1,000 rows × 8 columns)\n\n### Description\nData loaded from CSV file: 75.csv (Dataset: Students Performance in Exams)\n\n### Schema (8 fields)\n  - gender -- type: object, values: female, male\n  - race/ethnicity -- type: object, values: group A, group B, group C, group D, group E\n  - parental level of education -- type: object, values: associate's degree, bachelor's degree, high school, master's degree, some college, some high school\n  - lunch -- type: object, values: free/reduced, standard\n  - test preparation course -- type: object, values: completed, none\n  - math score -- type: int64, values: 0, 8, 18, 19, 22, ..., 96, 97, 98, 99, 100\n  - reading score -- type: int64, values: 17, 23, 24, 26, 28, ..., 95, 96, 97, 99, 100\n  - writing score -- type: int64, values: 10, 15, 19, 22, 23, ..., 96, 97, 98, 99, 100\n\n### Sample Data (first 5 rows)\n```\n   gender race/ethnicity parental level of education         lunch test preparation course  math score  reading score  writing score\n0  female        group B           bachelor's degree      standard                    none          72             72             74\n1  female        group C                some college      standard               completed          69             90             88\n2  female        group B             master's degree      standard                    none          90             95             93\n3    male        group A          associate's degree  free/reduced                    none          47             57             44\n4    male        group C                some college      standard                    none          76             78             75\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "75",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "question": "How do average math scores differ between students who completed the test preparation course versus those who did not?",
+      "column_combination": [
+        "gender",
+        "race/ethnicity",
+        "parental level of education",
+        "lunch",
+        "test preparation course",
+        "math score",
+        "reading score",
+        "writing score"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Bar Plot (Grouped)",
+            "design_rationale": "A grouped bar plot directly compares the average math scores of students who completed the test preparation course against those who did not. This approach leverages aggregation by 'test preparation course' and is highly effective for clear side-by-side comparison. The chart succinctly answers the analytical question with a conventional, easy-to-read visual, making the results instantly understandable, especially given that 'test preparation course' is a binary categorical variable.",
+            "target_insight": "The visualization reveals whether completion of a test preparation course correlates with higher average math scores, and quantifies the magnitude of difference between the two groups.",
+            "output_fields": [
+              "test preparation course",
+              "math score"
+            ],
+            "chart_encodings": {
+              "x": "test preparation course",
+              "y": "math score",
+              "color": "test preparation course",
+              "size": null,
+              "other_aesthetics": "Value label annotation on bars; distinct colors for each group"
+            }
+          },
+          "transformations": [
+            "Group by 'test preparation course'",
+            "Compute mean of 'math score' for each group"
+          ],
+          "data_preparation_steps": [
+            "df_grouped = df.groupby('test preparation course')['math score'].mean().reset_index()"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ndf_grouped = df.groupby('test preparation course')['math score'].mean().reset_index()\ncolors = mpl.colormaps['viridis'].resampled(2)(np.arange(2))\nfig, ax = plt.subplots(figsize=(7,5))\nbars = ax.bar(\n    df_grouped['test preparation course'],\n    df_grouped['math score'],\n    color=colors,\n    edgecolor='black',\n    width=0.6\n)\nfor i, bar in enumerate(bars):\n    height = bar.get_height()\n    ax.text(\n        bar.get_x() + bar.get_width() / 2,\n        height + 1.2,\n        f'{height:.2f}',\n        ha='center',\n        va='bottom',\n        fontsize=12,\n        color='black',\n        weight='bold'\n    )\nax.set_ylabel('Average Math Score', fontsize=12)\nax.set_xlabel('Test Preparation Course', fontsize=12)\nax.set_title('Average Math Scores by Test Preparation Course\\n75', fontsize=14, weight='bold')\nax.set_ylim(0, 100)\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Violin Plot",
+            "design_rationale": "A violin plot allows for a nuanced look at both central tendency and the distribution/spread of math scores for each test preparation group. This unconventional chart type is excellent for revealing underlying score distributions, multimodalities, skew, and variation in addition to average differences. It caters to the question by showing not just the mean, but the performance range and density, which can highlight if test prep completion mainly influences the top, bottom, or middle scores.",
+            "target_insight": "The visualization reveals whether students who completed the test preparation course generally score higher, if their scores are less varied, and if the increase is uniform or concentrated in certain score ranges.",
+            "output_fields": [
+              "test preparation course",
+              "math score"
+            ],
+            "chart_encodings": {
+              "x": "test preparation course",
+              "y": "math score",
+              "color": "test preparation course",
+              "size": null,
+              "other_aesthetics": "Show inner box (median/quartiles), violin width by density"
+            }
+          },
+          "transformations": [
+            "No aggregation; stratify data by 'test preparation course' to compare score distributions"
+          ],
+          "data_preparation_steps": [
+            "Prepare arrays of 'math score' for each value of 'test preparation course'"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ngroups = df['test preparation course'].unique()\ndata = [df[df['test preparation course']==g]['math score'] for g in groups]\ncolors = mpl.colormaps['viridis'].resampled(len(groups))(np.arange(len(groups)))\nfig, ax = plt.subplots(figsize=(8,6))\nvp = ax.violinplot(data, positions=np.arange(len(groups)), showmeans=False, showmedians=True, showextrema=True)\nfor i, pc in enumerate(vp['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.8)\n    pc.set_edgecolor('black')\nfor partname in ('cbars','cmedians','cmaxes','cmins'):\n    vp[partname].set_edgecolor('black')\n    vp[partname].set_linewidth(1)\nax.set_xticks(np.arange(len(groups)))\nax.set_xticklabels(groups, fontsize=12)\nax.set_ylabel('Math Score', fontsize=12)\nax.set_xlabel('Test Preparation Course', fontsize=12)\nax.set_title('Distribution of Math Scores by Test Preparation Course\\n75', fontsize=14, weight='bold')\nax.set_ylim(0, 100)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T14:11:08.426127",
+      "schema_context": "Table: Students Performance in Exams\nRows: 1000\nColumns: 8\n\nFIELD INFORMATION:\nField: gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified gender of each student, indicating whether they are female or male in the context of exam performance analysis.\n\nField: race/ethnicity\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 5\n  - Semantic Meaning: This field categorizes students into five demographic groups based on their race or ethnicity, likely for analyzing performance differences across these segments in educational assessments.\n\nField: parental level of education\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field records the highest educational attainment of a student's parent or guardian, reflecting their formal schooling level, which may be used to analyze its influence on student academic performance.\n\nField: lunch\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a student receives a free or reduced-price lunch (suggesting lower socioeconomic status) or a standard lunch, typically used to assess the impact of socioeconomic factors on academic performance.\n\nField: test preparation course\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether a student has completed a test preparation course, reflecting their participation in exam-related academic support programs.\n\nField: math score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 81\n  - Semantic Meaning: This field represents each student's numerical score (ranging from 0 to 100) achieved in a math exam, indicating their performance or proficiency in mathematics within an academic assessment context.\n  - Value Range: 0.0 to 100.0\n  - Mean: 66.09\n\nField: reading score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 72\n  - Semantic Meaning: The \"reading score\" field represents a student's numerical score (from 17 to 100) on a reading assessment, indicating their proficiency in reading-related skills within an academic exam context.\n  - Value Range: 17.0 to 100.0\n  - Mean: 69.17\n\nField: writing score\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 77\n  - Semantic Meaning: The \"writing score\" field represents each student's numerical performance result (on a scale of 10 to 100) in the writing section of an academic exam, reflecting their proficiency in written communication skills.\n  - Value Range: 10.0 to 100.0\n  - Mean: 68.05\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"gender\"\n  2. \"race/ethnicity\"\n  3. \"parental level of education\"\n  4. \"lunch\"\n  5. \"test preparation course\"\n  6. \"math score\"\n  7. \"reading score\"\n  8. \"writing score\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['gender'], df['race/ethnicity']",
+      "table_metadata": {
+        "table_name": "Students Performance in Exams",
+        "file_path": "csv_c2_sec\\75.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 75.csv (Dataset: Students Performance in Exams)",
+        "original_filename": "75.csv",
+        "dataset_name": "Students Performance in Exams",
+        "row_count": 1000,
+        "column_count": 8,
+        "table_hash": 1217861670544797299,
+        "fields": [
+          {
+            "name": "gender",
+            "clean_name": "gender",
+            "camel_case_name": "gender",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 2,
+            "sample_values": "female, male",
+            "inferred_semantic_summary": "This field records the self-identified gender of each student, indicating whether they are female or male in the context of exam performance analysis."
+          },
+          {
+            "name": "race/ethnicity",
+            "clean_name": "race_ethnicity",
+            "camel_case_name": "raceEthnicity",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 5,
+            "sample_values": "group A, group B, group C, group D, group E",
+            "inferred_semantic_summary": "This field categorizes students into five demographic groups based on their race or ethnicity, likely for analyzing performance differences across these segments in educational assessments."
+          },
+          {
+            "name": "parental level of education",
+            "clean_name": "parental_level_of_education",
+            "camel_case_name": "parentalLevelOfEducation",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 6,
+            "sample_values": "associate's degree, bachelor's degree, high school, master's degree, some college, some high school",
+            "inferred_semantic_summary": "This field records the highest educational attainment of a student's parent or guardian, reflecting their formal schooling level, which may be used to analyze its influence on student academic performance."
+          },
+          {
+            "name": "lunch",
+            "clean_name": "lunch",
+            "camel_case_name": "lunch",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 2,
+            "sample_values": "free/reduced, standard",
+            "inferred_semantic_summary": "This field indicates whether a student receives a free or reduced-price lunch (suggesting lower socioeconomic status) or a standard lunch, typically used to assess the impact of socioeconomic factors on academic performance."
+          },
+          {
+            "name": "test preparation course",
+            "clean_name": "test_preparation_course",
+            "camel_case_name": "testPreparationCourse",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 2,
+            "sample_values": "completed, none",
+            "inferred_semantic_summary": "This field indicates whether a student has completed a test preparation course, reflecting their participation in exam-related academic support programs."
+          },
+          {
+            "name": "math score",
+            "clean_name": "math_score",
+            "camel_case_name": "mathScore",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 81,
+            "min_value": 0.0,
+            "max_value": 100.0,
+            "mean_value": 66.089,
+            "median_value": 66.0,
+            "sample_values": "0, 8, 18, 19, 22, ..., 96, 97, 98, 99, 100",
+            "inferred_semantic_summary": "This field represents each student's numerical score (ranging from 0 to 100) achieved in a math exam, indicating their performance or proficiency in mathematics within an academic assessment context."
+          },
+          {
+            "name": "reading score",
+            "clean_name": "reading_score",
+            "camel_case_name": "readingScore",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 72,
+            "min_value": 17.0,
+            "max_value": 100.0,
+            "mean_value": 69.169,
+            "median_value": 70.0,
+            "sample_values": "17, 23, 24, 26, 28, ..., 95, 96, 97, 99, 100",
+            "inferred_semantic_summary": "The \"reading score\" field represents a student's numerical score (from 17 to 100) on a reading assessment, indicating their proficiency in reading-related skills within an academic exam context."
+          },
+          {
+            "name": "writing score",
+            "clean_name": "writing_score",
+            "camel_case_name": "writingScore",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 1000,
+            "unique_values": 77,
+            "min_value": 10.0,
+            "max_value": 100.0,
+            "mean_value": 68.054,
+            "median_value": 69.0,
+            "sample_values": "10, 15, 19, 22, 23, ..., 96, 97, 98, 99, 100",
+            "inferred_semantic_summary": "The \"writing score\" field represents each student's numerical performance result (on a scale of 10 to 100) in the writing section of an academic exam, reflecting their proficiency in written communication skills."
+          }
+        ],
+        "formatted_summary": "## Table 1: Students_Performance_in_Exams (1,000 rows × 8 columns)\n\n### Description\nData loaded from CSV file: 75.csv (Dataset: Students Performance in Exams)\n\n### Schema (8 fields)\n  - gender -- type: object, values: female, male\n  - race/ethnicity -- type: object, values: group A, group B, group C, group D, group E\n  - parental level of education -- type: object, values: associate's degree, bachelor's degree, high school, master's degree, some college, some high school\n  - lunch -- type: object, values: free/reduced, standard\n  - test preparation course -- type: object, values: completed, none\n  - math score -- type: int64, values: 0, 8, 18, 19, 22, ..., 96, 97, 98, 99, 100\n  - reading score -- type: int64, values: 17, 23, 24, 26, 28, ..., 95, 96, 97, 99, 100\n  - writing score -- type: int64, values: 10, 15, 19, 22, 23, ..., 96, 97, 98, 99, 100\n\n### Sample Data (first 5 rows)\n```\n   gender race/ethnicity parental level of education         lunch test preparation course  math score  reading score  writing score\n0  female        group B           bachelor's degree      standard                    none          72             72             74\n1  female        group C                some college      standard               completed          69             90             88\n2  female        group B             master's degree      standard                    none          90             95             93\n3    male        group A          associate's degree  free/reduced                    none          47             57             44\n4    male        group C                some college      standard                    none          76             78             75\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

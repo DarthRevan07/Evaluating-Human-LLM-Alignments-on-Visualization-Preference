@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "What trend can be observed in the Price of cars with advanced safety features (more Airbags) across different Production years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Airbags bins across Production years)",
+      "design_rationale": "A boxplot for each Airbags bin, faceted by Production year periods, captures distribution shifts and outlier behavior in car Prices for safety-featured vehicles. This chart type shows spread, medians, and highlights volatility or price premiums for 'advanced' Airbags cars over time.",
+      "target_insight": "To expose not only trend but price distribution changes and potential outlier effects, emphasizing how the market values advanced safety features in different eras.",
+      "output_fields": [
+        "Prod. year",
+        "Price",
+        "Airbags"
+      ],
+      "chart_encodings": {
+        "x": "Airbags bin",
+        "y": "Price",
+        "color": "Prod. year period (e.g., 2005–2010, 2011–2015, 2016–2020)",
+        "size": null,
+        "other_aesthetics": "Boxplot; facet grid via color for Production year period; legend"
+      }
+    },
+    "transformations": [
+      "Filter df for df['Airbags'] >= 6",
+      "Bin df['Airbags'] into classes: Low (6–8), Medium (9–11), High (12+)",
+      "Create Prod_year_period by binning df['Prod. year'] into intervals: 2005–2010, 2011–2015, 2016–2020",
+      "Prepare data so each combination of Airbags_bin and Prod_year_period is a boxplot group"
+    ],
+    "data_preparation_steps": [
+      "df_adv = df[df['Airbags'] >= 6]",
+      "df_adv['Airbags_bin'] = pd.cut(df_adv['Airbags'], bins=[6,8,11,16], labels=['Low','Medium','High'], right=True)",
+      "df_adv['Prod_year_period'] = pd.cut(df_adv['Prod. year'], bins=[2004,2010,2015,2020], labels=['2005–2010','2011–2015','2016–2020'], right=True)",
+      "Prepare grouped boxplot data: for each Airbags_bin, get list of Price arrays for each Prod_year_period"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf_adv = df[df['Airbags'] >= 6]\ndf_adv['Airbags_bin'] = pd.cut(df_adv['Airbags'], bins=[6,8,11,16], labels=['Low','Medium','High'], right=True)\ndf_adv['Prod_year_period'] = pd.cut(df_adv['Prod. year'], bins=[2004,2010,2015,2020], labels=['2005–2010','2011–2015','2016–2020'], right=True)\n# Group boxplot data\nairbags_bins = ['Low','Medium','High']\nyear_periods = ['2005–2010','2011–2015','2016–2020']\nboxplot_data = []\nlabels = []\ncolors = []\ncmap = mpl.colormaps['viridis'].resampled(3)\nfor i, period in enumerate(year_periods):\n    for bin in airbags_bins:\n        mask = (df_adv['Airbags_bin'] == bin) & (df_adv['Prod_year_period'] == period)\n        prices = df_adv.loc[mask, 'Price'].values\n        if len(prices) > 0:\n            boxplot_data.append(prices)\n            labels.append(bin + ' (' + period + ')')\n            colors.append(cmap(i))\nfig, ax = plt.subplots(figsize=(11,7))\nbp = ax.boxplot(boxplot_data, patch_artist=True, labels=labels)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nax.set_xlabel('Airbags bin (by Production year period)')\nax.set_ylabel('Price')\nax.set_title('Price Distribution of Cars with Advanced Safety Features by Year Period and Airbags Count')\n# Custom legend\nimport matplotlib.patches as mpatches\nlegend_patches = [mpatches.Patch(color=cmap(i), label=year_periods[i]) for i in range(len(year_periods))]\nax.legend(handles=legend_patches, title='Production year period', loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,45 @@
+{
+  "table_name": "269",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Which countries have experienced a decrease in population between 2020 and 2023, and how do their growth rates compare to the global average?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Global Scatter Plot with Reference Line",
+      "design_rationale": "A scatter plot comparing 'growth rate' versus population change (2020-2023) for all countries visualizes both detail and context. Highlighting countries with population decrease (pop_change < 0) in red and others in grey allows immediate spotting of declining countries. Adding a vertical reference line at 'pop_change' = 0 and a horizontal line at the global mean growth rate builds interpretability. This chart answers both parts of the question (who declined, and are their rates above/below global avg) with spatial clarity and context.",
+      "target_insight": "Reveal if population-decline countries cluster around certain growth rate values, and whether their rates are consistently below global average—plus show how these relate to global distribution.",
+      "output_fields": [
+        "country",
+        "pop_change",
+        "growth rate",
+        "rank"
+      ],
+      "chart_encodings": {
+        "x": "pop_change (2023 population - 2020 population)",
+        "y": "growth rate (float)",
+        "color": "Red for negative pop_change, Grey otherwise",
+        "size": "Scaled by 2023 population (optional for emphasis)",
+        "other_aesthetics": "Vertical line at x=0 (no change), Horizontal line at global avg growth rate, Alpha=0.7"
+      }
+    },
+    "transformations": [
+      "Compute population change: df['2023 population'] - df['2020 population'] as 'pop_change'",
+      "Convert 'growth rate' to float for plotting",
+      "Compute global average of 'growth rate' (converted to float)",
+      "Assign color: red for negative pop_change, grey otherwise",
+      "Compute sizes: scale by sqrt of '2023 population'/1e6 for visual legibility"
+    ],
+    "data_preparation_steps": [
+      "df['pop_change'] = df['2023 population'] - df['2020 population']",
+      "df['growth_rate_num'] = pd.to_numeric(df['growth rate'], errors='coerce')",
+      "global_avg = df['growth_rate_num'].mean()",
+      "df['color'] = np.where(df['pop_change'] < 0, 'red', 'grey')",
+      "df['size'] = np.sqrt(df['2023 population']/1e6)*35"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\269.csv')\ndf['pop_change'] = df['2023 population'] - df['2020 population']\ndf['growth_rate_num'] = pd.to_numeric(df['growth rate'], errors='coerce')\nglobal_avg = df['growth_rate_num'].mean()\ndf['color'] = np.where(df['pop_change'] < 0, 'red', 'grey')\ndf['size'] = np.sqrt(df['2023 population']/1e6)*35\nfig, ax = plt.subplots(figsize=(10,7))\nsct = ax.scatter(df['pop_change'], df['growth_rate_num'], c=df['color'], s=df['size'], alpha=0.7, edgecolors='black', linewidths=0.5)\nax.axvline(0, color='blue', linestyle='--', linewidth=1.5, label='No population change')\nax.axhline(global_avg, color='orange', linestyle='--', linewidth=1.5, label='Global avg growth rate')\nax.set_xlabel('Population Change (2023 - 2020)')\nax.set_ylabel('Growth Rate (%)')\nax.set_title('Growth Rate vs Population Change (2020-2023)\\nRed = Population Decrease, Grey = Population Increase/Stable')\nfrom matplotlib.lines import Line2D\nlegend_elements = [Line2D([0], [0], marker='o', color='w', label='Population Decrease', markerfacecolor='red', markersize=10, markeredgecolor='black'),\n                  Line2D([0], [0], marker='o', color='w', label='Population Increase/Stable', markerfacecolor='grey', markersize=10, markeredgecolor='black'),\n                  Line2D([0], [0], color='blue', linewidth=1.5, linestyle='--', label='No population change'),\n                  Line2D([0], [0], color='orange', linewidth=1.5, linestyle='--', label='Global avg growth rate (' + str(round(global_avg,2)) + '%)')]\nax.legend(handles=legend_elements)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

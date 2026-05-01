@@ -1,0 +1,37 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Among young customers, does gender impact spending score differently?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot with Embedded Swarm Plot",
+      "design_rationale": "Violin plots reveal the full shape of the spending score distribution per gender (density, multimodality) among young customers—very helpful for identifying hidden patterns or differences not visible in boxplots. An embedded swarmplot overlays individual data points, conveying both sample size and spread. This combination provides a granular perspective on gender-based spending score dynamics in the young demographic.",
+      "target_insight": "Exposes whether spending score distributions differ in shape and spread between Female and Male young customers, as well as differences in the concentration of spending scores.",
+      "output_fields": [
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (distinct colors)",
+        "size": null,
+        "other_aesthetics": "density overlay (violin), alpha blending, swarm points for actual values"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Age'] <= 30 (young customers)",
+      "Group by df['Gender'] and extract df['Spending Score (1-100)'] for each gender"
+    ],
+    "data_preparation_steps": [
+      "df_young = df[df['Age'] <= 30]",
+      "For each gender: collect df_young['Spending Score (1-100)'] values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\nfrom scipy.stats import gaussian_kde\ndf = pd.read_csv(\"csv_c2_sec\\37.csv\")\ndf_young = df[df['Age'] <= 30]\ngenders = ['Female', 'Male']\ncolors = ['#64b5f6', '#e57373']\nfig, ax = plt.subplots(figsize=(7, 5))\nfor i, gender in enumerate(genders):\n    scores = df_young[df_young['Gender'] == gender]['Spending Score (1-100)']\n    if len(scores) > 1:\n        kde = gaussian_kde(scores)\n        y_grid = np.linspace(scores.min(), scores.max(), 100)\n        density = kde(y_grid)\n        density_scaled = (density / density.max()) * 0.35\n        ax.fill_betweenx(y_grid, i - density_scaled, i + density_scaled, color=colors[i], alpha=0.4)\n        ax.plot(i + density_scaled, y_grid, color=colors[i], linewidth=1.5)\n        ax.plot(i - density_scaled, y_grid, color=colors[i], linewidth=1.5)\n    ax.scatter(np.random.normal(i, 0.07, len(scores)), scores, color=colors[i], edgecolor='black', alpha=0.8, s=32, label=gender)\nax.set_xticks([0, 1])\nax.set_xticklabels(genders)\nax.set_xlabel('Gender')\nax.set_ylabel('Spending Score (1-100)')\nax.set_title('Gender Differences in Spending Score Among Young Customers\\nViolin + Swarm Visualization (Age ≤ 30)')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

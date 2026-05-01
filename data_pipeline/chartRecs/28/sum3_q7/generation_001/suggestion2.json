@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do vehicles with higher mileage tend to have lower prices regardless of fuel type?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Grouped boxplot (Price distributions across mileage bins and fuel types)",
+      "design_rationale": "A grouped boxplot offers a robust summary of how price distributions vary as cars accrue mileage, segmented by fuel type. By discretizing mileage into bins (low, medium, high, etc.) and plotting boxplots for each fuel type within each bin, the visualization delivers both aggregate and comparative perspectives. This approach highlights not only central tendency but also spread, outliers, and whether all fuel types demonstrate depressed median prices in higher mileage bins. It answers the question in terms of conditional distributions and emphasizes group-level differences more clearly than a scatterplot.",
+      "target_insight": "How typical price levels (mediated by distributional shape) change across mileage bins for each fuel type, showing whether high mileage universally predicts lower prices or if some fuel types maintain higher prices at higher mileage.",
+      "output_fields": [
+        "Price",
+        "Mileage",
+        "Fuel type"
+      ],
+      "chart_encodings": {
+        "x": "Mileage bins (discrete, categorical)",
+        "y": "Price",
+        "color": "Fuel type (grouped/facet boxplot)",
+        "size": null,
+        "other_aesthetics": "grouped boxplot layout"
+      }
+    },
+    "transformations": [
+      "Convert df['Mileage'] to numeric as above",
+      "Filter out invalid 'Price' and 'Mileage'",
+      "Bin df['Mileage'] into quantile-based bins (e.g., 5 bins: 'Very low', 'Low', 'Medium', 'High', 'Very high')",
+      "Create a categorical variable for 'Mileage bins'"
+    ],
+    "data_preparation_steps": [
+      "df['Mileage'] = df['Mileage'].str.replace(' km','').str.replace(',','').astype(float)",
+      "df = df[(df['Price'] > 0) & (df['Mileage'] > 0)]",
+      "bin_labels = ['Very low','Low','Medium','High','Very high']",
+      "df['Mileage bin'] = pd.qcut(df['Mileage'], q=5, labels=bin_labels)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf['Mileage'] = df['Mileage'].str.replace(' km','').str.replace(',','').astype(float)\ndf = df[(df['Price'] > 0) & (df['Mileage'] > 0)]\nbin_labels = ['Very low','Low','Medium','High','Very high']\ndf['Mileage bin'] = pd.qcut(df['Mileage'], q=5, labels=bin_labels)\nfuel_types = df['Fuel type'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(fuel_types))\ncolor_dict = {ft: cmap(i) for i, ft in enumerate(fuel_types)}\nx_groups = bin_labels\nbox_width = 0.8 / len(fuel_types)\nfig, ax = plt.subplots(figsize=(11,7))\nfor i, bin_lbl in enumerate(x_groups):\n    for j, ft in enumerate(fuel_types):\n        y = df[(df['Mileage bin'] == bin_lbl) & (df['Fuel type'] == ft)]['Price'].values\n        if len(y) > 0:\n            pos = i + j*box_width - (len(fuel_types)/2)*box_width + box_width/2\n            bp = ax.boxplot(y, positions=[pos], widths=box_width*0.85, patch_artist=True, showfliers=False)\n            for box in bp['boxes']:\n                box.set_facecolor(color_dict[ft])\n                box.set_alpha(0.49)\nax.set_xticks(range(len(x_groups)))\nax.set_xticklabels(x_groups)\nax.set_xlabel('Mileage bin')\nax.set_ylabel('Price')\nhandles = [plt.Line2D([0],[0], color=color_dict[ft], lw=8) for ft in fuel_types]\nax.legend(handles, fuel_types, title='Fuel type', loc='upper right')\nax.set_title('Price distribution across Mileage bins \\nGrouped by Fuel type\\n (box width encodes group, color encodes fuel type)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

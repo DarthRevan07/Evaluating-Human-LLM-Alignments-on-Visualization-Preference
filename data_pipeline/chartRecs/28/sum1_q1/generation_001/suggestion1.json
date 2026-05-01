@@ -1,0 +1,37 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does the average car price vary across different manufacturers?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart provides clear visual ranking and quantitative comparison of average car prices across manufacturers. Since 'Manufacturer' is a highly categorical variable (65 unique values) and 'Price' is numeric with significant variation, this chart effectively answers the question. Sorting the manufacturers by their mean price reveals high-value brands versus budget manufacturers. Choosing a horizontal orientation improves readability with long manufacturer names and enables users to quickly identify the extremes.",
+      "target_insight": "Ranked comparison of average car price by manufacturer, highlighting which brands command higher prices and where budget options are prevalent.",
+      "output_fields": [
+        "Manufacturer",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Average Price per Manufacturer",
+        "y": "Manufacturer",
+        "color": "Null",
+        "size": "Null",
+        "other_aesthetics": "Sort bars descending by mean price; show grid for readability; font scaling for labels"
+      }
+    },
+    "transformations": [
+      "Group by 'Manufacturer' and calculate mean of 'Price'",
+      "Sort resulting groups by mean price in descending order"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('Manufacturer', as_index=False)['Price'].mean()",
+      "df_grouped_sorted = df_grouped.sort_values('Price', ascending=False).reset_index(drop=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_grouped = df.groupby(\"Manufacturer\", as_index=False)[\"Price\"].mean()\ndf_grouped_sorted = df_grouped.sort_values(\"Price\", ascending=False).reset_index(drop=True)\nplt.figure(figsize=(12, 16))\nplt.barh(df_grouped_sorted[\"Manufacturer\"], df_grouped_sorted[\"Price\"], color=\"royalblue\")\nplt.xlabel(\"Average Price\")\nplt.ylabel(\"Manufacturer\")\nplt.title(\"Average Car Price by Manufacturer\\n(Ranked Highest to Lowest)\")\nplt.gca().invert_yaxis()\nplt.grid(axis=\"x\", linewidth=0.5, alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

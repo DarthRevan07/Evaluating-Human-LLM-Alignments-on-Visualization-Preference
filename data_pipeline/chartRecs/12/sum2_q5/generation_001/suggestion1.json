@@ -1,0 +1,41 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "How do Abstract Reasoning scores compare between managerial and creative job roles?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot offers a clear comparative view of score distributions, medians, and outliers for Abstract Reasoning across two job role categories (managerial vs creative). Given the dataset's moderate size and the quantitative nature of scores, this chart is effective for highlighting central tendency, spread, and differences in Abstract Reasoning with ease—crucial to understanding how cognitive skills may be valued differently in the two job types.",
+      "target_insight": "This visualization reveals whether managerial or creative roles tend to require or attract higher Abstract Reasoning scores, as well as whether one group has more variability or outliers.",
+      "output_fields": [
+        "Career",
+        "Abstract Reasoning"
+      ],
+      "chart_encodings": {
+        "x": "Job Role Category (Managerial/Creative, derived from Career)",
+        "y": "Abstract Reasoning",
+        "color": "Role Category (distinct color for Managerial and Creative)",
+        "size": null,
+        "other_aesthetics": "boxplot width, line thickness"
+      }
+    },
+    "transformations": [
+      "Create a new categorical column 'Job Role Category' based on 'Career', assigning jobs to 'Managerial' or 'Creative' based on keywords or mapping.",
+      "Filter dataframe to include only rows categorized as 'Managerial' or 'Creative' jobs.",
+      "Group data by 'Job Role Category' and extract 'Abstract Reasoning' scores for boxplot."
+    ],
+    "data_preparation_steps": [
+      "Load data from csv_c2_sec\\12.csv",
+      "Define mapping rules to classify 'Career' as 'Managerial' or 'Creative' using keyword lists (e.g., Manager, Director, Supervisor for managerial; Designer, Artist, Writer for creative).",
+      "Create a new column 'Job Role Category' in df using mapped values.",
+      "Filter df to only rows where 'Job Role Category' is 'Managerial' or 'Creative'.",
+      "Prepare an array of 'Abstract Reasoning' scores grouped by 'Job Role Category' for boxplot."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\nmanagerial_keywords = [\"Manager\", \"Director\", \"Supervisor\", \"Administrator\", \"Executive\", \"Chief\", \"Lead\", \"Head\"]\ncreative_keywords = [\"Designer\", \"Artist\", \"Writer\", \"Editor\", \"Animator\", \"Illustrator\", \"Photographer\", \"Producer\", \"Composer\", \"Musician\", \"Stylist\"]\ndef categorize_role(career):\n    for kw in managerial_keywords:\n        if kw.lower() in career.lower():\n            return \"Managerial\"\n    for kw in creative_keywords:\n        if kw.lower() in career.lower():\n            return \"Creative\"\n    return np.nan\ndf[\"Job Role Category\"] = df[\"Career\"].apply(categorize_role)\ndf_filtered = df[df[\"Job Role Category\"].isin([\"Managerial\", \"Creative\"])]\nmanagerial_scores = df_filtered[df_filtered[\"Job Role Category\"]==\"Managerial\"][\"Abstract Reasoning\"].values\ncreative_scores = df_filtered[df_filtered[\"Job Role Category\"]==\"Creative\"][\"Abstract Reasoning\"].values\nfig, ax = plt.subplots(figsize=(7,5))\ndata = [managerial_scores, creative_scores]\nbox_colors = [\"#2077b4\", \"#a8369e\"]\nax.boxplot(data, patch_artist=True, boxprops=dict(facecolor=box_colors[0], color=box_colors[0]),\n           whiskerprops=dict(color=box_colors[0]), capprops=dict(color=box_colors[0]),\n           medianprops=dict(color=\"black\"), positions=[1], widths=0.6)\nax.boxplot([creative_scores], patch_artist=True, boxprops=dict(facecolor=box_colors[1], color=box_colors[1]),\n           whiskerprops=dict(color=box_colors[1]), capprops=dict(color=box_colors[1]),\n           medianprops=dict(color=\"black\"), positions=[2], widths=0.6)\nax.set_xticks([1,2])\nax.set_xticklabels([\"Managerial\", \"Creative\"])\nax.set_ylabel(\"Abstract Reasoning\")\nax.set_title(\"Abstract Reasoning Scores Comparison\\nManagerial vs Creative Roles\")\nfor i, scores in enumerate(data):\n    ax.text(i+1, np.max(scores)+0.18, f\"n = {len(scores)}\", ha=\"center\", fontsize=10, color=box_colors[i])\nax.grid(axis=\"y\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

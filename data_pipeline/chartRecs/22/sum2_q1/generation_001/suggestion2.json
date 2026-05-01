@@ -1,0 +1,39 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does citympg differ across the various fueltype categories?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin plot with overlaid mean and sample size annotation",
+      "design_rationale": "A violin plot combines kernel density estimation with quartile information, providing richer detail about the shape of the citympg distribution for each fueltype. Overlaying the mean and annotating sample sizes enables an immediate overview of typical values and distribution skewness for each group. This unconventional approach serves statistical curiosity, especially with only two categories, and makes subtle distributional differences between fueltypes salient, while also showing the density of values and the comparative number of observations.",
+      "target_insight": "Reveal whether citympg distributions are symmetric or skewed, and highlight average citympg plus the number of cars within each fueltype category.",
+      "output_fields": [
+        "fueltype",
+        "citympg"
+      ],
+      "chart_encodings": {
+        "x": "fueltype",
+        "y": "citympg",
+        "color": "fueltype (distinct colors for each violin)",
+        "size": null,
+        "other_aesthetics": "overlay mean point (dot), sample size text annotation, transparency, density fill"
+      }
+    },
+    "transformations": [
+      "Group df by 'fueltype' and extract distribution of 'citympg'",
+      "Calculate the mean of 'citympg' per 'fueltype'",
+      "Determine sample size for each 'fueltype' for annotation"
+    ],
+    "data_preparation_steps": [
+      "Convert 'citympg' to numeric if needed and filter out any missing values",
+      "Get distinct 'fueltype' categories",
+      "Generate color palette for 'diesel' and 'gasoline'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\nfueltypes = ['diesel', 'gasoline']\ncolors = {'diesel': '#2ca02c', 'gasoline': '#d62728'}\ndata = [df[df['fueltype'] == ft]['citympg'].values for ft in fueltypes]\nmeans = [np.mean(d) for d in data]\nsizes = [len(d) for d in data]\nplt.figure(figsize=(8,5))\nparts = plt.violinplot(data, positions=[0,1], showmeans=False, showmedians=True, showextrema=True, widths=0.85)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[fueltypes[i]])\n    pc.set_alpha(0.3)\n    pc.set_edgecolor(colors[fueltypes[i]])\nfor i, mean in enumerate(means):\n    plt.scatter(i, mean, color=colors[fueltypes[i]], s=80, marker='o', zorder=3, label=fueltypes[i] + ' mean')\nfor i, size in enumerate(sizes):\n    plt.text(i, 48, 'n=' + str(size), ha='center', color=colors[fueltypes[i]], fontsize=12, fontweight='bold')\nplt.xticks([0,1], fueltypes)\nplt.ylabel('citympg')\nplt.xlabel('fueltype')\nplt.title('Violin Plot of citympg by fueltype\\nShape, Mean, and Sample Size Comparison')\nplt.grid(axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

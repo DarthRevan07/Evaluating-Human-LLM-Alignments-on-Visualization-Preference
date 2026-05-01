@@ -1,0 +1,39 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What trends can be observed in the industry sector’s percentage of GDP over the years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Plot (Yearly Mean Industry%ofGDP)",
+      "design_rationale": "A line plot visualizing the change in the average 'Industry%ofGDP' across all countries for each year reveals high-level temporal patterns and global macroeconomic shifts in industrial sector importance. By aggregating across the dataset, viewers can observe overarching trends (increase, decrease, flattening) and potential inflection points. This overview is ideal given the large number of countries and years, providing a concise summary of global industrial sector dynamics.",
+      "target_insight": "Global trend in industry sector's percentage contribution to GDP over time—does industrial importance grow, stabilize, or decline, and during which periods?",
+      "output_fields": [
+        "Year GDP ",
+        "Industry%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "Industry%ofGDP (mean across all countries per year)",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Line width, gridlines, clear year markers"
+      }
+    },
+    "transformations": [
+      "Convert df['Industry%ofGDP'] to numeric, coercing errors",
+      "Group by df['Year GDP '] and calculate mean of df['Industry%ofGDP'] ignoring NaN",
+      "Sort result by df['Year GDP '] to ensure chronological order"
+    ],
+    "data_preparation_steps": [
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df_grouped = df.groupby('Year GDP ')['Industry%ofGDP'].mean().reset_index()",
+      "df_grouped = df_grouped.sort_values('Year GDP ')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf_grouped = df.groupby('Year GDP ')['Industry%ofGDP'].mean().reset_index()\ndf_grouped = df_grouped.sort_values('Year GDP ')\nfig, ax = plt.subplots(figsize=(8,5))\nax.plot(df_grouped['Year GDP '], df_grouped['Industry%ofGDP'], marker='o', linewidth=2)\nax.set_xlabel('Year GDP ')\nax.set_ylabel('Average Industry%ofGDP')\nax.set_title('Global Trend\\nAverage Industry Sector Percentage of GDP by Year')\nax.grid(True, linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

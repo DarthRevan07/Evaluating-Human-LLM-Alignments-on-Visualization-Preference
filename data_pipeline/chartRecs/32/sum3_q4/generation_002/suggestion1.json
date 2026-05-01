@@ -1,0 +1,40 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there noticeable differences in medical charges between males and females across various age ranges?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (with jittered strip overlay)",
+      "design_rationale": "A grouped boxplot with male and female as separate groups for each age bin allows for a clear and intuitive comparison of charge distributions across age ranges within each sex. Given charges are continuous with large range, boxplots summarize distributions, while overlaying stripplot shows outliers and density. This is effective for visually highlighting both central tendency, spread, and extreme values, and reveals differences in median and spread of medical charges by sex through adult life stages.",
+      "target_insight": "Shows whether males or females face higher typical (median) charges at different age ranges, and whether distributional spreads or outliers differ meaningfully.",
+      "output_fields": [
+        "age",
+        "sex",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age bins (binned from df['age'])",
+        "y": "df['charges']",
+        "color": "df['sex'] (categorical: male, female)",
+        "size": null,
+        "other_aesthetics": "Box width, alpha for strip overlays, age bins labeled"
+      }
+    },
+    "transformations": [
+      "Bin df['age'] into 5 evenly spaced age ranges (e.g. 18-25, 26-32, 33-39, 40-48, 49-64)",
+      "Group by both age bin and df['sex'], showing distribution of df['charges'] in each subgroup"
+    ],
+    "data_preparation_steps": [
+      "Create an 'age_bin' column by binning df['age'] using pd.cut with 5 bins",
+      "Sort age bins and assign readable labels",
+      "Ensure df['sex'] values are consistent",
+      "Prepare subgroups for plotting: each (age_bin, sex) pair"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\n# Bin age into 5 equal-width bins\nbins = [18, 25, 32, 39, 48, 64]\nlabels = ['18-25', '26-32', '33-39', '40-48', '49-64']\ndf['age_bin'] = pd.cut(df['age'], bins=bins, labels=labels, include_lowest=True)\n# Drop rows if any nulls (should be none per schema)\nplot_data = df[['age_bin', 'sex', 'charges']].dropna()\n# Prepare boxplot data: for each age_bin and sex\ngrouped = plot_data.groupby(['age_bin', 'sex'])\n# Build boxplot structure: list of charge arrays for each group\ncharge_arrays = []\nx_labels = []\nfor age_label in labels:\n    for sex_val in ['female', 'male']:\n        sub = plot_data[(plot_data['age_bin'] == age_label) & (plot_data['sex'] == sex_val)]\n        charge_arrays.append(sub['charges'].values)\n        x_labels.append(age_label + ' ' + sex_val)\n# Color mapping\nsex_colors = {'female': '#FC8D59', 'male': '#91BFDB'}\nbox_colors = [sex_colors['female'] if 'female' in lbl else sex_colors['male'] for lbl in x_labels]\nfig, ax = plt.subplots(figsize=(13, 6))\np = ax.boxplot(charge_arrays, patch_artist=True, widths=0.6, showfliers=False)\nfor patch, color in zip(p['boxes'], box_colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.6)\n# Jittered strips overlay\nfor i, arr in enumerate(charge_arrays):\n    if len(arr) > 0:\n        x = np.random.normal(i+1, 0.12, size=len(arr))\n        alpha_val = 0.22 if 'female' in x_labels[i] else 0.19\n        c = sex_colors['female'] if 'female' in x_labels[i] else sex_colors['male']\n        ax.scatter(x, arr, color=c, alpha=alpha_val, s=18, edgecolors='k', linewidths=0.5)\n# X-axis labels grouping\nax.set_xticks(range(1, len(x_labels)+1))\nax.set_xticklabels(x_labels, rotation=35, ha='right')\nax.set_xlabel('Age Range and Sex')\nax.set_ylabel('Medical Charges ($)')\nax.set_title('Distribution of Medical Charges by Age Range and Sex\\nBoxplot (with Jitter Overlay)')\nax.grid(True, axis='y', linestyle='--', alpha=0.23)\n# Legend box\nimport matplotlib.patches as mpatches\nhandles = [mpatches.Patch(color=sex_colors['female'], label='Female'), mpatches.Patch(color=sex_colors['male'], label='Male')]\nax.legend(handles=handles, title='Sex', loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

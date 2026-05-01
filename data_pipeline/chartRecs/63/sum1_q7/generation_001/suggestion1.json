@@ -1,0 +1,38 @@
+{
+  "table_name": "63",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Which product categories have the highest proportion of successful purchases?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Chart (Proportion of Success by ProductCategory)",
+      "design_rationale": "A bar chart is direct and intuitive for comparing proportions across discrete categories. By aggregating the purchase success rate for each 'ProductCategory', we enable clear ranking and rapid identification of high-performing product categories. Encoding product categories on the x-axis and success proportions on the y-axis provides a classic overview, suitable for the schema's categorical nature and the analytical question.",
+      "target_insight": "Which product categories stand out for their high proportion of successful purchases.",
+      "output_fields": [
+        "ProductCategory",
+        "PurchaseStatus"
+      ],
+      "chart_encodings": {
+        "x": "ProductCategory",
+        "y": "Success Proportion (mean of PurchaseStatus per ProductCategory)",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Bar width=0.7; gridlines; value annotation above bars for clarity"
+      }
+    },
+    "transformations": [
+      "Group df by 'ProductCategory', compute mean of 'PurchaseStatus' to get proportion of successful purchases per category",
+      "Sort result in descending order of success proportion"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby('ProductCategory', as_index=False)['PurchaseStatus'].mean()",
+      "df_grouped.rename(columns={'PurchaseStatus': 'SuccessProportion'}, inplace=True)",
+      "df_grouped.sort_values('SuccessProportion', ascending=False, inplace=True)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\63.csv')\ndf_grouped = df.groupby('ProductCategory', as_index=False)['PurchaseStatus'].mean()\ndf_grouped.rename(columns={'PurchaseStatus': 'SuccessProportion'}, inplace=True)\ndf_grouped.sort_values('SuccessProportion', ascending=False, inplace=True)\n\nfig, ax = plt.subplots(figsize=(8, 5))\nbar = ax.bar(df_grouped['ProductCategory'].astype(str), df_grouped['SuccessProportion'], width=0.7, color='#4f8cff')\nax.set_xlabel('ProductCategory')\nax.set_ylabel('Proportion of Successful Purchases')\nax.set_title('Product Categories by Proportion of Successful Purchases')\nax.grid(axis='y', alpha=0.35)\n\n# Annotate bar values\nfor idx, rect in enumerate(bar):\n    height = rect.get_height()\n    ax.text(rect.get_x() + rect.get_width()/2, height + 0.015, f'{height:.2f}', ha='center', va='bottom', fontsize=10)\n\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

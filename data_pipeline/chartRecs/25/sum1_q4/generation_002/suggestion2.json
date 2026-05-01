@@ -1,0 +1,39 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Which stocks have the highest turnover (crs.) and do they show significant price movement as indicated by % Chng?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot (Turnover vs % Chng, All Stocks)",
+      "design_rationale": "A scatter plot placing turnover (crs.) on the x-axis and % Chng on the y-axis lets us visualize the relationship between trading activity (value) and price movement across all 50 NIFTY-50 stocks. By encoding the absolute value of % Chng as the point size, we further highlight which high-turnover stocks experienced outsized price changes, regardless of direction. Symbol labels are overlaid for clarity—especially for stocks with both high turnover and extreme price movement.",
+      "target_insight": "Discover correlation (if any) between turnover and price change magnitude. Visually highlight stocks with both high value-traded and significant % price volatility.",
+      "output_fields": [
+        "Symbol",
+        "Turnover (crs.)",
+        "% Chng"
+      ],
+      "chart_encodings": {
+        "x": "Turnover (crs.) (numeric, float)",
+        "y": "% Chng",
+        "color": "% Chng using diverging colormap (coolwarm, centered at 0)",
+        "size": "abs(% Chng), larger means higher price movement magnitude",
+        "other_aesthetics": "Symbol labels on extreme turnover or % Chng points; grid; slightly transparent points for overlapping clarity; colorbar"
+      }
+    },
+    "transformations": [
+      "Convert df['Turnover (crs.)'] to numeric (float), handling commas",
+      "Compute point sizes based on the absolute value of df['% Chng'] (e.g., min size for 0, max size for highest |% Chng|, scaled for visual balance)",
+      "No aggregation—use all 50 stocks"
+    ],
+    "data_preparation_steps": [
+      "df['Turnover (crs.)'] = pd.to_numeric(df['Turnover (crs.)'].str.replace(',', ''), errors='coerce')",
+      "sizes = 80 + 420 * (np.abs(df['% Chng']) / np.abs(df['% Chng']).max())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['Turnover (crs.)'] = pd.to_numeric(df['Turnover (crs.)'].str.replace(',', ''), errors='coerce')\nsizes = 80 + 420 * (np.abs(df['% Chng']) / np.abs(df['% Chng']).max())\ncmap = mpl.colormaps['coolwarm']\nnorm = mpl.colors.TwoSlopeNorm(vcenter=0, vmin=df['% Chng'].min(), vmax=df['% Chng'].max())\nfig, ax = plt.subplots(figsize=(11, 7))\nsc = ax.scatter(\n    df['Turnover (crs.)'],\n    df['% Chng'],\n    c=df['% Chng'],\n    cmap=cmap,\n    norm=norm,\n    s=sizes,\n    alpha=0.72,\n    edgecolor='black',\n    linewidth=0.9\n)\nax.set_xlabel('Turnover (crs.)')\nax.set_ylabel('% Chng')\nax.set_title('Turnover vs % Chng for All NIFTY-50 Stocks\\nPoint Size = |% Chng| (Price Movement Magnitude)')\ncbar = plt.colorbar(sc, ax=ax)\ncbar.set_label('% Chng')\n# Annotate points with largest turnover or largest magnitude % Chng\nthreshold_turnover = df['Turnover (crs.)'].quantile(0.93)\nthreshold_chng = np.abs(df['% Chng']).quantile(0.93)\nfor i, row in df.iterrows():\n    if row['Turnover (crs.)'] >= threshold_turnover or np.abs(row['% Chng']) >= threshold_chng:\n        ax.text(row['Turnover (crs.)'] + 0.5, row['% Chng'], row['Symbol'], fontsize=9, va='center', ha='left', fontweight='bold')\nax.grid(True, linestyle='--', alpha=0.45)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

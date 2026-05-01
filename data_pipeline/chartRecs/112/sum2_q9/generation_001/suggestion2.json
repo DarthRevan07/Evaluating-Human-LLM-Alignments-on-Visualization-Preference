@@ -1,0 +1,39 @@
+{
+  "table_name": "112",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "What brands or drink names dominate the top ranks for caffeine content and how does their calorie content compare?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "scatter plot with color-by drink type",
+      "design_rationale": "This scatter plot visualizes the relationship between caffeine and calories across all drinks, highlighting dominant caffeine brands and types (energy drink vs coffee, etc.). Outliers are easily spotted, and color-coding reveals how drink type affects the interplay of calories and caffeine, offering both individual drink and category-level comparison.",
+      "target_insight": "How caffeine and calorie content interrelate across brands and types; which drinks achieve extreme values; whether certain drink types cluster in terms of stimulant and energy content.",
+      "output_fields": [
+        "drink",
+        "Caffeine (mg)",
+        "Calories",
+        "type"
+      ],
+      "chart_encodings": {
+        "x": "Caffeine (mg)",
+        "y": "Calories",
+        "color": "type",
+        "size": "null",
+        "other_aesthetics": "Point labels for extreme outliers; color-coding by drink type; transparency for overlap"
+      }
+    },
+    "transformations": [
+      "No aggregation; use entire dataset",
+      "Identify top 5 drinks by Caffeine (mg) for annotation"
+    ],
+    "data_preparation_steps": [
+      "df_plot = df.copy()",
+      "top_idx = df_plot['Caffeine (mg)'].nlargest(5).index"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf_plot = df.copy()\ndrink_types = df_plot['type'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(drink_types))\ntype_colors = {t: cmap(i) for i, t in enumerate(drink_types)}\nfig, ax = plt.subplots(figsize=(10, 7))\nfor t in drink_types:\n    idx = df_plot['type'] == t\n    ax.scatter(df_plot.loc[idx, 'Caffeine (mg)'], df_plot.loc[idx, 'Calories'],\n               color=type_colors[t], label=t, alpha=0.7, edgecolor='white', s=70)\nax.set_xlabel('Caffeine (mg)')\nax.set_ylabel('Calories')\nax.set_title('Caffeine vs. Calorie Content\\nColored by Drink Type')\nax.legend(title='Drink Type')\n\n# Annotate top 5 caffeine drinks\ntop_idx = df_plot['Caffeine (mg)'].nlargest(5).index\nfor i in top_idx:\n    x = df_plot.loc[i, 'Caffeine (mg)']\n    y = df_plot.loc[i, 'Calories']\n    label = df_plot.loc[i, 'drink']\n    ax.text(x+10, y+5, label, fontsize=9, color='black')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

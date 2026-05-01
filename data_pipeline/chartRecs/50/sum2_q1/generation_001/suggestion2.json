@@ -1,0 +1,39 @@
+{
+  "table_name": "50",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does the percentage of respondents influenced by each social platform vary across different segment types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Segment Type vs Social Platform Percentage Distribution)",
+      "design_rationale": "A heatmap provides a compact, matrix-style view of platform influence, showing relative average influence percentage for each platform within each segment type. This unconventional approach highlights where influence is strong or weak, making patterns and outliers easy to spot. The color encoding (intensity) maps directly to mean 'Percentage', the axes to segment and platform. It works well since both axes have a manageable number of unique categories, and provides richer context for cross-segment comparison.",
+      "target_insight": "Spot which segments are uniquely influenced by specific platforms, and identify high/low zones of platform influence—revealing cross-segment dependencies and anomalies.",
+      "output_fields": [
+        "Segment Type",
+        "Answer",
+        "Percentage"
+      ],
+      "chart_encodings": {
+        "x": "Answer",
+        "y": "Segment Type",
+        "color": "Percentage (mean)",
+        "size": null,
+        "other_aesthetics": "Colorbar labels show scale; ticks for all categories; explicit annotation of values inside heatmap"
+      }
+    },
+    "transformations": [
+      "Drop rows with null df['Answer'] to focus on actual platform influences.",
+      "Group by df['Segment Type'] and df['Answer'], aggregate mean df['Percentage'] for each pair.",
+      "Pivot result to get a 2D matrix with segment types as rows and platforms as columns."
+    ],
+    "data_preparation_steps": [
+      "df_filtered = df.dropna(subset=['Answer'])",
+      "df_pivot = df_filtered.groupby(['Segment Type', 'Answer'])['Percentage'].mean().reset_index().pivot(index='Segment Type', columns='Answer', values='Percentage')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\50.csv')\ndf_filtered = df.dropna(subset=['Answer'])\ndf_pivot = df_filtered.groupby(['Segment Type', 'Answer'])['Percentage'].mean().reset_index().pivot(index='Segment Type', columns='Answer', values='Percentage')\ncmap = mpl.colormaps['viridis']\nfig, ax = plt.subplots(figsize=(8,6))\nim = ax.imshow(df_pivot.values, cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_xticklabels(df_pivot.columns, rotation=30)\nax.set_yticklabels(df_pivot.index)\nfor i in range(len(df_pivot.index)):\n    for j in range(len(df_pivot.columns)):\n        value = df_pivot.values[i,j]\n        if not np.isnan(value):\n            ax.text(j, i, f'{value:.2f}', ha='center', va='center', color='white' if value>0.3 else 'black')\ncbar = plt.colorbar(im, ax=ax)\ncbar.ax.set_ylabel('Mean Influence Percentage')\nax.set_xlabel('Social Platform')\nax.set_ylabel('Segment Type')\nax.set_title('Heatmap of Platform Influence Percentage\\nAcross Segment Types')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

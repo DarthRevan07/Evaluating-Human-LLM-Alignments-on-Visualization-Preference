@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does car price differ across various carbody types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Strip (Swarm) Plot with Mean Overlay",
+      "design_rationale": "A strip plot (swarm style) lays out all individual cars' price points, colored by carbody, thus giving a sense of group density, spread, and overlap. Overlaying each group mean as a bold marker pinpoints central tendency without hiding detail. This also addresses potential multimodal distributions missed by boxplots. The approach is ideal given the dataset size and categorical nature of carbody.",
+      "target_insight": "Visualizes both the distribution and clustering of price points within each carbody type, while highlighting group mean for direct comparison.",
+      "output_fields": [
+        "carbody",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "carbody",
+        "y": "price",
+        "color": "carbody (distinct color per type)",
+        "size": "null",
+        "other_aesthetics": "alpha for dots; mean overlay (black diamond); high vertical aspect for price variation"
+      }
+    },
+    "transformations": [
+      "No aggregation for main plot: retain all individual records for 'carbody' and 'price'",
+      "Compute mean 'price' per 'carbody' for overlay"
+    ],
+    "data_preparation_steps": [
+      "Assign each carbody a distinct color from a categorical palette",
+      "Prepare groupwise mean price series",
+      "Organize x-axis order by mean price (descending)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\22.csv')\ncarbody_means = df.groupby('carbody')['price'].mean().sort_values(ascending=False)\ncarbody_order = carbody_means.index.tolist()\ncarbody_palette = dict(zip(carbody_order, plt.cm.tab10.colors[:len(carbody_order)]))\nfig, ax = plt.subplots(figsize=(10,8))\nfor idx, cb in enumerate(carbody_order):\n    yvals = df.loc[df['carbody']==cb, 'price'].values\n    ax.scatter(np.full(len(yvals), idx), yvals, alpha=0.58, color=carbody_palette[cb], edgecolor='#333333', linewidth=0.5, s=50, label=cb if idx==0 else None)\nfor idx, cb in enumerate(carbody_order):\n    mean_val = carbody_means[cb]\n    ax.scatter(idx, mean_val, marker='D', s=120, color='#000000', label='Mean' if idx==0 else None)\nax.set_xticks(range(len(carbody_order)))\nax.set_xticklabels(carbody_order)\nax.set_xlabel('carbody')\nax.set_ylabel('price')\nax.set_title('Individual Car Prices by Carbody Type with Mean Overlay')\nax.legend(loc='upper right', fontsize=8, frameon=False)\nax.grid(True, axis='y', linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

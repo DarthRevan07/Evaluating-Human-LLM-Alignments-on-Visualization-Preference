@@ -1,0 +1,39 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How does the duration of trips differ among travelers selecting hotels versus Airbnbs?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Swarm Plot (Dot Plot)",
+      "design_rationale": "A swarm plot (dot plot) provides a granular, high-detail visualization that shows each individual trip's duration as a point, visually grouped by accommodation type. With 139 rows and only 9 unique duration values, this chart avoids overplotting and gives the viewer a clear sense of exact distributions, overlap, and clustering patterns. This approach humanizes the data and reveals if both groups exhibit similar or highly differentiated spread and clustering of trip lengths.",
+      "target_insight": "Reveal the frequency and spread of individual trip durations, highlight potential modal values and show whether there are dominant duration clusters within each accommodation group.",
+      "output_fields": [
+        "Accommodation type",
+        "Duration (days)"
+      ],
+      "chart_encodings": {
+        "x": "Accommodation type (categorical position)",
+        "y": "Duration (days)",
+        "color": "Accommodation type (distinct colors for hotel and Airbnb)",
+        "size": "constant size per dot",
+        "other_aesthetics": "Jitter for spreading dots, transparency for overlapping points"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Accommodation type'] is 'Hotel' or 'Airbnb'",
+      "Remove rows where df['Duration (days)'] is null"
+    ],
+    "data_preparation_steps": [
+      "df_swarm = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]",
+      "df_swarm = df_swarm.dropna(subset=['Duration (days)'])",
+      "Assign x coordinate of 0 for hotel and 1 for Airbnb",
+      "Jitter x values using np.random.normal for spread"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_swarm = df[df['Accommodation type'].isin(['Hotel', 'Airbnb'])]\ndf_swarm = df_swarm.dropna(subset=['Duration (days)'])\nnp.random.seed(0)\nx_vals = df_swarm['Accommodation type'].map({'Hotel':0, 'Airbnb':1}).values\nx_jitter = x_vals + np.random.normal(0, 0.08, size=len(x_vals))\ncolors_map = {'Hotel': mpl.colormaps['Set2'](0), 'Airbnb': mpl.colormaps['Set2'](1)}\ncolors = df_swarm['Accommodation type'].map(colors_map)\nfig, ax = plt.subplots(figsize=(7,6))\nax.scatter(x_jitter, df_swarm['Duration (days)'], c=colors, alpha=0.7, s=60, edgecolor='k', linewidth=0.5)\nax.set_xticks([0,1])\nax.set_xticklabels(['Hotel','Airbnb'])\nax.set_ylabel('Duration (days)')\nax.set_xlabel('Accommodation type')\nax.set_title('Distribution of trip durations\\nfor Hotel vs Airbnb travelers')\nax.grid(True, axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

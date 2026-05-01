@@ -1,0 +1,38 @@
+{
+  "table_name": "65",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Which Consumer Demographic group is associated with the highest Sales Volume for each Product Category?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap offers an at-a-glance view of the relationship between Product Category and Consumer Demographics in terms of Sales Volume. The use of color intensity draws immediate attention to the maximum values, making it instantly obvious which demographic owns the largest sales share in each category. This unconventional representation is ideal for quickly identifying leading groups and for comparing patterns across all cells, which is more scalable for datasets with more groups or categories.",
+      "target_insight": "Spotlights the Consumer Demographic with the highest Sales Volume per Product Category as the cell with the strongest color, while simultaneously showing the distribution of sales for all combinations.",
+      "output_fields": [
+        "Product Category",
+        "Consumer Demographics",
+        "Sales Volume"
+      ],
+      "chart_encodings": {
+        "x": "Consumer Demographics",
+        "y": "Product Category",
+        "color": "Aggregate Sales Volume value (cell color)",
+        "size": null,
+        "other_aesthetics": "Colorbar to indicate Sales Volume scale"
+      }
+    },
+    "transformations": [
+      "Group df by ['Product Category', 'Consumer Demographics'] and sum 'Sales Volume'.",
+      "Pivot to make a matrix (rows: Product Category, columns: Consumer Demographics) with aggregated Sales Volume."
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Product Category', 'Consumer Demographics'], as_index=False)['Sales Volume'].sum()",
+      "heatmap_data = df_grouped.pivot(index='Product Category', columns='Consumer Demographics', values='Sales Volume')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\65.csv')\ndf_grouped = df.groupby(['Product Category', 'Consumer Demographics'], as_index=False)['Sales Volume'].sum()\nheatmap_data = df_grouped.pivot(index='Product Category', columns='Consumer Demographics', values='Sales Volume')\nfig, ax = plt.subplots(figsize=(8,6))\ncmap = mpl.colormaps['viridis']\ncax = ax.imshow(heatmap_data, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels(heatmap_data.columns)\nax.set_yticklabels(heatmap_data.index)\nax.set_xlabel('Consumer Demographics')\nax.set_ylabel('Product Category')\nplt.setp(ax.get_xticklabels(), rotation=40, ha='right', rotation_mode='anchor')\nfor i in range(heatmap_data.shape[0]):\n    for j in range(heatmap_data.shape[1]):\n        val = heatmap_data.iloc[i, j]\n        text_color = 'white' if val > heatmap_data.values.max()/2 else 'black'\n        ax.text(j, i, str(int(val)) if not np.isnan(val) else '', ha='center', va='center', color=text_color, fontsize=10)\ncbar = fig.colorbar(cax, ax=ax, orientation='vertical', pad=0.02)\ncbar.ax.set_ylabel('Total Sales Volume')\nax.set_title('Sales Volume Heatmap by Consumer Demographic and Product Category')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the distribution of traveler ages across various destinations?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Violin Plot",
+      "design_rationale": "A violin plot provides a nuanced view of the distribution of traveler ages for each destination, revealing both the density and spread (including potential multimodal age clusters) per location. Given 'Destination' is categorical with 59 unique values and 'Traveler age' is numeric (20.0 to 60.0), this chart enables comparisons across destinations and quickly surfaces unusual or diverse age distributions. It's excellent for highlighting differences between destinations in terms of traveler demographics.",
+      "target_insight": "This visualization exposes which destinations attract younger or older travelers, which locations have a narrow or wide age range, and identifies potential multimodal distributions of traveler ages.",
+      "output_fields": [
+        "Destination",
+        "Traveler age"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Traveler age",
+        "color": "Destination (categorical colors for each destination)",
+        "size": "null",
+        "other_aesthetics": "Alpha level set for density shading, rotated x-axis labels for legibility, ordering destinations by median traveler age for clearer comparison."
+      }
+    },
+    "transformations": [
+      "Remove rows with nulls in 'Destination' or 'Traveler age'",
+      "Sort destinations by the median 'Traveler age' to improve the visual comparison",
+      "Select top 10 destinations by trip count for readability, given the high cardinality of 'Destination'"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Destination', 'Traveler age'])",
+      "dest_median_age = df_clean.groupby('Destination')['Traveler age'].median().sort_values()",
+      "top_dest = df_clean['Destination'].value_counts().index[:10]",
+      "df_plot = df_clean[df_clean['Destination'].isin(top_dest)]",
+      "dest_order = dest_median_age.loc[top_dest].index.tolist()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Traveler age'])\ndest_median_age = df_clean.groupby('Destination')['Traveler age'].median().sort_values()\ntop_dest = df_clean['Destination'].value_counts().index[:10]\ndf_plot = df_clean[df_clean['Destination'].isin(top_dest)]\ndest_order = dest_median_age.loc[top_dest].index.tolist()\nfig, ax = plt.subplots(figsize=(12,7))\nparts = ax.violinplot([df_plot[df_plot['Destination']==d]['Traveler age'].values for d in dest_order], positions=np.arange(len(dest_order)), showmeans=False, showmedians=True, showextrema=True)\ncmap = mpl.colormaps['tab10']\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(cmap(i % 10))\n    pc.set_alpha(0.5)\nax.set_xticks(np.arange(len(dest_order)))\nax.set_xticklabels(dest_order, rotation=35, ha='right')\nax.set_ylabel('Traveler age')\nax.set_xlabel('Destination')\nax.set_title('Traveler age distributions across top 10 destinations\\n(violin plots reveal density and spread)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

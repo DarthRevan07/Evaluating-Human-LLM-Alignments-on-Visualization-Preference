@@ -1,0 +1,37 @@
+{
+  "table_name": "37",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there noticeable differences in spending behavior between genders?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot provides a clear visual summary of the distribution of spending scores for each gender, allowing direct comparison of medians, interquartile ranges, and the presence of outliers. This approach is effective given the schema contains two distinct gender categories and a numeric spending score, and is suitable for a table of this size (200 rows).",
+      "target_insight": "Observe differences in spending score distribution between Female and Male customers, revealing central tendency, spread, and outliers for each gender.",
+      "output_fields": [
+        "Gender",
+        "Spending Score (1-100)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Spending Score (1-100)",
+        "color": "Gender (each box colored differently)",
+        "size": null,
+        "other_aesthetics": "Box width; notch for confidence interval; themed pastel colors"
+      }
+    },
+    "transformations": [
+      "Group df by Gender and extract all values of Spending Score (1-100) for each group"
+    ],
+    "data_preparation_steps": [
+      "Load the data from csv_c2_sec\\37.csv into DataFrame df",
+      "Create a list of spending scores for each gender",
+      "Set up color mapping for each gender"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\37.csv')\ngenders = df['Gender'].unique()\nscore_data = [df[df['Gender']==gender]['Spending Score (1-100)'].values for gender in genders]\ncolors = ['#FFC0CB', '#87CEFA']  # pastel pink, pastel blue\nfig, ax = plt.subplots(figsize=(7, 5))\nbox = ax.boxplot(score_data, labels=genders, patch_artist=True, notch=True)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\n    patch.set_alpha(0.7)\nax.set_title('Distribution of Spending Score (1-100) by Gender')\nax.set_ylabel('Spending Score (1-100)')\nax.set_xlabel('Gender')\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

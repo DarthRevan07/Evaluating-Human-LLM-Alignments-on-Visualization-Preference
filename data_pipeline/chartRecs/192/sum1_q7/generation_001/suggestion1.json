@@ -1,0 +1,39 @@
+{
+  "table_name": "192",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Are there any outliers in the Temperature and Luminosity relationship?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Logarithmic Luminosity Axis and Outlier Annotation",
+      "design_rationale": "A scatter plot directly visualizes the relationship between Temperature (K) and Luminosity(L/Lo) at the level of individual stars. Given the extreme range and skew in Luminosity (minimum 8e-05, maximum 849420), a log-scale is vital to reveal structure and potential outliers. Outliers appear as points far from local density clusters. Annotating top and bottom outliers makes anomalies explicit. Color encoding by Spectral Class provides astrophysical context, showing if outliers are concentrated in certain star classes.",
+      "target_insight": "Clear visualization of outliers in the Temperature-Luminosity relationship, identification if outliers correspond to unusual Spectral Classes.",
+      "output_fields": [
+        "Temperature (K)",
+        "Luminosity(L/Lo)",
+        "Spectral Class"
+      ],
+      "chart_encodings": {
+        "x": "Temperature (K)",
+        "y": "Luminosity(L/Lo) (log scale)",
+        "color": "Spectral Class mapped to discrete colormap",
+        "size": "null",
+        "other_aesthetics": "Annotate extreme values; alpha=0.75 for clarity"
+      }
+    },
+    "transformations": [
+      "Apply log10 transformation to df['Luminosity(L/Lo)'] for better spread and more robust outlier detection",
+      "Identify top 3 and bottom 3 outliers according to log-transformed luminosity for annotation"
+    ],
+    "data_preparation_steps": [
+      "Create df['Luminosity_log'] = np.log10(df['Luminosity(L/Lo)'])",
+      "Sort df by 'Luminosity_log' to find lowest and highest values",
+      "Map Spectral Class to colors using mpl.colormaps['tab10']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\192.csv\")\ndf['Luminosity_log'] = np.log10(df['Luminosity(L/Lo)'])\nsc_classes = df['Spectral Class'].unique()\nsc_classes_sorted = sorted(sc_classes)\ncolor_dict = {sc: mpl.colormaps['tab10'](i / max(1,len(sc_classes_sorted)-1)) for i, sc in enumerate(sc_classes_sorted)}\ncolors = df['Spectral Class'].map(color_dict)\nfig, ax = plt.subplots(figsize=(9, 6))\nax.scatter(df['Temperature (K)'], df['Luminosity_log'], c=colors, alpha=0.75, edgecolor=\"k\", linewidth=0.5, s=45)\nfor idx in df.nsmallest(3, 'Luminosity_log').index:\n    temp = df.loc[idx, 'Temperature (K)']\n    lum_log = df.loc[idx, 'Luminosity_log']\n    ax.annotate(\"Low outlier\", xy=(temp, lum_log), xytext=(temp+300, lum_log+0.2), arrowprops=dict(arrowstyle=\"->\", color=\"red\"), fontsize=8, color=\"red\")\nfor idx in df.nlargest(3, 'Luminosity_log').index:\n    temp = df.loc[idx, 'Temperature (K)']\n    lum_log = df.loc[idx, 'Luminosity_log']\n    ax.annotate(\"High outlier\", xy=(temp, lum_log), xytext=(temp-500, lum_log-0.5), arrowprops=dict(arrowstyle=\"->\", color=\"blue\"), fontsize=8, color=\"blue\")\nlegend_labels = [plt.Line2D([0], [0], marker='o', color='w', label=sc, markerfacecolor=color_dict[sc], markersize=8) for sc in sc_classes_sorted]\nax.legend(handles=legend_labels, title=\"Spectral Class\", fontsize=8, title_fontsize=9, loc=\"upper left\")\nax.set_xlabel(\"Temperature (K)\")\nax.set_ylabel(\"Log10 Luminosity(L/Lo)\")\ntitle_str = \"Temperature vs Luminosity:\\nOutlier Highlighting & Spectral Class Colors\"\nax.set_title(title_str)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

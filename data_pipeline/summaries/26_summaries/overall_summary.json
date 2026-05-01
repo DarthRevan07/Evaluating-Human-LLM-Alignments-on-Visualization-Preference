@@ -1,0 +1,31 @@
+{
+  "table_name": "Tesla stock data from 2010 to 2020",
+  "file_index": "26",
+  "original_filename": "26.csv",
+  "total_rows": 2416,
+  "total_columns": 7,
+  "column_names": [
+    "Date",
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Adj Close",
+    "Volume"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\26_summaries",
+  "source_file": "csv_c2_sec\\26.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\26_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

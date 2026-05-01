@@ -1,0 +1,46 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there any publishers whose games consistently perform well in a particular region compared to others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot shows the distribution and consistency of sales for a publisher's games in each region. It visualizes not only the median and spread but also potential outliers, revealing whether games from a publisher perform consistently (i.e., consistently high sales, low variance) or erratically in a region. Displaying the top 5 publishers by global sales, we can directly compare their sales spread across all regions.",
+      "target_insight": "Discover whether leading publishers have more consistent or higher-performing games in one region compared to others, and compare the sales variability within publishers across regions.",
+      "output_fields": [
+        "Publisher",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Region (NA_Sales, EU_Sales, JP_Sales, Other_Sales)",
+        "y": "Sales distribution per game",
+        "color": "Publisher (distinct color for each)",
+        "size": "null",
+        "other_aesthetics": "Multiple boxplots per region; legend for publisher mapping"
+      }
+    },
+    "transformations": [
+      "Drop rows where df['Publisher'] is null",
+      "Group df by df['Publisher'], aggregate mean for df['Global_Sales']",
+      "Select top 5 publishers by mean global sales",
+      "For each region (NA_Sales, EU_Sales, JP_Sales, Other_Sales), gather all sales per game for each selected publisher",
+      "Reshape data for boxplot: Each region has 5 boxplots (one per publisher)"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Publisher'])",
+      "global_means = df_clean.groupby('Publisher')['Global_Sales'].mean().sort_values(ascending=False).head(5)",
+      "publishers = list(global_means.index)",
+      "region_list = ['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']",
+      "box_data = {}\nfor region in region_list:\n    box_data[region] = [df_clean.loc[df_clean['Publisher']==pub, region].values for pub in publishers]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\122.csv')\ndf_clean = df.dropna(subset=['Publisher'])\nglobal_means = df_clean.groupby('Publisher')['Global_Sales'].mean().sort_values(ascending=False).head(5)\npublishers = list(global_means.index)\nregion_list = ['NA_Sales', 'EU_Sales', 'JP_Sales', 'Other_Sales']\nbox_data = {}\nfor region in region_list:\n    box_data[region] = [df_clean.loc[df_clean['Publisher']==pub, region].values for pub in publishers]\ncolors = mpl.colormaps['tab10'].colors[:5]\nfig, axes = plt.subplots(1,4, figsize=(16,6), sharey=True)\nfor i, region in enumerate(region_list):\n    bp = axes[i].boxplot(box_data[region], patch_artist=True, labels=publishers)\n    for patch, color in zip(bp['boxes'], colors):\n        patch.set_facecolor(color)\n    axes[i].set_title(region + ' Sales', fontsize=14)\n    axes[i].tick_params(axis='x', labelrotation=45)\naxes[0].set_ylabel('Sales per Game (Millions)', fontsize=12)\nplt.suptitle('Regional Sales Distribution by Publisher\\n(Top 5 Publishers)', fontsize=16)\nlegend_elements = [mpl.patches.Patch(facecolor=colors[i], label=publishers[i]) for i in range(5)]\nfig.legend(handles=legend_elements, title='Publisher', loc='upper right')\nplt.tight_layout(rect=[0,0,0.95,0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,38 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How does car price differ across various carbody types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot is ideal for comparing the distribution of prices across carbody types, showing median, interquartile range, potential outliers, and spread within each group. This approach leverages the categorical nature of 'carbody' and the continuous numeric nature of 'price' to provide a comprehensive overview of how prices vary, revealing not just averages but also variability and extreme values. It accommodates the moderate number of carbody categories and the relatively large dataset size (205 rows), ensuring robust statistical storytelling.",
+      "target_insight": "The boxplot reveals the typical price range, median, variance, and presence of outliers for each carbody category, highlighting whether certain carbody types command consistently higher or lower prices and if some categories have greater price dispersion.",
+      "output_fields": [
+        "carbody",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "carbody",
+        "y": "price",
+        "color": "carbody (distinct color for each, grouped by x)",
+        "size": null,
+        "other_aesthetics": "box width (uniform), outlier markers (styled), gridlines for readability"
+      }
+    },
+    "transformations": [
+      "Group df by 'carbody' and extract corresponding 'price' values for each carbody category",
+      "Prepare a list of price arrays, one per carbody type, for plotting"
+    ],
+    "data_preparation_steps": [
+      "df_box = df.groupby('carbody')['price'].apply(list).reindex(df['carbody'].unique())",
+      "carbody_categories = df['carbody'].unique()",
+      "price_data = [df[df['carbody'] == c]['price'] for c in carbody_categories]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Data loading\n df = pd.read_csv('csv_c_squared\\22.csv')\n\n# Prepare boxplot data by extracting price arrays for each carbody\ncarbody_categories = df['carbody'].unique()\nprice_data = [df[df['carbody'] == c]['price'] for c in carbody_categories]\n\n# Plot\nfig, ax = plt.subplots(figsize=(9,6))\nbox = ax.boxplot(price_data, patch_artist=True, labels=carbody_categories, showfliers=True, medianprops={'color':'black'}, boxprops={'facecolor':'lightblue','edgecolor':'navy'}, whiskerprops={'color':'navy'}, capprops={'color':'navy'}, flierprops={'marker':'o','markersize':6,'markerfacecolor':'red','alpha':0.5})\n\nax.set_xlabel('carbody', fontsize=12)\nax.set_ylabel('price', fontsize=12)\nax.set_title('Distribution of Car Prices Across Carbody Types', fontsize=14)\nax.grid(True, linestyle='--', linewidth=0.7, alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

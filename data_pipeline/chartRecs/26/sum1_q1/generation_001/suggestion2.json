@@ -1,0 +1,40 @@
+{
+  "table_name": "26",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How did Tesla's closing price change over the ten-year period, and were there any noticeable long-term upward or downward trends?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot Matrix (Yearly Distribution of Closing Prices)",
+      "design_rationale": "A boxplot matrix displays the distribution, median, and volatility of Tesla's closing price for each year. This summarization helps visualize how price spread, central tendency, and outlier occurrence change across years—pinpointing both gradual and abrupt shifts and revealing long-term patterns in price behavior.",
+      "target_insight": "This visualization shows year-by-year closing price distributions, emphasizing increased volatility or major jumps during specific years, and clearly delineates upward trends in medians or changes in spread due to market events.",
+      "output_fields": [
+        "Year",
+        "Close"
+      ],
+      "chart_encodings": {
+        "x": "Year (categorical, ordered)",
+        "y": "Close (numeric)",
+        "color": "Year grouping (distinct colors per box)",
+        "size": "null",
+        "other_aesthetics": "outlier markers, gridlines, vertical orientation"
+      }
+    },
+    "transformations": [
+      "Convert df['Date'] to pandas datetime",
+      "Extract year from df['Date'] and assign to df['Year']",
+      "Group df['Close'] by year for boxplot distribution"
+    ],
+    "data_preparation_steps": [
+      "df['Date'] = pd.to_datetime(df['Date'])",
+      "df['Year'] = df['Date'].dt.year",
+      "years = np.sort(df['Year'].unique())",
+      "Prepare df_box = [df[df['Year']==y]['Close'].values for y in years]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\26.csv')\ndf['Date'] = pd.to_datetime(df['Date'])\ndf['Year'] = df['Date'].dt.year\nyears = np.sort(df['Year'].unique())\ndf_box = [df[df['Year']==y]['Close'].values for y in years]\nn_colors = len(years)\ncmap = mpl.colormaps['viridis'].resampled(n_colors)\n\nfig, ax = plt.subplots(figsize=(12,7))\nbox = ax.boxplot(df_box,\n                 patch_artist=True,\n                 labels=[str(y) for y in years],\n                 showfliers=True,\n                 medianprops={'color':'black','linewidth':2})\nfor patch, idx in zip(box['boxes'], range(n_colors)):\n    patch.set_facecolor(cmap(idx))\n    patch.set_alpha(0.7)\nfor whisker in box['whiskers']:\n    whisker.set_color('gray')\nfor cap in box['caps']:\n    cap.set_color('gray')\nax.set_xlabel('Year')\nax.set_ylabel('Close')\nax.set_title('Yearly Distribution of Tesla Closing Prices (2010–2020)\\nBoxplots Show Median, Spread, and Outliers Across Years')\nax.grid(True, axis='y', alpha=0.2)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

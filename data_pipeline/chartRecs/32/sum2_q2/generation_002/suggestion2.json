@@ -1,0 +1,37 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What is the relationship between BMI and medical charges?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot of charges grouped by BMI category",
+      "design_rationale": "To explore nonlinear or threshold effects, charges are compared across BMI categories: Underweight, Healthy, Overweight, and Obese. This aggregation uses BMI's clinical interpretation and exposes how median charges and spread change as BMI crosses risk thresholds. Boxplots succinctly reveal variability, outliers, and medians for each group, supporting risk-class comparison, useful for insurance and healthcare decision-making.",
+      "target_insight": "How do typical and extreme medical charges differ across BMI risk categories? Are higher BMI categories associated with sharply higher costs, more variability, or distinct outlier behavior?",
+      "output_fields": [
+        "bmi",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "BMI category (derived from 'bmi')",
+        "y": "charges",
+        "color": "category color",
+        "size": null,
+        "other_aesthetics": "boxplot whiskers and outlier dots"
+      }
+    },
+    "transformations": [
+      "Categorize 'bmi' into clinical groups: Underweight (<18.5), Healthy (18.5-24.9), Overweight (25-29.9), Obese (>=30)",
+      "Aggregate 'charges' per BMI category for boxplot representation"
+    ],
+    "data_preparation_steps": [
+      "Create new column 'BMI category' based on 'bmi' clinical cutoffs",
+      "Prepare data lists for boxplot from each category's charges"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\nbins = [0, 18.5, 24.9, 29.9, np.inf]\nlabels = ['Underweight', 'Healthy', 'Overweight', 'Obese']\ndf['BMI category'] = pd.cut(df['bmi'], bins=bins, labels=labels, right=True)\nbox_data = [df[df['BMI category'] == cat]['charges'] for cat in labels]\nbox_colors = ['#8c564b', '#2ca02c', '#ff7f0e', '#9467bd']\nfig, ax = plt.subplots(figsize=(8,6))\nbox = ax.boxplot(box_data, patch_artist=True, labels=labels, showfliers=True)\nfor patch, color in zip(box['boxes'], box_colors):\n    patch.set_facecolor(color)\nax.set_xlabel('BMI category')\nax.set_ylabel('charges')\nax.set_title('Medical Charges by BMI Category\\nBoxplot by clinical threshold')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

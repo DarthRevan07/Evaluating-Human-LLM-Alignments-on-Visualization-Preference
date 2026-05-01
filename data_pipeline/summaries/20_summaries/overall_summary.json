@@ -1,0 +1,32 @@
+{
+  "table_name": "Best Artworks of All Time",
+  "file_index": "20",
+  "original_filename": "20.csv",
+  "total_rows": 50,
+  "total_columns": 8,
+  "column_names": [
+    "id",
+    "name",
+    "years",
+    "genre",
+    "nationality",
+    "bio",
+    "wikipedia",
+    "paintings"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\20_summaries",
+  "source_file": "csv_c2_sec\\20.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\20_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

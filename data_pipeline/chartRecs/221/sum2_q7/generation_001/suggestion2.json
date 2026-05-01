@@ -1,0 +1,43 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which destinations see higher transportation costs, and is this linked to specific transportation types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Transportation Cost Distribution by Transportation Type, Faceted by Destination)",
+      "design_rationale": "A boxplot for each transportation type (grouped and colored) and faceted by destination enables exploration of whether certain transportation types are associated with higher costs in specific destinations. This allows detection of cost variability and potential linkage between cost and mode. Faceting by destination (multi-panel grid for most expensive destinations, e.g., top 6) balances detail and readability. Boxplots are ideal for showing spread, medians, and outliers in cost across transportation modes, illuminating the second part of the question (linkage).",
+      "target_insight": "Reveals whether certain transportation types contribute disproportionately to high costs in top destinations; shows cost distribution and variability for each mode and destination.",
+      "output_fields": [
+        "Destination",
+        "Transportation type",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "'Transportation type' (categorical)",
+        "y": "'Transportation cost' (numeric)",
+        "color": "Transportation type (distinct colors for each type)",
+        "size": "null",
+        "other_aesthetics": "Facets (subplots) for each destination; box width const; alpha=0.7; set number of columns for clarity; legend off labeled panels"
+      }
+    },
+    "transformations": [
+      "Remove rows with missing values in 'Destination', 'Transportation type', or 'Transportation cost'",
+      "Extract numeric values from 'Transportation cost' (removing currency symbols/text)",
+      "Select top N destinations by average transportation cost (N=6 for boxplot panels)",
+      "Subset original data for these destinations"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=[\"Destination\", \"Transportation type\", \"Transportation cost\"])",
+      "df[\"Transportation cost\"] = df[\"Transportation cost\"].str.replace('[^\\d\\.]', '', regex=True).astype(float)",
+      "df_dest_avg = df.groupby(\"Destination\")[\"Transportation cost\"].mean().reset_index()",
+      "dest_top = df_dest_avg.sort_values(\"Transportation cost\", ascending=False)[\"Destination\"].head(6).tolist()",
+      "df_plot = df[df[\"Destination\"].isin(dest_top)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf = df.dropna(subset=[\"Destination\", \"Transportation type\", \"Transportation cost\"])\ndf[\"Transportation cost\"] = df[\"Transportation cost\"].str.replace('[^\\d\\.]', '', regex=True).astype(float)\ndf_dest_avg = df.groupby(\"Destination\")[\"Transportation cost\"].mean().reset_index()\ndest_top = df_dest_avg.sort_values(\"Transportation cost\", ascending=False)[\"Destination\"].head(6).tolist()\ndf_plot = df[df[\"Destination\"].isin(dest_top)]\n\ntrans_types = df_plot[\"Transportation type\"].unique()\ncmap = mpl.colormaps[\"tab10\"]\ncolor_dict = {tt: cmap(i) for i, tt in enumerate(trans_types)}\n\nfig, axes = plt.subplots(2, 3, figsize=(16, 8), sharey=True)\naxes_flat = axes.flatten()\n\nfor idx, dest in enumerate(dest_top):\n    ax = axes_flat[idx]\n    df_dest = df_plot[df_plot[\"Destination\"] == dest]\n    data = [df_dest[df_dest[\"Transportation type\"] == tt][\"Transportation cost\"].values for tt in trans_types]\n    box = ax.boxplot(data, patch_artist=True, widths=0.7)\n    for patch, tt in zip(box['boxes'], trans_types):\n        patch.set_facecolor(color_dict[tt])\n        patch.set_alpha(0.7)\n    ax.set_xticks(np.arange(1, len(trans_types) + 1))\n    ax.set_xticklabels(trans_types, rotation=30, fontsize=10)\n    ax.set_title(dest, fontsize=12)\n    ax.grid(axis=\"y\", linestyle=\"--\", alpha=0.5)\n\nfig.suptitle(\"Transportation Cost Distribution by Type in Top 6 Costliest Destinations\", fontsize=16)\nfig.text(0.5, 0.03, \"Transportation type\", ha=\"center\", fontsize=13)\nfig.text(0.05, 0.5, \"Transportation cost (USD)\", va=\"center\", rotation=\"vertical\", fontsize=13)\n\nplt.tight_layout(rect=[0, 0.05, 1, 0.95])\nplt.show()"
+  },
+  "schema_based": true
+}

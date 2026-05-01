@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which stocks have demonstrated the largest positive or negative percentage changes over the past 30 days, and how do these changes compare to their 365-day percentage changes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "scatterplot with color and annotation",
+      "design_rationale": "Scatterplots are ideal for visualizing the relationship between two continuous variables per category: here, the 30-day vs 365-day percentage changes for each stock. This helps reveal if stocks with big gains/losses recently are consistent with their longer-term performance, capture outliers, reversals, and clusters. Adding color encoding to highlight largest movers, and annotating extreme points, makes the visual both overview and focused.",
+      "target_insight": "Expose correlation, outliers, and stocks whose short-term performance deviates from annual trend; highlight stocks with largest absolute 30-day changes.",
+      "output_fields": [
+        "Symbol",
+        "30 d % chng",
+        "365 d % chng"
+      ],
+      "chart_encodings": {
+        "x": "'365 d % chng' (annual percentage change)",
+        "y": "'30 d % chng' (recent percentage change)",
+        "color": "Cyclic color intensity by absolute '30 d % chng' (largest movers stand out), using colormap; highlight with annotation",
+        "size": "null",
+        "other_aesthetics": "gridlines, annotation of extreme points (top 2 positive and negative); labels on highlighted stocks"
+      }
+    },
+    "transformations": [
+      "Calculate absolute values for '30 d % chng' for all stocks to highlight largest movers",
+      "Identify top 2 positive and top 2 negative '30 d % chng' values for annotation",
+      "No filtering: show all NIFTY-50 stocks in the scatterplot for comprehensive view"
+    ],
+    "data_preparation_steps": [
+      "df['abs_30d'] = df['30 d % chng'].abs()",
+      "df_top_pos = df.nlargest(2, '30 d % chng')",
+      "df_top_neg = df.nsmallest(2, '30 d % chng')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['abs_30d'] = df['30 d % chng'].abs()\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['abs_30d'].min(), vmax=df['abs_30d'].max())\nfig, ax = plt.subplots(figsize=(10, 7))\n# Scatter\nsc = ax.scatter(df['365 d % chng'], df['30 d % chng'], c=df['abs_30d'], cmap=cmap, norm=norm, edgecolor='k', s=70)\n# Grid\nax.grid(True, lw=0.5, linestyle='--', alpha=0.7)\n# Highlight top movers\ndf_top_pos = df.nlargest(2, '30 d % chng')\ndf_top_neg = df.nsmallest(2, '30 d % chng')\nfor idx, row in df_top_pos.iterrows():\n    ax.scatter(row['365 d % chng'], row['30 d % chng'], color='#34a853', s=150, marker='v', zorder=3)\n    ax.text(row['365 d % chng']+1, row['30 d % chng']+0.5, row['Symbol'], color='#34a853', fontsize=12, weight='bold')\nfor idx, row in df_top_neg.iterrows():\n    ax.scatter(row['365 d % chng'], row['30 d % chng'], color='#ea4335', s=150, marker='^', zorder=3)\n    ax.text(row['365 d % chng']+1, row['30 d % chng']-1, row['Symbol'], color='#ea4335', fontsize=12, weight='bold')\n# Colorbar\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\ncbar = plt.colorbar(sm, ax=ax)\ncbar.set_label('Absolute 30-Day % Change')\n# Axes labeling\nax.set_xlabel('365 d % chng (Annual % Change)')\nax.set_ylabel('30 d % chng (Last 30 Days % Change)')\ntitle = 'Scatterplot: 30-Day vs 365-Day % Change, Highlighting Largest NIFTY-50 Movers'\nax.set_title(title)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

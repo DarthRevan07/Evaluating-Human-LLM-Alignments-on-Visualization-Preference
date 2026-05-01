@@ -1,0 +1,41 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do certain genres cluster within specific nationalities or spread across multiple countries?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Heatmap (Genre vs Nationality)",
+      "design_rationale": "A heatmap allows for an immediate visual inspection of clustering versus diversity: genres listed along one axis and nationalities along the other. High values indicate genre concentration within a nationality, while dispersed counts across different countries suggest genre spread. This approach is effective with categorical data of modest cardinality (31 genres, 17 nationalities) and communicates the breadth or focus of artistic movements.",
+      "target_insight": "Which genres are tightly associated with specific nationalities, and which genres span multiple national identities?",
+      "output_fields": [
+        "genre",
+        "nationality"
+      ],
+      "chart_encodings": {
+        "x": "nationality",
+        "y": "genre",
+        "color": "Count of artworks for each (genre, nationality) pair",
+        "size": null,
+        "other_aesthetics": "Color intensity to represent count; genre and nationality labels rotated for readability; colorbar included for quantitative interpretation"
+      }
+    },
+    "transformations": [
+      "Split values in df['genre'] if they contain multiple genres (e.g., comma-separated)",
+      "Create new rows pairing each genre with its nationality for each artwork",
+      "Group by ['genre', 'nationality'] and aggregate count of artworks",
+      "Pivot the grouped DataFrame into a matrix with genres as rows and nationalities as columns, fill missing pairs with zero"
+    ],
+    "data_preparation_steps": [
+      "Explode df['genre'] if entries contain multiple genres",
+      "Build a DataFrame with columns ['genre', 'nationality'] for each unique (genre, nationality) pair",
+      "Count occurrences for each (genre, nationality)",
+      "Pivot the table for heatmap input"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\ndf_exploded = df.copy()\ndf_exploded['genre'] = df_exploded['genre'].str.split(',')\ndf_exploded = df_exploded.explode('genre')\ndf_exploded['genre'] = df_exploded['genre'].str.strip()\ngrouped = df_exploded.groupby(['genre', 'nationality']).size().reset_index(name='count')\ndf_pivot = grouped.pivot(index='genre', columns='nationality', values='count').fillna(0)\nfig, ax = plt.subplots(figsize=(12, 10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(df_pivot.values, aspect='auto', cmap=cmap)\nax.set_xticks(np.arange(len(df_pivot.columns)))\nax.set_xticklabels(df_pivot.columns, rotation=60, ha='right')\nax.set_yticks(np.arange(len(df_pivot.index)))\nax.set_yticklabels(df_pivot.index)\ncbar = fig.colorbar(im, ax=ax)\ncbar.set_label('Number of artworks')\nplt.title('Heatmap of Genre Clustering by Nationality\\n(Do genres cluster by country or spread?)')\nplt.xlabel('nationality')\nplt.ylabel('genre')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

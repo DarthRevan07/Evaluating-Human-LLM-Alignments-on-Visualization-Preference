@@ -1,0 +1,70 @@
+{
+  "table_name": "2",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there any anomalies or outliers in the time series of methane emissions for the Waste sector in any country?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot + outlier highlighting (per-country, per-year)",
+      "design_rationale": "A boxplot allows visual identification of outliers for each year across all countries specifically in the 'Waste' sector. Since the schema has full time-series columns as individual fields, we summarize all countries for each year as a distribution and mark countries that are outliers according to IQR rules. This provides a clean overview and surfaces anomalies (outlying emissions values) over time, consistent with the analytical question.",
+      "target_insight": "Which countries, in which years, had anomalously high or low Waste sector methane emissions compared to the global range for that year.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (from '1990' to '2018')",
+        "y": "Methane emissions (MTCO2e, numeric value in each year column)",
+        "color": "Red for marked outlier points, blue for all others",
+        "size": "Null",
+        "other_aesthetics": "Boxplot for per-year distribution, jittered points for actual country values (with outliers highlighted), grid for clarity"
+      }
+    },
+    "transformations": [
+      "Filter df to rows where Sector == 'Waste'",
+      "Melt yearly columns ('1990' to '2018') into a long format: columns=['Country', 'Year', 'Methane Emissions']",
+      "For each 'Year', compute IQR (Q1, Q3) and determine outlier threshold (values < Q1-1.5*IQR or > Q3+1.5*IQR); flag country-year pairs as outlier if value is outside",
+      "Prepare per-year boxplot data (all emissions values for that year across all countries)"
+    ],
+    "data_preparation_steps": [
+      "waste = df[df['Sector'] == 'Waste'].copy()",
+      "df_melt = waste.melt(id_vars=['Country'], value_vars=[str(y) for y in range(1990, 2019)], var_name='Year', value_name='Methane Emissions')",
+      "For each Year, compute Q1, Q3, IQR, lower, upper bounds; assign boolean 'is_outlier' to df_melt",
+      "Split df_melt for plotting: per-year lists of emissions and outlier points"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\nwaste = df[df['Sector'] == 'Waste'].copy()\nyears = [str(y) for y in range(1990,2019)]\ndf_melt = waste.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Methane Emissions')\ndf_melt['Year'] = df_melt['Year'].astype(int)\nboxplot_data = [df_melt[df_melt['Year'] == y]['Methane Emissions'].dropna().values for y in range(1990,2019)]\noutlier_rows = []\nfor idx, y in enumerate(range(1990,2019)):\n    vals = np.array(boxplot_data[idx])\n    if len(vals) > 0:\n        q1 = np.percentile(vals, 25)\n        q3 = np.percentile(vals, 75)\n        iqr = q3 - q1\n        lower = q1 - 1.5 * iqr\n        upper = q3 + 1.5 * iqr\n        mask = (df_melt['Year']==y) & ((df_melt['Methane Emissions'] < lower) | (df_melt['Methane Emissions'] > upper))\n        outlier_rows.append(df_melt[mask])\noutlier_df = pd.concat(outlier_rows) if outlier_rows else pd.DataFrame(columns=df_melt.columns)\nplt.figure(figsize=(14,6))\nbp = plt.boxplot(boxplot_data, positions=np.arange(1990,2019), notch=True, patch_artist=True, showbox=True, whiskerprops={'color':'#999999'}, boxprops={'facecolor':'#aec6cf','color':'#333344'}, medianprops={'color':'#cc0000','linewidth':2}, showmeans=False, widths=0.6, flierprops={'marker': '', 'markersize':0})\nplt.grid(axis='y', linestyle=':', alpha=0.4)\nplt.scatter(df_melt['Year'], df_melt['Methane Emissions'], color=\"#6b7caf\", s=12, alpha=0.45, edgecolor='none')\nif not outlier_df.empty:\n    plt.scatter(outlier_df['Year'], outlier_df['Methane Emissions'], color='red', s=35, alpha=0.85, edgecolor='k', linewidths=0.45, label='Outliers')\nplt.xlabel(\"Year\")\nplt.ylabel(\"Methane Emissions (MTCO2e)\")\nplt.title(\"Yearly Boxplot of Methane Emissions in Waste Sector by Country\\nOutliers Highlighted as Red Dots\")\nif not outlier_df.empty:\n    plt.legend(loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

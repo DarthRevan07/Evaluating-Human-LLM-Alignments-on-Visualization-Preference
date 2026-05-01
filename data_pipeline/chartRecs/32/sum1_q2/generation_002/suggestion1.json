@@ -1,0 +1,38 @@
+{
+  "table_name": "32",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What trends can be observed in medical charges as age increases, and do these trends differ by smoking status?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot with two curves (smoking status split)",
+      "design_rationale": "A line plot of mean medical charges by age for smokers vs non-smokers highlights both the overall trend across the adult age range and the direct, interpretable differences between the two groups. Age is a continuous variable with many unique values, and splitting by smoker status efficiently leverages both numeric and categorical fields to reveal patterns without overwhelming viewers with individual points. Suitable for observing growth patterns and effect modification.",
+      "target_insight": "How the average medical charges change with age for smokers and non-smokers, and whether smokers have higher charges consistently across age or if the rate of increase differs.",
+      "output_fields": [
+        "age",
+        "smoker",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "age",
+        "y": "charges (aggregated, mean per age per smoker status)",
+        "color": "smoker (yes/no), with distinct line colors",
+        "size": null,
+        "other_aesthetics": "dashed vs solid line styles to differentiate; legend for smoker status; grid for readability"
+      }
+    },
+    "transformations": [
+      "Group by 'age' and 'smoker', compute mean of 'charges'",
+      "Pivot smoker status to separate curves for plot"
+    ],
+    "data_preparation_steps": [
+      "df_group = df.groupby(['age', 'smoker'])['charges'].mean().reset_index()",
+      "Create two subsets: smoker == 'yes' and smoker == 'no'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv(\"csv_c_squared\\32.csv\")\ndf_group = df.groupby(['age', 'smoker'])['charges'].mean().reset_index()\ndf_smoker = df_group[df_group['smoker'] == 'yes']\ndf_nonsmoker = df_group[df_group['smoker'] == 'no']\nfig, ax = plt.subplots(figsize=(10,6))\nax.plot(df_nonsmoker['age'], df_nonsmoker['charges'], color='steelblue', label='Non-smoker', linestyle='-')\nax.plot(df_smoker['age'], df_smoker['charges'], color='firebrick', label='Smoker', linestyle='--')\nax.set_xlabel(\"age\")\nax.set_ylabel(\"Mean medical charges\")\nax.set_title(\"Mean Medical Charges vs Age:\\nComparison by Smoking Status\")\nax.legend(title=\"smoker\", loc='upper left')\nax.grid(True, which='both', linestyle=':', linewidth=0.5, alpha=0.7)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

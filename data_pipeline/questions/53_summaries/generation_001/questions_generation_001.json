@@ -1,0 +1,87 @@
+{
+  "table_name": "META Stock Historical Prices & Data",
+  "generation_dir": "secondIter\\summaries\\53_summaries\\generation_001",
+  "total_summaries_processed": 2,
+  "questions_per_summary": 10,
+  "schema_context": "## Table 1: META_Stock_Historical_Prices___Data (1,509 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 53.csv (Dataset: META Stock Historical Prices & Data)\n\n### Schema (7 fields)\n  - Date -- type: object, values: 2018-01-03, 2018-01-04, 2018-01-05, 2018-01-08, 2018-01-09, ..., 2023-12-26, 2023-12-27, 2023-12-28, 2023-12-29, 2024-01-02\n  - Open -- type: float64, values: 90.080002, 90.349998, 94.209999, 94.330002, 94.779999, ..., 379.950012, 380.160004, 381.359985, 381.5, 381.679993\n  - High -- type: float64, values: 90.459999, 91.389999, 95.199997, 96.879997, 97.489998, ..., 381.75, 382.76001, 382.959991, 383.790009, 384.329987\n  - Low -- type: float64, values: 88.089996, 88.410004, 90.480003, 92.599998, 93.099998, ..., 375.109985, 376.570007, 378.26001, 378.799988, 378.809998\n  - Close -- type: float64, values: 88.910004, 90.540001, 90.790001, 93.160004, 95.199997, ..., 378.690002, 379.380005, 380.660004, 382.049988, 382.179993\n  - Adj Close -- type: float64, values: 88.910004, 90.540001, 90.790001, 93.160004, 95.199997, ..., 378.690002, 379.380005, 380.660004, 382.049988, 382.179993\n  - Volume -- type: int64, values: 5467500, 6046300, 6702000, 7006000, 7170700, ..., 129851800, 150475700, 169803700, 188119900, 232316600\n\n### Sample Data (first 5 rows)\n```\n         Date        Open        High         Low       Close   Adj Close    Volume\n0  2018-01-03  181.880005  184.779999  181.330002  184.669998  184.669998  16886600\n1  2018-01-04  184.899994  186.210007  184.100006  184.330002  184.330002  13880900\n2  2018-01-05  185.589996  186.899994  184.929993  186.850006  186.850006  13574500\n3  2018-01-08  187.199997  188.899994  186.330002  188.279999  188.279999  17994700\n4  2018-01-09  188.699997  188.800003  187.100006  187.869995  187.869995  12393100\n```\n",
+  "table_metadata": {
+    "total_rows": 1509,
+    "total_columns": 7,
+    "source_file": "csv_c2_sec\\53.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "META_Stock_Historical_Prices___Data",
+      "summary_idx": 1,
+      "column_combination": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume"
+      ],
+      "questions": [
+        "How have daily closing prices changed over the years, and what long-term trends can be observed?",
+        "During which periods were the largest differences between daily high and low prices recorded, indicating heightened volatility?",
+        "Do increases in trading volume on specific dates correspond with significant changes in closing price?",
+        "How does the distribution of trading volume vary across different months or seasons, and are there any recurring patterns?",
+        "What is the relationship between daily opening price and closing price, and are there periods where this relationship shifts significantly?",
+        "Are there notable outliers in daily price movements, where the closing price differs sharply from the previous day's close?",
+        "How does the adjusted closing price compare to the unadjusted closing price over time, and during which periods is the gap most apparent?",
+        "On days with unusually high trading volumes, does the stock's volatility, as measured by the difference between high and low prices, also increase?",
+        "Are there any months or years where META stock consistently experienced higher volatility based on daily price ranges?",
+        "What aggregate statistics (such as average or median closing prices) can be observed for different years, and how do these compare?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 1509,
+          "total_columns": 7,
+          "source_file": "csv_c2_sec\\53.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    },
+    {
+      "table_name": "META_Stock_Historical_Prices___Data",
+      "summary_idx": 2,
+      "column_combination": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume"
+      ],
+      "questions": [
+        "How did META's closing price trend over time, and which periods experienced the most significant changes?",
+        "Are there specific dates where both trading volume and closing price show unusual spikes or dips compared to surrounding days?",
+        "How does the trading volume on days with large gaps between the high and low prices compare to typical days?",
+        "What periods show notable increases or decreases in adjusted close price, and how might these align with significant business milestones?",
+        "How does the relationship between opening and closing price change during periods of market volatility?",
+        "Which dates are outliers in terms of trading volume, and do these align with significant changes in closing price?",
+        "How do the daily high and low prices fluctuate during periods of consistently high trading volume?",
+        "On which dates does the closing price deviate most from the opening price, and what might have caused these changes?",
+        "Is there a pattern in trading volume during periods of consecutive increases or decreases in closing price?",
+        "How often does the closing price remain stable compared to the opening price, and what does this indicate about market confidence during those periods?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 1509,
+          "total_columns": 7,
+          "source_file": "csv_c2_sec\\53.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 10,
+        "num_questions_generated": 10
+      }
+    }
+  ]
+}

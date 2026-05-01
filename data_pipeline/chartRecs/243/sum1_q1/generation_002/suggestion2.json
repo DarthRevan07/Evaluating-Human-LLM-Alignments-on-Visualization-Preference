@@ -1,0 +1,38 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How does temperature vary across different metropolitan locations at specific observation times?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line Chart (Multi-Series)",
+      "design_rationale": "A grouped line chart allows us to track how temperature changes through time in each metropolitan location, emphasizing temporal trends and location comparisons. Each city is shown as a distinct color/line, supporting easy analysis of both intra-city evolution and inter-city differences. This is meaningful with categorical timestamps and small numbers of cities, leveraging the strong ordinal/time directionality of 'Observation Time'.",
+      "target_insight": "Reveal both the overall trend and differences in temperature profiles among cities over time, highlighting whether certain locations experience sharper fluctuations, higher/lower mean temperatures, or distinctive patterns at specific times.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Temperature (°C)",
+        "color": "Location",
+        "size": null,
+        "other_aesthetics": "Legend for Location; markers for each point; distinct line colors"
+      }
+    },
+    "transformations": [
+      "Aggregate temperature by Location and Observation Time (mean) to remove possible duplicates",
+      "Sort 'Observation Time' within each Location to ensure line continuity"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Location', 'Observation Time'], as_index=False)['Temperature (°C)'].mean()",
+      "obs_times = sorted(df_grouped['Observation Time'].unique())"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf_grouped = df.groupby(['Location', 'Observation Time'], as_index=False)['Temperature (°C)'].mean()\nlocations = df_grouped['Location'].unique()\nobs_times = sorted(df_grouped['Observation Time'].unique())\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['tab10']\nfor i, loc in enumerate(locations):\n    df_loc = df_grouped[df_grouped['Location'] == loc].set_index('Observation Time')\n    y = [df_loc.loc[ot]['Temperature (°C)'] if ot in df_loc.index else np.nan for ot in obs_times]\n    ax.plot(obs_times, y, label=loc, color=cmap(i), marker='o', linewidth=2)\nax.set_xlabel('Observation Time')\nax.set_ylabel('Temperature (°C)')\nplt.xticks(rotation=45, ha='right')\nax.legend(title='Location')\nplt.title('Temperature Trends Across Metropolitan Locations by Observation Time')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

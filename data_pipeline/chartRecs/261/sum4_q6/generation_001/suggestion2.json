@@ -1,0 +1,42 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 6,
+  "suggestion_id": 2,
+  "question": "Compare the frequency and timing of astronaut fatalities (Death Date) with their mission involvement (Death Mission).",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar Chart of Mission-Related vs Non-Mission Fatalities by Decade",
+      "design_rationale": "This grouped bar chart aggregates the count of astronaut fatalities per decade, split by whether they were associated with a space mission ('Death Mission'). By using 'Death Date' to assign each fatality to a decade and counting mission vs non-mission deaths per decade, the chart provides both a frequency overview and contextualizes how mission-related fatalities compare to others over time. This approach emphasizes variance across decades and directly visualizes the relationship between space missions and fatal incidents.",
+      "target_insight": "Shows changes in occurrence of astronaut fatalities over time, revealing if mission-related deaths were concentrated in certain decades and providing context for broader safety trends.",
+      "output_fields": [
+        "Death Date",
+        "Death Mission"
+      ],
+      "chart_encodings": {
+        "x": "Decade (from 'Death Date')",
+        "y": "Number of fatalities",
+        "color": "Mission involvement (bar grouping)",
+        "size": "null",
+        "other_aesthetics": "grouped bar positions, bold labeling"
+      }
+    },
+    "transformations": [
+      "Filter rows where 'Death Date' is not null",
+      "Create a boolean column 'Mission Death' that is True if 'Death Mission' is not null",
+      "Convert 'Death Date' to datetime and extract decade (year floored to nearest 10)",
+      "Group by decade and mission involvement, count fatalities"
+    ],
+    "data_preparation_steps": [
+      "df_fatal = df[df['Death Date'].notnull()].copy()",
+      "df_fatal['Mission Death'] = df_fatal['Death Mission'].notnull()",
+      "df_fatal['Death Date pd'] = pd.to_datetime(df_fatal['Death Date'])",
+      "df_fatal['Decade'] = (df_fatal['Death Date pd'].dt.year // 10)*10",
+      "count_data = df_fatal.groupby(['Decade','Mission Death']).size().unstack(fill_value=0).sort_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\261.csv\")\ndf_fatal = df[df['Death Date'].notnull()].copy()\ndf_fatal['Mission Death'] = df_fatal['Death Mission'].notnull()\ndf_fatal['Death Date pd'] = pd.to_datetime(df_fatal['Death Date'])\ndf_fatal['Decade'] = (df_fatal['Death Date pd'].dt.year // 10)*10\ncount_data = df_fatal.groupby(['Decade','Mission Death']).size().unstack(fill_value=0).sort_index()\ndecades = count_data.index.astype(str)\nmission_vals = [False, True]\ncolor_map = {False: '#1F77B4', True: '#D62728'}\nbar_width = 0.4\nfig, ax = plt.subplots(figsize=(10,6))\nfor i, mission in enumerate(mission_vals):\n    ax.bar(np.arange(len(decades)) + i*bar_width, count_data[mission], width=bar_width, color=color_map[mission], label='Mission Death' if mission else 'Non-Mission Death')\nax.set_xticks(np.arange(len(decades)) + bar_width / 2)\nax.set_xticklabels(decades)\nax.set_xlabel('Decade')\nax.set_ylabel('Number of Fatalities')\nax.set_title('Astronaut Fatalities by Decade\\nSplit by Mission Involvement')\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

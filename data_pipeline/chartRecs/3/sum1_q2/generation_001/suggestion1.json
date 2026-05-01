@@ -1,0 +1,44 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "How does rice production per person vary across different countries, and are there any countries where this value significantly exceeds or falls below the global average?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "horizontal bar chart with reference line",
+      "design_rationale": "A horizontal bar chart allows for clear, direct comparison of Rice Production Per Person (Kg) across all countries. Arranging countries by their rank exposes distribution outliers. Color highlights for countries that significantly exceed or fall below the global average help instantly identify extremes. Using a reference line for the global average makes deviations highly visible, aligning perfectly with the analytical question.",
+      "target_insight": "Spot which countries are well above or below the global average rice production per person, and see the full distribution mapped to country names.",
+      "output_fields": [
+        "Country",
+        "Rice Production Per Person (Kg)",
+        "Rank of Rice Production Per Person"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg)",
+        "y": "Country",
+        "color": "Comparison of each country's value to the global average (highlight those that are >1 SD above/below mean)",
+        "size": null,
+        "other_aesthetics": "Reference line for global average, distinct color for significant outliers"
+      }
+    },
+    "transformations": [
+      "Convert df['Rice Production Per Person (Kg)'] to float (remove any non-numeric characters)",
+      "Sort countries by df['Rice Production Per Person (Kg)'] descending",
+      "Calculate global mean and standard deviation of Rice Production Per Person (Kg)",
+      "Mark countries as 'High', 'Low', or 'Normal' based on being >1 SD above or below mean"
+    ],
+    "data_preparation_steps": [
+      "df['Rice Production Per Person (Kg)_num'] = df['Rice Production Per Person (Kg)'].str.replace('[^0-9.]','',regex=True).astype(float)",
+      "Sort df by 'Rice Production Per Person (Kg)_num' descending for bar chart order",
+      "mean_val = df['Rice Production Per Person (Kg)_num'].mean()",
+      "std_val = df['Rice Production Per Person (Kg)_num'].std()",
+      "Define 'High' as value > mean+std, 'Low' as value < mean-std, 'Normal' otherwise",
+      "Create color list accordingly"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndf['Rice Production Per Person (Kg)_num'] = df['Rice Production Per Person (Kg)'].str.replace('[^0-9.]', '', regex=True).astype(float)\ndf = df.sort_values('Rice Production Per Person (Kg)_num', ascending=False)\nmean_val = df['Rice Production Per Person (Kg)_num'].mean()\nstd_val = df['Rice Production Per Person (Kg)_num'].std()\ncolor_map = []\nfor val in df['Rice Production Per Person (Kg)_num']:\n    if val > mean_val + std_val:\n        color_map.append(\"tab:green\")\n    elif val < mean_val - std_val:\n        color_map.append(\"tab:red\")\n    else:\n        color_map.append(\"tab:blue\")\nfig, ax = plt.subplots(figsize=(10, 16))\nax.barh(df['Country'], df['Rice Production Per Person (Kg)_num'], color=color_map, edgecolor=\"k\")\nax.axvline(mean_val, color=\"tab:gray\", linestyle=\"--\", linewidth=2, label=\"Global Average\")\nax.set_xlabel(\"Rice Production Per Person (Kg)\")\nax.set_ylabel(\"Country\")\nax.set_title(\"Rice Production Per Person Across Countries\\nSignificantly Above/Below Global Average Highlighted\")\nlegend_handles = [plt.Line2D([0], [0], color=\"tab:green\", lw=6, label=\"Above 1 SD\"),\n                  plt.Line2D([0], [0], color=\"tab:red\", lw=6, label=\"Below 1 SD\"),\n                  plt.Line2D([0], [0], color=\"tab:blue\", lw=6, label=\"Within 1 SD\"),\n                  plt.Line2D([0], [0], color=\"tab:gray\", linestyle=\"--\", lw=2, label=\"Global Average\")]\nax.legend(handles=legend_handles, loc='lower right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

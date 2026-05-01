@@ -1,0 +1,37 @@
+{
+  "table_name": "32",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there any regions where medical charges show unusually high or low values compared to others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "Boxplots provide a clear summary of the distribution of medical charges within each region, visualizing medians, interquartile ranges, and identifying outliers. This approach allows for quick comparison between regions, making it easy to spot regions with unusually high or low typical charges and extreme values. It leverages the categorical 'region' field and the numeric 'charges' field to answer the question directly.",
+      "target_insight": "Distinct regional variations in both central tendency and spread of medical charges, highlighting where charges are unusually high (top whiskers/outliers) or low (bottom whiskers/outliers).",
+      "output_fields": [
+        "region",
+        "charges"
+      ],
+      "chart_encodings": {
+        "x": "region",
+        "y": "charges",
+        "color": "region (categorical palette)",
+        "size": null,
+        "other_aesthetics": "show outliers with markers, apply distinctive color for each region"
+      }
+    },
+    "transformations": [
+      "No aggregation: Use raw 'charges' per individual, grouped by 'region'",
+      "Sort regions by median charges for consistent boxplot ordering"
+    ],
+    "data_preparation_steps": [
+      "Group df by 'region' and extract list of 'charges' for each region",
+      "Compute median charges for each region and sort regions by median ascending"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\32.csv')\nregion_order = df.groupby('region')['charges'].median().sort_values().index.tolist()\ndata_to_plot = [df[df['region'] == region]['charges'].values for region in region_order]\nfig, ax = plt.subplots(figsize=(10,6))\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(region_order))]\nbox = ax.boxplot(data_to_plot, patch_artist=True, labels=region_order, showfliers=True)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor median, color in zip(box['medians'], colors):\n    median.set_color('black')\n    median.set_linewidth(2)\nfor flier, color in zip(box['fliers'], colors):\n    flier.set_marker('o')\n    flier.set_markerfacecolor('red')\n    flier.set_alpha(0.9)\nax.set_xlabel('region', fontsize=13)\nax.set_ylabel('charges', fontsize=13)\nax.set_title('Distribution of Medical Charges by Region\\n(Boxplot shows median, IQR, and outliers)', fontsize=15)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

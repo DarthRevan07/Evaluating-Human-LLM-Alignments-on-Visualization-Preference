@@ -1,0 +1,40 @@
+{
+  "table_name": "461",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "How variable are monthly temperature maxima from year to year in Amherst—do some years show more extreme fluctuations than others?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap",
+      "design_rationale": "A heatmap of monthly maxima places the 'Year' on the y-axis and the months (from the 'Date' string) on the x-axis, coloring each cell by the monthly maximum temperature. This directly reveals not just yearly variability, but how extreme (high/low) any given month was per year, and whether certain years are more erratic than others. The color-encoding makes it easy to spot unusually hot or cool months and compare fluctuation magnitude year-to-year.",
+      "target_insight": "Identify years and months with the most extreme temperature spikes/drops, and visually compare fluctuation range and patterns across all years.",
+      "output_fields": [
+        "Year",
+        "Date",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Month (parsed from 'Date')",
+        "y": "Year",
+        "color": "Temperature (by colormap intensity)",
+        "size": null,
+        "other_aesthetics": "Annotate cells with temperature values; use clear colorbar; organized as years (rows) by month (columns)"
+      }
+    },
+    "transformations": [
+      "Parse the month as a 3-letter string ('%b') from 'Date', e.g., 'Jan', 'Feb', etc.",
+      "Pivot table: index='Year', columns='Month', values='Temperature', so each cell is a monthly max for that year/month"
+    ],
+    "data_preparation_steps": [
+      "df['Month'] = pd.to_datetime(df['Date']).dt.strftime('%b')",
+      "month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']",
+      "pivot = df.pivot(index='Year', columns='Month', values='Temperature')",
+      "pivot = pivot[month_order]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\461.csv\")\ndf['Month'] = pd.to_datetime(df['Date']).dt.strftime('%b')\nmonth_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']\npivot = df.pivot(index='Year', columns='Month', values='Temperature')\npivot = pivot[month_order]\nfig, ax = plt.subplots(figsize=(12,7))\ncmap = mpl.colormaps['coolwarm']\nmin_temp = df['Temperature'].min()\nmax_temp = df['Temperature'].max()\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap, vmin=min_temp, vmax=max_temp)\nax.set_xticks(np.arange(len(month_order)))\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_xticklabels(month_order)\nax.set_yticklabels([str(int(y)) for y in pivot.index])\nfor i in range(len(pivot.index)):\n    for j in range(len(month_order)):\n        val = pivot.iloc[i, j]\n        if not np.isnan(val):\n            ax.text(j, i, str(int(val)), ha='center', va='center', color='black', fontsize=9)\ncbar = fig.colorbar(im, ax=ax, orientation='vertical')\ncbar.set_label('Monthly Highest Temperature')\nax.set_xlabel('Month')\nax.set_ylabel('Year')\nax.set_title('Heatmap of Monthly Highest Temperatures in Amherst\\n(Reveals yearly and monthly patterns & extremes)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

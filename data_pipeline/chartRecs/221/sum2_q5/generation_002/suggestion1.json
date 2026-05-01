@@ -1,0 +1,40 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are certain transportation types more common among specific traveler nationalities?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Clustered Bar Chart (Grouped Barplot)",
+      "design_rationale": "A grouped bar chart allows a clear comparison of the frequency of each transportation type across traveler nationalities in one visual. Since both 'Transportation type' and 'Traveler nationality' are categorical with manageable numbers of unique values (9 and 41), grouping by nationality on the x-axis and stacking/grouping bars by transportation mode clarifies which transportation modes are popular in each nationality. The discrete color encoding for transportation types aids rapid comparison. This approach is effective for both overview and drill-down because the chart visually answers whether certain nationalities rely on specific transport modes.",
+      "target_insight": "Reveals which nationalities favor specific transportation modes and highlights transportation types that dominate in particular nationalities.",
+      "output_fields": [
+        "Traveler nationality",
+        "Transportation type",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Traveler nationality",
+        "y": "Counts (number of trips)",
+        "color": "Transportation type (distinct color per type)",
+        "size": null,
+        "other_aesthetics": "Grouped bars for each nationality, legend for transportation types, rotate x labels for visibility"
+      }
+    },
+    "transformations": [
+      "Drop rows with null values in 'Traveler nationality' or 'Transportation type'",
+      "Group by 'Traveler nationality' and 'Transportation type' and count 'Trip ID' (number of trips per combination)",
+      "Pivot the grouped data so that each row is a nationality and columns are transportation types, values are trip counts"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=[\"Traveler nationality\", \"Transportation type\"])",
+      "df_grouped = df_clean.groupby([\"Traveler nationality\", \"Transportation type\"]).size().reset_index(name=\"Trip Count\")",
+      "df_pivot = df_grouped.pivot(index=\"Traveler nationality\", columns=\"Transportation type\", values=\"Trip Count\").fillna(0)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\ndf_clean = df.dropna(subset=[\"Traveler nationality\", \"Transportation type\"])\ndf_grouped = df_clean.groupby([\"Traveler nationality\", \"Transportation type\"]).size().reset_index(name=\"Trip Count\")\ndf_pivot = df_grouped.pivot(index=\"Traveler nationality\", columns=\"Transportation type\", values=\"Trip Count\").fillna(0)\ntransport_types = df_pivot.columns.tolist()\nnationalities = df_pivot.index.tolist()\nbar_width = 0.065\nx = np.arange(len(nationalities))\ncmap = mpl.colormaps[\"tab10\"].resampled(len(transport_types))\nfig, ax = plt.subplots(figsize=(max(9,len(nationalities)*0.25), 7))\nfor i, ttype in enumerate(transport_types):\n    ax.bar(x + i*bar_width, df_pivot[ttype], width=bar_width, label=ttype, color=cmap(i))\nax.set_xticks(x + bar_width*(len(transport_types)-1)/2)\nax.set_xticklabels(nationalities, rotation=66, ha=\"right\", fontsize=9)\nax.set_ylabel(\"Number of Trips\")\nax.set_xlabel(\"Traveler nationality\")\nax.set_title(\"Transportation types by traveler nationality\\n(Grouped by mode)\")\nax.legend(title=\"Transportation type\", fontsize=8, title_fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

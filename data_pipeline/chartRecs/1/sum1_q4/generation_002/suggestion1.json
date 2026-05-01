@@ -1,0 +1,45 @@
+{
+  "table_name": "1",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there any countries where the agriculture, industry, and services sectors contribute almost equally to GDP, based on their % contributions?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatterplot highlighting 'near-equal' sectoral contributions",
+      "design_rationale": "A scatterplot enables visual detection of countries with balanced sectoral GDP shares. By plotting each country's three sector % contributions, we can color-code those where all three values are within a close range. This visual approach is powerful for an overview with precise identification, and allows us to visualize the distribution of countries according to their sectoral balance. Outlying points (far from equality) help contextualize the rarity and characteristics of 'near-equal' countries.",
+      "target_insight": "It reveals which countries have agriculture, industry, and services sectors contributing almost equally to GDP, using a quantifiable threshold (e.g., maximum difference between sector %s less than 10 percentage points).",
+      "output_fields": [
+        "Country/Economy",
+        "Agriculture Sector GDP of % Contribution",
+        "Industry%ofGDP",
+        "Services%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Industry%ofGDP",
+        "y": "Agriculture Sector GDP of % Contribution",
+        "color": "Highlight countries with maximum absolute difference among sector %s below threshold (e.g., 10)",
+        "size": null,
+        "other_aesthetics": "Point labels for 'balanced' countries; alpha=0.7; grid for readability"
+      }
+    },
+    "transformations": [
+      "Clean and convert 'Agriculture Sector GDP of % Contribution', 'Industry%ofGDP', and 'Services%ofGDP' to float",
+      "Drop rows with missing or invalid values in those three fields",
+      "Calculate for each country the absolute difference between the highest and lowest sector % contributions",
+      "Filter countries where this maximum difference is below or equal to 10 percentage points (threshold for 'near-equal')"
+    ],
+    "data_preparation_steps": [
+      "df['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')",
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')",
+      "df_clean = df.dropna(subset=['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP'])",
+      "df_clean['maxdiff'] = df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].max(axis=1) - df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].min(axis=1)",
+      "df_balanced = df_clean[df_clean['maxdiff'] <= 10]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Agriculture Sector GDP of % Contribution'] = pd.to_numeric(df['Agriculture Sector GDP of % Contribution'], errors='coerce')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf['Services%ofGDP'] = pd.to_numeric(df['Services%ofGDP'], errors='coerce')\ndf_clean = df.dropna(subset=['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP'])\ndf_clean['maxdiff'] = df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].max(axis=1) - df_clean[['Agriculture Sector GDP of % Contribution','Industry%ofGDP','Services%ofGDP']].min(axis=1)\ndf_balanced = df_clean[df_clean['maxdiff'] <= 10]\nfig, ax = plt.subplots(figsize=(8,6))\nax.scatter(df_clean['Industry%ofGDP'], df_clean['Agriculture Sector GDP of % Contribution'], c='lightgray', alpha=0.7, label='All countries')\nax.scatter(df_balanced['Industry%ofGDP'], df_balanced['Agriculture Sector GDP of % Contribution'], c='orange', s=80, edgecolor='black', label='Balanced sectors')\nfor i, row in df_balanced.iterrows():\n    ax.text(row['Industry%ofGDP']+0.5, row['Agriculture Sector GDP of % Contribution']+0.5, row['Country/Economy'], fontsize=8, color='black')\nax.set_xlabel('Industry%ofGDP')\nax.set_ylabel('Agriculture Sector GDP of % Contribution')\nax.set_title('Countries with Near-Equal Sectoral GDP Contributions (maxdiff≤10)\\nIndustry vs Agriculture Share')\nax.grid(True, alpha=0.2)\nax.legend(loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are certain transportation types more common among specific traveler nationalities?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Grouped Bar Chart",
+      "design_rationale": "A grouped bar chart visualizes counts of each transportation type per traveler nationality side-by-side. This approach makes it easy to compare and spot which transportation modes dominate for each nationality and if certain nationalities have a distinct preference. It leverages categorical groupings and allows quick, intuitive comparison across two key dimensions (transportation type and nationality), which are both moderate in cardinality (41 nationalities, 9 transportation types).",
+      "target_insight": "The visualization reveals which transportation types are favored by different nationalities, highlighting any patterns or outliers.",
+      "output_fields": [
+        "Traveler nationality",
+        "Transportation type",
+        "Trip ID"
+      ],
+      "chart_encodings": {
+        "x": "Traveler nationality",
+        "y": "Count of Trip ID (per Transportation type)",
+        "color": "Transportation type",
+        "size": null,
+        "other_aesthetics": "Bars grouped by nationality; legend for Transportation type; x-axis rotated for readability"
+      }
+    },
+    "transformations": [
+      "Remove rows with null values in 'Traveler nationality' or 'Transportation type'",
+      "Aggregate count of 'Trip ID' for each combination of 'Traveler nationality' and 'Transportation type'",
+      "Filter to top 10 most common nationalities for clarity (lowest noise with 139 rows, 41 nations)"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Traveler nationality', 'Transportation type'])",
+      "df_nation_counts = df.groupby('Traveler nationality')['Trip ID'].count().sort_values(ascending=False).head(10)",
+      "df_top = df[df['Traveler nationality'].isin(df_nation_counts.index)]",
+      "df_grouped = df_top.groupby(['Traveler nationality', 'Transportation type'])['Trip ID'].count().reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf = df.dropna(subset=['Traveler nationality', 'Transportation type'])\ndf_nation_counts = df.groupby('Traveler nationality')['Trip ID'].count().sort_values(ascending=False).head(10)\ndf_top = df[df['Traveler nationality'].isin(df_nation_counts.index)]\ndf_grouped = df_top.groupby(['Traveler nationality', 'Transportation type'])['Trip ID'].count().reset_index()\nnationalities = df_nation_counts.index.tolist()\ntransport_types = df_grouped['Transportation type'].unique()\nn_group = len(transport_types)\nx = np.arange(len(nationalities))\nbar_width = 0.08\ncolors = mpl.colormaps['tab10'].resampled(n_group)(np.linspace(0,1,n_group))\nfig, ax = plt.subplots(figsize=(13,7))\nfor i, t_type in enumerate(transport_types):\n    counts = []\n    for nationality in nationalities:\n        val = df_grouped[(df_grouped['Traveler nationality'] == nationality) & (df_grouped['Transportation type'] == t_type)]['Trip ID']\n        count = val.values[0] if len(val) else 0\n        counts.append(count)\n    ax.bar(x + i*bar_width, counts, bar_width, color=colors[i], label=t_type, edgecolor='black')\nax.set_xticks(x + bar_width*(n_group-1)/2)\nax.set_xticklabels(nationalities, rotation=45, ha='right')\nax.set_xlabel('Traveler nationality')\nax.set_ylabel('Number of Trips')\nplt.title('Transportation Type Frequency Across Top 10 Traveler Nationalities')\nax.legend(title='Transportation type')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

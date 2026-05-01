@@ -1,0 +1,38 @@
+{
+  "table_name": "243",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "How does the 'feels like' temperature compare to the actual temperature in each city?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "City-wise Temperature Difference Boxplot",
+      "design_rationale": "Boxplots encode the distribution of differences (Feels Like minus Actual) for every city across all observation times, capturing variability as well as central tendency. This approach reveals not just averages but also range, skewness, and outlier events. Since there are 8 cities and multiple observations each, boxplots are ideal for spotting cities with large, inconsistent, or stable differences.",
+      "target_insight": "Identifies cities where perceived temperature is consistently above or below actual, or where difference varies wildly—helpful for understanding local climate effects and weather perception.",
+      "output_fields": [
+        "Location",
+        "Temperature Difference"
+      ],
+      "chart_encodings": {
+        "x": "Location",
+        "y": "Feels Like (°C) minus Temperature (°C)",
+        "color": "Boxes colored by median difference (colormap)",
+        "size": null,
+        "other_aesthetics": "Show outliers, notch for median, city order sorted by median difference"
+      }
+    },
+    "transformations": [
+      "Compute new column 'Difference' = 'Feels Like (°C)' - 'Temperature (°C)'",
+      "Group data by 'Location', get distribution of 'Difference'"
+    ],
+    "data_preparation_steps": [
+      "df['Difference'] = df['Feels Like (°C)'] - df['Temperature (°C)']",
+      "city_order = df.groupby('Location')['Difference'].median().sort_values().index.tolist()",
+      "df_box = df.set_index('Location').loc[city_order].reset_index()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Difference'] = df['Feels Like (°C)'] - df['Temperature (°C)']\ncity_order = df.groupby('Location')['Difference'].median().sort_values().index.tolist()\ndata = [df[df['Location'] == city]['Difference'] for city in city_order]\nmedians = [np.median(vals) for vals in data]\ncmap = mpl.colormaps['viridis'].resampled(len(city_order))\ncolors = [cmap(i) for i in range(len(city_order))]\nfig, ax = plt.subplots(figsize=(11, 7))\nbp = ax.boxplot(data, patch_artist=True, notch=True, medianprops={'color':'black', 'lw':2})\nfor patch, col in zip(bp['boxes'], colors):\n    patch.set_facecolor(col)\nfor i, med in enumerate(medians):\n    ax.text(i+1, med + 0.15, f'{med:.2f}', ha='center', va='bottom', fontsize=10)\nax.set_xticks(range(1, len(city_order)+1))\nax.set_xticklabels(city_order, fontsize=12)\nax.set_ylabel('Feels Like minus Actual Temperature (°C)', fontsize=13)\nax.set_title('Distribution of Feels Like vs Actual Temperature Difference\\nby City', fontsize=15)\nsmap = mpl.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=min(medians), vmax=max(medians)))\ncbar = plt.colorbar(smap, ax=ax, pad=0.02, aspect=40)\ncbar.set_label('Median Temperature Difference (°C)', fontsize=12)\nax.grid(axis='y', linestyle='--', alpha=0.32)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

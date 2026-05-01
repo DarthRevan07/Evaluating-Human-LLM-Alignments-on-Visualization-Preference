@@ -1,0 +1,43 @@
+{
+  "table_name": "2",
+  "generation_id": 3,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "Which countries had the highest total methane emissions in 2018, and how does this compare to their values in 1990?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Horizontal Bar Chart",
+      "design_rationale": "A horizontal bar chart is chosen to clearly show and rank the top emitter countries by their total methane emissions in 2018, with direct annotation (or overlay) of their 1990 values for side-by-side comparison. This approach leverages the capability of bar charts to represent magnitudes and facilitate rank-based insight, while horizontal layout accommodates long country names. Annotating or adding overlay bars for 1990 anchors each country's trend without overwhelming the viewer. This chart provides both an immediate answer to 'which countries had highest emissions in 2018' and an easy visual cue for 'how much have they changed since 1990' for each top emitter.",
+      "target_insight": "Identifies the countries with the highest methane emissions in 2018 and contrasts each with its 1990 value, exposing both ranking and absolute/relative change.",
+      "output_fields": [
+        "Country",
+        "2018",
+        "1990"
+      ],
+      "chart_encodings": {
+        "x": "'2018' and '1990' emissions values (overlayed or side-by-side bars)",
+        "y": "Country",
+        "color": "Emissions year (2018=primary, 1990=secondary color)",
+        "size": "null",
+        "other_aesthetics": "Bar width for year distinction; legend; sorted y-axis; annotation of % change as optional"
+      }
+    },
+    "transformations": [
+      "Group by df['Country'], aggregate by sum of df['2018'] and df['1990'] (if needed, but each Country likely only appears once since it's national total).",
+      "Pivot or reshape so each country has its values for both 2018 and 1990.",
+      "Sort countries by df['2018'] in descending order.",
+      "Select top 10 countries by df['2018'] for readability.",
+      "Remove rows with NaN in df['1990'] to ensure fair historical comparison."
+    ],
+    "data_preparation_steps": [
+      "df_totals = df.groupby('Country', as_index=False)[['2018', '1990']].sum()",
+      "df_totals = df_totals.dropna(subset=['1990'])",
+      "df_top10 = df_totals.sort_values('2018', ascending=False).head(10)",
+      "df_top10 = df_top10[::-1]  # Reverse order for horizontal bar chart (largest on top)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\2.csv\")\n\ndf_totals = df.groupby('Country', as_index=False)[['2018', '1990']].sum()\ndf_totals = df_totals.dropna(subset=['1990'])\ndf_top10 = df_totals.sort_values('2018', ascending=False).head(10)\ndf_top10 = df_top10[::-1]\n\ncountries = df_top10['Country']\nemissions_2018 = df_top10['2018']\nemissions_1990 = df_top10['1990']\n\nbar_width = 0.4\ny_pos = np.arange(len(countries))\n\nfig, ax = plt.subplots(figsize=(10, 6))\n\nbars1 = ax.barh(y_pos - bar_width/2, emissions_2018, height=bar_width, label=\"2018\", color=\"#3066be\")\nbars2 = ax.barh(y_pos + bar_width/2, emissions_1990, height=bar_width, label=\"1990\", color=\"#e59500\", alpha=0.7)\n\nax.set_yticks(y_pos)\nax.set_yticklabels(countries)\nax.set_xlabel(\"Methane Emissions (MTCO2e)\")\nax.set_title(\"Top 10 Countries: Highest Total Methane Emissions in 2018 (w/ 1990 Comparison)\")\nax.legend(loc=\"best\")\n\nfor i, (cur, prev) in enumerate(zip(emissions_2018, emissions_1990)):\n    pct = ((cur - prev) / prev) * 100 if prev != 0 else 0\n    ax.text(cur + max(df_top10['2018'])*0.01, y_pos[i]-bar_width/2, f\"{cur:.1f}\", va=\"center\", ha=\"left\", fontsize=9, color=\"#19365c\")\n    ax.text(prev + max(df_top10['2018'])*0.01, y_pos[i]+bar_width/2, f\"{prev:.1f}\", va=\"center\", ha=\"left\", fontsize=9, color=\"#a06a00\")\n    ax.text(max(cur,prev) * 1.05, y_pos[i], f\"{pct:+.1f}%\", va=\"center\", ha=\"left\", fontsize=9, color=\"#333333\")\n\nfig.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

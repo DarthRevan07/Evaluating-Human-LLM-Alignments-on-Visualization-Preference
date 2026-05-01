@@ -1,0 +1,43 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "Which countries have the highest rice yield per hectare, and how does their total rice production compare with those having the greatest production volumes?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Scatter Plot (Yield vs. Production; Global Leaders Highlighted)",
+      "design_rationale": "A scatter plot provides a holistic overview of the relationship between rice yield and production volume. Countries with maximum production (top producers) are visually emphasized (color or marker), directly answering the question of how high-yielding countries relate to production giants, and exposing outliers—countries that are high-yield but not necessarily high-volume, and vice versa.",
+      "target_insight": "Directly visualizes whether countries leading in rice yield also dominate in global production, highlighting both agricultural efficiency and absolute output, and exposing exceptions or trends.",
+      "output_fields": [
+        "Country",
+        "Rice Yield (Kg / Hectare)",
+        "Rice Production (Tons)",
+        "Rank of Rice Production"
+      ],
+      "chart_encodings": {
+        "x": "Rice Yield (Kg / Hectare)",
+        "y": "Rice Production (Tons)",
+        "color": "Rank of Rice Production (highlight top 5 with red, others blue)",
+        "size": "null (use marker size for visibility)",
+        "other_aesthetics": "Country labels for top 5 yield & top 5 production; grid lines, log scale for y for clarity"
+      }
+    },
+    "transformations": [
+      "Convert 'Rice Yield (Kg / Hectare)' and 'Rice Production (Tons)' columns to numeric, handling units (K, M)",
+      "Identify top 5 countries by 'Rice Yield (Kg / Hectare)' and top 5 by 'Rice Production (Tons)'",
+      "Create categorical highlight for top producers"
+    ],
+    "data_preparation_steps": [
+      "Define helper function to convert metrics with 'K' and 'M' to numeric values for 'Rice Yield (Kg / Hectare)' and 'Rice Production (Tons)'",
+      "Apply conversions to create numeric columns",
+      "Determine top 5 countries by yield and production",
+      "Create color array: red for top 5 production countries, blue otherwise",
+      "Prepare text annotation for top 5 yield and top 5 production countries"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndef parse_metric(val):\n    if isinstance(val, str):\n        if 'M' in val:\n            return float(val.replace('M', '')) * 1e6\n        elif 'K' in val:\n            return float(val.replace('K', '')) * 1e3\n        else:\n            return float(val.replace(',', ''))\n    else:\n        return val\ndf['Rice Yield Numeric'] = df['Rice Yield (Kg / Hectare)'].apply(parse_metric)\ndf['Rice Production Numeric'] = df['Rice Production (Tons)'].apply(parse_metric)\ndf_prod_top5 = df.sort_values('Rice Production Numeric', ascending=False).head(5)\ndf_yield_top5 = df.sort_values('Rice Yield Numeric', ascending=False).head(5)\nhighlight_countries = set(df_prod_top5['Country'])\ncolors = ['red' if c in highlight_countries else 'blue' for c in df['Country']]\nfig, ax = plt.subplots(figsize=(10, 7))\nscatter = ax.scatter(df['Rice Yield Numeric'], df['Rice Production Numeric'], c=colors, alpha=0.7, edgecolor='k')\nfor idx, row in df_yield_top5.iterrows():\n    ax.text(row['Rice Yield Numeric'], row['Rice Production Numeric'], row['Country'], fontsize=9, color='green', weight='bold', va='bottom')\nfor idx, row in df_prod_top5.iterrows():\n    ax.text(row['Rice Yield Numeric'], row['Rice Production Numeric'], row['Country'], fontsize=9, color='red', weight='bold', va='top')\nax.set_xlabel('Rice Yield (Kg / Hectare)')\nax.set_ylabel('Rice Production (Tons)')\nax.set_yscale('log')\nax.grid(True, which='both', linestyle='--', linewidth=0.5)\nplt.title('Rice Yield vs. Total Production Volume\\nTop Producers Highlighted (Red); Yield-peak Countries labeled (Green)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

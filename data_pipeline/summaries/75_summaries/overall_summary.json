@@ -1,0 +1,32 @@
+{
+  "table_name": "Students Performance in Exams",
+  "file_index": "75",
+  "original_filename": "75.csv",
+  "total_rows": 1000,
+  "total_columns": 8,
+  "column_names": [
+    "gender",
+    "race/ethnicity",
+    "parental level of education",
+    "lunch",
+    "test preparation course",
+    "math score",
+    "reading score",
+    "writing score"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\75_summaries",
+  "source_file": "csv_c2_sec\\75.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\75_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there any anomalies or outliers in the time series of methane emissions for the Waste sector in any country?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line chart with z-score anomaly overlay (detail by country)",
+      "design_rationale": "A multi-faceted line chart, highlighting countries with outlier points, effectively illustrates the time series structure of methane emissions for the Waste sector and pinpoints where (country/year) and when (temporally) sudden emission anomalies occur. Outliers are revealed using z-scores computed per country, visualized as red markers atop the time series. This approach enables users to spot both sustained and single-year spikes/drops across 1990-2018 for each country, which would be missed by aggregation.",
+      "target_insight": "Temporal anomalies or sudden shifts in Waste sector emissions for specific countries, and which countries/years contain significant outliers compared to their own historical trends.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (from 1990 to 2018, columns reshaped to row variable)",
+        "y": "Methane Emissions (for Waste sector)",
+        "color": "Country (multiple lines, light gray)",
+        "marker (highlight)": "Anomaly points (outlier detection by country over time, shown in red circles)",
+        "other_aesthetics": "All countries faint, but country with outlier points in more saturated color; anomaly points overlaid; subplot (facet) for up to 10 selected countries with most/strongest anomalies"
+      }
+    },
+    "transformations": [
+      "Filter rows where df['Sector'] == 'Waste'",
+      "Reshape DataFrame from wide (columns 1990-2018) to long, yielding columns 'Country', 'Year', 'Emission'",
+      "For each Country, compute the z-score over its time series, flagging emission values with |z| > 2 as anomalies",
+      "Select top 9 countries with most anomaly points (if ties, highest magnitude anomalies), for one subplot panel per country"
+    ],
+    "data_preparation_steps": [
+      "waste_df = df[df['Sector']=='Waste'].copy()",
+      "years = [str(y) for y in range(1990,2019)]",
+      "waste_long = waste_df.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emission')",
+      "Remove NaNs from 'Emission'",
+      "Compute, for each Country, the z-score for the 'Emission' time series",
+      "Flag |z| > 2 as anomalies; annotate anomaly mask",
+      "Count anomalies per country, select 9 with highest count (or anomaly score sum for rank ties)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\2.csv')\n# Filter\nwaste_df = df[df['Sector']=='Waste'].copy()\nyears = [str(y) for y in range(1990,2019)]\nwaste_long = waste_df.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emission')\nwaste_long = waste_long.dropna(subset=['Emission'])\nwaste_long['Year'] = waste_long['Year'].astype(int)\n# Z-score per country\ndef zflag(group):\n    vals = group['Emission']\n    z = (vals - vals.mean()) / vals.std(ddof=0)\n    group['z'] = z\n    group['is_anomaly'] = np.abs(z) > 2\n    return group\nwaste_long = waste_long.groupby('Country', group_keys=False).apply(zflag)\n# Most anomalous countries\nanomaly_counts = waste_long.groupby('Country')['is_anomaly'].sum().sort_values(ascending=False)\ntop_countries = anomaly_counts.head(9).index.tolist()\nwaste_top = waste_long[waste_long['Country'].isin(top_countries)]\n# Facet lineplot\nfig, axes = plt.subplots(3, 3, figsize=(16, 12), sharex=True, sharey=True)\naxes = axes.flat\nfor idx, country in enumerate(top_countries):\n    ax = axes[idx]\n    sub = waste_long[waste_long['Country']==country]\n    ax.plot(sub['Year'], sub['Emission'], color='gray', alpha=0.5, lw=1)\n    # Highlight anomalies\n    anomalies = sub[sub['is_anomaly']]\n    ax.plot(sub['Year'], sub['Emission'], color='tab:blue', lw=2, zorder=1)\n    ax.scatter(anomalies['Year'], anomalies['Emission'], s=60, color='red', edgecolor='black', zorder=2, label='Anomaly')\n    ax.set_title(country, fontsize=12)\n    ax.set_xlabel('Year')\n    if idx % 3 == 0:\n        ax.set_ylabel('Methane Emissions (MTCO2e)')\n# Legends and layout\nhandles = [mpl.lines.Line2D([0], [0], color='tab:blue', lw=2, label='Emissions'),\n           mpl.lines.Line2D([0], [0], marker='o', color='red', lw=0, label='Anomaly', markerfacecolor='red', markeredgecolor='black')]\nfig.legend(handles=handles, loc='upper center', ncol=2, fontsize=13, frameon=False)\nfig.suptitle('Methane Emissions (Waste Sector) \\n Anomalies (Country-level z-score > 2) Highlighted, 1990-2018', fontsize=17)\nfig.tight_layout(rect=[0, 0, 1, 0.94])\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any artists whose biographical narratives suggest periods of intense productivity during specific years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Timeline Heatmap",
+      "design_rationale": "The 'years' field holds creation periods as strings, and coupled with 'name' and biographical context, allows exploration of artist productivity across time. By parsing 'years' and mapping paintings to a year-based matrix for each artist, a heatmap can visually highlight periods of increased productivity, directly answering the question. Artists are listed on the y-axis, years along the x-axis; intense activity appears as darker blocks.",
+      "target_insight": "This chart reveals which artists had bursts of productivity and exactly in which years these occurred, aligning with biographical records and 'years' field data.",
+      "output_fields": [
+        "name",
+        "years",
+        "paintings"
+      ],
+      "chart_encodings": {
+        "x": "years (parsed into actual years)",
+        "y": "name",
+        "color": "Intensity of productivity (number of paintings for that year span)",
+        "size": null,
+        "other_aesthetics": "Grid heat blocks, color scale bar"
+      }
+    },
+    "transformations": [
+      "Split df['years'] into start_year and end_year for each artwork",
+      "Create a year-wise productivity matrix for each artist: assign each painting to all years it spans",
+      "Sum painting counts per artist per year span to highlight intensity"
+    ],
+    "data_preparation_steps": [
+      "Parse df['years'] using regex to extract start and end years",
+      "For each row, expand years into integer list (e.g., 1900-1910 as [1900,...,1910])",
+      "For each artist ('name'), sum number of paintings assigned to each year",
+      "Pivot data to matrix: rows=artist (name), columns=year, values=paining counts",
+      "Normalize intensity across artists for heatmap color scaling"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\n# Extract start and end year from 'years' field\nimport re\ndef parse_years(s):\n    match = re.search(r'(\\d{4})', s)\n    start_year = int(match.group(1)) if match else np.nan\n    end_match = re.search(r'(\\d{4})[^\\d]*(\\d{4})', s)\n    end_year = int(end_match.group(2)) if end_match else start_year\n    return start_year, end_year\ndf[['start_year', 'end_year']] = df['years'].apply(lambda s: pd.Series(parse_years(s)))\n# Build year range matrix\nyear_min = int(df['start_year'].min())\nyear_max = int(df['end_year'].max())\nall_years = np.arange(year_min, year_max+1)\nartist_names = df['name'].unique()\nprod_matrix = np.zeros((len(artist_names), len(all_years)))\nfor idx, artist in enumerate(artist_names):\n    selected = df[df['name']==artist]\n    for _, row in selected.iterrows():\n        sy, ey = row['start_year'], row['end_year']\n        years_span = np.arange(sy, ey+1)\n        for y in years_span:\n            if y-year_min>=0 and y-year_min<len(all_years):\n                prod_matrix[idx, y-year_min] += row['paintings']/len(years_span)\n# Normalize matrix\nmax_val = prod_matrix.max()\nprod_norm = prod_matrix / max_val\nfig, ax = plt.subplots(figsize=(16, 10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(prod_norm, aspect='auto', cmap=cmap)\nax.set_yticks(np.arange(len(artist_names)))\nax.set_yticklabels(artist_names)\nax.set_xticks(np.arange(0, len(all_years), 5))\nax.set_xticklabels([str(y) for y in all_years[::5]])\nplt.title('Periods of Productivity: Heatmap of Artist Output Across Years\\nDarker blocks indicate years of intense artistic activity')\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Relative Productivity Intensity')\nplt.xlabel('Year')\nplt.ylabel('Artist')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,42 @@
+{
+  "table_name": "429",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "Are there any domestic states that import significantly more dogs than they export?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Divergent Bar Chart (Imports minus Exports)",
+      "design_rationale": "To assess which U.S. states import significantly more dogs than they export, a divergent bar chart visualizes the net difference (imported - exported) per state, with bars colored by direction and magnitude. This allows easy comparison and detection of states with notable import surpluses. Nulls, typical in this dataset, are handled via fillna for clarity.",
+      "target_insight": "Identifies states with the largest positive (import surplus) or negative (export surplus) dog flows; highlights those with significant import surpluses specifically.",
+      "output_fields": [
+        "location",
+        "imported",
+        "exported"
+      ],
+      "chart_encodings": {
+        "x": "location",
+        "y": "imported minus exported (net difference)",
+        "color": "net difference sign (import surplus: blue, export surplus: red)",
+        "size": null,
+        "other_aesthetics": "horizontal layout, label for significant importers"
+      }
+    },
+    "transformations": [
+      "Filter for rows where inUS is True (domestic states only)",
+      "Fill NaNs in imported and exported with 0 for numeric comparison",
+      "Compute net difference as imported minus exported for each state"
+    ],
+    "data_preparation_steps": [
+      "df_domestic = df[df['inUS'] == True]",
+      "df_domestic['imported'] = df_domestic['imported'].fillna(0)",
+      "df_domestic['exported'] = df_domestic['exported'].fillna(0)",
+      "df_domestic['net_diff'] = df_domestic['imported'] - df_domestic['exported']",
+      "Sort states by net_diff descending"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\429.csv')\ndf_domestic = df[df['inUS'] == True].copy()\ndf_domestic['imported'] = df_domestic['imported'].fillna(0)\ndf_domestic['exported'] = df_domestic['exported'].fillna(0)\ndf_domestic['net_diff'] = df_domestic['imported'] - df_domestic['exported']\ndf_domestic = df_domestic.sort_values('net_diff', ascending=False)\nfig, ax = plt.subplots(figsize=(10, 12))\ncolors = ['#2166ac' if x > 0 else '#b2182b' for x in df_domestic['net_diff']]\nax.barh(df_domestic['location'], df_domestic['net_diff'], color=colors, edgecolor='black')\nax.axvline(0, color='grey', linewidth=1)\nfor i, (loc, diff) in enumerate(zip(df_domestic['location'], df_domestic['net_diff'])):\n    if diff > df_domestic['net_diff'].quantile(0.9):\n        ax.text(diff + 5, i, f'+{int(diff)}', va='center', color='#2166ac', fontsize=10)\n    elif diff < df_domestic['net_diff'].quantile(0.1):\n        ax.text(diff - 30, i, f'{int(diff)}', va='center', color='#b2182b', fontsize=10)\nplt.title('Net Dog Imports vs Exports per U.S. State\\n(Import surplus: Blue, Export surplus: Red)')\nax.set_xlabel('Net Difference (Imported minus Exported)')\nax.set_ylabel('State')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

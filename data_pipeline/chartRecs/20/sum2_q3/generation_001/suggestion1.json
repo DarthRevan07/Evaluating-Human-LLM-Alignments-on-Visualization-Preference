@@ -1,0 +1,40 @@
+{
+  "table_name": "20",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 1,
+  "question": "Are there any artists whose biographical narratives suggest periods of intense productivity during specific years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Timeline Heatmap",
+      "design_rationale": "To visually highlight periods of concentrated artistic activity, a heatmap showing the distribution of artworks across specific years for each artist is effective. By extracting individual years from the 'years' field for each artwork and aggregating by artist, we expose which artists have clusters of masterpieces within narrow timespans, indicating intense productivity. This unconventional chart type directly visualizes the question, leveraging the temporal information in 'years' and artist grouping.",
+      "target_insight": "Artists with high-frequency masterpieces during particular years are easily identifiable as having intense productivity periods.",
+      "output_fields": [
+        "name",
+        "years"
+      ],
+      "chart_encodings": {
+        "x": "years (parsed as int from 'years' field)",
+        "y": "name",
+        "color": "counts of artworks per artist per year",
+        "size": null,
+        "other_aesthetics": "viridis colormap, grid, labeled axes, colorbar"
+      }
+    },
+    "transformations": [
+      "Expand df['years'] to parse start and end years; for each artwork, assign all relevant years if a range is present",
+      "Group by df['name'] and each parsed year, count number of artworks per artist per year",
+      "Pivot to matrix form: rows are artist 'name', columns are year, values are counts"
+    ],
+    "data_preparation_steps": [
+      "Parse df['years']: if value is a single year, assign; if it is a range (e.g. '1887-1890'), expand to all years in range",
+      "Create expanded DataFrame where each row corresponds to an artist and a specific year of creation",
+      "Group the expanded DataFrame by artist ('name') and year (int), aggregate counts",
+      "Pivot the grouped data to a heatmap matrix"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\20.csv\")\n# Step 1: parse years into start-end\nexpanded_rows = []\nfor idx, row in df.iterrows():\n    years_str = row['years']\n    name = row['name']\n    # Try to parse range\n    if '-' in years_str:\n        parts = years_str.split('-')\n        try:\n            start = int(parts[0].strip())\n            end = int(parts[1].strip())\n            for yr in range(start, end+1):\n                expanded_rows.append({'name': name, 'year': yr})\n        except:\n            continue\n    else:\n        try:\n            year = int(years_str.strip())\n            expanded_rows.append({'name': name, 'year': year})\n        except:\n            continue\nexpanded_df = pd.DataFrame(expanded_rows)\n# Step 2: count artworks per artist per year\ncounts = expanded_df.groupby(['name', 'year']).size().reset_index(name='artwork_count')\n# Step 3: pivot for heatmap\npivot = counts.pivot(index='name', columns='year', values='artwork_count').fillna(0)\n# Step 4: plot heatmap\nfig, ax = plt.subplots(figsize=(15, 10))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(pivot.values, aspect='auto', cmap=cmap)\n# Axis ticks\nax.set_yticks(np.arange(len(pivot.index)))\nax.set_yticklabels(pivot.index)\nyears = list(pivot.columns)\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels(years, rotation=90)\n# Colorbar\ncbar = plt.colorbar(im, ax=ax)\ncbar.set_label('Artworks produced by artist in year')\n# Labels and title\nax.set_xlabel('Year')\nax.set_ylabel('Artist')\nplt.title('Periods of Intense Artistic Productivity by Year and Artist')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

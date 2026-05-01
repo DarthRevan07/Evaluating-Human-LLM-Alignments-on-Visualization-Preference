@@ -1,0 +1,41 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do vehicles with higher mileage tend to have lower prices regardless of fuel type?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatterplot with regression overlays and fuel type color encoding",
+      "design_rationale": "A scatterplot directly visualizes the relationship between mileage (vehicle usage) and price (market value) for every individual car entry, leveraging the sizeable dataset for density and outlier insights. Coloring points by 'Fuel type' differentiates possible group-level patterns while overlaying regression lines allows visual comparison of trends across fuel type, revealing whether higher mileage consistently relates to lower prices for all fuel types or if exceptions exist. This approach utilizes numeric and categorical field interplay; outlier detection, cluster patterns, and slope comparisons become visually apparent.",
+      "target_insight": "Whether the negative relationship (or lack thereof) between mileage and price holds consistently across all fuel types, and if any categories defy the overall trend.",
+      "output_fields": [
+        "Price",
+        "Mileage",
+        "Fuel type"
+      ],
+      "chart_encodings": {
+        "x": "Mileage",
+        "y": "Price",
+        "color": "Fuel type",
+        "size": null,
+        "other_aesthetics": "alpha for density, regression line per fuel type"
+      }
+    },
+    "transformations": [
+      "Convert df['Mileage'] to numeric (remove non-numeric entries, convert strings like '123456 km' to integer values)",
+      "Filter out entries where df['Price'] or df['Mileage'] is missing or non-positive",
+      "Optional: Remove extreme outliers in 'Price' and 'Mileage' for visual clarity (e.g., keep within 99th percentile)"
+    ],
+    "data_preparation_steps": [
+      "df['Mileage'] = df['Mileage'].str.replace(' km','').str.replace(',','').astype(float)",
+      "df = df[(df['Price'] > 0) & (df['Mileage'] > 0)]",
+      "fuel_types = df['Fuel type'].unique()",
+      "Optionally, trim df to the 99th percentile for both 'Price' and 'Mileage' for improved chart scale"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf['Mileage'] = df['Mileage'].str.replace(' km','').str.replace(',','').astype(float)\ndf = df[(df['Price'] > 0) & (df['Mileage'] > 0)]\nprice_99 = df['Price'].quantile(0.99)\nmileage_99 = df['Mileage'].quantile(0.99)\ndf_plot = df[(df['Price'] < price_99) & (df['Mileage'] < mileage_99)]\nfuel_types = df_plot['Fuel type'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(fuel_types))\ncolor_dict = {ft: cmap(i) for i, ft in enumerate(fuel_types)}\nfig, ax = plt.subplots(figsize=(10,7))\nfor ft in fuel_types:\n    part = df_plot[df_plot['Fuel type'] == ft]\n    ax.scatter(part['Mileage'], part['Price'], color=color_dict[ft], label=ft, alpha=0.35, s=18)\n    # Regression overlay\n    if len(part) > 10:\n        xvals = part['Mileage'].values\n        yvals = part['Price'].values\n        if np.std(xvals) > 0:  # Avoid division by zero\n            slope, intercept = np.polyfit(xvals, yvals, 1)\n            xfit = np.linspace(np.min(xvals), np.max(xvals), 100)\n            yfit = slope * xfit + intercept\n            ax.plot(xfit, yfit, color=color_dict[ft], linewidth=2, alpha=0.85)\nax.set_xlabel('Mileage (km)')\nax.set_ylabel('Price')\nax.set_title('Relationship between Mileage and Price across Fuel Types\\nRegression lines show slope per fuel type')\nax.legend(title='Fuel type', loc='best')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

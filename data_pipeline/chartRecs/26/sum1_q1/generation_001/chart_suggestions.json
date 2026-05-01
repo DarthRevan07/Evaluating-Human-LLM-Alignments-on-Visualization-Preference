@@ -1,0 +1,338 @@
+{
+  "table_name": "26",
+  "generation_id": 1,
+  "generation_dir": "secondIter\\chartRecs\\26\\sum1_q1\\generation_001",
+  "schema_context": "Table: Tesla stock data from 2010 to 2020\nRows: 2416\nColumns: 7\n\nFIELD INFORMATION:\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2416\n  - Semantic Meaning: The \"Date\" field records the specific calendar day when Tesla's stock data was captured or traded, reflecting chronological points within the historical stock market context from 2010 to 2020.\n\nField: Open\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2132\n  - Semantic Meaning: This field represents the price at which Tesla's stock began trading for each day in the period 2010–2020, reflecting the official opening value on the stock market.\n  - Value Range: 16.139999 to 673.690002\n  - Mean: 186.27\n\nField: High\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2128\n  - Semantic Meaning: The \"High\" field represents the highest price per share that Tesla's stock reached during each trading day between 2010 and 2020.\n  - Value Range: 16.629999 to 786.140015\n  - Mean: 189.58\n\nField: Low\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2136\n  - Semantic Meaning: The \"Low\" field represents the lowest trading price of Tesla's stock recorded for each day between 2010 and 2020.\n  - Value Range: 14.98 to 673.52002\n  - Mean: 182.92\n\nField: Close\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2225\n  - Semantic Meaning: This field represents the final price at which Tesla's stock was traded at the end of each trading day between 2010 and 2020, reflecting daily market valuation.\n  - Value Range: 15.8 to 780.0\n  - Mean: 186.40\n\nField: Adj Close\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2225\n  - Semantic Meaning: This field represents the adjusted closing price of Tesla's stock for each trading day, reflecting the share value after accounting for corporate actions like splits and dividends, within the 2010–2020 period.\n  - Value Range: 15.8 to 780.0\n  - Mean: 186.40\n\nField: Volume\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2391\n  - Semantic Meaning: The \"Volume\" field represents the total number of Tesla shares traded on a specific day, indicating daily trading activity and liquidity in the stock market.\n  - Value Range: 118500.0 to 47065000.0\n  - Mean: 5572721.69\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Date\"\n  2. \"Open\"\n  3. \"High\"\n  4. \"Low\"\n  5. \"Close\"\n  6. \"Adj Close\"\n  7. \"Volume\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Date'], df['Open']",
+  "table_metadata": {
+    "table_name": "Tesla stock data from 2010 to 2020",
+    "file_path": "csv_c2_sec\\26.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 26.csv (Dataset: Tesla stock data from 2010 to 2020)",
+    "original_filename": "26.csv",
+    "dataset_name": "Tesla stock data from 2010 to 2020",
+    "row_count": 2416,
+    "column_count": 7,
+    "table_hash": -1564765366182258219,
+    "fields": [
+      {
+        "name": "Date",
+        "clean_name": "Date",
+        "camel_case_name": "date",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2416,
+        "sample_values": "2010-06-29, 2010-06-30, 2010-07-01, 2010-07-02, 2010-07-06, ..., 2020-01-28, 2020-01-29, 2020-01-30, 2020-01-31, 2020-02-03",
+        "inferred_semantic_summary": "The \"Date\" field records the specific calendar day when Tesla's stock data was captured or traded, reflecting chronological points within the historical stock market context from 2010 to 2020."
+      },
+      {
+        "name": "Open",
+        "clean_name": "Open",
+        "camel_case_name": "open",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2132,
+        "min_value": 16.139999,
+        "max_value": 673.690002,
+        "mean_value": 186.27114660016557,
+        "median_value": 213.03500350000002,
+        "sample_values": "16.139999, 16.4, 17.389999, 17.58, 17.799999, ..., 571.890015, 575.690002, 632.419983, 640.0, 673.690002",
+        "inferred_semantic_summary": "This field represents the price at which Tesla's stock began trading for each day in the period 2010–2020, reflecting the official opening value on the stock market."
+      },
+      {
+        "name": "High",
+        "clean_name": "High",
+        "camel_case_name": "high",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2128,
+        "min_value": 16.629999,
+        "max_value": 786.140015,
+        "mean_value": 189.5782242562086,
+        "median_value": 216.7450025,
+        "sample_values": "16.629999, 17.52, 17.9, 18.07, 18.450001, ..., 589.799988, 594.5, 650.880005, 653.0, 786.140015",
+        "inferred_semantic_summary": "The \"High\" field represents the highest price per share that Tesla's stock reached during each trading day between 2010 and 2020."
+      },
+      {
+        "name": "Low",
+        "clean_name": "Low",
+        "camel_case_name": "low",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2136,
+        "min_value": 14.98,
+        "max_value": 673.52002,
+        "mean_value": 182.91663908236757,
+        "median_value": 208.8700025,
+        "sample_values": "14.98, 15.57, 15.83, 16.549999, 16.9, ..., 559.099976, 567.429993, 618.0, 632.52002, 673.52002",
+        "inferred_semantic_summary": "The \"Low\" field represents the lowest trading price of Tesla's stock recorded for each day between 2010 and 2020."
+      },
+      {
+        "name": "Close",
+        "clean_name": "Close",
+        "camel_case_name": "close",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2225,
+        "min_value": 15.8,
+        "max_value": 780.0,
+        "mean_value": 186.40365078187088,
+        "median_value": 212.960007,
+        "sample_values": "15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0",
+        "inferred_semantic_summary": "This field represents the final price at which Tesla's stock was traded at the end of each trading day between 2010 and 2020, reflecting daily market valuation."
+      },
+      {
+        "name": "Adj Close",
+        "clean_name": "Adj_Close",
+        "camel_case_name": "adjClose",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2225,
+        "min_value": 15.8,
+        "max_value": 780.0,
+        "mean_value": 186.40365078187088,
+        "median_value": 212.960007,
+        "sample_values": "15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0",
+        "inferred_semantic_summary": "This field represents the adjusted closing price of Tesla's stock for each trading day, reflecting the share value after accounting for corporate actions like splits and dividends, within the 2010–2020 period."
+      },
+      {
+        "name": "Volume",
+        "clean_name": "Volume",
+        "camel_case_name": "volume",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 2416,
+        "unique_values": 2391,
+        "min_value": 118500.0,
+        "max_value": 47065000.0,
+        "mean_value": 5572721.688741722,
+        "median_value": 4578400.0,
+        "sample_values": "118500, 141000, 161100, 162800, 171200, ..., 32371900, 32681700, 33649700, 37163900, 47065000",
+        "inferred_semantic_summary": "The \"Volume\" field represents the total number of Tesla shares traded on a specific day, indicating daily trading activity and liquidity in the stock market."
+      }
+    ],
+    "formatted_summary": "## Table 1: Tesla_stock_data_from_2010_to_2020 (2,416 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 26.csv (Dataset: Tesla stock data from 2010 to 2020)\n\n### Schema (7 fields)\n  - Date -- type: object, values: 2010-06-29, 2010-06-30, 2010-07-01, 2010-07-02, 2010-07-06, ..., 2020-01-28, 2020-01-29, 2020-01-30, 2020-01-31, 2020-02-03\n  - Open -- type: float64, values: 16.139999, 16.4, 17.389999, 17.58, 17.799999, ..., 571.890015, 575.690002, 632.419983, 640.0, 673.690002\n  - High -- type: float64, values: 16.629999, 17.52, 17.9, 18.07, 18.450001, ..., 589.799988, 594.5, 650.880005, 653.0, 786.140015\n  - Low -- type: float64, values: 14.98, 15.57, 15.83, 16.549999, 16.9, ..., 559.099976, 567.429993, 618.0, 632.52002, 673.52002\n  - Close -- type: float64, values: 15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0\n  - Adj Close -- type: float64, values: 15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0\n  - Volume -- type: int64, values: 118500, 141000, 161100, 162800, 171200, ..., 32371900, 32681700, 33649700, 37163900, 47065000\n\n### Sample Data (first 5 rows)\n```\n         Date       Open   High        Low      Close  Adj Close    Volume\n0  2010-06-29  19.000000  25.00  17.540001  23.889999  23.889999  18766300\n1  2010-06-30  25.790001  30.42  23.299999  23.830000  23.830000  17187100\n2  2010-07-01  25.000000  25.92  20.270000  21.959999  21.959999   8218800\n3  2010-07-02  23.000000  23.10  18.709999  19.200001  19.200001   5139800\n4  2010-07-06  20.000000  20.00  15.830000  16.110001  16.110001   6866900\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "26",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "question": "How did Tesla's closing price change over the ten-year period, and were there any noticeable long-term upward or downward trends?",
+      "column_combination": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Line Chart (Time Series) with Annual Linear Trend Overlay",
+            "design_rationale": "A line chart illustrates the daily closing price dynamics over time, highlighting both short-term volatility and long-term movement. Overlaying annual trend lines makes it easy to spot periods of sustained upward or downward momentum, effectively revealing structural changes. The 'Close' price is mapped to the y-axis and 'Date' (as datetime) to the x-axis, providing clear insight into price evolution.",
+            "target_insight": "This visualization reveals Tesla's decade-long closing price history, pinpointing when major shifts occurred (e.g., rapid growth years), and quantifies long-term trends by overlaying annual regression lines.",
+            "output_fields": [
+              "Date",
+              "Close"
+            ],
+            "chart_encodings": {
+              "x": "Date",
+              "y": "Close",
+              "color": "Annual segments (each year overlaid as trend line, different colors)",
+              "size": "null",
+              "other_aesthetics": "alpha for daily series, distinct line styles for annual trends, grid for time orientation"
+            }
+          },
+          "transformations": [
+            "Convert df['Date'] to pandas datetime and sort ascending",
+            "Extract year component from df['Date'] and group by year for annual trend line overlay",
+            "For each year, fit a linear regression to df['Close'] versus time for that year"
+          ],
+          "data_preparation_steps": [
+            "df['Date'] = pd.to_datetime(df['Date'])",
+            "df = df.sort_values('Date')",
+            "df['Year'] = df['Date'].dt.year",
+            "Store unique years in years = df['Year'].unique()"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom matplotlib import cm\nfrom sklearn.linear_model import LinearRegression\n\ndf = pd.read_csv('csv_c2_sec\\26.csv')\ndf['Date'] = pd.to_datetime(df['Date'])\ndf = df.sort_values('Date')\ndf['Year'] = df['Date'].dt.year\nyears = np.sort(df['Year'].unique())\ncmap = cm.get_cmap('tab10', len(years))\nfig, ax = plt.subplots(figsize=(14,6))\nax.plot(df['Date'], df['Close'], color='gray', alpha=0.4, label='Daily Close Price')\nfor idx, year in enumerate(years):\n    df_year = df[df['Year'] == year]\n    x = (df_year['Date'] - df_year['Date'].min()).dt.days.values.reshape(-1,1)\n    y = df_year['Close'].values\n    if len(x) > 5:\n        lr = LinearRegression()\n        lr.fit(x, y)\n        x_pred = np.linspace(0, x.max(), 100).reshape(-1,1)\n        y_pred = lr.predict(x_pred)\n        dates_pred = df_year['Date'].min() + pd.to_timedelta(x_pred.flatten(), unit='D')\n        ax.plot(dates_pred, y_pred, color=cmap(idx), linewidth=2, label=f'Trend {year}')\nax.set_title('Tesla Daily Closing Price (2010-2020) with Annual Trend Lines\\nRevealing Long-term Upward/Downward Patterns')\nax.set_xlabel('Date')\nax.set_ylabel('Close')\nax.grid(True, alpha=0.3)\nax.legend(ncol=3, fontsize=8, loc='upper left', bbox_to_anchor=(0.01,1.02))\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Boxplot Matrix (Yearly Distribution of Closing Prices)",
+            "design_rationale": "A boxplot matrix displays the distribution, median, and volatility of Tesla's closing price for each year. This summarization helps visualize how price spread, central tendency, and outlier occurrence change across years—pinpointing both gradual and abrupt shifts and revealing long-term patterns in price behavior.",
+            "target_insight": "This visualization shows year-by-year closing price distributions, emphasizing increased volatility or major jumps during specific years, and clearly delineates upward trends in medians or changes in spread due to market events.",
+            "output_fields": [
+              "Year",
+              "Close"
+            ],
+            "chart_encodings": {
+              "x": "Year (categorical, ordered)",
+              "y": "Close (numeric)",
+              "color": "Year grouping (distinct colors per box)",
+              "size": "null",
+              "other_aesthetics": "outlier markers, gridlines, vertical orientation"
+            }
+          },
+          "transformations": [
+            "Convert df['Date'] to pandas datetime",
+            "Extract year from df['Date'] and assign to df['Year']",
+            "Group df['Close'] by year for boxplot distribution"
+          ],
+          "data_preparation_steps": [
+            "df['Date'] = pd.to_datetime(df['Date'])",
+            "df['Year'] = df['Date'].dt.year",
+            "years = np.sort(df['Year'].unique())",
+            "Prepare df_box = [df[df['Year']==y]['Close'].values for y in years]"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\26.csv')\ndf['Date'] = pd.to_datetime(df['Date'])\ndf['Year'] = df['Date'].dt.year\nyears = np.sort(df['Year'].unique())\ndf_box = [df[df['Year']==y]['Close'].values for y in years]\nn_colors = len(years)\ncmap = mpl.colormaps['viridis'].resampled(n_colors)\n\nfig, ax = plt.subplots(figsize=(12,7))\nbox = ax.boxplot(df_box,\n                 patch_artist=True,\n                 labels=[str(y) for y in years],\n                 showfliers=True,\n                 medianprops={'color':'black','linewidth':2})\nfor patch, idx in zip(box['boxes'], range(n_colors)):\n    patch.set_facecolor(cmap(idx))\n    patch.set_alpha(0.7)\nfor whisker in box['whiskers']:\n    whisker.set_color('gray')\nfor cap in box['caps']:\n    cap.set_color('gray')\nax.set_xlabel('Year')\nax.set_ylabel('Close')\nax.set_title('Yearly Distribution of Tesla Closing Prices (2010–2020)\\nBoxplots Show Median, Spread, and Outliers Across Years')\nax.grid(True, axis='y', alpha=0.2)\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T13:55:42.866378",
+      "schema_context": "Table: Tesla stock data from 2010 to 2020\nRows: 2416\nColumns: 7\n\nFIELD INFORMATION:\nField: Date\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2416\n  - Semantic Meaning: The \"Date\" field records the specific calendar day when Tesla's stock data was captured or traded, reflecting chronological points within the historical stock market context from 2010 to 2020.\n\nField: Open\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2132\n  - Semantic Meaning: This field represents the price at which Tesla's stock began trading for each day in the period 2010–2020, reflecting the official opening value on the stock market.\n  - Value Range: 16.139999 to 673.690002\n  - Mean: 186.27\n\nField: High\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2128\n  - Semantic Meaning: The \"High\" field represents the highest price per share that Tesla's stock reached during each trading day between 2010 and 2020.\n  - Value Range: 16.629999 to 786.140015\n  - Mean: 189.58\n\nField: Low\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2136\n  - Semantic Meaning: The \"Low\" field represents the lowest trading price of Tesla's stock recorded for each day between 2010 and 2020.\n  - Value Range: 14.98 to 673.52002\n  - Mean: 182.92\n\nField: Close\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2225\n  - Semantic Meaning: This field represents the final price at which Tesla's stock was traded at the end of each trading day between 2010 and 2020, reflecting daily market valuation.\n  - Value Range: 15.8 to 780.0\n  - Mean: 186.40\n\nField: Adj Close\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2225\n  - Semantic Meaning: This field represents the adjusted closing price of Tesla's stock for each trading day, reflecting the share value after accounting for corporate actions like splits and dividends, within the 2010–2020 period.\n  - Value Range: 15.8 to 780.0\n  - Mean: 186.40\n\nField: Volume\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 2391\n  - Semantic Meaning: The \"Volume\" field represents the total number of Tesla shares traded on a specific day, indicating daily trading activity and liquidity in the stock market.\n  - Value Range: 118500.0 to 47065000.0\n  - Mean: 5572721.69\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Date\"\n  2. \"Open\"\n  3. \"High\"\n  4. \"Low\"\n  5. \"Close\"\n  6. \"Adj Close\"\n  7. \"Volume\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Date'], df['Open']",
+      "table_metadata": {
+        "table_name": "Tesla stock data from 2010 to 2020",
+        "file_path": "csv_c2_sec\\26.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 26.csv (Dataset: Tesla stock data from 2010 to 2020)",
+        "original_filename": "26.csv",
+        "dataset_name": "Tesla stock data from 2010 to 2020",
+        "row_count": 2416,
+        "column_count": 7,
+        "table_hash": -1564765366182258219,
+        "fields": [
+          {
+            "name": "Date",
+            "clean_name": "Date",
+            "camel_case_name": "date",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2416,
+            "sample_values": "2010-06-29, 2010-06-30, 2010-07-01, 2010-07-02, 2010-07-06, ..., 2020-01-28, 2020-01-29, 2020-01-30, 2020-01-31, 2020-02-03",
+            "inferred_semantic_summary": "The \"Date\" field records the specific calendar day when Tesla's stock data was captured or traded, reflecting chronological points within the historical stock market context from 2010 to 2020."
+          },
+          {
+            "name": "Open",
+            "clean_name": "Open",
+            "camel_case_name": "open",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2132,
+            "min_value": 16.139999,
+            "max_value": 673.690002,
+            "mean_value": 186.27114660016557,
+            "median_value": 213.03500350000002,
+            "sample_values": "16.139999, 16.4, 17.389999, 17.58, 17.799999, ..., 571.890015, 575.690002, 632.419983, 640.0, 673.690002",
+            "inferred_semantic_summary": "This field represents the price at which Tesla's stock began trading for each day in the period 2010–2020, reflecting the official opening value on the stock market."
+          },
+          {
+            "name": "High",
+            "clean_name": "High",
+            "camel_case_name": "high",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2128,
+            "min_value": 16.629999,
+            "max_value": 786.140015,
+            "mean_value": 189.5782242562086,
+            "median_value": 216.7450025,
+            "sample_values": "16.629999, 17.52, 17.9, 18.07, 18.450001, ..., 589.799988, 594.5, 650.880005, 653.0, 786.140015",
+            "inferred_semantic_summary": "The \"High\" field represents the highest price per share that Tesla's stock reached during each trading day between 2010 and 2020."
+          },
+          {
+            "name": "Low",
+            "clean_name": "Low",
+            "camel_case_name": "low",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2136,
+            "min_value": 14.98,
+            "max_value": 673.52002,
+            "mean_value": 182.91663908236757,
+            "median_value": 208.8700025,
+            "sample_values": "14.98, 15.57, 15.83, 16.549999, 16.9, ..., 559.099976, 567.429993, 618.0, 632.52002, 673.52002",
+            "inferred_semantic_summary": "The \"Low\" field represents the lowest trading price of Tesla's stock recorded for each day between 2010 and 2020."
+          },
+          {
+            "name": "Close",
+            "clean_name": "Close",
+            "camel_case_name": "close",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2225,
+            "min_value": 15.8,
+            "max_value": 780.0,
+            "mean_value": 186.40365078187088,
+            "median_value": 212.960007,
+            "sample_values": "15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0",
+            "inferred_semantic_summary": "This field represents the final price at which Tesla's stock was traded at the end of each trading day between 2010 and 2020, reflecting daily market valuation."
+          },
+          {
+            "name": "Adj Close",
+            "clean_name": "Adj_Close",
+            "camel_case_name": "adjClose",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2225,
+            "min_value": 15.8,
+            "max_value": 780.0,
+            "mean_value": 186.40365078187088,
+            "median_value": 212.960007,
+            "sample_values": "15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0",
+            "inferred_semantic_summary": "This field represents the adjusted closing price of Tesla's stock for each trading day, reflecting the share value after accounting for corporate actions like splits and dividends, within the 2010–2020 period."
+          },
+          {
+            "name": "Volume",
+            "clean_name": "Volume",
+            "camel_case_name": "volume",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 2416,
+            "unique_values": 2391,
+            "min_value": 118500.0,
+            "max_value": 47065000.0,
+            "mean_value": 5572721.688741722,
+            "median_value": 4578400.0,
+            "sample_values": "118500, 141000, 161100, 162800, 171200, ..., 32371900, 32681700, 33649700, 37163900, 47065000",
+            "inferred_semantic_summary": "The \"Volume\" field represents the total number of Tesla shares traded on a specific day, indicating daily trading activity and liquidity in the stock market."
+          }
+        ],
+        "formatted_summary": "## Table 1: Tesla_stock_data_from_2010_to_2020 (2,416 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 26.csv (Dataset: Tesla stock data from 2010 to 2020)\n\n### Schema (7 fields)\n  - Date -- type: object, values: 2010-06-29, 2010-06-30, 2010-07-01, 2010-07-02, 2010-07-06, ..., 2020-01-28, 2020-01-29, 2020-01-30, 2020-01-31, 2020-02-03\n  - Open -- type: float64, values: 16.139999, 16.4, 17.389999, 17.58, 17.799999, ..., 571.890015, 575.690002, 632.419983, 640.0, 673.690002\n  - High -- type: float64, values: 16.629999, 17.52, 17.9, 18.07, 18.450001, ..., 589.799988, 594.5, 650.880005, 653.0, 786.140015\n  - Low -- type: float64, values: 14.98, 15.57, 15.83, 16.549999, 16.9, ..., 559.099976, 567.429993, 618.0, 632.52002, 673.52002\n  - Close -- type: float64, values: 15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0\n  - Adj Close -- type: float64, values: 15.8, 16.110001, 17.049999, 17.4, 17.459999, ..., 572.200012, 580.98999, 640.809998, 650.570007, 780.0\n  - Volume -- type: int64, values: 118500, 141000, 161100, 162800, 171200, ..., 32371900, 32681700, 33649700, 37163900, 47065000\n\n### Sample Data (first 5 rows)\n```\n         Date       Open   High        Low      Close  Adj Close    Volume\n0  2010-06-29  19.000000  25.00  17.540001  23.889999  23.889999  18766300\n1  2010-06-30  25.790001  30.42  23.299999  23.830000  23.830000  17187100\n2  2010-07-01  25.000000  25.92  20.270000  21.959999  21.959999   8218800\n3  2010-07-02  23.000000  23.10  18.709999  19.200001  19.200001   5139800\n4  2010-07-06  20.000000  20.00  15.830000  16.110001  16.110001   6866900\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

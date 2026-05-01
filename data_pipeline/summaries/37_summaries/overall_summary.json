@@ -1,0 +1,29 @@
+{
+  "table_name": "Mall Customer Segmentation Data",
+  "file_index": "37",
+  "original_filename": "37.csv",
+  "total_rows": 200,
+  "total_columns": 5,
+  "column_names": [
+    "CustomerID",
+    "Gender",
+    "Age",
+    "Annual Income (k$)",
+    "Spending Score (1-100)"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\37_summaries",
+  "source_file": "csv_c2_sec\\37.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\37_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

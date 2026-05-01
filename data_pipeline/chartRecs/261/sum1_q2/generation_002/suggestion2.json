@@ -1,0 +1,46 @@
+{
+  "table_name": "261",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which undergraduate majors are most common among astronauts, and how does this distribution differ by gender?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Diverging Bar Chart (Population Pyramid Style)",
+      "design_rationale": "A horizontal diverging (population pyramid) bar chart offers a distinct, side-by-side comparison of male versus female representation for each major, which is particularly powerful when inspecting gender disparities. Each major appears on the y-axis, sorted by total number of astronauts, with leftward bars for males and rightward bars for females. This layout immediately visualizes imbalances and symmetry, and subtly encourages reflection on gender representation within STEM and non-STEM undergraduate backgrounds.",
+      "target_insight": "Reveals major-specific gender representation patterns for astronauts, highlighting fields with pronounced imbalances or near parity.",
+      "output_fields": [
+        "Undergraduate Major",
+        "Gender",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Number of male/female astronauts (count of Name, males negative, females positive)",
+        "y": "Undergraduate Major",
+        "color": "Gender ('#1f77b4' for Male, '#d62728' for Female)",
+        "size": null,
+        "other_aesthetics": "Population pyramid bars, horizontal orientation, major labels; legend with explicit color coding"
+      }
+    },
+    "transformations": [
+      "Drop rows with nulls in 'Undergraduate Major' or 'Gender'",
+      "Group by ['Undergraduate Major', 'Gender'] and count 'Name'",
+      "Aggregate counts to get total per major, then select top 12 majors with highest total counts",
+      "Reformat data so that male counts are negative, female counts positive, for population pyramid effect"
+    ],
+    "data_preparation_steps": [
+      "df = df.dropna(subset=['Undergraduate Major', 'Gender'])",
+      "major_gender_counts = df.groupby(['Undergraduate Major', 'Gender'])['Name'].count().reset_index()",
+      "total_major_counts = major_gender_counts.groupby('Undergraduate Major')['Name'].sum().sort_values(ascending=False)",
+      "top_majors = total_major_counts.head(12).index.tolist()",
+      "top_major_gender_counts = major_gender_counts[major_gender_counts['Undergraduate Major'].isin(top_majors)]",
+      "# Reindex for plotting pyramid: sort majors by total astronauts descending",
+      "top_major_gender_counts['Name'] = top_major_gender_counts.apply(lambda row: -row['Name'] if row['Gender']=='Male' else row['Name'], axis=1)",
+      "top_major_gender_counts = top_major_gender_counts.sort_values(by='Undergraduate Major')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf = df.dropna(subset=['Undergraduate Major', 'Gender'])\nmajor_gender_counts = df.groupby(['Undergraduate Major', 'Gender'])['Name'].count().reset_index()\ntotal_major_counts = major_gender_counts.groupby('Undergraduate Major')['Name'].sum().sort_values(ascending=False)\ntop_majors = total_major_counts.head(12).index.tolist()\ntop_major_gender_counts = major_gender_counts[major_gender_counts['Undergraduate Major'].isin(top_majors)]\n# Format for diverging bars\nmale_counts = top_major_gender_counts[top_major_gender_counts['Gender']=='Male'][['Undergraduate Major','Name']].set_index('Undergraduate Major')['Name']\nfemale_counts = top_major_gender_counts[top_major_gender_counts['Gender']=='Female'][['Undergraduate Major','Name']].set_index('Undergraduate Major')['Name']\nmajors_sorted = total_major_counts.loc[top_majors].index.tolist()\n# Ensure majors_sorted covers all majors for y axis\ny = np.arange(len(majors_sorted))\nmale_vals = [-male_counts.get(m,0) for m in majors_sorted]\nfemale_vals = [female_counts.get(m,0) for m in majors_sorted]\nfig, ax = plt.subplots(figsize=(12,8))\nax.barh(y, male_vals, color='#1f77b4', label='Male')\nax.barh(y, female_vals, color='#d62728', label='Female')\nax.set_yticks(y)\nax.set_yticklabels(majors_sorted)\nax.set_xlabel('Number of astronauts\\n(Male to left, Female to right)')\nax.set_title('NASA Astronauts Undergraduate Majors by Gender\\nPopulation Pyramid Style')\nax.axvline(0, color='k', linewidth=0.8)\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,33 @@
+============================================================================
+  SOFT-DISTRIBUTION METRICS SUMMARY
+============================================================================
+
+  Unlike hard-label metrics that treat each model response as a
+  point-mass (delta) distribution, these metrics compare the full
+  probability distribution from k repeated model runs against the
+  human annotator vote distribution.
+
+  Model                        Pairs      JSD   Cosine  TV Dist  Overlap       CE  Pearson      τ_b    Ent_r  Ent_cos
+  ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  Phi4Multimodal                  24   0.1389   0.8252   0.2812   0.7188   4.1128   0.0892   0.0669   0.1252   0.8780
+  ClaudeOpus45                    24   0.3395   0.6553   0.4875   0.5125  17.6943  -0.0587  -0.0673   0.1905   0.5202
+  Gpt5Chat                        24   0.3644   0.6192   0.5042   0.4958  19.0126  -0.1829  -0.1958   0.0635   0.4702
+  Gpt4v                           24   0.3701   0.6147   0.5208   0.4792  19.3216  -0.1661  -0.1635   0.1031   0.4475
+  ClaudeSonnet45                  24   0.3768   0.6179   0.5292   0.4708  19.9195  -0.0900  -0.0719  -0.0304   0.3040
+
+  Column descriptions:
+    JSD      Mean Jensen-Shannon Divergence (0 = identical, 1 = maximally different)
+    Cosine   Mean cosine similarity of probability vectors (1 = identical direction)
+    TV Dist  Mean total variation distance (0 = identical, 1 = disjoint support)
+    Overlap  Mean distribution overlap Σ min(h_i, m_i)  (1 = identical, 0 = disjoint)
+    CE       Mean cross-entropy CE(human, model) in bits (lower = model fits human better)
+    Pearson  Pearson's r between human margin (h_c1−h_c2)/N and model margin across pairs
+    τ_b      Kendall's Tau-b between human and model soft margins (rank concordance)
+    Ent_r    Pearson's r between Hnorm(human) and Hnorm(model) entropy vectors
+    Ent_cos  Cosine similarity between Hnorm(human) and Hnorm(model) entropy vectors
+
+  Interpretation notes:
+    Lower JSD / TV and higher Cosine / Overlap / Pearson / τ_b → better alignment.
+    Pearson r = 1 → model margin perfectly linearly tracks human margin.
+    τ_b = 1       → model margin perfectly rank-concordant with human margin.
+

@@ -1,0 +1,42 @@
+{
+  "table_name": "112",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 10,
+  "suggestion_id": 2,
+  "question": "Which drinks combine both high calorie and high caffeine amounts, and what types do they represent?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot + Swarm (Bee) Plot",
+      "design_rationale": "Combining boxplots and swarm plots visualizes the distribution of 'Caffeine (mg)' and 'Calories' product ('intensity') per 'type', revealing which types most commonly produce drinks with both high calorie and high caffeine values. Boxplots show central tendency and spread for each 'type', while the swarm overlays individual drinks, with color indicating relative drink intensity. This offers both statistical summary and detailed outlier/context for each type.",
+      "target_insight": "Which beverage types dominate in high calorie-and-caffeine drinks, including how their distributions and outliers differ.",
+      "output_fields": [
+        "type",
+        "'Intensity' (Calories * Caffeine per drink)",
+        "drink"
+      ],
+      "chart_encodings": {
+        "x": "type (categorical)",
+        "y": "Calories * Caffeine (mg) (combined 'intensity' metric)",
+        "color": "relative intensity (cmap coloring within each type, swarm points)",
+        "size": "None",
+        "other_aesthetics": "Boxplot behind; jittered swarm for points; highlight top outlier per type"
+      }
+    },
+    "transformations": [
+      "Compute new column 'Intensity' as Calories * Caffeine (mg) for all drinks",
+      "For each type, plot the distribution of 'Intensity'",
+      "Overlay colored swarm points atop boxplots",
+      "Highlight (different marker/label) the drink with highest intensity in each type"
+    ],
+    "data_preparation_steps": [
+      "df = pd.read_csv('csv_c2_sec\\112.csv')",
+      "df['Intensity'] = df['Calories'] * df['Caffeine (mg)']",
+      "Order types by median Intensity (descending) for axis sorting",
+      "For each type, identify drink with maximum Intensity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\112.csv')\ndf['Intensity'] = df['Calories'] * df['Caffeine (mg)']\ntypes_order = df.groupby('type')['Intensity'].median().sort_values(ascending=False).index.tolist()\ncmap = mpl.colormaps['plasma']\nfig, ax = plt.subplots(figsize=(11, 6))\n# Prepare data per type\npositions = range(len(types_order))\nbplot_data = [df[df['type'] == t]['Intensity'] for t in types_order]\n# Boxplot\nax.boxplot(bplot_data, positions=positions, patch_artist=True, showfliers=False, widths=0.5, boxprops=dict(facecolor='lightgray', alpha=0.3))\n# Swarm\nfor i, t in enumerate(types_order):\n    dft = df[df['type'] == t]\n    x_jitter = np.random.uniform(-0.18, 0.18, size=len(dft))\n    norm = plt.Normalize(dft['Intensity'].min(), dft['Intensity'].max())\n    colors = cmap(norm(dft['Intensity']))\n    ax.scatter(\n        np.full_like(dft['Intensity'], i) + x_jitter,\n        dft['Intensity'],\n        c=colors,\n        s=42,\n        edgecolors='k',\n        alpha=0.8,\n        label=None\n    )\n    # Highlight top intensity in each type\n    if len(dft):\n        idxmax = dft['Intensity'].idxmax()\n        top = dft.loc[idxmax]\n        ax.scatter(i, top['Intensity'], marker='*', s=120, c='red', edgecolors='white', zorder=5)\n        ax.text(i, top['Intensity'], top['drink'], fontsize=8, color='darkred', ha='left', va='bottom', rotation=15)\nax.set_xticks(positions)\nax.set_xticklabels(types_order, rotation=20, ha='right')\nax.set_ylabel('Calories x Caffeine (mg)')\nax.set_xlabel('Drink Type')\nax.set_title('Distribution of High Calorie & High Caffeine Drinks\\nby Type (Intensity = Calories x Caffeine)')\n# Colorbar for combined intensity\nsm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(df['Intensity'].min(), df['Intensity'].max()))\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, pad=0.01)\ncbar.set_label('Calories x Caffeine Intensity')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

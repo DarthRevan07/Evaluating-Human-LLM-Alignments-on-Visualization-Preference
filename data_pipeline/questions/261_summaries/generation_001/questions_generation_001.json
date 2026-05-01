@@ -1,0 +1,199 @@
+{
+  "table_name": "NASA Astronauts, 1959-Present",
+  "generation_dir": "c2_summaries_run2\\261_summaries\\generation_001",
+  "total_summaries_processed": 4,
+  "questions_per_summary": 8,
+  "schema_context": "## Table 1: NASA_Astronauts__1959_Present (357 rows × 19 columns)\n\n### Description\nData loaded from CSV file: 261.csv (Dataset: NASA Astronauts, 1959-Present)\n\n### Schema (19 fields)\n  - Name -- type: object, values: Alan B. Shepard Jr. , Alan G. Poindexter, Alan L. Bean, Albert Sacco Jr., Alfred M. Worden, ..., William M. Shepherd, William R. Pogue, William S. McArthur Jr. , Winston E. Scott, Yvonne D. Cagle\n  - Year -- type: float64, values: nan, nan, nan, nan, nan, ..., nan, nan, nan, nan, nan\n  - Group -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, nan\n  - Status -- type: object, values: Active, Deceased, Management, Retired\n  - Birth Date -- type: object, values: 1/14/1943, 1/16/1946, 1/16/1952, 1/16/1955, 1/17/1943, ..., 9/30/1961, 9/6/1946, 9/6/1955, 9/7/1939, 9/9/1952\n  - Birth Place -- type: object, values: \"Abington, PA\", \"Adelaide, Australia\", \"Akron, OH\", \"Albany, GA\", \"Albany, NY\", ..., \"Wichita Falls, TX\", \"Wilmington, DE\", \"Winona, MS\", \"Yanktown, SD\", \"Yonkers, NY\"\n  - Gender -- type: object, values: Female, Male\n  - Alma Mater -- type: object, values: University of Utah, University of Michigan, University of Sydney, University of Colorado; Rensselaer Polytechnic Institute; University of Hartford, Harvard University; MIT, ..., University of Colorado; University of California Los Angeles, Ohio State University; University of Southern California; University of Houston, US Naval Academy; Harvard University, Framingham State College; Bowie State College, University of New Hampshire; Ohio State University; Harvard University\n  - Undergraduate Major -- type: object, values: Physics & Engineering, Electrical Science, Aeronautical Engineering, Physics & Astronomy, Zoology, ..., Systems Engineering, Geology, Mechanical & Aeronautical Engineering, Mathematics & Physics, Civil Engineering\n  - Graduate Major -- type: object, values: Medicine, Chemical Engineering; Medicine, Nuclear Physics, Materials Science Engineering, Aeronautical Engineering, ..., Astronomy, Systems Engineering, Geology, Aeronautics & Astronautics; Physical Sciences, Chemistry; Medicine\n  - Military Rank -- type: object, values: Lieutenant Colonel, Rear Admiral, Chief Warrant Officer, Commander, Captain, ..., Major General, Brigadier General, Lieutenant Commander, Vice Admiral, Major\n  - Military Branch -- type: object, values: US Marine Corps (Retired), US Navy (Retired), US Marine Corps, US Coast Guard (Retired), nan, ..., US Navy, US Naval Reserves (Retired), US Air Force (Retired), US Marine Corps Reserves, US Air Force\n  - Space Flights -- type: int64, values: 0, 1, 2, 3, 4, 5, 6, 7\n  - Space Flight (hr) -- type: int64, values: 0, 4, 5, 73, 97, ..., 8970, 9159, 11698, 12490, 12818\n  - Space Walks -- type: int64, values: 0, 1, 2, 3, 4, ..., 6, 7, 8, 9, 10\n  - Space Walks (hr) -- type: float64, values: 0.0, 0.5, 1.0, 2.0, 3.0, ..., 49.0, 50.0, 53.0, 58.0, 67.0\n  - Missions -- type: object, values: \"STS-73 (Columbia), STS-92 (Discovery), STS-113 (Endeavor), ISS-14 (Soyuz)\", \"STS-116/117 (Discovery/Atlantis), ISS-32/33 (Soyuz)\", STS 51-B (Challenger), Apollo 16, \"STS-111 (Endeavor), STS-113 (Endeavor)\", ..., \"STS-123 (Endeavor), STS-129 (Atlantis)\", \"Mercury 8, Gemini 6, Apollo 7\", \"Mercury 9, Gemini 5\", \"STS-70 (Discovery), STS-101 (Atlantis)\", \"STS-56 (Discovery), STS-66 (Atlantis), STS-96 (Discovery), STS-110 (Atlantis)\"\n  - Death Date -- type: object, values: 10/5/1967, 2/28/1966, 10/31/1964, nan, 1/27/1967, ..., 5/24/1986, 8/11/2008, 4/6/1990, 2/1/2003, 12/12/1994\n  - Death Mission -- type: object, values: STS 51-L (Challenger), Apollo 1, STS-107 (Columbia), nan\n\n### Sample Data (first 5 rows)\n```\n               Name    Year  Group   Status Birth Date    Birth Place Gender                                                     Alma Mater     Undergraduate Major         Graduate Major Military Rank         Military Branch  Space Flights  Space Flight (hr)  Space Walks  Space Walks (hr)                                                                     Missions  Death Date  Death Mission\n0   Joseph M. Acaba  2004.0   19.0   Active  5/17/1967  Inglewood, CA   Male  University of California-Santa Barbara; University of Arizona                 Geology                Geology           NaN                     NaN              2               3307            2              13.0                                       STS-119 (Discovery), ISS-31/32 (Soyuz)         NaN            NaN\n1    Loren W. Acton     NaN    NaN  Retired   3/7/1936   Lewiston, MT   Male               Montana State University; University of Colorado     Engineering Physics          Solar Physics           NaN                     NaN              1                190            0               0.0                                                        STS 51-F (Challenger)         NaN            NaN\n2  James C. Adamson  1984.0   10.0  Retired   3/3/1946     Warsaw, NY   Male                      US Military Academy; Princeton University             Engineering  Aerospace Engineering       Colonel       US Army (Retired)              2                334            0               0.0                                         STS-28 (Columbia), STS-43 (Atlantis)         NaN            NaN\n3   Thomas D. Akers  1987.0   12.0  Retired  5/20/1951  St. Louis, MO   Male                                   University of Missouri-Rolla     Applied Mathematics    Applied Mathematics       Colonel  US Air Force (Retired)              4                814            4              29.0  STS-41 (Discovery), STS-49 (Endeavor), STS-61 (Endeavor), STS-79 (Atlantis)         NaN            NaN\n4       Buzz Aldrin  1963.0    3.0  Retired  1/20/1930  Montclair, NJ   Male                                       US Military Academy; MIT  Mechanical Engineering           Astronautics       Colonel  US Air Force (Retired)              2                289            2               8.0                                                         Gemini 12, Apollo 11         NaN            NaN\n```\n",
+  "table_metadata": {
+    "total_rows": 357,
+    "total_columns": 19,
+    "source_file": "csv_c_squared\\261.csv",
+    "sheet_name": ""
+  },
+  "questions": [
+    {
+      "table_name": "NASA_Astronauts__1959_Present",
+      "summary_idx": 1,
+      "column_combination": [
+        "Name",
+        "Year",
+        "Group",
+        "Status",
+        "Birth Date",
+        "Birth Place",
+        "Gender",
+        "Alma Mater",
+        "Undergraduate Major",
+        "Graduate Major",
+        "Military Rank",
+        "Military Branch",
+        "Space Flights",
+        "Space Flight (hr)",
+        "Space Walks",
+        "Space Walks (hr)",
+        "Missions",
+        "Death Date",
+        "Death Mission"
+      ],
+      "questions": [
+        "How has the gender composition of NASA astronauts changed over time based on the 'Year' and 'Gender' fields?",
+        "Which undergraduate majors are most common among astronauts, and how does this distribution differ by gender?",
+        "Which alma maters have produced the highest number of NASA astronauts, and how does their representation vary across decades?",
+        "What is the distribution of astronauts born in different locations, and does birthplace correlate with alma mater?",
+        "Are there noticeable trends in the frequency of space flights by astronauts with different military ranks?",
+        "How do the number of missions compare between astronauts who are currently 'Active' versus those who are 'Retired'?",
+        "What is the relationship between the total hours spent in space ('Space Flight (hr)') and the undergraduate major of astronauts?",
+        "Are there any anomalies or outliers in the number of space walks for astronauts from specific military branches?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 357,
+          "total_columns": 19,
+          "source_file": "csv_c_squared\\261.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "NASA_Astronauts__1959_Present",
+      "summary_idx": 2,
+      "column_combination": [
+        "Name",
+        "Year",
+        "Group",
+        "Status",
+        "Birth Date",
+        "Birth Place",
+        "Gender",
+        "Alma Mater",
+        "Undergraduate Major",
+        "Graduate Major",
+        "Military Rank",
+        "Military Branch",
+        "Space Flights",
+        "Space Flight (hr)",
+        "Space Walks",
+        "Space Walks (hr)",
+        "Missions",
+        "Death Date",
+        "Death Mission"
+      ],
+      "questions": [
+        "How does the number of Space Flights differ across the various Status categories (Active, Retired, Management, Deceased)?",
+        "What is the distribution of Space Flight hours among astronauts with different Military Ranks?",
+        "Are there any noticeable trends in Space Walks over time based on the Year or Group field?",
+        "How does Space Walks (hr) vary between male and female astronauts?",
+        "Is there a relationship between the number of Missions and the astronaut’s Status?",
+        "Which Alma Mater institutions have the highest average Space Flights per astronaut?",
+        "What patterns can be observed in Space Flight (hr) for astronauts with and without a military background (Military Branch vs. nan)?",
+        "Do astronauts from different Undergraduate Majors tend to have differing numbers of Space Walks?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 357,
+          "total_columns": 19,
+          "source_file": "csv_c_squared\\261.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "NASA_Astronauts__1959_Present",
+      "summary_idx": 3,
+      "column_combination": [
+        "Name",
+        "Year",
+        "Group",
+        "Status",
+        "Birth Date",
+        "Birth Place",
+        "Gender",
+        "Alma Mater",
+        "Undergraduate Major",
+        "Graduate Major",
+        "Military Rank",
+        "Military Branch",
+        "Space Flights",
+        "Space Flight (hr)",
+        "Space Walks",
+        "Space Walks (hr)",
+        "Missions",
+        "Death Date",
+        "Death Mission"
+      ],
+      "questions": [
+        "How is the distribution of military ranks among astronauts different across military branches?",
+        "Which military branches most frequently contribute active versus retired astronauts in the dataset?",
+        "What patterns can be observed in the number of space flights across different military ranks?",
+        "How does astronaut status (Active, Retired, Deceased, Management) relate to military branch affiliation?",
+        "Are there notable differences in the prevalence of military experience (rank and branch) within each astronaut Group?",
+        "What relationship exists between military rank and total space flight hours among astronauts?",
+        "Which military branches are most common among astronauts who have conducted space walks?",
+        "How does the proportion of astronauts with military backgrounds change across different Groups?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 357,
+          "total_columns": 19,
+          "source_file": "csv_c_squared\\261.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    },
+    {
+      "table_name": "NASA_Astronauts__1959_Present",
+      "summary_idx": 4,
+      "column_combination": [
+        "Name",
+        "Year",
+        "Group",
+        "Status",
+        "Birth Date",
+        "Birth Place",
+        "Gender",
+        "Alma Mater",
+        "Undergraduate Major",
+        "Graduate Major",
+        "Military Rank",
+        "Military Branch",
+        "Space Flights",
+        "Space Flight (hr)",
+        "Space Walks",
+        "Space Walks (hr)",
+        "Missions",
+        "Death Date",
+        "Death Mission"
+      ],
+      "questions": [
+        "How has the number of active and retired astronauts changed over different years?",
+        "What trends can be observed in astronaut mission participation across different groups?",
+        "How does the total number of space flights vary among astronauts with different military ranks?",
+        "Are there differences in the distribution of space flight hours between male and female astronauts?",
+        "What relationships exist between the undergraduate major of astronauts and their total missions flown?",
+        "Compare the frequency and timing of astronaut fatalities (Death Date) with their mission involvement (Death Mission).",
+        "How does the status of an astronaut (Active, Deceased, Retired) relate to their total space walks?",
+        "Are there any noticeable anomalies in space flight hours when analyzed against astronauts’ birth places?"
+      ],
+      "metadata": {
+        "schema_based": true,
+        "table_metadata": {
+          "total_rows": 357,
+          "total_columns": 19,
+          "source_file": "csv_c_squared\\261.csv",
+          "sheet_name": ""
+        },
+        "num_questions_requested": 8,
+        "num_questions_generated": 8
+      }
+    }
+  ]
+}

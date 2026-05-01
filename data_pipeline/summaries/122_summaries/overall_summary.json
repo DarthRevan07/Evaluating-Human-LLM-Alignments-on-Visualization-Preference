@@ -1,0 +1,35 @@
+{
+  "table_name": "Video Game Sales",
+  "file_index": "122",
+  "original_filename": "122.csv",
+  "total_rows": 16598,
+  "total_columns": 11,
+  "column_names": [
+    "Rank",
+    "Name",
+    "Platform",
+    "Year",
+    "Genre",
+    "Publisher",
+    "NA_Sales",
+    "EU_Sales",
+    "JP_Sales",
+    "Other_Sales",
+    "Global_Sales"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\122_summaries",
+  "source_file": "csv_c2_sec\\122.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\122_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "table_name": "243",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "What patterns can be observed in temperature trends for major cities over the series of observation times?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Multi-Line Plot (Line Chart)",
+      "design_rationale": "A multi-line plot shows temperature changes for each city across observation times, allowing direct comparison of temporal temperature patterns among locations. Leveraging the categorical 'Location' and timestamp-based 'Observation Time' fields, and plotting 'Temperature (°C)', this approach delivers a clear view of seasonal or daily weather variations and highlights contrasting temperature curves among cities. The color encoding distinguishes each city, supporting visually distinct, easily trackable lines.",
+      "target_insight": "Temporal temperature trends and patterns for each city, revealing similarities and differences across cities during the observed time series.",
+      "output_fields": [
+        "Location",
+        "Observation Time",
+        "Temperature (°C)"
+      ],
+      "chart_encodings": {
+        "x": "Observation Time",
+        "y": "Temperature (°C)",
+        "color": "Location",
+        "size": null,
+        "other_aesthetics": "Distinct line color per city; legend for Location; x-axis labels rotated for readability; grid for clarity"
+      }
+    },
+    "transformations": [
+      "Convert 'Observation Time' to pandas datetime for accurate sorting and plotting",
+      "Sort data by 'Location' and 'Observation Time' to ensure temporal order",
+      "Restrict to relevant columns: 'Location', 'Observation Time', 'Temperature (°C)'"
+    ],
+    "data_preparation_steps": [
+      "df['Observation Time'] = pd.to_datetime(df['Observation Time'])",
+      "df_sorted = df.sort_values(['Location', 'Observation Time'])",
+      "df_plot = df_sorted[['Location', 'Observation Time', 'Temperature (°C)']]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\243.csv')\ndf['Observation Time'] = pd.to_datetime(df['Observation Time'])\ndf_sorted = df.sort_values(['Location', 'Observation Time'])\ndf_plot = df_sorted[['Location', 'Observation Time', 'Temperature (°C)']]\nlocations = df_plot['Location'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(locations))\nfig, ax = plt.subplots(figsize=(12,6))\nfor idx, loc in enumerate(locations):\n    city_data = df_plot[df_plot['Location']==loc]\n    ax.plot(city_data['Observation Time'], city_data['Temperature (°C)'], label=loc, color=cmap(idx))\nax.set_xlabel('Observation Time')\nax.set_ylabel('Temperature (°C)')\nax.set_title('Temperature Trends\\nfor Major Cities Over Observation Times')\nax.legend(title='Location', bbox_to_anchor=(1.02,1), loc='upper left')\nplt.xticks(rotation=45, ha='right')\nax.grid(True, which='major', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

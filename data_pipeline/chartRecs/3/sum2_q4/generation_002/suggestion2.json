@@ -1,0 +1,40 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "How is rice production per person distributed across all countries in the dataset?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal bar chart (ranked)",
+      "design_rationale": "A ranked horizontal bar chart enables the viewer to directly compare rice production per person for every country, sorted from highest to lowest. By mapping precise per capita production to bar length and annotating top/bottom values, spatial arrangement intuitively emphasizes leaders and laggards, names are readable, and outliers are immediately evident. Coloring the bars (e.g., gradient by yield or neutral for clarity) visually reinforces magnitude. With 119 rows and a categorical country variable, a horizontal bar chart is preferable for label readability.",
+      "target_insight": "This visualization shows the entire spectrum of countries, making it obvious which nations have exceptional, average, or low per capita rice output, highlighting the range and unevenness in a straightforward, easily scanned format.",
+      "output_fields": [
+        "Country",
+        "Rice Production Per Person (Kg)",
+        "Rank of Rice Production Per Person"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg)",
+        "y": "Country",
+        "color": "Optional: gradient/color by 'Rice Production Per Person (Kg)' or neutral palette, or by 'Rank of Rice Production Per Person'",
+        "size": "None",
+        "other_aesthetics": "Bars sorted descending, highlight top/bottom bar with bolder color, x-axis annotated with units"
+      }
+    },
+    "transformations": [
+      "Convert df['Rice Production Per Person (Kg)'] from string (strip K/M/commas if present) to float",
+      "Drop rows with missing per-person production",
+      "Sort the data descending by numeric per-person production"
+    ],
+    "data_preparation_steps": [
+      "Define and apply a parsing function for 'Rice Production Per Person (Kg)' as above",
+      "Create a sorted DataFrame by 'Rice Production Per Person (Kg)_num', descending",
+      "Select all columns necessary for plotting (especially 'Country', 'Rice Production Per Person (Kg)_num', 'Rank of Rice Production Per Person')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\ndef parse_kmg(val):\n    if isinstance(val, str):\n        val = val.replace(\",\", \"\").replace(\" \", \"\")\n        if val.endswith(\"K\"): return float(val[:-1])*1e3\n        elif val.endswith(\"M\"): return float(val[:-1])*1e6\n        else:\n            try: return float(val)\n            except: return np.nan\n    return np.nan\ndf[\"Rice Production Per Person (Kg)_num\"] = df[\"Rice Production Per Person (Kg)\"].apply(parse_kmg)\ndf_plot = df.dropna(subset=[\"Rice Production Per Person (Kg)_num\"]).sort_values(\"Rice Production Per Person (Kg)_num\", ascending=False).reset_index(drop=True)\nn = len(df_plot)\ncmap = mpl.colormaps[\"Blues\"].resampled(256)\nnorm = mpl.colors.Normalize(vmin=df_plot[\"Rice Production Per Person (Kg)_num\"].min(), vmax=df_plot[\"Rice Production Per Person (Kg)_num\"].max())\nbar_colors = cmap(norm(df_plot[\"Rice Production Per Person (Kg)_num\"]))\nfig, ax = plt.subplots(figsize=(10, max(8, n//6)))\nbars = ax.barh(\n    df_plot[\"Country\"],\n    df_plot[\"Rice Production Per Person (Kg)_num\"],\n    color=bar_colors, edgecolor=\"gray\", height=0.75\n)\n# Highlight top and bottom\nbars[0].set_facecolor(\"#e4572e\")\nbars[-1].set_facecolor(\"#29335c\")\nax.set_xlabel(\"Rice Production Per Person (Kg)\")\nax.set_ylabel(\"Country\")\nax.invert_yaxis()\nax.set_title(\"Rice Production Per Person by Country (Ranked)\")\n# Annotate top and bottom\nax.text(\n    df_plot[\"Rice Production Per Person (Kg)_num\"].iloc[0] * 1.01, 0, f\"Top: {df_plot['Country'].iloc[0]}\",\n    va=\"center\", ha=\"left\", fontsize=10, color=\"#e4572e\", fontweight=\"bold\"\n)\nax.text(\n    df_plot[\"Rice Production Per Person (Kg)_num\"].iloc[-1] * 1.01, n-1, f\"Bottom: {df_plot['Country'].iloc[-1]}\",\n    va=\"center\", ha=\"left\", fontsize=10, color=\"#29335c\", fontweight=\"bold\"\n)\ncbar = fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, orientation=\"vertical\", pad=0.015)\ncbar.set_label(\"Rice Production Per Person (Kg)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

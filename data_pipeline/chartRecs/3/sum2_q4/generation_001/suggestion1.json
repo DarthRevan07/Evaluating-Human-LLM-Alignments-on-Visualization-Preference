@@ -1,0 +1,35 @@
+{
+  "table_name": "3",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How is rice production per person distributed across all countries in the dataset?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Histogram + KDE overlay",
+      "design_rationale": "A histogram efficiently displays the overall distribution (shape, center, spread, and possible outliers) of rice production per person across all 119 countries, making it easy to see whether the distribution is skewed, bimodal, or contains extreme values. Overlaying a Kernel Density Estimate (KDE) provides extra insight into the underlying probability distribution. This approach focuses on the continuous, numeric interpretation of the per-person production value (kilograms), and highlights central tendencies and outlier nations.",
+      "target_insight": "Main patterns, typical values, skewness, and the presence of high or low outliers in per-person rice production globally.",
+      "output_fields": [
+        "Rice Production Per Person (Kg)"
+      ],
+      "chart_encodings": {
+        "x": "Rice Production Per Person (Kg)",
+        "y": "Density (histogram and KDE)",
+        "color": "Histogram bars in light blue, KDE line in dark blue",
+        "size": null,
+        "other_aesthetics": "Alpha blending for bars, bold gridlines, labeled axes, careful bin selection for visibility"
+      }
+    },
+    "transformations": [
+      "Clean and convert df['Rice Production Per Person (Kg)'] from string to float (removing commas, K/M if present, though likely just numbers)",
+      "Remove or impute any rows with missing or non-numeric values (shouldn't exist per schema, but ensure robustness)"
+    ],
+    "data_preparation_steps": [
+      "df['Rice Production Per Person (Kg)'] = df['Rice Production Per Person (Kg)'].str.replace(',', '', regex=False).astype(float)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\3.csv\")\n# Clean numeric values in per-person field\ndf['Rice Production Per Person (Kg)'] = df['Rice Production Per Person (Kg)'].str.replace(',', '', regex=False).astype(float)\ndata = df['Rice Production Per Person (Kg)']\n\nplt.figure(figsize=(10, 6))\nn, bins, patches = plt.hist(\n    data,\n    bins=20,\n    color=\"#87ceeb\",\n    edgecolor=\"#222222\",\n    alpha=0.75,\n    density=True,\n    label=\"Histogram\"\n)\n# KDE\nfrom scipy.stats import gaussian_kde\nkde = gaussian_kde(data)\nxrange = np.linspace(data.min(), data.max(), 500)\nplt.plot(xrange, kde(xrange), color=\"#003366\", linewidth=2.5, label=\"KDE Estimate\")\nplt.xlabel(\"Rice Production Per Person (Kg)\", fontsize=13)\nplt.ylabel(\"Density\", fontsize=13)\nplt.title(\"Distribution of Rice Production Per Person Across Countries\", fontsize=15)\nplt.grid(axis='y', linestyle='--', alpha=0.5)\nplt.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

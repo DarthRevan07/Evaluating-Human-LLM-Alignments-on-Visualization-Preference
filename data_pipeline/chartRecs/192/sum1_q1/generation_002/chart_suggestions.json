@@ -1,0 +1,327 @@
+{
+  "table_name": "192",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\192\\sum1_q1\\generation_002",
+  "schema_context": "Table: Star dataset to predict star types\nRows: 240\nColumns: 7\n\nFIELD INFORMATION:\nField: Temperature (K)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 228\n  - Semantic Meaning: This field represents the surface temperature of stars measured in Kelvin, indicating their thermal energy and spectral classification in astronomy.\n  - Value Range: 1939.0 to 40000.0\n  - Mean: 10497.46\n\nField: Luminosity(L/Lo)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 208\n  - Semantic Meaning: This field represents the luminosity of stars, measured as a ratio compared to the Sun's luminosity, indicating how much energy each star emits relative to the Sun in the context of stellar classification.\n  - Value Range: 8e-05 to 849420.0\n  - Mean: 107188.36\n\nField: Radius(R/Ro)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 216\n  - Semantic Meaning: This field represents the radius of a star expressed as a multiple of the Sun’s radius (R☉), quantifying star sizes for comparative astronomical analysis.\n  - Value Range: 0.0084 to 1948.5\n  - Mean: 237.16\n\nField: Absolute magnitude(Mv)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 228\n  - Semantic Meaning: This field represents the intrinsic brightness of stars, measured as their absolute magnitude, indicating how luminous they would appear from a standard distance in astronomical studies.\n  - Value Range: -11.92 to 20.06\n  - Mean: 4.38\n\nField: Star type\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field represents the categorical classification of stars into six distinct types, with each integer value (0-5) indicating a specific star category in the context of astronomical star classification.\n  - Value Range: 0.0 to 5.0\n  - Mean: 2.50\n\nField: Star color\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 19\n  - Semantic Meaning: This field records the observed color classification of stars, indicating their surface temperature and spectral characteristics in the context of astronomical star type prediction.\n\nField: Spectral Class\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 7\n  - Semantic Meaning: This field indicates the spectral classification of a star, categorizing it by temperature and color based on the standard astronomical types (O, B, A, F, G, K, M).\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Temperature (K)\"\n  2. \"Luminosity(L/Lo)\"\n  3. \"Radius(R/Ro)\"\n  4. \"Absolute magnitude(Mv)\"\n  5. \"Star type\"\n  6. \"Star color\"\n  7. \"Spectral Class\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Temperature (K)'], df['Luminosity(L/Lo)']",
+  "table_metadata": {
+    "table_name": "Star dataset to predict star types",
+    "file_path": "csv_c_squared\\192.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 192.csv (Dataset: Star dataset to predict star types)",
+    "original_filename": "192.csv",
+    "dataset_name": "Star dataset to predict star types",
+    "row_count": 240,
+    "column_count": 7,
+    "table_hash": 7418450605429261444,
+    "fields": [
+      {
+        "name": "Temperature (K)",
+        "clean_name": "Temperature__K_",
+        "camel_case_name": "temperatureK",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 228,
+        "min_value": 1939.0,
+        "max_value": 40000.0,
+        "mean_value": 10497.4625,
+        "median_value": 5776.0,
+        "sample_values": "1939, 2600, 2621, 2637, 2650, ..., 37882, 38234, 38940, 39000, 40000",
+        "inferred_semantic_summary": "This field represents the surface temperature of stars measured in Kelvin, indicating their thermal energy and spectral classification in astronomy."
+      },
+      {
+        "name": "Luminosity(L/Lo)",
+        "clean_name": "Luminosity_L_Lo_",
+        "camel_case_name": "luminosityLLo",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 208,
+        "min_value": 8e-05,
+        "max_value": 849420.0,
+        "mean_value": 107188.36163460833,
+        "median_value": 0.07050000000000001,
+        "sample_values": "8e-05, 8.5e-05, 0.00011, 0.000138, 0.00014, ..., 748890.0, 783930.0, 813000.0, 834042.0, 849420.0",
+        "inferred_semantic_summary": "This field represents the luminosity of stars, measured as a ratio compared to the Sun's luminosity, indicating how much energy each star emits relative to the Sun in the context of stellar classification."
+      },
+      {
+        "name": "Radius(R/Ro)",
+        "clean_name": "Radius_R_Ro_",
+        "camel_case_name": "radiusRRo",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 216,
+        "min_value": 0.0084,
+        "max_value": 1948.5,
+        "mean_value": 237.157781375,
+        "median_value": 0.7625,
+        "sample_values": "0.0084, 0.0087, 0.00878, 0.00879, 0.0089, ..., 1673.0, 1679.0, 1779.0, 1783.0, 1948.5",
+        "inferred_semantic_summary": "This field represents the radius of a star expressed as a multiple of the Sun’s radius (R☉), quantifying star sizes for comparative astronomical analysis."
+      },
+      {
+        "name": "Absolute magnitude(Mv)",
+        "clean_name": "Absolute_magnitude_Mv_",
+        "camel_case_name": "absoluteMagnitudeMv",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 228,
+        "min_value": -11.92,
+        "max_value": 20.06,
+        "mean_value": 4.382395833333334,
+        "median_value": 8.312999999999999,
+        "sample_values": "-11.92, -11.75, -11.39, -11.36, -11.33, ..., 19.56, 19.63, 19.94, 20.02, 20.06",
+        "inferred_semantic_summary": "This field represents the intrinsic brightness of stars, measured as their absolute magnitude, indicating how luminous they would appear from a standard distance in astronomical studies."
+      },
+      {
+        "name": "Star type",
+        "clean_name": "Star_type",
+        "camel_case_name": "starType",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 6,
+        "min_value": 0.0,
+        "max_value": 5.0,
+        "mean_value": 2.5,
+        "median_value": 2.5,
+        "sample_values": "0, 1, 2, 3, 4, 5",
+        "inferred_semantic_summary": "This field represents the categorical classification of stars into six distinct types, with each integer value (0-5) indicating a specific star category in the context of astronomical star classification."
+      },
+      {
+        "name": "Star color",
+        "clean_name": "Star_color",
+        "camel_case_name": "starColor",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 19,
+        "sample_values": "Blue, Blue , Blue White, Blue white, Blue white , ..., Yellowish, Yellowish White, white, yellow-white, yellowish",
+        "inferred_semantic_summary": "This field records the observed color classification of stars, indicating their surface temperature and spectral characteristics in the context of astronomical star type prediction."
+      },
+      {
+        "name": "Spectral Class",
+        "clean_name": "Spectral_Class",
+        "camel_case_name": "spectralClass",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 240,
+        "unique_values": 7,
+        "sample_values": "A, B, F, G, K, M, O",
+        "inferred_semantic_summary": "This field indicates the spectral classification of a star, categorizing it by temperature and color based on the standard astronomical types (O, B, A, F, G, K, M)."
+      }
+    ],
+    "formatted_summary": "## Table 1: Star_dataset_to_predict_star_types (240 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 192.csv (Dataset: Star dataset to predict star types)\n\n### Schema (7 fields)\n  - Temperature (K) -- type: int64, values: 1939, 2600, 2621, 2637, 2650, ..., 37882, 38234, 38940, 39000, 40000\n  - Luminosity(L/Lo) -- type: float64, values: 8e-05, 8.5e-05, 0.00011, 0.000138, 0.00014, ..., 748890.0, 783930.0, 813000.0, 834042.0, 849420.0\n  - Radius(R/Ro) -- type: float64, values: 0.0084, 0.0087, 0.00878, 0.00879, 0.0089, ..., 1673.0, 1679.0, 1779.0, 1783.0, 1948.5\n  - Absolute magnitude(Mv) -- type: float64, values: -11.92, -11.75, -11.39, -11.36, -11.33, ..., 19.56, 19.63, 19.94, 20.02, 20.06\n  - Star type -- type: int64, values: 0, 1, 2, 3, 4, 5\n  - Star color -- type: object, values: Blue, Blue , Blue White, Blue white, Blue white , ..., Yellowish, Yellowish White, white, yellow-white, yellowish\n  - Spectral Class -- type: object, values: A, B, F, G, K, M, O\n\n### Sample Data (first 5 rows)\n```\n   Temperature (K)  Luminosity(L/Lo)  Radius(R/Ro)  Absolute magnitude(Mv)  Star type Star color Spectral Class\n0             3068          0.002400        0.1700                   16.12          0        Red              M\n1             3042          0.000500        0.1542                   16.60          0        Red              M\n2             2600          0.000300        0.1020                   18.70          0        Red              M\n3             2800          0.000200        0.1600                   16.65          0        Red              M\n4             1939          0.000138        0.1030                   20.06          0        Red              M\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "192",
+      "summary_idx": 1,
+      "question_idx": 1,
+      "question": "How does Temperature vary across different Spectral Classes?",
+      "column_combination": [
+        "Temperature (K)",
+        "Luminosity(L/Lo)",
+        "Radius(R/Ro)",
+        "Absolute magnitude(Mv)",
+        "Star type",
+        "Star color",
+        "Spectral Class"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Boxplot",
+            "design_rationale": "A boxplot facilitates comparison of the distribution and spread of Temperature (K) for each Spectral Class, revealing the typical temperature range, variability, and potential outliers within each class. Given the strong association between spectral class and temperature in astronomy, a boxplot provides a clear, accessible overview of how temperature segregates among the classes. It leverages the categorical nature of 'Spectral Class' and the continuous nature of 'Temperature (K)' to answer the question directly, utilizing all rows for maximal representativeness.",
+            "target_insight": "Shows how the typical temperatures, spread, and extremes differ across spectral classes, indicating which classes are hotter/cooler and the variability within each class.",
+            "output_fields": [
+              "Spectral Class",
+              "Temperature (K)"
+            ],
+            "chart_encodings": {
+              "x": "Spectral Class",
+              "y": "Temperature (K)",
+              "color": null,
+              "size": null,
+              "other_aesthetics": "box color, whiskers, and outlier markers; custom ordering of spectral classes O-B-A-F-G-K-M"
+            }
+          },
+          "transformations": [
+            "Order 'Spectral Class' categories according to standard astronomical sequence: O, B, A, F, G, K, M",
+            "Group stars by 'Spectral Class'",
+            "Extract 'Temperature (K)' values for each group"
+          ],
+          "data_preparation_steps": [
+            "Define ordered spectral classes: ordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']",
+            "Create data list: [df[df['Spectral Class']==c]['Temperature (K)'] for c in ordered_classes]"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\192.csv')\nordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']\ndata = [df[df['Spectral Class']==c]['Temperature (K)'] for c in ordered_classes]\nplt.figure(figsize=(9,5))\nbp = plt.boxplot(data, patch_artist=True, labels=ordered_classes, boxprops={'facecolor':'skyblue','edgecolor':'navy'}, medianprops={'color':'red','linewidth':2}, whiskerprops={'color':'black'}, capprops={'color':'black'}, flierprops={'marker':'o','markerfacecolor':'orange','markersize':6,'markeredgecolor':'gray'})\nplt.xlabel('Spectral Class')\nplt.ylabel('Temperature (K)')\nplt.title('Temperature Distribution Across Spectral Classes\\nBoxplot Summary by Ordered Astronomical Types')\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Violin Plot",
+            "design_rationale": "A violin plot overlays kernel density estimation onto boxplot statistics, revealing both the spread and the shape (multi-modal tendencies, skewness) of 'Temperature (K)' across Spectral Classes. This visualization presents nuance beyond just median/quartiles, helping identify whether temperature distributions within each class are unimodal or show substructure, crucial for understanding stellar population diversity. This approach is unconventional but effective for large datasets with many unique values (as in Temperature).",
+            "target_insight": "Highlights not only the central tendency and range, but also the underlying distribution shape of stellar temperatures within each Spectral Class. Enables quick identification of classes with homogeneous vs heterogeneous thermal profiles.",
+            "output_fields": [
+              "Spectral Class",
+              "Temperature (K)"
+            ],
+            "chart_encodings": {
+              "x": "Spectral Class",
+              "y": "Temperature (K)",
+              "color": "Spectral Class (distinct color per class for easy comparison)",
+              "size": null,
+              "other_aesthetics": "width shaped by probability density; alpha blending for visual appeal; custom ordering O-B-A-F-G-K-M"
+            }
+          },
+          "transformations": [
+            "Order 'Spectral Class' categories as ['O', 'B', 'A', 'F', 'G', 'K', 'M']",
+            "Group by 'Spectral Class' and extract 'Temperature (K)' values",
+            "Assign a distinct color to each spectral class for visual distinction"
+          ],
+          "data_preparation_steps": [
+            "Set ordered spectral classes: ordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']",
+            "Create temperature arrays: data = [df[df['Spectral Class']==c]['Temperature (K)'].values for c in ordered_classes]",
+            "Define color palette: colors = ['#673ab7','#1976d2','#26a69a','#ffd600','#ff9800','#d32f2f','#795548'] (distinct for each class)"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\192.csv')\nordered_classes = ['O', 'B', 'A', 'F', 'G', 'K', 'M']\ndata = [df[df['Spectral Class']==c]['Temperature (K)'].values for c in ordered_classes]\ncolors = ['#673ab7', '#1976d2', '#26a69a', '#ffd600', '#ff9800', '#d32f2f', '#795548']\nplt.figure(figsize=(10,5))\nparts = plt.violinplot(data, positions=np.arange(len(ordered_classes)), showmedians=True, showmeans=False, showextrema=True)\nfor i, pc in enumerate(parts['bodies']):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.5)\n    pc.set_edgecolor('black')\nplt.xticks(np.arange(len(ordered_classes)), ordered_classes)\nplt.xlabel('Spectral Class')\nplt.ylabel('Temperature (K)')\nplt.title('Temperature Shapes Across Spectral Classes\\nViolin Plot with Density per Astronomical Type')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:11:46.301102",
+      "schema_context": "Table: Star dataset to predict star types\nRows: 240\nColumns: 7\n\nFIELD INFORMATION:\nField: Temperature (K)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 228\n  - Semantic Meaning: This field represents the surface temperature of stars measured in Kelvin, indicating their thermal energy and spectral classification in astronomy.\n  - Value Range: 1939.0 to 40000.0\n  - Mean: 10497.46\n\nField: Luminosity(L/Lo)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 208\n  - Semantic Meaning: This field represents the luminosity of stars, measured as a ratio compared to the Sun's luminosity, indicating how much energy each star emits relative to the Sun in the context of stellar classification.\n  - Value Range: 8e-05 to 849420.0\n  - Mean: 107188.36\n\nField: Radius(R/Ro)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 216\n  - Semantic Meaning: This field represents the radius of a star expressed as a multiple of the Sun’s radius (R☉), quantifying star sizes for comparative astronomical analysis.\n  - Value Range: 0.0084 to 1948.5\n  - Mean: 237.16\n\nField: Absolute magnitude(Mv)\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 228\n  - Semantic Meaning: This field represents the intrinsic brightness of stars, measured as their absolute magnitude, indicating how luminous they would appear from a standard distance in astronomical studies.\n  - Value Range: -11.92 to 20.06\n  - Mean: 4.38\n\nField: Star type\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 6\n  - Semantic Meaning: This field represents the categorical classification of stars into six distinct types, with each integer value (0-5) indicating a specific star category in the context of astronomical star classification.\n  - Value Range: 0.0 to 5.0\n  - Mean: 2.50\n\nField: Star color\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 19\n  - Semantic Meaning: This field records the observed color classification of stars, indicating their surface temperature and spectral characteristics in the context of astronomical star type prediction.\n\nField: Spectral Class\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 7\n  - Semantic Meaning: This field indicates the spectral classification of a star, categorizing it by temperature and color based on the standard astronomical types (O, B, A, F, G, K, M).\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"Temperature (K)\"\n  2. \"Luminosity(L/Lo)\"\n  3. \"Radius(R/Ro)\"\n  4. \"Absolute magnitude(Mv)\"\n  5. \"Star type\"\n  6. \"Star color\"\n  7. \"Spectral Class\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['Temperature (K)'], df['Luminosity(L/Lo)']",
+      "table_metadata": {
+        "table_name": "Star dataset to predict star types",
+        "file_path": "csv_c_squared\\192.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 192.csv (Dataset: Star dataset to predict star types)",
+        "original_filename": "192.csv",
+        "dataset_name": "Star dataset to predict star types",
+        "row_count": 240,
+        "column_count": 7,
+        "table_hash": 7418450605429261444,
+        "fields": [
+          {
+            "name": "Temperature (K)",
+            "clean_name": "Temperature__K_",
+            "camel_case_name": "temperatureK",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 228,
+            "min_value": 1939.0,
+            "max_value": 40000.0,
+            "mean_value": 10497.4625,
+            "median_value": 5776.0,
+            "sample_values": "1939, 2600, 2621, 2637, 2650, ..., 37882, 38234, 38940, 39000, 40000",
+            "inferred_semantic_summary": "This field represents the surface temperature of stars measured in Kelvin, indicating their thermal energy and spectral classification in astronomy."
+          },
+          {
+            "name": "Luminosity(L/Lo)",
+            "clean_name": "Luminosity_L_Lo_",
+            "camel_case_name": "luminosityLLo",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 208,
+            "min_value": 8e-05,
+            "max_value": 849420.0,
+            "mean_value": 107188.36163460833,
+            "median_value": 0.07050000000000001,
+            "sample_values": "8e-05, 8.5e-05, 0.00011, 0.000138, 0.00014, ..., 748890.0, 783930.0, 813000.0, 834042.0, 849420.0",
+            "inferred_semantic_summary": "This field represents the luminosity of stars, measured as a ratio compared to the Sun's luminosity, indicating how much energy each star emits relative to the Sun in the context of stellar classification."
+          },
+          {
+            "name": "Radius(R/Ro)",
+            "clean_name": "Radius_R_Ro_",
+            "camel_case_name": "radiusRRo",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 216,
+            "min_value": 0.0084,
+            "max_value": 1948.5,
+            "mean_value": 237.157781375,
+            "median_value": 0.7625,
+            "sample_values": "0.0084, 0.0087, 0.00878, 0.00879, 0.0089, ..., 1673.0, 1679.0, 1779.0, 1783.0, 1948.5",
+            "inferred_semantic_summary": "This field represents the radius of a star expressed as a multiple of the Sun’s radius (R☉), quantifying star sizes for comparative astronomical analysis."
+          },
+          {
+            "name": "Absolute magnitude(Mv)",
+            "clean_name": "Absolute_magnitude_Mv_",
+            "camel_case_name": "absoluteMagnitudeMv",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 228,
+            "min_value": -11.92,
+            "max_value": 20.06,
+            "mean_value": 4.382395833333334,
+            "median_value": 8.312999999999999,
+            "sample_values": "-11.92, -11.75, -11.39, -11.36, -11.33, ..., 19.56, 19.63, 19.94, 20.02, 20.06",
+            "inferred_semantic_summary": "This field represents the intrinsic brightness of stars, measured as their absolute magnitude, indicating how luminous they would appear from a standard distance in astronomical studies."
+          },
+          {
+            "name": "Star type",
+            "clean_name": "Star_type",
+            "camel_case_name": "starType",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 6,
+            "min_value": 0.0,
+            "max_value": 5.0,
+            "mean_value": 2.5,
+            "median_value": 2.5,
+            "sample_values": "0, 1, 2, 3, 4, 5",
+            "inferred_semantic_summary": "This field represents the categorical classification of stars into six distinct types, with each integer value (0-5) indicating a specific star category in the context of astronomical star classification."
+          },
+          {
+            "name": "Star color",
+            "clean_name": "Star_color",
+            "camel_case_name": "starColor",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 19,
+            "sample_values": "Blue, Blue , Blue White, Blue white, Blue white , ..., Yellowish, Yellowish White, white, yellow-white, yellowish",
+            "inferred_semantic_summary": "This field records the observed color classification of stars, indicating their surface temperature and spectral characteristics in the context of astronomical star type prediction."
+          },
+          {
+            "name": "Spectral Class",
+            "clean_name": "Spectral_Class",
+            "camel_case_name": "spectralClass",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 240,
+            "unique_values": 7,
+            "sample_values": "A, B, F, G, K, M, O",
+            "inferred_semantic_summary": "This field indicates the spectral classification of a star, categorizing it by temperature and color based on the standard astronomical types (O, B, A, F, G, K, M)."
+          }
+        ],
+        "formatted_summary": "## Table 1: Star_dataset_to_predict_star_types (240 rows × 7 columns)\n\n### Description\nData loaded from CSV file: 192.csv (Dataset: Star dataset to predict star types)\n\n### Schema (7 fields)\n  - Temperature (K) -- type: int64, values: 1939, 2600, 2621, 2637, 2650, ..., 37882, 38234, 38940, 39000, 40000\n  - Luminosity(L/Lo) -- type: float64, values: 8e-05, 8.5e-05, 0.00011, 0.000138, 0.00014, ..., 748890.0, 783930.0, 813000.0, 834042.0, 849420.0\n  - Radius(R/Ro) -- type: float64, values: 0.0084, 0.0087, 0.00878, 0.00879, 0.0089, ..., 1673.0, 1679.0, 1779.0, 1783.0, 1948.5\n  - Absolute magnitude(Mv) -- type: float64, values: -11.92, -11.75, -11.39, -11.36, -11.33, ..., 19.56, 19.63, 19.94, 20.02, 20.06\n  - Star type -- type: int64, values: 0, 1, 2, 3, 4, 5\n  - Star color -- type: object, values: Blue, Blue , Blue White, Blue white, Blue white , ..., Yellowish, Yellowish White, white, yellow-white, yellowish\n  - Spectral Class -- type: object, values: A, B, F, G, K, M, O\n\n### Sample Data (first 5 rows)\n```\n   Temperature (K)  Luminosity(L/Lo)  Radius(R/Ro)  Absolute magnitude(Mv)  Star type Star color Spectral Class\n0             3068          0.002400        0.1700                   16.12          0        Red              M\n1             3042          0.000500        0.1542                   16.60          0        Red              M\n2             2600          0.000300        0.1020                   18.70          0        Red              M\n3             2800          0.000200        0.1600                   16.65          0        Red              M\n4             1939          0.000138        0.1030                   20.06          0        Red              M\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

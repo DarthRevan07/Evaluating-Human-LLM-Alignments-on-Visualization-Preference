@@ -1,0 +1,42 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "Is there a significant difference in Attack between Pokémon of different primary types (Type 1)?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Violin Plot with Jittered Points",
+      "design_rationale": "A violin plot shows the full distribution density for each category more smoothly than boxplots, letting you see multimodalities or skewness in 'Attack' across types. Overlaying individual Pokémon as jittered dots provides detail and visual engagement, highlighting if some types have rare Pokémon with extremely high or low Attack. This dual approach blends familiarity (summary distribution) with detailed context (the data points), especially helpful given moderate row count (800) and 18 types.",
+      "target_insight": "How the distribution shapes, density, and individual Pokémon Attack values compare across primary types—spotting types with concentrated or dispersed Attack stats, and types with many high/low outliers.",
+      "output_fields": [
+        "Type 1",
+        "Attack",
+        "Name"
+      ],
+      "chart_encodings": {
+        "x": "Type 1 (categorical, ordered by median Attack descending)",
+        "y": "Attack (numeric stat)",
+        "color": "Type 1 (category color for violin and points)",
+        "size": "null",
+        "other_aesthetics": "Overlay jittered points, set semi-transparent alpha, rotate x labels, tight grid, set title and clear legend"
+      }
+    },
+    "transformations": [
+      "Group by 'Type 1' and extract corresponding 'Attack' values",
+      "Order 'Type 1' categories by their median Attack descending",
+      "Assign each Pokémon data point a horizontal jitter within their type bin"
+    ],
+    "data_preparation_steps": [
+      "Load df from csv_c2_sec\\16.csv",
+      "Compute the ordering of 'Type 1' values by median 'Attack' descending",
+      "For each Pokémon, map categorical 'Type 1' to numeric x-position (as per ordering)",
+      "Add horizontal jitter to each point within its category",
+      "Prepare violin plot data as list of arrays"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\nmedians = df.groupby(\"Type 1\")[\"Attack\"].median().sort_values(ascending=False)\ntype1_order = medians.index.tolist()\ndata = [df[df[\"Type 1\"] == t][\"Attack\"].values for t in type1_order]\ncmap = mpl.colormaps[\"tab20\"]\ncolors = [cmap(i) for i in range(len(type1_order))]\nplt.figure(figsize=(15, 7))\nparts = plt.violinplot(data, positions=np.arange(len(type1_order)), showmeans=False, showmedians=True, widths=0.8)\nfor i, pc in enumerate(parts[\"bodies\"]):\n    pc.set_facecolor(colors[i])\n    pc.set_alpha(0.5)\nfor line in [\"cbars\", \"cmedians\"]:\n    parts[line].set_color(\"black\")\n    parts[line].set_linewidth(1.2)\n# Overlay jittered points\nfor idx, t in enumerate(type1_order):\n    y = df[df[\"Type 1\"] == t][\"Attack\"].values\n    x = np.random.normal(idx, 0.12, size=len(y))\n    plt.scatter(x, y, color=colors[idx], alpha=0.62, edgecolor=\"k\", linewidth=0.3, s=22, label=t if idx == 0 else None)\nplt.xticks(np.arange(len(type1_order)), type1_order, rotation=45, ha=\"right\")\nplt.ylabel(\"Attack\")\nplt.xlabel(\"Type 1\")\nplt.title(\"Violin Plot of Attack Distribution per Pok\\u00e9mon Primary Type\\nWith Individual Data Points\")\nplt.grid(axis=\"y\", ls=\"--\", alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

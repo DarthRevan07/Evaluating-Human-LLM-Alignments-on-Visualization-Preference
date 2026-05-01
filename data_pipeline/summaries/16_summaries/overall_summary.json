@@ -1,0 +1,37 @@
+{
+  "table_name": "Pokemon with stats",
+  "file_index": "16",
+  "original_filename": "16.csv",
+  "total_rows": 800,
+  "total_columns": 13,
+  "column_names": [
+    "id",
+    "Name",
+    "Type 1",
+    "Type 2",
+    "Total",
+    "HP",
+    "Attack",
+    "Defense",
+    "Sp. Atk",
+    "Sp. Def",
+    "Speed",
+    "Generation",
+    "Legendary"
+  ],
+  "summaries_per_generation": 2,
+  "num_generations": 1,
+  "successful_generations": 1,
+  "failed_generations": 0,
+  "output_directory": "secondIter\\summaries\\16_summaries",
+  "source_file": "csv_c2_sec\\16.csv",
+  "sheet_name": "",
+  "generations": {
+    "generation_001": {
+      "status": "success",
+      "output_file": "secondIter\\summaries\\16_summaries\\generation_001\\summaries_gen_001.json",
+      "summaries_count": 2,
+      "generation_number": 1
+    }
+  }
+}

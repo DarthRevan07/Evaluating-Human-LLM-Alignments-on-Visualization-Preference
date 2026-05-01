@@ -1,0 +1,38 @@
+{
+  "table_name": "75",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What is the average writing score for each parental level of education category?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (with mean marker)",
+      "design_rationale": "A boxplot displays the distribution of writing scores within each parental education category, showing not only the average but also spread, skewness, and outlier presence. Including a mean marker distinguishes the average from the median and gives richer context. It provides insights into variability and whether a category's higher average is due to a few high performers or overall better performance.",
+      "target_insight": "Shows not just category averages but how consistent writing scores are within each parental education group, illuminating disparities and spread.",
+      "output_fields": [
+        "parental level of education",
+        "writing score"
+      ],
+      "chart_encodings": {
+        "x": "parental level of education",
+        "y": "writing score",
+        "color": "distinct color per box (using categorical colormap)",
+        "size": null,
+        "other_aesthetics": "mean marker, median line, whiskers, and outliers"
+      }
+    },
+    "transformations": [
+      "For each 'parental level of education' category, extract all 'writing score' values to display distribution",
+      "Calculate mean per category for overlay marker"
+    ],
+    "data_preparation_steps": [
+      "categories = sorted(df['parental level of education'].unique())",
+      "score_distributions = [df[df['parental level of education'] == category]['writing score'].values for category in categories]",
+      "means = [np.mean(scores) for scores in score_distributions]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\75.csv')\ncategories = sorted(df['parental level of education'].unique())\nscore_distributions = [df[df['parental level of education'] == category]['writing score'].values for category in categories]\nmeans = [np.mean(scores) for scores in score_distributions]\ncmap = mpl.colormaps['tab10'].resampled(len(categories))\ncolors = cmap(range(len(categories)))\nfig, ax = plt.subplots(figsize=(9, 6))\nbox = ax.boxplot(score_distributions, patch_artist=True, labels=categories, showmeans=False)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor i, mean in enumerate(means):\n    ax.scatter(i+1, mean, c='black', s=70, marker='*', label='Mean' if i == 0 else None, zorder=3)\nax.set_ylabel('Writing Score')\nax.set_xlabel('Parental Level of Education')\nax.set_title('Distribution of Writing Scores\\nby Parental Level of Education (mean shown as star)', fontsize=14)\nplt.xticks(rotation=30, ha='right')\nplt.legend(loc='lower right', fontsize=10)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

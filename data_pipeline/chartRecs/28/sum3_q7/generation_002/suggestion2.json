@@ -1,0 +1,43 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 3,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Do vehicles with higher mileage tend to have lower prices regardless of fuel type?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (violin overlay) of Price per Mileage bins, faceted by Fuel type",
+      "design_rationale": "This approach summarizes Price distributions within discrete Mileage bands (e.g., quartiles), revealing how the spread and central tendency of Price changes with increasing Mileage for each Fuel type. Grouped violin/boxplots facet these relationships by Fuel type, showing whether all (or only some) categories manifest the downward trend, and which types are most/least affected by Mileage. Focusing on distribution within bins is ideal for large data, mitigating outlier skew and improving interpretability over direct scatter.",
+      "target_insight": "Highlights whether Price consistently declines with greater Mileage in each Fuel type, and differences in rate/distribution, showing if the trend holds regardless of fuel type.",
+      "output_fields": [
+        "Mileage",
+        "Price",
+        "Fuel type"
+      ],
+      "chart_encodings": {
+        "x": "Mileage bins",
+        "y": "Price",
+        "color": "Fuel type",
+        "size": null,
+        "other_aesthetics": "boxplot and violin overlay, facet by Fuel type"
+      }
+    },
+    "transformations": [
+      "Convert Mileage to float as in previous suggestion",
+      "Bin Mileage into quartiles or fixed bins (e.g., 5 quantiles)",
+      "Group data by Fuel type and Mileage bin",
+      "Prepare Price distributions for each group"
+    ],
+    "data_preparation_steps": [
+      "df['Mileage'] = df['Mileage'].str.replace('[^0-9]', '', regex=True).astype(float)",
+      "Remove rows with missing or invalid Mileage or Price values: df = df.dropna(subset=['Mileage', 'Price'])",
+      "Bin Mileage into 5 quantiles: df['Mileage_bin'] = pd.qcut(df['Mileage'], 5, labels=['Very Low','Low','Medium','High','Very High'])",
+      "Restrict to dominant Fuel types for clarity (limit to top 5 by count): fuels = df['Fuel type'].value_counts().nlargest(5).index.tolist(); df = df[df['Fuel type'].isin(fuels)]",
+      "Prepare data for plotting: group by Fuel type and Mileage_bin"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf['Mileage'] = df['Mileage'].str.replace('[^0-9]', '', regex=True).astype(float)\ndf = df.dropna(subset=['Mileage', 'Price'])\ndf['Mileage_bin'] = pd.qcut(df['Mileage'], 5, labels=['Very Low','Low','Medium','High','Very High'])\nfuels = df['Fuel type'].value_counts().nlargest(5).index.tolist()\ndf = df[df['Fuel type'].isin(fuels)]\nfuel_types = df['Fuel type'].unique()\nfig, axes = plt.subplots(len(fuel_types), 1, figsize=(13, 3*len(fuel_types)), sharex=True)\ncolors = mpl.colormaps['tab10'].colors\nfor i, ftype in enumerate(fuel_types):\n    ax = axes[i] if len(fuel_types)>1 else axes\n    box_data = [df[(df['Fuel type']==ftype)&(df['Mileage_bin']==bin_label)]['Price'] for bin_label in df['Mileage_bin'].cat.categories]\n    violins = ax.violinplot(box_data, positions=np.arange(len(box_data)), showmeans=False, showextrema=True, widths=0.7)\n    ax.boxplot(box_data, positions=np.arange(len(box_data)), patch_artist=True, widths=0.5, boxprops=dict(facecolor=colors[i % len(colors)], alpha=0.3))\n    for patch in violins['bodies']:\n        patch.set_facecolor(colors[i % len(colors)])\n        patch.set_alpha(0.22)\n        patch.set_edgecolor('black')\n        patch.set_linewidth(0.4)\n    ax.set_title('Fuel type: ' + str(ftype))\n    ax.set_ylabel('Price')\n    ax.set_xticks(np.arange(len(box_data)))\n    ax.set_xticklabels(df['Mileage_bin'].cat.categories)\naxes[-1].set_xlabel('Mileage bin')\ntitle_txt = 'Distribution of Price by Mileage bin for Each Fuel type\\nBoxplot+Violin overlay shows trend between Mileage and Price for different fuel categories'\nfig.suptitle(title_txt)\nplt.tight_layout(rect=[0,0,1,0.97])\nplt.show()"
+  },
+  "schema_based": true
+}

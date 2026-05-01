@@ -1,0 +1,41 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 4,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How do car prices vary between different CarName brands, and are certain brands consistently in higher or lower price ranges?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot (Brand-level price distribution)",
+      "design_rationale": "To directly compare price distributions across brands, a boxplot provides a visual summary of the range, median, quartiles, and potential outliers for each brand. Since CarName combines make/model, extracting just the brand (first word) enables standardized groupings per manufacturer. This is ideal given many unique CarName values, so aggregation by manufacturer reveals which brands consistently have higher or lower price ranges and highlights variability within brands. Boxplots succinctly answer the analytical question by showing median price, spread, and extremes for every brand, distinguishing those that are always premium versus more affordable or variable.",
+      "target_insight": "Which car brands exhibit consistently higher, lower, or more variable price ranges; identification of premium vs budget brands by manufacturer.",
+      "output_fields": [
+        "CarName",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "Brand (from CarName, categorical, sorted by median price)",
+        "y": "price (numeric, distribution within each brand)",
+        "color": "null (all boxes same color for emphasis on distribution, optionally highlight top/bottom brands)",
+        "size": "null",
+        "other_aesthetics": "x-axis labels rotated for readability; brands ordered by median price; outliers marked by default"
+      }
+    },
+    "transformations": [
+      "Extract the manufacturer (brand) name from each CarName by taking the first space-separated token.",
+      "Group by extracted brand and aggregate price values into distributions.",
+      "Sort brands by median price for visual ordering."
+    ],
+    "data_preparation_steps": [
+      "df['brand'] = df['CarName'].str.split(' ').str[0]",
+      "brands_price = df.groupby('brand')['price'].apply(list)",
+      "medians = df.groupby('brand')['price'].median().sort_values()",
+      "brands_ordered = medians.index.tolist()",
+      "Prepare a list of price arrays ordered by brands_ordered"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\ndf = pd.read_csv('csv_c_squared\\22.csv')\ndf['brand'] = df['CarName'].str.split(' ').str[0]\ngroups = df.groupby('brand')\nmedians = groups['price'].median().sort_values()\nbrands_ordered = medians.index.tolist()\nprice_arrays = [df[df['brand'] == brand]['price'].values for brand in brands_ordered]\nfig, ax = plt.subplots(figsize=(14,7))\nbox = ax.boxplot(price_arrays, patch_artist=True, showfliers=True)\nax.set_xticklabels(brands_ordered, rotation=45, ha='right', fontsize=10)\nax.set_ylabel('price')\nax.set_xlabel('brand')\nax.set_title('Car Price Distribution by Brand (Manufacturer)\\nBoxplot shows range, median, and outliers for each brand')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

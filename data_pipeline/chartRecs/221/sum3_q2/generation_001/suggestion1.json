@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What is the distribution of traveler ages across various destinations?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot effectively visualizes the spread, median, and outliers of 'Traveler age' within each 'Destination'. This allows a quick comparison of age distributions and highlights destinations with more diverse or unusual traveler demographics. Given the manageable number of destinations (59 unique), boxplots provide detailed insight without overwhelming the display, especially for the most popular destinations.",
+      "target_insight": "Highlights destinations with younger or older traveler bases, shows age variability, and identifies destinations with unusual age outliers or clusters.",
+      "output_fields": [
+        "Destination",
+        "Traveler age"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Traveler age",
+        "color": "Box color (by destination or uniform)",
+        "size": null,
+        "other_aesthetics": "Show outliers; rotate x labels for readability; grid lines; limit displayed destinations to top 15 by count to avoid overcrowding"
+      }
+    },
+    "transformations": [
+      "Drop rows with missing values in 'Traveler age' or 'Destination'",
+      "Group by 'Destination'; count trips per destination",
+      "Select top 15 destinations by trip count (most popular) for focus",
+      "Filter data to only trips in top 15 destinations"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Traveler age', 'Destination'])",
+      "dest_counts = df_clean['Destination'].value_counts()",
+      "top_destinations = dest_counts.index[:15]",
+      "df_plot = df_clean[df_clean['Destination'].isin(top_destinations)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\n# Load data\ndf = pd.read_csv('csv_c_squared\\221.csv')\n# Data cleaning and prep\ndf_clean = df.dropna(subset=['Traveler age', 'Destination'])\ndest_counts = df_clean['Destination'].value_counts()\ntop_destinations = dest_counts.index[:15]\ndf_plot = df_clean[df_clean['Destination'].isin(top_destinations)]\n# Prepare boxplot data\ndata_to_plot = [df_plot[df_plot['Destination'] == dest]['Traveler age'] for dest in top_destinations]\nfig, ax = plt.subplots(figsize=(13, 7))\nbox = ax.boxplot(data_to_plot, patch_artist=True, boxprops=dict(facecolor='#74C476'))\n# Customization\nax.set_xticks(np.arange(1, len(top_destinations) + 1))\nax.set_xticklabels(top_destinations, rotation=40, ha='right')\nax.set_xlabel('Destination')\nax.set_ylabel('Traveler age')\nax.set_title('Distribution of Traveler Ages Across Top 15 Destinations')\nax.grid(True, linestyle='--', alpha=0.6)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

@@ -1,0 +1,45 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "Which artists have both a high number of paintings and biographies that emphasize innovation or major influence on artistic movements?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bubble Scatterplot with Bio Annotation",
+      "design_rationale": "This approach uses a scatterplot where each artist is positioned by the number of paintings, and bubble size encodes the frequency of bio keywords related to innovation/influence. The plot allows visibility of both quantity (paintings) and intensity of biographical emphasis (keyword counts), giving nuanced insight into which artists are most associated with innovation/influence and productive output. Annotating top bubbles adds narrative context.",
+      "target_insight": "Maps artists by painting output and bio keyword frequency, visually revealing those with the strongest combo of prolific output and innovation/influence mentions.",
+      "output_fields": [
+        "name",
+        "paintings",
+        "bio"
+      ],
+      "chart_encodings": {
+        "x": "paintings",
+        "y": "Keyword count in bio",
+        "color": "Nationality (optional for discovery or differentiation)",
+        "size": "Bubble size: frequency of relevant keywords detected in bio",
+        "other_aesthetics": "Annotations for top bubbles; custom colormap for nationality for additional context"
+      }
+    },
+    "transformations": [
+      "Count occurrences of 'innovation', 'innovative', 'influence', and 'movement' (any case) in df['bio'] for each artist and store in 'keyword_count'",
+      "Filter artists with keyword_count > 0 and painting counts above mean (168.92) to focus the scatterplot",
+      "Map 'nationality' to discrete colors using colormap for additional exploration"
+    ],
+    "data_preparation_steps": [
+      "keyword_pattern = r'(innovation|innovative|influence|movement)'",
+      "df['keyword_count'] = df['bio'].str.count(keyword_pattern, flags=np.__dict__['IGNORECASE'])",
+      "df_plot = df[(df['keyword_count'] > 0) & (df['paintings'] > 168.92)].copy()",
+      "nationalities = df_plot['nationality'].unique()",
+      "nationality_map = dict(zip(nationalities, np.arange(len(nationalities))))",
+      "color_idxs = df_plot['nationality'].map(nationality_map)",
+      "import matplotlib as mpl",
+      "cmap = mpl.colormaps['viridis'].resampled(len(nationalities))"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nkeyword_pattern = r'(innovation|innovative|influence|movement)'\ndf['keyword_count'] = df['bio'].str.count(keyword_pattern, flags=np.__dict__['IGNORECASE'])\ndf_plot = df[(df['keyword_count'] > 0) & (df['paintings'] > 168.92)].copy()\nnationalities = df_plot['nationality'].unique()\nnationality_map = dict(zip(nationalities, np.arange(len(nationalities))))\ncolor_idxs = df_plot['nationality'].map(nationality_map)\ncmap = mpl.colormaps['viridis'].resampled(len(nationalities))\nfig, ax = plt.subplots(figsize=(9, 7))\nsc = ax.scatter(df_plot['paintings'], df_plot['keyword_count'], s=df_plot['keyword_count']*80 + 100, c=color_idxs, cmap=cmap, edgecolor='black', alpha=0.8)\nfor i, row in df_plot.iterrows():\n    if row['keyword_count'] > df_plot['keyword_count'].max() - 1:\n        label = row['name'] + '\\n(' + str(int(row['paintings'])) + ' paintings, keywords: ' + str(row['keyword_count']) + ')'\n        ax.text(row['paintings'] + 10, row['keyword_count'], label, fontsize=10, color='black')\nax.set_xlabel('paintings', fontsize=12)\nax.set_ylabel('Bio keyword count', fontsize=12)\nax.set_title('Which artists have BOTH high painting counts AND bios stressing innovation/influence?', fontsize=14)\nfrom matplotlib.lines import Line2D\nlegend_elements = [Line2D([0],[0], marker='o', color='w', markerfacecolor=cmap(idx), label=nat, markersize=14, markeredgecolor='black') for nat, idx in nationality_map.items()]\nax.legend(handles=legend_elements, title='nationality', bbox_to_anchor=(1.05, 1), loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

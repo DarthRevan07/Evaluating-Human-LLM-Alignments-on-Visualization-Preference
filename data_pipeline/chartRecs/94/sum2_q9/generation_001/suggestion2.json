@@ -1,0 +1,46 @@
+{
+  "table_name": "94",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 9,
+  "suggestion_id": 2,
+  "question": "Are there any years where the population growth (yearly % change) deviates from the overall trend, and what was the density in those years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Year vs Yearly % Change, color=Density)",
+      "design_rationale": "A heatmap provides an unconventional angle: mapping years (x-axis) and population growth rates (y-axis), with cell color intensity encoding population density. This approach emphasizes density distribution across the spectrum of growth rates and instantly highlights which years (and growth values) correspond to density extremes or unusual deviations. Heatmaps support quick visual identification of anomalies and data clusters.",
+      "target_insight": "See which years (and growth rates) coincide with highest and lowest density, exposing density shifts on years of anomalous population growth.",
+      "output_fields": [
+        "Year",
+        "Yearly % Change",
+        "Density (P/Km²)"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Yearly % Change (binned)",
+        "color": "Density (P/Km²): colormap intensity",
+        "size": "null",
+        "other_aesthetics": "Annotations for top/bottom density cells; custom color normalization for density"
+      }
+    },
+    "transformations": [
+      "Convert df['Yearly % Change'] from string to float",
+      "Bin df['Yearly % Change'] into discrete intervals (e.g., bins of 0.1%)",
+      "Pivot table: index Year, columns are binned Yearly % Change, values are Density (P/Km²)",
+      "Fill pivot table missing values with np.nan for proper heatmap rendering",
+      "Identify cells (years/bins) with density maxima/minima for annotation"
+    ],
+    "data_preparation_steps": [
+      "df['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)",
+      "growth_bins = np.round(df['Yearly % Change']/0.1)*0.1",
+      "df['Growth Bin'] = growth_bins",
+      "heatmap_data = pd.pivot_table(df, values='Density (P/Km²)', index='Year', columns='Growth Bin', fill_value=np.nan)",
+      "max_density = np.nanmax(heatmap_data.values)",
+      "min_density = np.nanmin(heatmap_data.values)",
+      "max_idxs = np.where(heatmap_data.values == max_density)\nmin_idxs = np.where(heatmap_data.values == min_density)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\94.csv')\ndf['Yearly % Change'] = df['Yearly % Change'].str.replace('%','').astype(float)\ngrowth_bins = np.round(df['Yearly % Change']/0.1)*0.1\ndf['Growth Bin'] = growth_bins\nheatmap_data = pd.pivot_table(df, values='Density (P/Km²)', index='Year', columns='Growth Bin', fill_value=np.nan)\nfig, ax = plt.subplots(figsize=(10,7))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(heatmap_data.values, cmap=cmap, aspect='auto', interpolation='nearest', origin='lower', vmin=np.nanmin(heatmap_data.values), vmax=np.nanmax(heatmap_data.values))\nax.set_xticks(np.arange(len(heatmap_data.columns)))\nax.set_yticks(np.arange(len(heatmap_data.index)))\nax.set_xticklabels([f'{col:.2f}%' for col in heatmap_data.columns], rotation=45, ha='right')\nax.set_yticklabels(heatmap_data.index)\nplt.xlabel('Yearly % Change (binned)', fontsize=12)\nplt.ylabel('Year', fontsize=12)\nplt.title('Heatmap of Population Density Across Years and Growth Deviations', fontsize=15)\ncbar = plt.colorbar(im, ax=ax, fraction=0.03, pad=0.08)\ncbar.set_label('Density (P/Km²)', fontsize=12)\nmax_density = np.nanmax(heatmap_data.values)\nmin_density = np.nanmin(heatmap_data.values)\nmax_idxs = np.where(heatmap_data.values == max_density)\nmin_idxs = np.where(heatmap_data.values == min_density)\nfor i in range(len(max_idxs[0])):\n    ax.text(max_idxs[1][i], max_idxs[0][i], f'MAX\\n{int(max_density)}', color='white', fontsize=10, ha='center', va='center', fontweight='bold')\nfor i in range(len(min_idxs[0])):\n    ax.text(min_idxs[1][i], min_idxs[0][i], f'MIN\\n{int(min_density)}', color='black', fontsize=10, ha='center', va='center')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

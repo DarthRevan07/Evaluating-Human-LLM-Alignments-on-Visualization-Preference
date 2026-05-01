@@ -1,0 +1,274 @@
+{
+  "table_name": "37",
+  "generation_id": 1,
+  "generation_dir": "secondIter\\chartRecs\\37\\sum1_q2\\generation_001",
+  "schema_context": "Table: Mall Customer Segmentation Data\nRows: 200\nColumns: 5\n\nFIELD INFORMATION:\nField: CustomerID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 200\n  - Semantic Meaning: CustomerID is a unique numeric identifier assigned to each individual customer in the mall for tracking and segmentation purposes within the dataset.\n  - Value Range: 1.0 to 200.0\n  - Mean: 100.50\n\nField: Gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified sex of mall customers (Female or Male), used for demographic segmentation and analysis in retail marketing.\n\nField: Age\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 51\n  - Semantic Meaning: The \"Age\" field represents the age (in years) of individual mall customers, capturing their demographic information for analysis in customer segmentation and targeting strategies.\n  - Value Range: 18.0 to 70.0\n  - Mean: 38.85\n\nField: Annual Income (k$)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the estimated annual income (in thousands of dollars) of individual mall customers, used to gauge their purchasing power for segmentation and marketing analysis.\n  - Value Range: 15.0 to 137.0\n  - Mean: 60.56\n\nField: Spending Score (1-100)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 84\n  - Semantic Meaning: Spending Score (1-100) represents a quantified value indicating a mall customer's spending behavior or purchasing potential, with higher scores suggesting greater propensity to spend or higher customer value.\n  - Value Range: 1.0 to 99.0\n  - Mean: 50.20\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"CustomerID\"\n  2. \"Gender\"\n  3. \"Age\"\n  4. \"Annual Income (k$)\"\n  5. \"Spending Score (1-100)\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['CustomerID'], df['Gender']",
+  "table_metadata": {
+    "table_name": "Mall Customer Segmentation Data",
+    "file_path": "csv_c2_sec\\37.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 37.csv (Dataset: Mall Customer Segmentation Data)",
+    "original_filename": "37.csv",
+    "dataset_name": "Mall Customer Segmentation Data",
+    "row_count": 200,
+    "column_count": 5,
+    "table_hash": -3933530937107143414,
+    "fields": [
+      {
+        "name": "CustomerID",
+        "clean_name": "CustomerID",
+        "camel_case_name": "customerid",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 200,
+        "unique_values": 200,
+        "min_value": 1.0,
+        "max_value": 200.0,
+        "mean_value": 100.5,
+        "median_value": 100.5,
+        "sample_values": "1, 2, 3, 4, 5, ..., 196, 197, 198, 199, 200",
+        "inferred_semantic_summary": "CustomerID is a unique numeric identifier assigned to each individual customer in the mall for tracking and segmentation purposes within the dataset."
+      },
+      {
+        "name": "Gender",
+        "clean_name": "Gender",
+        "camel_case_name": "gender",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 200,
+        "unique_values": 2,
+        "sample_values": "Female, Male",
+        "inferred_semantic_summary": "This field records the self-identified sex of mall customers (Female or Male), used for demographic segmentation and analysis in retail marketing."
+      },
+      {
+        "name": "Age",
+        "clean_name": "Age",
+        "camel_case_name": "age",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 200,
+        "unique_values": 51,
+        "min_value": 18.0,
+        "max_value": 70.0,
+        "mean_value": 38.85,
+        "median_value": 36.0,
+        "sample_values": "18, 19, 20, 21, 22, ..., 66, 67, 68, 69, 70",
+        "inferred_semantic_summary": "The \"Age\" field represents the age (in years) of individual mall customers, capturing their demographic information for analysis in customer segmentation and targeting strategies."
+      },
+      {
+        "name": "Annual Income (k$)",
+        "clean_name": "Annual_Income__k__",
+        "camel_case_name": "annualIncomeK",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 200,
+        "unique_values": 64,
+        "min_value": 15.0,
+        "max_value": 137.0,
+        "mean_value": 60.56,
+        "median_value": 61.5,
+        "sample_values": "15, 16, 17, 18, 19, ..., 103, 113, 120, 126, 137",
+        "inferred_semantic_summary": "This field represents the estimated annual income (in thousands of dollars) of individual mall customers, used to gauge their purchasing power for segmentation and marketing analysis."
+      },
+      {
+        "name": "Spending Score (1-100)",
+        "clean_name": "Spending_Score__1_100_",
+        "camel_case_name": "spendingScore1100",
+        "data_type": "int64",
+        "inferred_ts_type": "number",
+        "null_count": 0,
+        "non_null_count": 200,
+        "unique_values": 84,
+        "min_value": 1.0,
+        "max_value": 99.0,
+        "mean_value": 50.2,
+        "median_value": 50.0,
+        "sample_values": "1, 3, 4, 5, 6, ..., 94, 95, 97, 98, 99",
+        "inferred_semantic_summary": "Spending Score (1-100) represents a quantified value indicating a mall customer's spending behavior or purchasing potential, with higher scores suggesting greater propensity to spend or higher customer value."
+      }
+    ],
+    "formatted_summary": "## Table 1: Mall_Customer_Segmentation_Data (200 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 37.csv (Dataset: Mall Customer Segmentation Data)\n\n### Schema (5 fields)\n  - CustomerID -- type: int64, values: 1, 2, 3, 4, 5, ..., 196, 197, 198, 199, 200\n  - Gender -- type: object, values: Female, Male\n  - Age -- type: int64, values: 18, 19, 20, 21, 22, ..., 66, 67, 68, 69, 70\n  - Annual Income (k$) -- type: int64, values: 15, 16, 17, 18, 19, ..., 103, 113, 120, 126, 137\n  - Spending Score (1-100) -- type: int64, values: 1, 3, 4, 5, 6, ..., 94, 95, 97, 98, 99\n\n### Sample Data (first 5 rows)\n```\n   CustomerID  Gender  Age  Annual Income (k$)  Spending Score (1-100)\n0           1    Male   19                  15                      39\n1           2    Male   21                  15                      81\n2           3  Female   20                  16                       6\n3           4  Female   23                  16                      77\n4           5  Female   31                  17                      40\n```\n"
+  },
+  "total_question_summaries": 2,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "37",
+      "summary_idx": 1,
+      "question_idx": 2,
+      "question": "Is there a relationship between annual income and spending score among mall customers?",
+      "column_combination": [
+        "CustomerID",
+        "Gender",
+        "Age",
+        "Annual Income (k$)",
+        "Spending Score (1-100)"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Scatter plot with gender color encoding",
+            "design_rationale": "A scatter plot directly visualizes the relationship between 'Annual Income (k$)' and 'Spending Score (1-100)'. Coloring points by 'Gender' (categorical segmentation) leverages schema information, highlighting any gender-based differences in spending/income dynamics. This approach is effective with moderate dataset size (200 rows) and helps answer the core question while offering additional insight into possible demographic trends.",
+            "target_insight": "Visual correlation (or lack thereof) between annual income and spending score, with gender distribution revealing demographic patterns in spending behavior.",
+            "output_fields": [
+              "Annual Income (k$)",
+              "Spending Score (1-100)",
+              "Gender"
+            ],
+            "chart_encodings": {
+              "x": "Annual Income (k$)",
+              "y": "Spending Score (1-100)",
+              "color": "Gender (Female=orange, Male=blue)",
+              "size": null,
+              "other_aesthetics": "alpha=0.7 for overlap; legend for gender"
+            }
+          },
+          "transformations": [
+            "No aggregation needed; direct plot of all rows to leverage moderate dataset and maintain detail",
+            "Map 'Gender' labels to color codes for clear categorical distinction"
+          ],
+          "data_preparation_steps": [
+            "Load dataframe from csv_c2_sec\\37.csv using pandas",
+            "Create color mapping for 'Gender' (Female: orange, Male: blue)",
+            "Apply color mapping to generate a color vector for scatter plot"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c2_sec\\37.csv')\ncolor_map = {'Female': 'orange', 'Male': 'blue'}\ncolors = df['Gender'].map(color_map)\nplt.figure(figsize=(8,6))\nplt.scatter(df['Annual Income (k$)'], df['Spending Score (1-100)'], c=colors, alpha=0.7, edgecolor='k', linewidth=0.7)\nfor gender, color in color_map.items():\n    plt.scatter([], [], c=color, alpha=0.7, label=gender)\nplt.xlabel('Annual Income (k$)')\nplt.ylabel('Spending Score (1-100)')\nplt.title('Annual Income vs Spending Score\\nColor-coded by Gender')\nplt.legend(title='Gender')\nplt.grid(True, linestyle='--', alpha=0.4)\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Heatmap of median spending score by income and age groups",
+            "design_rationale": "A binned heatmap aggregates customers into income and age buckets, then visualizes the median 'Spending Score (1-100)' per bin. This unconventional approach reveals regional patterns and nonlinear interactions, potentially uncovering nuanced relationships between annual income and spending propensity across age segments. Particularly effective due to moderate dataset size (200 rows, 51 unique ages, 64 unique incomes) and the analytical question's focus on relationship rather than individual details.",
+            "target_insight": "How spending score varies across combinations of annual income and age, illustrating regions of higher or lower spending propensity and identifying hotspots, clusters, or gaps.",
+            "output_fields": [
+              "Annual Income (k$)",
+              "Spending Score (1-100)",
+              "Age"
+            ],
+            "chart_encodings": {
+              "x": "Annual Income (k$) (binned, 8 bins)",
+              "y": "Age (binned, 6 bins)",
+              "color": "Median Spending Score (1-100) per bin (heatmap shading)",
+              "size": null,
+              "other_aesthetics": "Colorbar labeled 'Median Spending Score'; axes labeled with bin edges"
+            }
+          },
+          "transformations": [
+            "Bin 'Annual Income (k$)' into 8 intervals using np.histogram_bin_edges",
+            "Bin 'Age' into 6 intervals using np.histogram_bin_edges",
+            "Group df by income and age bins, compute median 'Spending Score (1-100)' for each bin",
+            "Pivot results to matrix format for heatmap"
+          ],
+          "data_preparation_steps": [
+            "Load dataframe from csv_c2_sec\\37.csv",
+            "Define bins for 'Annual Income (k$)' and 'Age' using np.linspace based on their value ranges",
+            "Add columns to df for income and age bins (categorical labels)",
+            "Group by income and age bins, aggregate with median spending score",
+            "Pivot groupby output for heatmap matrix (income bins as x, age bins as y)"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c2_sec\\37.csv')\nincome_min, income_max = df['Annual Income (k$)'].min(), df['Annual Income (k$)'].max()\nage_min, age_max = df['Age'].min(), df['Age'].max()\nincome_bins = np.linspace(income_min, income_max, 9)\nage_bins = np.linspace(age_min, age_max, 7)\ndf['IncomeBin'] = pd.cut(df['Annual Income (k$)'], bins=income_bins, include_lowest=True, right=False)\ndf['AgeBin'] = pd.cut(df['Age'], bins=age_bins, include_lowest=True, right=False)\ngrouped = df.groupby(['IncomeBin', 'AgeBin'])['Spending Score (1-100)'].median().reset_index()\npivot = grouped.pivot(index='AgeBin', columns='IncomeBin', values='Spending Score (1-100)')\ncmap = mpl.colormaps['viridis']\nplt.figure(figsize=(10,6))\nim = plt.imshow(pivot.values, aspect='auto', cmap=cmap, origin='lower')\nplt.xticks(np.arange(len(pivot.columns)), [str(bin) for bin in pivot.columns], rotation=60)\nplt.yticks(np.arange(len(pivot.index)), [str(bin) for bin in pivot.index])\nplt.xlabel('Annual Income (k$) bins')\nplt.ylabel('Age bins')\nplt.title('Median Spending Score Heatmap\\nby Income and Age Groups')\ncbar = plt.colorbar(im, shrink=0.8, pad=0.03)\ncbar.set_label('Median Spending Score (1-100)')\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-04-01T13:57:52.165109",
+      "schema_context": "Table: Mall Customer Segmentation Data\nRows: 200\nColumns: 5\n\nFIELD INFORMATION:\nField: CustomerID\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 200\n  - Semantic Meaning: CustomerID is a unique numeric identifier assigned to each individual customer in the mall for tracking and segmentation purposes within the dataset.\n  - Value Range: 1.0 to 200.0\n  - Mean: 100.50\n\nField: Gender\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field records the self-identified sex of mall customers (Female or Male), used for demographic segmentation and analysis in retail marketing.\n\nField: Age\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 51\n  - Semantic Meaning: The \"Age\" field represents the age (in years) of individual mall customers, capturing their demographic information for analysis in customer segmentation and targeting strategies.\n  - Value Range: 18.0 to 70.0\n  - Mean: 38.85\n\nField: Annual Income (k$)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 64\n  - Semantic Meaning: This field represents the estimated annual income (in thousands of dollars) of individual mall customers, used to gauge their purchasing power for segmentation and marketing analysis.\n  - Value Range: 15.0 to 137.0\n  - Mean: 60.56\n\nField: Spending Score (1-100)\n  - Data Type: int64\n  - Inferred Type: number\n  - Null Count: 0\n  - Unique Values: 84\n  - Semantic Meaning: Spending Score (1-100) represents a quantified value indicating a mall customer's spending behavior or purchasing potential, with higher scores suggesting greater propensity to spend or higher customer value.\n  - Value Range: 1.0 to 99.0\n  - Mean: 50.20\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"CustomerID\"\n  2. \"Gender\"\n  3. \"Age\"\n  4. \"Annual Income (k$)\"\n  5. \"Spending Score (1-100)\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['CustomerID'], df['Gender']",
+      "table_metadata": {
+        "table_name": "Mall Customer Segmentation Data",
+        "file_path": "csv_c2_sec\\37.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 37.csv (Dataset: Mall Customer Segmentation Data)",
+        "original_filename": "37.csv",
+        "dataset_name": "Mall Customer Segmentation Data",
+        "row_count": 200,
+        "column_count": 5,
+        "table_hash": -3933530937107143414,
+        "fields": [
+          {
+            "name": "CustomerID",
+            "clean_name": "CustomerID",
+            "camel_case_name": "customerid",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 200,
+            "unique_values": 200,
+            "min_value": 1.0,
+            "max_value": 200.0,
+            "mean_value": 100.5,
+            "median_value": 100.5,
+            "sample_values": "1, 2, 3, 4, 5, ..., 196, 197, 198, 199, 200",
+            "inferred_semantic_summary": "CustomerID is a unique numeric identifier assigned to each individual customer in the mall for tracking and segmentation purposes within the dataset."
+          },
+          {
+            "name": "Gender",
+            "clean_name": "Gender",
+            "camel_case_name": "gender",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 200,
+            "unique_values": 2,
+            "sample_values": "Female, Male",
+            "inferred_semantic_summary": "This field records the self-identified sex of mall customers (Female or Male), used for demographic segmentation and analysis in retail marketing."
+          },
+          {
+            "name": "Age",
+            "clean_name": "Age",
+            "camel_case_name": "age",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 200,
+            "unique_values": 51,
+            "min_value": 18.0,
+            "max_value": 70.0,
+            "mean_value": 38.85,
+            "median_value": 36.0,
+            "sample_values": "18, 19, 20, 21, 22, ..., 66, 67, 68, 69, 70",
+            "inferred_semantic_summary": "The \"Age\" field represents the age (in years) of individual mall customers, capturing their demographic information for analysis in customer segmentation and targeting strategies."
+          },
+          {
+            "name": "Annual Income (k$)",
+            "clean_name": "Annual_Income__k__",
+            "camel_case_name": "annualIncomeK",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 200,
+            "unique_values": 64,
+            "min_value": 15.0,
+            "max_value": 137.0,
+            "mean_value": 60.56,
+            "median_value": 61.5,
+            "sample_values": "15, 16, 17, 18, 19, ..., 103, 113, 120, 126, 137",
+            "inferred_semantic_summary": "This field represents the estimated annual income (in thousands of dollars) of individual mall customers, used to gauge their purchasing power for segmentation and marketing analysis."
+          },
+          {
+            "name": "Spending Score (1-100)",
+            "clean_name": "Spending_Score__1_100_",
+            "camel_case_name": "spendingScore1100",
+            "data_type": "int64",
+            "inferred_ts_type": "number",
+            "null_count": 0,
+            "non_null_count": 200,
+            "unique_values": 84,
+            "min_value": 1.0,
+            "max_value": 99.0,
+            "mean_value": 50.2,
+            "median_value": 50.0,
+            "sample_values": "1, 3, 4, 5, 6, ..., 94, 95, 97, 98, 99",
+            "inferred_semantic_summary": "Spending Score (1-100) represents a quantified value indicating a mall customer's spending behavior or purchasing potential, with higher scores suggesting greater propensity to spend or higher customer value."
+          }
+        ],
+        "formatted_summary": "## Table 1: Mall_Customer_Segmentation_Data (200 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 37.csv (Dataset: Mall Customer Segmentation Data)\n\n### Schema (5 fields)\n  - CustomerID -- type: int64, values: 1, 2, 3, 4, 5, ..., 196, 197, 198, 199, 200\n  - Gender -- type: object, values: Female, Male\n  - Age -- type: int64, values: 18, 19, 20, 21, 22, ..., 66, 67, 68, 69, 70\n  - Annual Income (k$) -- type: int64, values: 15, 16, 17, 18, 19, ..., 103, 113, 120, 126, 137\n  - Spending Score (1-100) -- type: int64, values: 1, 3, 4, 5, 6, ..., 94, 95, 97, 98, 99\n\n### Sample Data (first 5 rows)\n```\n   CustomerID  Gender  Age  Annual Income (k$)  Spending Score (1-100)\n0           1    Male   19                  15                      39\n1           2    Male   21                  15                      81\n2           3  Female   20                  16                       6\n3           4  Female   23                  16                      77\n4           5  Female   31                  17                      40\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

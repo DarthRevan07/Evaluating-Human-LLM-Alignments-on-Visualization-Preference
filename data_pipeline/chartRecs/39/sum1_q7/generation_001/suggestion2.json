@@ -1,0 +1,39 @@
+{
+  "table_name": "39",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "How does the ratio of K (potassium) to Ca (calcium) differ among the identified glass Types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Bar chart (mean ratio per Type with error bars)",
+      "design_rationale": "A bar chart of mean K/Ca ratio per Type, with error bars indicating standard deviation, offers a quick, high-level summary and statistical comparison across Types. It directly supports groupwise analysis and encourages easy ranking, spotlighting Types with notably higher or lower average ratios. The error bars add nuance, showing variability and reliability of the mean per Type, making the chart effective and engaging for overview-style insights.",
+      "target_insight": "Direct comparison of average K/Ca ratio by Type, and which Types have most reliable or variable ratios.",
+      "output_fields": [
+        "Type",
+        "K",
+        "Ca"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "Mean K/Ca Ratio",
+        "color": "Type (distinct color per bar)",
+        "size": null,
+        "other_aesthetics": "error bars (std), annotated bars, pastel color palette"
+      }
+    },
+    "transformations": [
+      "Calculate K/Ca ratio for each row: df['K'] / df['Ca']",
+      "Group by Type and compute mean and standard deviation of K/Ca ratio"
+    ],
+    "data_preparation_steps": [
+      "Add new column 'K_Ca_ratio': df['K_Ca_ratio'] = df['K'] / df['Ca']",
+      "Aggregate to 'df_stats': df_stats = df.groupby('Type')['K_Ca_ratio'].agg(['mean', 'std']).reset_index()",
+      "Extract Type, mean, and std arrays for plotting"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv('csv_c_squared\\39.csv')\ndf['K_Ca_ratio'] = df['K'] / df['Ca']\ndf_stats = df.groupby('Type')['K_Ca_ratio'].agg(['mean', 'std']).reset_index()\ntypes = df_stats['Type'].values\nmeans = df_stats['mean'].values\nstds = df_stats['std'].values\nimport matplotlib as mpl\ncmap = mpl.colormaps['Pastel1'].resampled(len(types))\nfig, ax = plt.subplots(figsize=(8,5))\nbarlist = ax.bar(types, means, yerr=stds, capsize=7, color=[cmap(i) for i in range(len(types))], edgecolor='gray', linewidth=1.5)\nax.set_xlabel('Type')\nax.set_ylabel('Mean Potassium/Calcium Ratio')\nax.set_title('Mean Potassium/Calcium Ratio with Variability by Glass Type')\nax.set_xticks(types)\nax.set_xticklabels([str(t) for t in types])\nfor i, (x, y) in enumerate(zip(types, means)):\n    ax.text(x, y + stds[i] + 0.01, f'{y:.2f}', ha='center', va='bottom', fontsize=10)\nax.grid(axis='y', linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

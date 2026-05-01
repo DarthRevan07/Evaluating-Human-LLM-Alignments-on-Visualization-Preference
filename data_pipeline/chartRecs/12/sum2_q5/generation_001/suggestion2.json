@@ -1,0 +1,41 @@
+{
+  "table_name": "12",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "How do Abstract Reasoning scores compare between managerial and creative job roles?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "violin plot with embedded scatter points",
+      "design_rationale": "A violin plot, combined with actual data points (strip-chart overlay), shows the full score distribution as well as density shape and individual values. It is unconventional but powerful for moderate-sized data (105 rows), revealing subtle group differences (skew, bimodality, clusters) in Abstract Reasoning across the same categories. By overlaying points, it avoids loss of detail; this is ideal for exploring nuanced score patterns beyond boxplot summary statistics.",
+      "target_insight": "This visualization uncovers whether managerial and creative roles show distinct density patterns, gaps, clusters, or spread in Abstract Reasoning scores — giving a richer sense of both group-level and individual-level variation.",
+      "output_fields": [
+        "Career",
+        "Abstract Reasoning"
+      ],
+      "chart_encodings": {
+        "x": "Job Role Category (Managerial/Creative, derived from Career)",
+        "y": "Abstract Reasoning",
+        "color": "Role Category (distinct color for Managerial and Creative for both violin shape and data points)",
+        "size": null,
+        "other_aesthetics": "point alpha, violin plot width, embedded scatter"
+      }
+    },
+    "transformations": [
+      "Classify 'Career' entries into 'Managerial' or 'Creative' categories via string mapping.",
+      "Filter down to rows marked 'Managerial' or 'Creative'.",
+      "Prepare arrays of Abstract Reasoning scores for each category; retain individual values for scatter overlay."
+    ],
+    "data_preparation_steps": [
+      "Load dataframe from csv_c2_sec\\12.csv",
+      "Apply job role classification (see suggestion 1 for mapping).",
+      "Filter for 'Managerial' and 'Creative'.",
+      "Create two arrays of Abstract Reasoning score values for violin plot, as well as corresponding arrays for category label.",
+      "Scatter plot each point atop respective violin."
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\12.csv\")\nmanagerial_keywords = [\"Manager\", \"Director\", \"Supervisor\", \"Administrator\", \"Executive\", \"Chief\", \"Lead\", \"Head\"]\ncreative_keywords = [\"Designer\", \"Artist\", \"Writer\", \"Editor\", \"Animator\", \"Illustrator\", \"Photographer\", \"Producer\", \"Composer\", \"Musician\", \"Stylist\"]\ndef categorize_role(career):\n    for kw in managerial_keywords:\n        if kw.lower() in career.lower():\n            return \"Managerial\"\n    for kw in creative_keywords:\n        if kw.lower() in career.lower():\n            return \"Creative\"\n    return np.nan\ndf[\"Job Role Category\"] = df[\"Career\"].apply(categorize_role)\ndf_filtered = df[df[\"Job Role Category\"].isin([\"Managerial\", \"Creative\"])]\nmanagerial_scores = df_filtered[df_filtered[\"Job Role Category\"]==\"Managerial\"][\"Abstract Reasoning\"].values\ncreative_scores = df_filtered[df_filtered[\"Job Role Category\"]==\"Creative\"][\"Abstract Reasoning\"].values\nfig, ax = plt.subplots(figsize=(8,5))\nparts = ax.violinplot([managerial_scores, creative_scores],\n                      positions=[1,2], showmeans=False, showextrema=True, showmedians=True)\nfor i, pc in enumerate(parts['bodies']):\n    color = \"#2877b4\" if i==0 else \"#a1389e\"\n    pc.set_facecolor(color)\n    pc.set_edgecolor(color)\n    pc.set_alpha(0.3)\n    pc.set_linewidth(1.3)\nax.scatter(np.ones(len(managerial_scores))*1, managerial_scores,\n           color=\"#2877b4\", alpha=0.65, s=22, edgecolors=\"white\", linewidths=0.5, label=\"Managerial Scores\")\nax.scatter(np.ones(len(creative_scores))*2, creative_scores,\n           color=\"#a1389e\", alpha=0.65, s=22, edgecolors=\"white\", linewidths=0.5, label=\"Creative Scores\")\nax.set_xticks([1,2])\nax.set_xticklabels([\"Managerial\", \"Creative\"])\nax.set_ylabel(\"Abstract Reasoning\")\nax.set_title(\"Distribution of Abstract Reasoning Scores\\nManagerial vs Creative Job Roles\")\nax.legend(loc=\"upper right\", fontsize=10)\nax.grid(axis=\"y\", alpha=0.35)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

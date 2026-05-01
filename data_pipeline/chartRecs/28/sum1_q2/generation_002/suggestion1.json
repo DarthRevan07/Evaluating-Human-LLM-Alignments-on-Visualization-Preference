@@ -1,0 +1,38 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 1,
+  "question": "What pricing trends can be observed for various car categories over different production years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line plot (multi-series, one line per Category)",
+      "design_rationale": "A line plot allows for a clear temporal comparison of price trends across multiple car body types ('Category') over production years. By plotting the average price per year for each category, viewers can see not only general pricing evolution but also distinguish how different car types behave in the market across time, leveraging the categorical axis and continuous time. This works well with the moderate number of categories (11), each with potentially distinct price dynamics.",
+      "target_insight": "How average price for each car category evolved over production years, highlighting which categories appreciate or depreciate over time, and where price gaps emerge.",
+      "output_fields": [
+        "Price",
+        "Prod. year",
+        "Category"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Price (mean aggregated)",
+        "color": "Category (distinct for each line)",
+        "size": null,
+        "other_aesthetics": "Legend for Category; label axes; use markers for clarity on each line"
+      }
+    },
+    "transformations": [
+      "Group by 'Category' and 'Prod. year', compute mean of 'Price'",
+      "Sort production years ascending for each Category for correct line plotting"
+    ],
+    "data_preparation_steps": [
+      "df_grouped = df.groupby(['Category', 'Prod. year'])['Price'].mean().reset_index()",
+      "Order categories based on overall average price descending (optional for legend order)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_grouped = df.groupby(['Category', 'Prod. year'])['Price'].mean().reset_index()\ncategories = df_grouped['Category'].unique()\ncmap = mpl.colormaps['tab10'].resampled(len(categories))\nfig, ax = plt.subplots(figsize=(12, 7))\nfor idx, cat in enumerate(categories):\n    data = df_grouped[df_grouped['Category'] == cat]\n    ax.plot(data['Prod. year'], data['Price'], label=cat, color=cmap(idx), marker='o', linewidth=2, alpha=0.8)\nax.set_xlabel(\"Prod. year\")\nax.set_ylabel(\"Average Price\")\nax.set_title(\"Pricing Trends by Car Category over Production Years\")\nax.legend(title=\"Category\", ncol=2, fontsize=\"medium\")\nax.grid(True, linestyle='--', alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

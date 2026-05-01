@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Which destinations see higher transportation costs, and is this linked to specific transportation types?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Bar Plot (Grouped)",
+      "design_rationale": "A grouped bar plot effectively compares average transportation costs for each destination, grouped by transportation type. This design leverages the categorical nature of 'Destination' and 'Transportation type' (with moderate unique counts) and numeric (cost) data. By showing multiple bars per destination, this reveals which destinations are most expensive to reach, and which specific types of transportation contribute most to those costs, directly linking cost and transport mode.",
+      "target_insight": "Highlights which destinations have higher transportation costs overall, and whether particular transport types (e.g., flights) are responsible for these high expenses within each destination.",
+      "output_fields": [
+        "Destination",
+        "Transportation type",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Average Transportation cost",
+        "color": "Transportation type",
+        "size": null,
+        "other_aesthetics": "Bars grouped by 'Destination', separate color for each 'Transportation type', tight layout, rotated x-ticks for readability"
+      }
+    },
+    "transformations": [
+      "Convert df['Transportation cost'] to numeric values, handling currency symbols and missing values",
+      "Drop rows where df['Destination'], df['Transportation type'], or df['Transportation cost'] are missing",
+      "Group by df['Destination'] and df['Transportation type'], compute mean of df['Transportation cost']"
+    ],
+    "data_preparation_steps": [
+      "Prepare df['Transportation cost'] as float: strip out currency symbols, handle non-numeric entries",
+      "Filter dataframe to remove NA in key fields ('Destination', 'Transportation type', 'Transportation cost')",
+      "Pivot/group data to get mean transportation cost per destination and transportation type",
+      "Select top destinations with highest average cost for clearer visualization (e.g., top 12 by mean cost)"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\221.csv\")\n# Clean transportation cost: convert to float, handle currencies/symbols\ndef parse_cost(val):\n    if pd.isnull(val):\n        return np.nan\n    val = str(val).replace('$','').replace('USD','').replace(',','').strip()\n    try:\n        return float(val)\n    except:\n        return np.nan\n\ndf['Transportation cost'] = df['Transportation cost'].apply(parse_cost)\n# Drop rows with missing destination, transport type or cost\ndf_clean = df.dropna(subset=['Destination','Transportation type','Transportation cost'])\n# Group by destination and transportation type - compute mean cost\ngrouped = df_clean.groupby(['Destination','Transportation type'])['Transportation cost'].mean().reset_index()\n# Select top 12 destinations by mean cost across all transport types\nmean_dest_cost = grouped.groupby('Destination')['Transportation cost'].mean().sort_values(ascending=False)\ntop_dest = mean_dest_cost.head(12).index.tolist()\ngrouped_top = grouped[grouped['Destination'].isin(top_dest)]\n# Prepare for grouped bar plot\ntransport_types = grouped_top['Transportation type'].unique()\ndestinations = grouped_top['Destination'].unique()\nbar_width = 0.8 / len(transport_types)\nx = np.arange(len(destinations))\nfig, ax = plt.subplots(figsize=(13,7))\ncmap = mpl.colormaps['tab10']\nfor i, ttype in enumerate(transport_types):\n    vals = [grouped_top[(grouped_top['Destination']==dest) & (grouped_top['Transportation type']==ttype)]['Transportation cost'].values[0] if len(grouped_top[(grouped_top['Destination']==dest) & (grouped_top['Transportation type']==ttype)])>0 else np.nan for dest in destinations]\n    ax.bar(x + i*bar_width, vals, bar_width, label=ttype, color=cmap(i))\n# Formatting\nax.set_xticks(x + bar_width*len(transport_types)/2)\nax.set_xticklabels(destinations, rotation=40, ha='right')\nax.set_ylabel('Average Transportation cost (USD)')\nax.set_xlabel('Destination')\nax.set_title('Average Transportation Cost by Destination and Transportation Type')\nax.legend(title='Transportation Type', bbox_to_anchor=(1,1))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

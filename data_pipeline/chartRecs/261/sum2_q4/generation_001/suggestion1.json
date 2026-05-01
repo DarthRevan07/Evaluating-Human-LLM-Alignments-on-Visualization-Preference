@@ -1,0 +1,38 @@
+{
+  "table_name": "261",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 4,
+  "suggestion_id": 1,
+  "question": "How does Space Walks (hr) vary between male and female astronauts?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "boxplot",
+      "design_rationale": "A boxplot allows direct comparison of the distribution, median, outliers and spread of Space Walks (hr) between male and female astronauts. This is ideal for showcasing differences in central tendency and variability, especially given that 'Space Walks (hr)' is a continuous numerical variable with possible outliers, and 'Gender' is categorical with two values. The boxplot will quickly reveal if one gender tends to have significantly more hours, more variation, or outliers.",
+      "target_insight": "Distribution and variability of spacewalk hours by gender, highlighting medians, ranges, and potential outliers.",
+      "output_fields": [
+        "Gender",
+        "Space Walks (hr)"
+      ],
+      "chart_encodings": {
+        "x": "Gender",
+        "y": "Space Walks (hr)",
+        "color": "Gender (distinct colors for Male/Female)",
+        "size": null,
+        "other_aesthetics": "boxplot width; alpha=0.8; show outliers; grid lines for y-axis"
+      }
+    },
+    "transformations": [
+      "Filter to astronauts with non-null 'Space Walks (hr)' and valid 'Gender'",
+      "Group data by 'Gender'",
+      "Prepare lists of 'Space Walks (hr)' values per gender"
+    ],
+    "data_preparation_steps": [
+      "df_box = df[df['Space Walks (hr)'].notnull() & df['Gender'].notnull()]",
+      "Prepare boxplot data: [df_box[df_box['Gender']=='Male']['Space Walks (hr)'], df_box[df_box['Gender']=='Female']['Space Walks (hr)']]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nfrom matplotlib import colormaps\n\ndf = pd.read_csv('csv_c_squared\\261.csv')\ndf_box = df[df['Space Walks (hr)'].notnull() & df['Gender'].notnull()]\ngender_order = ['Male', 'Female']\ndata_box = [df_box[df_box['Gender']=='Male']['Space Walks (hr)'], df_box[df_box['Gender']=='Female']['Space Walks (hr)']]\ncmap = colormaps['tab10']\ncolors = [cmap(0), cmap(1)]\nfig, ax = plt.subplots(figsize=(7, 5))\nbox = ax.boxplot(data_box,\n    vert=True,\n    patch_artist=True,\n    labels=gender_order,\n    widths=0.6,\n    showfliers=True,\n    medianprops={'color':'black'},\n    boxprops={'alpha':0.8}\n)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_linewidth(2)\nax.set_ylabel('Space Walks (hr)')\nax.set_xlabel('Gender')\nax.set_title('Distribution of Space Walks (hr) by Gender')\nax.grid(axis='y', linestyle='--', linewidth=0.7, alpha=0.5)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

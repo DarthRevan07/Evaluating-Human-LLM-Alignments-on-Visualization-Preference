@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "What trend can be observed in the Price of cars with advanced safety features (more Airbags) across different Production years?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line chart (multi-series: Airbags bins vs. Production year)",
+      "design_rationale": "A line chart with multiple lines for different Airbags bins (levels of advanced safety) across Production years highlights how car Price trends evolve both over time and across safety feature levels. This visually compares trajectories, revealing whether newer cars with more Airbags command higher prices and how that premium changes by year.",
+      "target_insight": "To reveal whether higher Airbags count correlates with higher Prices and whether the Price premium for safety changes over time.",
+      "output_fields": [
+        "Prod. year",
+        "Price",
+        "Airbags"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Mean Price (aggregated by Airbags and Prod. year)",
+        "color": "Airbags bin (e.g., Low, Medium, High)",
+        "size": null,
+        "other_aesthetics": "Line plot; legend for Airbags bins; marker style for clarity"
+      }
+    },
+    "transformations": [
+      "Filter df to only rows where df['Airbags'] >= 6 (focus on 'advanced' safety, using mean Airbags ~6.58 as reference)",
+      "Bin df['Airbags'] into three groups: Low (6–8), Medium (9–11), High (12+)",
+      "Group by ['Prod. year', 'Airbags bin'], aggregate mean Price",
+      "Pivot result so each Airbags bin is a line across 'Prod. year'"
+    ],
+    "data_preparation_steps": [
+      "df_adv = df[df['Airbags'] >= 6]",
+      "Create Airbags_bin column: pd.cut(df_adv['Airbags'], bins=[6,8,11,16], labels=['Low','Medium','High'], right=True)",
+      "df_plot = df_adv.groupby(['Prod. year','Airbags_bin'])['Price'].mean().reset_index()",
+      "Pivot: df_plot_pivot = df_plot.pivot(index='Prod. year', columns='Airbags_bin', values='Price')"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\28.csv')\ndf_adv = df[df['Airbags'] >= 6]\ndf_adv['Airbags_bin'] = pd.cut(df_adv['Airbags'], bins=[6,8,11,16], labels=['Low','Medium','High'], right=True)\ndf_plot = df_adv.groupby(['Prod. year','Airbags_bin'])['Price'].mean().reset_index()\ndf_plot_pivot = df_plot.pivot(index='Prod. year', columns='Airbags_bin', values='Price')\ncmap = mpl.colormaps['viridis'].resampled(3)\nfig, ax = plt.subplots(figsize=(10,6))\nfor idx, col in enumerate(['Low','Medium','High']):\n    if col in df_plot_pivot.columns:\n        ax.plot(df_plot_pivot.index, df_plot_pivot[col], marker='o', color=cmap(idx), label=col)\nax.set_xlabel('Prod. year')\nax.set_ylabel('Mean Price')\nax.set_title('Trend of Car Prices with Advanced Safety (Airbags) across Production Years')\nax.legend(title='Airbags bin')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

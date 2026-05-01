@@ -1,0 +1,38 @@
+{
+  "table_name": "39",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "How does the ratio of K (potassium) to Ca (calcium) differ among the identified glass Types?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "stripplot (jittered scatter) overlayed on bar plot of mean",
+      "design_rationale": "A stripplot with jitter visualizes the individual sample ratios per Type, while an overlayed bar chart shows the average ratio for each. This layered approach combines granular visibility (distribution, density, clustering, outliers) with a clear summary (mean per Type), offering detailed and aggregate views. It makes it easy to see both overall differences between Types and whether some Types have more variability or clustering of ratios.",
+      "target_insight": "Shows average K/Ca ratios per Type along with spread and density of individual glass samples, revealing if differences are driven by consistent groups or outliers, and which Types are more homogeneous or variable.",
+      "output_fields": [
+        "K",
+        "Ca",
+        "Type"
+      ],
+      "chart_encodings": {
+        "x": "Type",
+        "y": "K/Ca ratio",
+        "color": "Type for scatter; mean bars in dark grey",
+        "size": null,
+        "other_aesthetics": "jitter scatter points horizontally; overlay semi-transparent bars for mean"
+      }
+    },
+    "transformations": [
+      "Calculate new column 'K_Ca_ratio' as df['K'] / df['Ca']",
+      "Compute mean K/Ca ratio per Type for bar chart overlay"
+    ],
+    "data_preparation_steps": [
+      "df['K_Ca_ratio'] = df['K'] / df['Ca']",
+      "means = df.groupby('Type')['K_Ca_ratio'].mean()"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\39.csv')\ndf['K_Ca_ratio'] = df['K'] / df['Ca']\ntypes_sorted = np.sort(df['Type'].unique())\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(types_sorted))]\nmeans = df.groupby('Type')['K_Ca_ratio'].mean()\nfig, ax = plt.subplots(figsize=(9,6))\nbar_width = 0.6\nax.bar(types_sorted, means.values, color='grey', alpha=0.25, width=bar_width, zorder=1, label='Type Mean')\nfor i, t in enumerate(types_sorted):\n    yvals = df[df['Type'] == t]['K_Ca_ratio'].values\n    xvals = np.random.normal(loc=t, scale=0.08, size=len(yvals))\n    ax.scatter(xvals, yvals, color=colors[i], alpha=0.7, s=32, edgecolor='k', zorder=2, label=f'Type {t}' if i==0 else None)\nax.set_xticks(types_sorted)\nax.set_xlabel('Type', fontsize=14)\nax.set_ylabel('K/Ca ratio', fontsize=14)\nax.set_title('Sample-Level Potassium to Calcium Ratios per Glass Type\\nWith Mean Overlay', fontsize=16)\nax.grid(axis='y', linestyle='--', alpha=0.45)\nfor i, mean in enumerate(means.values):\n    ax.text(types_sorted[i], mean, f'{mean:.2f}', color='k', fontsize=12, ha='center', va='bottom')\nahandles = [plt.Line2D([0],[0], color='grey', lw=8, alpha=0.25, label='Type Mean')]\nax.legend(handles=ahandles, fontsize=12, loc='upper left')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

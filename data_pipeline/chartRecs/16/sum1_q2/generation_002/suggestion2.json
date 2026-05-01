@@ -1,0 +1,44 @@
+{
+  "table_name": "16",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "Which Generation features the highest proportion of Legendary Pokémon compared to its total Pokémon count?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Legendary vs Total Count Ratio)",
+      "design_rationale": "A heatmap is visually engaging and effective for showing both the absolute counts and the proportion: by blending ratio and count size visually. Rows are generations, columns are 'Total Count' and 'Legendary Count'; color encodes the proportion. This approach allows the viewer to see both the number of Legendary Pokémon (raw), total Pokémon, and the normalized ratio simultaneously. The heatmap draws quick comparative attention to both large and small values, as well as proportion differences.",
+      "target_insight": "Simultaneously compares across generations both their total Pokémon, Legendary Pokémon counts, and the resulting proportion, illuminating which generation is most distinguished by its Legendary segment.",
+      "output_fields": [
+        "Generation",
+        "Legendary",
+        "id"
+      ],
+      "chart_encodings": {
+        "x": "Stat type ('Total', 'Legendary', 'Proportion')",
+        "y": "Generation",
+        "color": "Heatmap color encodes proportion value (continuous colormap)",
+        "size": "None",
+        "other_aesthetics": "Text annotations for values; colorbar displaying proportion"
+      }
+    },
+    "transformations": [
+      "Group df by 'Generation'",
+      "Aggregate total count per Generation (number of rows)",
+      "Aggregate Legendary count per Generation (Legendary == True)",
+      "Compute proportion per Generation",
+      "Assemble into new DataFrame: columns=['Total', 'Legendary', 'Proportion'], index=Generation"
+    ],
+    "data_preparation_steps": [
+      "grouped = df.groupby('Generation')",
+      "total_count = grouped['id'].count()",
+      "legendary_count = grouped['Legendary'].sum()",
+      "proportion = legendary_count / total_count",
+      "df_heat = pd.DataFrame({'Total': total_count, 'Legendary': legendary_count, 'Proportion': proportion})"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c2_sec\\16.csv\")\ngrouped = df.groupby('Generation')\ntotal_count = grouped['id'].count()\nlegendary_count = grouped['Legendary'].sum()\nproportion = legendary_count / total_count\ndf_heat = pd.DataFrame({'Total': total_count, 'Legendary': legendary_count, 'Proportion': proportion})\ndata = df_heat.values\nrow_labels = df_heat.index.astype(str)\ncol_labels = df_heat.columns\nfig, ax = plt.subplots(figsize=(6, 5))\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=proportion.min(), vmax=proportion.max())\nheatmap = ax.imshow(data, aspect='auto', cmap=cmap)\n# Annotate each cell with value\nfor i in range(data.shape[0]):\n    for j in range(data.shape[1]):\n        val = data[i, j]\n        if col_labels[j] == 'Proportion':\n            ax.text(j, i, f\"{val:.2%}\", ha='center', va='center', color='white', fontsize=10)\n        else:\n            ax.text(j, i, f\"{int(val)}\", ha='center', va='center', color='black', fontsize=10)\nax.set_xticks(np.arange(len(col_labels)))\nax.set_xticklabels(col_labels)\nax.set_yticks(np.arange(len(row_labels)))\nax.set_yticklabels(row_labels)\nax.set_xlabel(\"Statistic\")\nax.set_ylabel(\"Generation\")\nax.set_title(\"Generation vs Legendary Ratio Heatmap\\n(Legendary, Total, Proportion)\", fontsize=13)\n# Colorbar specific for Proportion column\nsm = plt.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=proportion.min(), vmax=proportion.max()))\ncbar = fig.colorbar(sm, ax=ax, orientation='vertical', label='Legendary Proportion')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

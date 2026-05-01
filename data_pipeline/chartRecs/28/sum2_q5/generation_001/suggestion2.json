@@ -1,0 +1,41 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 2,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "What trend can be observed in the Price of cars with advanced safety features (more Airbags) across different Production years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Line Plot (Multiple Lines: Airbags level vs Price over Production years)",
+      "design_rationale": "A multiple line plot reveals, for selected high-airbag levels, the trend in average Price across Production years. Each line corresponds to a particular high Airbags count, showing how price appreciation or depreciation for highly equipped cars changes over time. This approach is easy to interpret, shows temporal trends, and visualizes how pricing responds to progressively advanced safety features.",
+      "target_insight": "Shows whether cars with more Airbags consistently command higher prices, and whether new models (years) elevate or depress this premium; compares trends for different advanced safety tiers.",
+      "output_fields": [
+        "Prod. year",
+        "Airbags",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Prod. year",
+        "y": "Average Price",
+        "color": "Airbags level (distinct color per line)",
+        "size": null,
+        "other_aesthetics": "Marker per data point; legend for Airbags level"
+      }
+    },
+    "transformations": [
+      "Filter for rows with Airbags >= 8 (advanced safety threshold, above mean)",
+      "Select top 3 most frequent Airbags values >=8 for clarity (prevent overplotting)",
+      "For each selected Airbags level, group by 'Prod. year', calculate average Price"
+    ],
+    "data_preparation_steps": [
+      "Filter df for df['Airbags'] >= 8",
+      "Find the 3 most common Airbags counts in this subset",
+      "For each Airbags level, group by 'Prod. year', calculate mean Price",
+      "Create a table: rows 'Prod. year', columns Airbags level, values mean Price"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf_adv = df[df['Airbags'] >= 8]  # advanced safety threshold\n# Get top 3 most frequent Airbags values >=8\nairbags_counts = df_adv['Airbags'].value_counts().nlargest(3)\ntop_airbags = airbags_counts.index.tolist()\ncolor_map = mpl.colormaps['tab10'].resampled(len(top_airbags))\nfig, ax = plt.subplots(figsize=(10, 6))\nfor idx, ab in enumerate(top_airbags):\n    df_ab = df_adv[df_adv['Airbags'] == ab]\n    avg_by_year = df_ab.groupby('Prod. year')['Price'].mean()\n    ax.plot(avg_by_year.index, avg_by_year.values, label=f\"{ab} Airbags\", color=color_map(idx), marker='o')\nax.set_xlabel('Production Year')\nax.set_ylabel('Average Price')\nplt.title('Trend of Car Prices for Advanced Safety Features\\nTop Airbag Levels Across Years')\nax.legend(title='Airbags Level')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

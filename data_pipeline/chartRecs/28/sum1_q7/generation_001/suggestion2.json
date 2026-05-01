@@ -1,0 +1,42 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 2,
+  "question": "What are the highest and lowest price outliers by manufacturer and model?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (pivot of outlier prices per manufacturer-model)",
+      "design_rationale": "A heatmap enables instant pattern recognition across many manufacturers and models. By extracting only extreme outlier values (highest or lowest) for each manufacturer-model, we encode price via color, facilitating rapid comparison of which manufacturer-models have the most extreme price records compared to others. This unconventional encoding is highly effective for dense categorical groupings (many models, many manufacturers), allowing holistic comparison and focusing on outlier values themselves.",
+      "target_insight": "Reveals which manufacturers and models stand out for unusually high or low price outliers and shows clustering, gaps, or anomalies in price extremes across the dataset.",
+      "output_fields": [
+        "Manufacturer",
+        "Model",
+        "Price (extremal)"
+      ],
+      "chart_encodings": {
+        "x": "Model",
+        "y": "Manufacturer",
+        "color": "Price (min or max, customizable as high or low outlier)",
+        "size": "null",
+        "other_aesthetics": "max vs min price toggle (choose one for full heatmap); diverging colormap for price; colorbar for scale; labels rotated and trimmed for clarity"
+      }
+    },
+    "transformations": [
+      "Group df by ['Manufacturer', 'Model']",
+      "For each group, compute lowest and highest price",
+      "Create pivot table with manufacturers as rows and models as columns with price values as cells; choose min or max (could do both in two heatmaps or toggle)",
+      "Select top N manufacturers and top M models for clarity"
+    ],
+    "data_preparation_steps": [
+      "Drop records with missing or non-numeric 'Price'",
+      "Determine top N manufacturers by frequency; top M models by frequency or price range",
+      "Create pivot table with manufacturers as rows and models as columns; cells hold highest (or lowest) price for each combination",
+      "Fill missing cells with NaN or zero for clarity"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\ndf['Price'] = pd.to_numeric(df['Price'], errors='coerce')\ndf = df[df['Price'].notna()]\n# Choose to show either max or min price outlier heatmap\nshow_max = True\nN = 10\nM = 20\ntop_manufacturers = df['Manufacturer'].value_counts().index[:N]\n# For top models, select by most variable price across all manufacturers\nmodel_prices = df.groupby('Model')['Price'].std().sort_values(ascending=False)\ntop_models = model_prices.index[:M]\nfiltered = df[df['Manufacturer'].isin(top_manufacturers) & df['Model'].isin(top_models)]\ngrouped = filtered.groupby(['Manufacturer', 'Model'])['Price']\npivot_dict = {}\nfor (manu, model), group in grouped:\n    if show_max:\n        pivot_dict[(manu, model)] = group.max()\n    else:\n        pivot_dict[(manu, model)] = group.min()\npivot_df = pd.DataFrame(np.nan, index=top_manufacturers, columns=top_models)\nfor (manu, model), price in pivot_dict.items():\n    pivot_df.loc[manu, model] = price\nfig, ax = plt.subplots(figsize=(18, 8))\ncmap = mpl.colormaps['coolwarm']\nim = ax.imshow(pivot_df.values, cmap=cmap, aspect='auto', interpolation='nearest', vmin=np.nanmin(pivot_df.values), vmax=np.nanmax(pivot_df.values))\nax.set_xticks(np.arange(len(top_models)))\nax.set_yticks(np.arange(len(top_manufacturers)))\nax.set_xticklabels(top_models, rotation=45, ha='right')\nax.set_yticklabels(top_manufacturers)\ncb = fig.colorbar(im, ax=ax)\ncb.set_label('Max Price' if show_max else 'Min Price')\nax.set_xlabel('Model')\nax.set_ylabel('Manufacturer')\nax.set_title(('Highest Price Outlier ' if show_max else 'Lowest Price Outlier ') + 'by Manufacturer and Model (Heatmap)\\n')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

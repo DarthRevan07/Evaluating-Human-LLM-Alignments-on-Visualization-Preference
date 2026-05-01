@@ -1,0 +1,41 @@
+{
+  "table_name": "25",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do stocks with larger intra-day price ranges (difference between High and Low) tend to also have higher trading volumes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter plot",
+      "design_rationale": "A scatter plot is a classic approach for visualizing correlations between two continuous variables. In this case, plotting intra-day price range (High - Low) against trading volume (Volume (lacs)) directly answers whether stocks with larger price movement also trade in higher volumes. Each stock is represented individually (50 points), avoiding overplotting and conveying the relationship effectively. Color encoding by '365 d % chng' adds context\\u2014distinguishing stocks with strong yearly performance.",
+      "target_insight": "Reveals the direct relationship (if any) between intra-day price range and trading volume, with emphasis on annual performance.",
+      "output_fields": [
+        "Symbol",
+        "High",
+        "Low",
+        "Volume (lacs)",
+        "365 d % chng"
+      ],
+      "chart_encodings": {
+        "x": "'High' - 'Low'",
+        "y": "Volume (lacs)",
+        "color": "365 d % chng",
+        "size": "null",
+        "other_aesthetics": "Alpha=0.8; colorbar for annual % change"
+      }
+    },
+    "transformations": [
+      "Convert df['High'] and df['Low'] to float (since both are object type strings)",
+      "Compute intra-day price range as new column: df['Range'] = df['High'] - df['Low']"
+    ],
+    "data_preparation_steps": [
+      "df['High'] = pd.to_numeric(df['High'], errors='coerce')",
+      "df['Low'] = pd.to_numeric(df['Low'], errors='coerce')",
+      "df['Range'] = df['High'] - df['Low']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\25.csv')\ndf['High'] = pd.to_numeric(df['High'], errors='coerce')\ndf['Low'] = pd.to_numeric(df['Low'], errors='coerce')\ndf['Range'] = df['High'] - df['Low']\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=df['365 d % chng'].min(), vmax=df['365 d % chng'].max())\nfig, ax = plt.subplots(figsize=(8,6))\nscatter = ax.scatter(df['Range'], df['Volume (lacs)'], c=df['365 d % chng'], cmap=cmap, norm=norm, alpha=0.8)\nax.set_xlabel('Intra-Day Price Range (High - Low)')\nax.set_ylabel('Trading Volume (lacs)')\ntitle_text = 'Relationship between Intra-Day Price Range and Trading Volume for NIFTY-50 Stocks\\n'\nsubtitle_text = '(Color = 365 d % chng: Annual Performance)'\nax.set_title(title_text + subtitle_text)\ncbar = plt.colorbar(scatter, ax=ax, pad=0.02)\ncbar.set_label('365 d % chng (Annual % Change)')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

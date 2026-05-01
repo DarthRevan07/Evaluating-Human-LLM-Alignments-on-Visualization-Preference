@@ -1,0 +1,270 @@
+{
+  "table_name": "429",
+  "generation_id": 2,
+  "generation_dir": "chartRecsDir\\c2_charts_run2\\429\\sum2_q1\\generation_002",
+  "schema_context": "Table: Imports and Exports of Dogs by state\nRows: 90\nColumns: 5\n\nFIELD INFORMATION:\nField: location\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 90\n  - Semantic Meaning: The \"location\" field specifies the geographic origin or destination, identifying either a U.S. state or a foreign country involved in the import or export of dogs.\n\nField: exported\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 9\n  - Unique Values: 34\n  - Semantic Meaning: This field represents the number of dogs exported from each state, with values indicating the quantity per state and some states having missing export data.\n  - Value Range: 1.0 to 635.0\n  - Mean: 30.37\n\nField: imported\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 52\n  - Unique Values: 30\n  - Semantic Meaning: The \"imported\" field represents the number of dogs imported into each U.S. state during a specific time period, with some states showing no recorded imports (null values).\n  - Value Range: 1.0 to 390.0\n  - Mean: 64.74\n\nField: total\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 39\n  - Unique Values: 49\n  - Semantic Meaning: This field represents the total number of dogs imported or exported by each state, indicating the volume of dog trade activity per state within a specified time period.\n  - Value Range: 15.0 to 4002.0\n  - Mean: 1139.82\n\nField: inUS\n  - Data Type: bool\n  - Inferred Type: boolean\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether the dog import or export record pertains to a transaction occurring within the United States (True) or outside of it (False).\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"location\"\n  2. \"exported\"\n  3. \"imported\"\n  4. \"total\"\n  5. \"inUS\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['location'], df['exported']",
+  "table_metadata": {
+    "table_name": "Imports and Exports of Dogs by state",
+    "file_path": "csv_c_squared\\429.csv",
+    "sheet_name": "",
+    "description": "Data loaded from CSV file: 429.csv (Dataset: Imports and Exports of Dogs by state)",
+    "original_filename": "429.csv",
+    "dataset_name": "Imports and Exports of Dogs by state",
+    "row_count": 90,
+    "column_count": 5,
+    "table_hash": 807114936618525641,
+    "fields": [
+      {
+        "name": "location",
+        "clean_name": "location",
+        "camel_case_name": "location",
+        "data_type": "object",
+        "inferred_ts_type": "string",
+        "null_count": 0,
+        "non_null_count": 90,
+        "unique_values": 90,
+        "sample_values": "Afghanistan, Alabama, Alaska, Arizona, Arkansas, ..., Washington, Washington DC, West Virginia, Wisconsin, Wyoming",
+        "inferred_semantic_summary": "The \"location\" field specifies the geographic origin or destination, identifying either a U.S. state or a foreign country involved in the import or export of dogs."
+      },
+      {
+        "name": "exported",
+        "clean_name": "exported",
+        "camel_case_name": "exported",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 9,
+        "non_null_count": 81,
+        "unique_values": 34,
+        "min_value": 1.0,
+        "max_value": 635.0,
+        "mean_value": 30.37037037037037,
+        "median_value": 4.0,
+        "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, 635.0",
+        "inferred_semantic_summary": "This field represents the number of dogs exported from each state, with values indicating the quantity per state and some states having missing export data."
+      },
+      {
+        "name": "imported",
+        "clean_name": "imported",
+        "camel_case_name": "imported",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 52,
+        "non_null_count": 38,
+        "unique_values": 30,
+        "min_value": 1.0,
+        "max_value": 390.0,
+        "mean_value": 64.73684210526316,
+        "median_value": 24.5,
+        "sample_values": "1.0, 2.0, 3.0, 4.0, nan, ..., nan, nan, nan, nan, nan",
+        "inferred_semantic_summary": "The \"imported\" field represents the number of dogs imported into each U.S. state during a specific time period, with some states showing no recorded imports (null values)."
+      },
+      {
+        "name": "total",
+        "clean_name": "total",
+        "camel_case_name": "total",
+        "data_type": "float64",
+        "inferred_ts_type": "number",
+        "null_count": 39,
+        "non_null_count": 51,
+        "unique_values": 49,
+        "min_value": 15.0,
+        "max_value": 4002.0,
+        "mean_value": 1139.8235294117646,
+        "median_value": 857.0,
+        "sample_values": "nan, 15.0, 18.0, 24.0, 542.0, ..., nan, nan, nan, 3058.0, nan",
+        "inferred_semantic_summary": "This field represents the total number of dogs imported or exported by each state, indicating the volume of dog trade activity per state within a specified time period."
+      },
+      {
+        "name": "inUS",
+        "clean_name": "inUS",
+        "camel_case_name": "inus",
+        "data_type": "bool",
+        "inferred_ts_type": "boolean",
+        "null_count": 0,
+        "non_null_count": 90,
+        "unique_values": 2,
+        "sample_values": "False, True",
+        "inferred_semantic_summary": "This field indicates whether the dog import or export record pertains to a transaction occurring within the United States (True) or outside of it (False)."
+      }
+    ],
+    "formatted_summary": "## Table 1: Imports_and_Exports_of_Dogs_by_state (90 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 429.csv (Dataset: Imports and Exports of Dogs by state)\n\n### Schema (5 fields)\n  - location -- type: object, values: Afghanistan, Alabama, Alaska, Arizona, Arkansas, ..., Washington, Washington DC, West Virginia, Wisconsin, Wyoming\n  - exported -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, 635.0\n  - imported -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, nan\n  - total -- type: float64, values: 15.0, 18.0, 24.0, nan, 542.0, ..., nan, nan, nan, nan, nan\n  - inUS -- type: bool, values: False, True\n\n### Sample Data (first 5 rows)\n```\n         location  exported  imported   total  inUS\n0           Texas     635.0       NaN   566.0  True\n1         Alabama     268.0       2.0  1428.0  True\n2  North Carolina     158.0      14.0  2627.0  True\n3  South Carolina     139.0      12.0  1618.0  True\n4         Georgia     137.0      19.0  3479.0  True\n```\n"
+  },
+  "total_question_summaries": 4,
+  "total_individual_questions": 1,
+  "questions_in_this_generation": 1,
+  "questions": [
+    {
+      "table_name": "429",
+      "summary_idx": 2,
+      "question_idx": 1,
+      "question": "Which locations have the highest and lowest total volumes, and how do these totals relate to whether the location is within the US?",
+      "column_combination": [
+        "location",
+        "exported",
+        "imported",
+        "total",
+        "inUS"
+      ],
+      "chart_suggestions": [
+        {
+          "suggestion_id": 1,
+          "analysis": {
+            "chart_type": "Horizontal Bar Chart (with US/Non-US color separation)",
+            "design_rationale": "A horizontal bar chart allows for easy comparison of 'total' volumes across many locations (90 unique values), minimizing overcrowding and maximizing label readability. Encoding 'inUS' status via color draws immediate attention to the US vs Foreign split, directly answering how the highest/lowest volumes relate to US status. Sorting by 'total' (descending) reveals extremes and distribution patterns.",
+            "target_insight": "Visual identification of locations with the highest and lowest dog trade volumes, and clear visual grouping by whether each location is within or outside the US.",
+            "output_fields": [
+              "location",
+              "total",
+              "inUS"
+            ],
+            "chart_encodings": {
+              "x": "total",
+              "y": "location",
+              "color": "inUS (US = blue, Non-US = orange)",
+              "size": null,
+              "other_aesthetics": "Sort by total descending; gridlines for easier comparison; font adjustments for clarity."
+            }
+          },
+          "transformations": [
+            "Drop rows where 'total' is null to ensure only valid volumes are plotted",
+            "Sort dataframe by 'total' descending so highest volumes appear at top",
+            "Assign categorical color based on 'inUS' (True = blue, False = orange)"
+          ],
+          "data_preparation_steps": [
+            "df = pd.read_csv(\"csv_c_squared\\429.csv\")",
+            "df_bar = df.dropna(subset=[\"total\"])",
+            "df_bar = df_bar.sort_values(by=\"total\", ascending=False)",
+            "colors = df_bar[\"inUS\"].map({True: \"#1f77b4\", False: \"#ff7f0e\"})"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n\ndf = pd.read_csv(\"csv_c_squared\\429.csv\")\ndf_bar = df.dropna(subset=[\"total\"])\ndf_bar = df_bar.sort_values(by=\"total\", ascending=False)\ncolors = df_bar[\"inUS\"].map({True: \"#1f77b4\", False: \"#ff7f0e\"})\nfig, ax = plt.subplots(figsize=(10, 14))\nax.barh(df_bar[\"location\"], df_bar[\"total\"], color=colors)\nax.set_xlabel(\"Total Volume of Dogs Imported/Exported\")\nax.set_ylabel(\"Location\")\nax.set_title(\"Dog Trade Volumes by Location\\n(Highest to Lowest, US vs. Non-US)\")\nax.grid(axis='x', linestyle='--', alpha=0.4)\n# Custom legend\nfrom matplotlib.patches import Patch\nlegend_elements = [Patch(facecolor=\"#1f77b4\", label=\"Within US\"), Patch(facecolor=\"#ff7f0e\", label=\"Outside US\")]\nax.legend(handles=legend_elements, title=\"Location Type\")\nplt.tight_layout()\nplt.show()"
+        },
+        {
+          "suggestion_id": 2,
+          "analysis": {
+            "chart_type": "Boxplot + Stripplot Overlay (Faceted by US/Non-US)",
+            "design_rationale": "A boxplot efficiently summarizes the distribution of 'total' dog trade volumes within and outside the US, visualizing medians, quartiles, and outliers. Overlaying a stripplot marks each individual location, allowing outlier identification for both extremes. Faceting by 'inUS' gives direct visual evidence of how overall volumes differ between US and Foreign locations, answering the relational aspect of the question.",
+            "target_insight": "Distributional contrasts between US and non-US locations in terms of dog trade volume, and clearly situated outlier locations (extremes).",
+            "output_fields": [
+              "total",
+              "inUS",
+              "location"
+            ],
+            "chart_encodings": {
+              "x": "inUS (category: US, Non-US)",
+              "y": "total",
+              "color": "location dots colored by total volume (viridis colormap)",
+              "size": null,
+              "other_aesthetics": "Box indicates spread; points overlay for detail; facet grid by 'inUS'; annotation for highest/lowest outlier."
+            }
+          },
+          "transformations": [
+            "Drop rows where 'total' is null",
+            "Separate data into US (inUS True) and Non-US (inUS False)",
+            "Assign color for stripplot using a consistent numeric colormap for 'total'"
+          ],
+          "data_preparation_steps": [
+            "df = pd.read_csv(\"csv_c_squared\\429.csv\")",
+            "df_box = df.dropna(subset=[\"total\"])",
+            "us_data = df_box[df_box[\"inUS\"] == True]",
+            "non_us_data = df_box[df_box[\"inUS\"] == False]",
+            "import matplotlib as mpl",
+            "cmap = mpl.colormaps[\"viridis\"]",
+            "us_colors = cmap((us_data[\"total\"] - us_data[\"total\"].min()) / (us_data[\"total\"].max() - us_data[\"total\"].min()))",
+            "non_us_colors = cmap((non_us_data[\"total\"] - non_us_data[\"total\"].min()) / (non_us_data[\"total\"].max() - non_us_data[\"total\"].min()))"
+          ],
+          "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv(\"csv_c_squared\\429.csv\")\ndf_box = df.dropna(subset=[\"total\"])\nus_data = df_box[df_box[\"inUS\"] == True]\nnon_us_data = df_box[df_box[\"inUS\"] == False]\ncmap = mpl.colormaps[\"viridis\"]\nus_colors = cmap((us_data[\"total\"] - us_data[\"total\"].min()) / (us_data[\"total\"].max() - us_data[\"total\"].min()))\nnon_us_colors = cmap((non_us_data[\"total\"] - non_us_data[\"total\"].min()) / (non_us_data[\"total\"].max() - non_us_data[\"total\"].min()))\n\nfig, ax = plt.subplots(figsize=(7, 6))\n# Boxplot\nax.boxplot([us_data[\"total\"], non_us_data[\"total\"]], labels=[\"US\", \"Non-US\"], patch_artist=True,\n            boxprops={'facecolor': '#d3d3d3', 'alpha': 0.4})\n# Stripplot overlay (using scatter for individual points)\nax.scatter(np.ones(len(us_data)) * 1, us_data[\"total\"], color=us_colors, edgecolor='#222', alpha=0.8, s=50, label=\"US Locations\")\nax.scatter(np.ones(len(non_us_data)) * 2, non_us_data[\"total\"], color=non_us_colors, edgecolor='#222', alpha=0.8, s=50, label=\"Non-US Locations\")\n# Annotate highest/lowest outliers\nus_max_idx = us_data[\"total\"].idxmax()\nus_min_idx = us_data[\"total\"].idxmin()\nnon_us_max_idx = non_us_data[\"total\"].idxmax()\nnon_us_min_idx = non_us_data[\"total\"].idxmin()\nax.text(1.08, us_data.loc[us_max_idx, \"total\"], \"Highest US: \" + us_data.loc[us_max_idx, \"location\"], va=\"center\", fontsize=9)\nax.text(1.08, us_data.loc[us_min_idx, \"total\"], \"Lowest US: \" + us_data.loc[us_min_idx, \"location\"], va=\"center\", fontsize=9)\nax.text(2.08, non_us_data.loc[non_us_max_idx, \"total\"], \"Highest Non-US: \" + non_us_data.loc[non_us_max_idx, \"location\"], va=\"center\", fontsize=9)\nax.text(2.08, non_us_data.loc[non_us_min_idx, \"total\"], \"Lowest Non-US: \" + non_us_data.loc[non_us_min_idx, \"location\"], va=\"center\", fontsize=9)\nax.set_ylabel(\"Total Volume of Dogs Imported/Exported\")\nax.set_title(\"Distribution of Dog Trade Volumes\\nby US vs Non-US Locations (with Outliers)\")\n# Colormap scale indicator\nimport matplotlib.colorbar as colorbar\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=mpl.colors.Normalize(vmin=df_box[\"total\"].min(), vmax=df_box[\"total\"].max()))\ncbar = plt.colorbar(sm, ax=ax, pad=0.02)\ncbar.set_label(\"Total Volume\")\nplt.tight_layout()\nplt.show()"
+        }
+      ],
+      "num_suggestions": 2,
+      "generation_timestamp": "2026-02-10T18:43:35.559237",
+      "schema_context": "Table: Imports and Exports of Dogs by state\nRows: 90\nColumns: 5\n\nFIELD INFORMATION:\nField: location\n  - Data Type: object\n  - Inferred Type: string\n  - Null Count: 0\n  - Unique Values: 90\n  - Semantic Meaning: The \"location\" field specifies the geographic origin or destination, identifying either a U.S. state or a foreign country involved in the import or export of dogs.\n\nField: exported\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 9\n  - Unique Values: 34\n  - Semantic Meaning: This field represents the number of dogs exported from each state, with values indicating the quantity per state and some states having missing export data.\n  - Value Range: 1.0 to 635.0\n  - Mean: 30.37\n\nField: imported\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 52\n  - Unique Values: 30\n  - Semantic Meaning: The \"imported\" field represents the number of dogs imported into each U.S. state during a specific time period, with some states showing no recorded imports (null values).\n  - Value Range: 1.0 to 390.0\n  - Mean: 64.74\n\nField: total\n  - Data Type: float64\n  - Inferred Type: number\n  - Null Count: 39\n  - Unique Values: 49\n  - Semantic Meaning: This field represents the total number of dogs imported or exported by each state, indicating the volume of dog trade activity per state within a specified time period.\n  - Value Range: 15.0 to 4002.0\n  - Mean: 1139.82\n\nField: inUS\n  - Data Type: bool\n  - Inferred Type: boolean\n  - Null Count: 0\n  - Unique Values: 2\n  - Semantic Meaning: This field indicates whether the dog import or export record pertains to a transaction occurring within the United States (True) or outside of it (False).\n\nDATAFRAME COLUMN NAMES:\nThe DataFrame will have these EXACT column names that you MUST use for indexing:\n  1. \"location\"\n  2. \"exported\"\n  3. \"imported\"\n  4. \"total\"\n  5. \"inUS\"\n\nCRITICAL: Use ONLY these exact column names when accessing DataFrame columns:\nExamples: df['location'], df['exported']",
+      "table_metadata": {
+        "table_name": "Imports and Exports of Dogs by state",
+        "file_path": "csv_c_squared\\429.csv",
+        "sheet_name": "",
+        "description": "Data loaded from CSV file: 429.csv (Dataset: Imports and Exports of Dogs by state)",
+        "original_filename": "429.csv",
+        "dataset_name": "Imports and Exports of Dogs by state",
+        "row_count": 90,
+        "column_count": 5,
+        "table_hash": 807114936618525641,
+        "fields": [
+          {
+            "name": "location",
+            "clean_name": "location",
+            "camel_case_name": "location",
+            "data_type": "object",
+            "inferred_ts_type": "string",
+            "null_count": 0,
+            "non_null_count": 90,
+            "unique_values": 90,
+            "sample_values": "Afghanistan, Alabama, Alaska, Arizona, Arkansas, ..., Washington, Washington DC, West Virginia, Wisconsin, Wyoming",
+            "inferred_semantic_summary": "The \"location\" field specifies the geographic origin or destination, identifying either a U.S. state or a foreign country involved in the import or export of dogs."
+          },
+          {
+            "name": "exported",
+            "clean_name": "exported",
+            "camel_case_name": "exported",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 9,
+            "non_null_count": 81,
+            "unique_values": 34,
+            "min_value": 1.0,
+            "max_value": 635.0,
+            "mean_value": 30.37037037037037,
+            "median_value": 4.0,
+            "sample_values": "1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, 635.0",
+            "inferred_semantic_summary": "This field represents the number of dogs exported from each state, with values indicating the quantity per state and some states having missing export data."
+          },
+          {
+            "name": "imported",
+            "clean_name": "imported",
+            "camel_case_name": "imported",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 52,
+            "non_null_count": 38,
+            "unique_values": 30,
+            "min_value": 1.0,
+            "max_value": 390.0,
+            "mean_value": 64.73684210526316,
+            "median_value": 24.5,
+            "sample_values": "1.0, 2.0, 3.0, 4.0, nan, ..., nan, nan, nan, nan, nan",
+            "inferred_semantic_summary": "The \"imported\" field represents the number of dogs imported into each U.S. state during a specific time period, with some states showing no recorded imports (null values)."
+          },
+          {
+            "name": "total",
+            "clean_name": "total",
+            "camel_case_name": "total",
+            "data_type": "float64",
+            "inferred_ts_type": "number",
+            "null_count": 39,
+            "non_null_count": 51,
+            "unique_values": 49,
+            "min_value": 15.0,
+            "max_value": 4002.0,
+            "mean_value": 1139.8235294117646,
+            "median_value": 857.0,
+            "sample_values": "nan, 15.0, 18.0, 24.0, 542.0, ..., nan, nan, nan, 3058.0, nan",
+            "inferred_semantic_summary": "This field represents the total number of dogs imported or exported by each state, indicating the volume of dog trade activity per state within a specified time period."
+          },
+          {
+            "name": "inUS",
+            "clean_name": "inUS",
+            "camel_case_name": "inus",
+            "data_type": "bool",
+            "inferred_ts_type": "boolean",
+            "null_count": 0,
+            "non_null_count": 90,
+            "unique_values": 2,
+            "sample_values": "False, True",
+            "inferred_semantic_summary": "This field indicates whether the dog import or export record pertains to a transaction occurring within the United States (True) or outside of it (False)."
+          }
+        ],
+        "formatted_summary": "## Table 1: Imports_and_Exports_of_Dogs_by_state (90 rows × 5 columns)\n\n### Description\nData loaded from CSV file: 429.csv (Dataset: Imports and Exports of Dogs by state)\n\n### Schema (5 fields)\n  - location -- type: object, values: Afghanistan, Alabama, Alaska, Arizona, Arkansas, ..., Washington, Washington DC, West Virginia, Wisconsin, Wyoming\n  - exported -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, 635.0\n  - imported -- type: float64, values: 1.0, 2.0, 3.0, 4.0, 5.0, ..., nan, nan, nan, nan, nan\n  - total -- type: float64, values: 15.0, 18.0, 24.0, nan, 542.0, ..., nan, nan, nan, nan, nan\n  - inUS -- type: bool, values: False, True\n\n### Sample Data (first 5 rows)\n```\n         location  exported  imported   total  inUS\n0           Texas     635.0       NaN   566.0  True\n1         Alabama     268.0       2.0  1428.0  True\n2  North Carolina     158.0      14.0  2627.0  True\n3  South Carolina     139.0      12.0  1618.0  True\n4         Georgia     137.0      19.0  3479.0  True\n```\n"
+      }
+    }
+  ],
+  "schema_based": true
+}

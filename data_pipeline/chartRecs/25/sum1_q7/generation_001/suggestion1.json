@@ -1,0 +1,40 @@
+{
+  "table_name": "25",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Do stocks with larger intra-day price ranges (difference between High and Low) tend to also have higher trading volumes?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot (with regression line)",
+      "design_rationale": "A scatter plot visually maps the relationship between intra-day price range and trading volume across all 50 NIFTY-50 stocks. Using each stock's intra-day price range (High - Low) on the x-axis and Volume (lacs) on the y-axis highlights the correlation between volatility and liquidity. Adding a regression line makes it visually intuitive to assess whether there is a positive or negative relationship. This approach gives an immediate and granular view of the pattern across the entire index without aggregation, leveraging the unique values in both fields.",
+      "target_insight": "Direct evidence (via point cloud and trend line) of whether higher intra-day price movement correlates with higher volume across individual NIFTY-50 stocks.",
+      "output_fields": [
+        "High",
+        "Low",
+        "Volume (lacs)",
+        "Symbol"
+      ],
+      "chart_encodings": {
+        "x": "High - Low (calculated intra-day price range)",
+        "y": "Volume (lacs)",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "Regression trend line, stock symbols as hover tooltips (optional with annotation for top points)"
+      }
+    },
+    "transformations": [
+      "Convert df['High'] and df['Low'] to numeric INR values (if stored as strings with currency formatting)",
+      "Create new column df['Range'] = df['High'] - df['Low']"
+    ],
+    "data_preparation_steps": [
+      "df['High'] = pd.to_numeric(df['High'].str.replace(',', ''))",
+      "df['Low'] = pd.to_numeric(df['Low'].str.replace(',', ''))",
+      "df['Range'] = df['High'] - df['Low']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n# Load data\ndf = pd.read_csv(\"csv_c_squared\\25.csv\")\n# Prepare numeric columns\ndf['High'] = pd.to_numeric(df['High'].str.replace(',', ''))\ndf['Low'] = pd.to_numeric(df['Low'].str.replace(',', ''))\ndf['Range'] = df['High'] - df['Low']\n# Scatter plot\nfig, ax = plt.subplots(figsize=(8,6))\nx = df['Range']\ny = df['Volume (lacs)']\nax.scatter(x, y, alpha=0.75, edgecolor='k')\n# Regression line\nm, b = np.polyfit(x, y, 1)\nax.plot(x, m*x + b, color='red', linewidth=2, label='Trend line')\n# Annotate top 3 by volume\ntop_idx = y.nlargest(3).index\nfor i in top_idx:\n    ax.text(x[i], y[i], df['Symbol'][i], fontsize=10, color='blue')\nax.set_xlabel(\"Intra-day Price Range (High - Low)\")\nax.set_ylabel(\"Volume (lacs)\")\nax.set_title(\"Relationship between Intra-day Price Range and Trading Volume\\nNIFTY-50 Stocks\")\nax.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

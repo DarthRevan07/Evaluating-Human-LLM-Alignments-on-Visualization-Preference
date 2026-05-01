@@ -1,0 +1,40 @@
+{
+  "table_name": "1",
+  "generation_id": 1,
+  "summary_idx": 3,
+  "question_idx": 2,
+  "suggestion_id": 2,
+  "question": "What trends can be observed in the industry sector’s percentage of GDP over the years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Heatmap (Industry%ofGDP by Country over Years)",
+      "design_rationale": "A heatmap provides a detailed comparison of 'Industry%ofGDP' across countries and years, visually surfacing patterns such as persistent high/low industrial sector shares, regional variations, and temporal shifts. This dense format leverages all country entries and allows users to spot clusters—countries with similar industrial patterns—or outliers, revealing actionable insights about the distribution and evolution of industrial sector importance.",
+      "target_insight": "Country-level changes and consistencies in industrial sector share over time, highlighting leaders, laggards, and possible geographic/regional groupings.",
+      "output_fields": [
+        "Country/Economy",
+        "Year GDP ",
+        "Industry%ofGDP"
+      ],
+      "chart_encodings": {
+        "x": "Year GDP ",
+        "y": "Country/Economy",
+        "color": "Industry%ofGDP (numeric, mapped to heatmap color)",
+        "size": "null",
+        "other_aesthetics": "Viridis colormap, colorbar, tight axis arrangement"
+      }
+    },
+    "transformations": [
+      "Convert df['Industry%ofGDP'] to numeric, coercing errors",
+      "Pivot DataFrame: index=df['Country/Economy'], columns=df['Year GDP '], values=df['Industry%ofGDP']",
+      "Sort countries by their average Industry%ofGDP to improve visual interpretability"
+    ],
+    "data_preparation_steps": [
+      "df['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')",
+      "df_heat = df.pivot(index='Country/Economy', columns='Year GDP ', values='Industry%ofGDP')",
+      "df_heat = df_heat.loc[df_heat.mean(axis=1).sort_values(ascending=False).index]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\1.csv')\ndf['Industry%ofGDP'] = pd.to_numeric(df['Industry%ofGDP'], errors='coerce')\ndf_heat = df.pivot(index='Country/Economy', columns='Year GDP ', values='Industry%ofGDP')\ndf_heat = df_heat.loc[df_heat.mean(axis=1).sort_values(ascending=False).index]\nfig, ax = plt.subplots(figsize=(11,14))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(df_heat.values, aspect='auto', cmap=cmap, interpolation='nearest')\nax.set_xticks(np.arange(len(df_heat.columns)))\nax.set_yticks(np.arange(len(df_heat.index)))\nax.set_xticklabels(df_heat.columns, rotation=45, ha='right', fontsize=9)\nax.set_yticklabels(df_heat.index, fontsize=7)\nax.set_xlabel('Year GDP ')\nax.set_ylabel('Country/Economy')\nax.set_title('Industry Sector Percentage of GDP\\nHeatmap by Country and Year', fontsize=14)\ncbar = plt.colorbar(im, ax=ax, fraction=0.035, pad=0.03)\ncbar.set_label('Industry%ofGDP', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

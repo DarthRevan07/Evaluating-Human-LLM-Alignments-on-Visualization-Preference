@@ -1,0 +1,36 @@
+{
+  "table_name": "461",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 1,
+  "question": "How variable are monthly temperature maxima from year to year in Amherst—do some years show more extreme fluctuations than others?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot",
+      "design_rationale": "A boxplot for each year displays the distribution and range of monthly maxima within that year. This allows direct visual comparison of spread, median, and outliers year-by-year—immediately revealing whether certain years have more extreme fluctuation (larger interquartile range, longer whiskers, and/or more outliers). Boxplots are highly effective for showcasing variability and extremes within groupings, and are particularly well-suited for showing potential anomalous or highly variable years over 12 consecutive years.",
+      "target_insight": "Which years had the most/least month-to-month temperature variability, and whether any years stand out with extreme temperature highs or lows.",
+      "output_fields": [
+        "Year",
+        "Temperature"
+      ],
+      "chart_encodings": {
+        "x": "Year",
+        "y": "Temperature",
+        "color": "Year (mapped to colormap for visual distinction)",
+        "size": null,
+        "other_aesthetics": "Show outliers as points; horizontal gridlines; rotate x-labels; use distinct color per box via colormap"
+      }
+    },
+    "transformations": [
+      "Group all rows by df['Year'] so that each group contains the 12 monthly maxima for that year"
+    ],
+    "data_preparation_steps": [
+      "Sort df by df['Year'] ascending for chronological x-axis ordering",
+      "Extract the list of unique years from df['Year'] to map colors"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\461.csv')\ndf = df.sort_values('Year')\nyears = df['Year'].unique()\ndata_per_year = [df[df['Year'] == year]['Temperature'].values for year in years]\ncmap = mpl.colormaps['viridis']\ncolors = [cmap(i / (len(years) - 1)) for i in range(len(years))]\nfig, ax = plt.subplots(figsize=(12, 6))\nbox = ax.boxplot(data_per_year, positions=np.arange(len(years)), patch_artist=True, showfliers=True)\nfor patch, color in zip(box['boxes'], colors):\n    patch.set_facecolor(color)\nfor median in box['medians']:\n    median.set_linewidth(2)\n    median.set_color('black')\nax.set_xticks(np.arange(len(years)))\nax.set_xticklabels([str(int(y)) for y in years], rotation=45)\nax.set_xlabel('Year', fontsize=12)\nax.set_ylabel('Monthly Max Temperature (°F)', fontsize=12)\nax.set_title('Distribution of Monthly Maxima by Year\\nAmherst 2004-2015', fontsize=14)\nax.grid(axis='y', linestyle='--', alpha=0.6)\nnorm = mpl.colors.Normalize(vmin=years.min(), vmax=years.max())\nsm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = plt.colorbar(sm, ax=ax, orientation='vertical', pad=0.02)\ncbar.set_label('Year', fontsize=12)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

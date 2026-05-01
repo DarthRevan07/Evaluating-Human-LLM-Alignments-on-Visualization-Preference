@@ -1,0 +1,41 @@
+{
+  "table_name": "221",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 1,
+  "question": "Are there any notable patterns in transportation cost associated with specific destinations?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot per Destination",
+      "design_rationale": "A boxplot for each destination allows us to inspect the distribution of transportation costs associated with specific destinations. This approach reveals both the median, spread, and presence of outliers, highlighting price variability due to factors like transportation type, distance, or frequency of visits. It is effective given the moderate number of destinations (59 unique values) and the string cost field, after conversion to numeric. It synthesizes a large dataset into comparably compact summaries, making it easy to spot destinations with unusually high or low costs or wide cost ranges.",
+      "target_insight": "This visualization makes it easy to visually identify destinations with typical high or low transportation costs, or those with high variability, and statistically detect anomalies.",
+      "output_fields": [
+        "Destination",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Transportation cost",
+        "color": "Each box outlined for clarity; uniform color scheme for comparability",
+        "size": "null",
+        "other_aesthetics": "Outlier points highlighted for each destination; Destinations sorted by median transportation cost; x-axis labels rotated for legibility"
+      }
+    },
+    "transformations": [
+      "Remove rows where 'Destination' or 'Transportation cost' is null",
+      "Parse 'Transportation cost' strings to numeric values (strip currency symbols, commas); Convert to float",
+      "Identify top 10 destinations by count to avoid overcrowding"
+    ],
+    "data_preparation_steps": [
+      "df_clean = df.dropna(subset=['Destination', 'Transportation cost'])",
+      "df_clean['Transportation cost'] = df_clean['Transportation cost'].replace('[^0-9\\.]', '', regex=True)",
+      "df_clean['Transportation cost'] = pd.to_numeric(df_clean['Transportation cost'], errors='coerce')",
+      "top_dest = df_clean['Destination'].value_counts().head(10).index.tolist()",
+      "df_plot = df_clean[df_clean['Destination'].isin(top_dest)]"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Transportation cost'])\ndf_clean['Transportation cost'] = df_clean['Transportation cost'].replace('[^0-9\\.]', '', regex=True)\ndf_clean['Transportation cost'] = pd.to_numeric(df_clean['Transportation cost'], errors='coerce')\ntop_dest = df_clean['Destination'].value_counts().head(10).index.tolist()\ndf_plot = df_clean[df_clean['Destination'].isin(top_dest)]\ndest_order = df_plot.groupby('Destination')['Transportation cost'].median().sort_values().index.tolist()\nfig, ax = plt.subplots(figsize=(12, 6))\ndata = [df_plot[df_plot['Destination']==dest]['Transportation cost'].dropna().values for dest in dest_order]\nbp = ax.boxplot(data, patch_artist=True, labels=dest_order, showfliers=True, boxprops=dict(facecolor='#4C72B0', alpha=0.5), medianprops=dict(color='#C02828', linewidth=2), whiskerprops=dict(color='#787878'), capprops=dict(color='#787878'), flierprops=dict(marker='o', color='#F1C40F', markersize=5, markerfacecolor='#F1C40F', alpha=0.7))\nax.set_xticklabels(dest_order, rotation=35, ha='right')\nax.set_ylabel('Transportation cost (USD)', fontsize=12)\nax.set_xlabel('Destination', fontsize=12)\nax.set_title('Distribution of Transportation Cost by Destination\\n(Top 10 Most Visited Destinations)', fontsize=14)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

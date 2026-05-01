@@ -1,0 +1,72 @@
+{
+  "table_name": "2",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 1,
+  "suggestion_id": 1,
+  "question": "How have methane emissions in the Agriculture sector changed across different countries from 1990 to 2018?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Line Chart (Multi-country lines, Temporal)",
+      "design_rationale": "A multi-line chart allows clear visualization of the temporal trend in agricultural methane emissions by country, directly showing increases or decreases and facilitating inter-country comparison. Selecting the top emitters ensures interpretability despite the high number of unique countries and avoids overplotting. Line color visually distinguishes countries; each line represents a country's year-by-year emission trajectory in the Agriculture sector. The schema's annual columns and categorical 'Country' field are ideally suited for this.",
+      "target_insight": "Determines which countries have had the most significant changes (rises, drops, or stable trends) in agricultural methane emissions over time and reveals the global pattern among top emitters.",
+      "output_fields": [
+        "Country",
+        "Sector",
+        "1990",
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013",
+        "2014",
+        "2015",
+        "2016",
+        "2017",
+        "2018"
+      ],
+      "chart_encodings": {
+        "x": "Year (using columns '1990' to '2018')",
+        "y": "Methane Emissions (annual column values, in MTCO2e)",
+        "color": "Country (distinct color for each selected country)",
+        "size": null,
+        "other_aesthetics": "Legend for countries; thicker lines for emphasis; grid lines for easier temporal comparison"
+      }
+    },
+    "transformations": [
+      "Filter rows where Sector == 'Agriculture'",
+      "Select annual columns: '1990' to '2018', plus 'Country'",
+      "Compute total agriculture methane emission per country in 2018 for sorting",
+      "Select top 10 countries by 2018 emission",
+      "Reshape DataFrame for plotting: one row per country-year, columns 'Country', 'Year', 'Emission'"
+    ],
+    "data_preparation_steps": [
+      "Filter df where df['Sector'] == 'Agriculture'",
+      "Extract annual columns from df: ['1990', ..., '2018']",
+      "Compute top 10 countries with highest df['2018']",
+      "Create df_top_countries containing only those countries",
+      "Melt df_top_countries to long format with columns: 'Country', 'Year', 'Emission'"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\n\ndf = pd.read_csv('csv_c_squared\\2.csv')\ndf_agri = df[df['Sector'] == 'Agriculture']\nyears = [str(y) for y in range(1990, 2019)]\ntop_countries = df_agri.sort_values('2018', ascending=False)['Country'].head(10).tolist()\ndf_top = df_agri[df_agri['Country'].isin(top_countries)].copy()\ndf_melt = df_top.melt(id_vars=['Country'], value_vars=years, var_name='Year', value_name='Emission')\ndf_melt['Year'] = df_melt['Year'].astype(int)\nfig, ax = plt.subplots(figsize=(12, 7))\ncmap = mpl.colormaps['tab10']\ncolors = {country: cmap(i) for i, country in enumerate(top_countries)}\nfor country in top_countries:\n    df_c = df_melt[df_melt['Country'] == country]\n    ax.plot(df_c['Year'], df_c['Emission'], label=country, color=colors[country], linewidth=2)\nax.set_xlabel('Year')\nax.set_ylabel('Methane Emissions in Agriculture (MTCO2e)')\nax.set_title('Temporal Change in Agricultural Methane Emissions\\nTop 10 Emitting Countries (1990-2018)')\nax.legend(title='Country', bbox_to_anchor=(1.02,1), loc='upper left')\nax.grid(True, alpha=0.4)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

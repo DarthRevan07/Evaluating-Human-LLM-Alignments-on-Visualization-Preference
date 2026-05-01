@@ -1,0 +1,41 @@
+{
+  "table_name": "28",
+  "generation_id": 1,
+  "summary_idx": 1,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "What are the highest and lowest price outliers by manufacturer and model?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Boxplot with overlayed scatter for extreme outliers",
+      "design_rationale": "Boxplots are highly effective at visualizing price distributions and natural outliers by group; here, we use 'Manufacturer' and 'Model' for hierarchical grouping. By overlaying scatter points for the most extreme (highest and lowest) price per manufacturer/model, viewers instantly see not just typical variability but the precise records that define outlier limits. This allows exploration of anomalous or exceptional pricing relative to brand/model median and spread.",
+      "target_insight": "Identifies which manufacturer/model combinations have unusually high or low prices, shows their distribution, and enables comparison of how extreme outliers depart from typical values.",
+      "output_fields": [
+        "Manufacturer",
+        "Model",
+        "Price"
+      ],
+      "chart_encodings": {
+        "x": "Model",
+        "y": "Price",
+        "color": "Manufacturer (used as group/facet axis tick color)",
+        "size": "null",
+        "other_aesthetics": "overlayed scatter for highest and lowest outlier points; rotated x-axis ticks, legend for manufacturers; alpha adjustment for scatter visibility"
+      }
+    },
+    "transformations": [
+      "Group df by ['Manufacturer', 'Model']",
+      "For each group, compute: Q1, Q3, IQR, whiskers, identify outlier records",
+      "Within each group, extract price records for max and min price (even if not outlier), overlay these specifically"
+    ],
+    "data_preparation_steps": [
+      "Drop records with missing or non-numeric 'Price'",
+      "Create a list of top N manufacturers by record count for visual clarity (e.g., top 8)",
+      "For each selected manufacturer, select top models by record count (e.g., top 5 per manufacturer)",
+      "Prepare a compact dataframe for plotting, including boxplot stats and list of indices for highest and lowest price outlier in each manufacturer/model shown"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\28.csv\")\n# Clean price field\ndf = df[df['Price'].notna()]\ndf['Price'] = pd.to_numeric(df['Price'], errors='coerce')\ndf = df[df['Price'].notna()]\n# Get top N manufacturers and top M models per manufacturer for clarity\nN = 8\nM = 5\ntop_manufacturers = df['Manufacturer'].value_counts().index[:N]\nplot_data = []\nmanufacturer_colors = {m: c for m, c in zip(top_manufacturers, mpl.colormaps['tab10'].colors[:N])}\nfor manufacturer in top_manufacturers:\n    models = df[df['Manufacturer'] == manufacturer]['Model'].value_counts().index[:M]\n    for model in models:\n        sub = df[(df['Manufacturer'] == manufacturer) & (df['Model'] == model)]\n        if not sub.empty:\n            plot_data.append({'manufacturer': manufacturer, 'model': model, 'prices': sub['Price'].values})\n# Build box plot stats and outliers lists\nmodel_names = []\nbox_stats = []\noutlier_high_idx = []\noutlier_low_idx = []\ncolors = []\nfor i, entry in enumerate(plot_data):\n    prices = entry['prices']\n    model = entry['model']\n    manufacturer = entry['manufacturer']\n    model_names.append(manufacturer + ' - ' + model)\n    # Compute box stats\n    q1 = np.percentile(prices, 25)\n    q3 = np.percentile(prices, 75)\n    iqr = q3 - q1\n    whisker_low = np.min(prices[prices >= q1 - 1.5 * iqr]) if len(prices[prices >= q1 - 1.5 * iqr]) > 0 else np.min(prices)\n    whisker_high = np.max(prices[prices <= q3 + 1.5 * iqr]) if len(prices[prices <= q3 + 1.5 * iqr]) > 0 else np.max(prices)\n    box_stats.append({'q1': q1, 'q3': q3, 'whisker_low': whisker_low, 'whisker_high': whisker_high, 'median': np.median(prices), 'prices': prices})\n    colors.append(manufacturer_colors[manufacturer])\n    # Find highest and lowest price outlier (even if within whiskers, just show extremal)\n    max_idx = np.argmax(prices)\n    min_idx = np.argmin(prices)\n    outlier_high_idx.append(prices[max_idx])\n    outlier_low_idx.append(prices[min_idx])\n# Plotting\nfig, ax = plt.subplots(figsize=(18, 8))\n# Prepare data for boxplot\nboxplot_data = [stats['prices'] for stats in box_stats]\nbp = ax.boxplot(boxplot_data, patch_artist=True, showfliers=True, notch=False)\nfor patch, color in zip(bp['boxes'], colors):\n    patch.set_facecolor(color)\nfor median, color in zip(bp['medians'], colors):\n    median.set_color('black')\n# Overlay the highest/lowest as scatter\nfor i, (hi, lo) in enumerate(zip(outlier_high_idx, outlier_low_idx)):\n    ax.scatter(i + 1, hi, color='red', s=70, marker='*', label='Highest Outlier' if i == 0 else None, zorder=10, alpha=0.85)\n    ax.scatter(i + 1, lo, color='blue', s=70, marker='o', label='Lowest Outlier' if i == 0 else None, zorder=10, alpha=0.85)\nax.set_xticks(np.arange(1, len(model_names) + 1))\nax.set_xticklabels(model_names, rotation=45, ha='right')\nax.set_ylabel('Price')\nax.set_xlabel('Manufacturer - Model')\nax.set_title('Car Price Outliers by Manufacturer and Model\\nBoxplot Distribution (Top Manufacturers and Models) with Highest & Lowest Overlay')\n# Custom legends\nimport matplotlib.lines as mlines\nhigh_outlier_legend = mlines.Line2D([], [], color='red', marker='*', linestyle='None', markersize=10, label='Highest Outlier')\nlow_outlier_legend = mlines.Line2D([], [], color='blue', marker='o', linestyle='None', markersize=10, label='Lowest Outlier')\nmanufacturer_legend = [mlines.Line2D([], [], color=manufacturer_colors[m], marker='s', linestyle='None', markersize=10, label=str(m)) for m in top_manufacturers]\nax.legend(handles=[high_outlier_legend, low_outlier_legend] + manufacturer_legend, loc='upper right', fontsize=9)\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

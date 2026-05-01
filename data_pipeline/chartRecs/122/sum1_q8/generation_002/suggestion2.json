@@ -1,0 +1,43 @@
+{
+  "table_name": "122",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 8,
+  "suggestion_id": 2,
+  "question": "How do the sales distributions of a single genre differ among platforms, indicating platform-genre strengths or gaps?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "heatmap",
+      "design_rationale": "A heatmap with platforms on the x-axis and regional sales (NA_Sales, EU_Sales, JP_Sales, Other_Sales) on the y-axis, using aggregated totals for a single genre, visualizes platform-genre strengths or gaps across geographies. This unconventional approach identifies not only overall sales strengths but also reveals whether certain platforms dominate specific markets for the genre.",
+      "target_insight": "Highlights which platforms do exceptionally well or poorly in different world regions for the selected genre, revealing patterns of market strength or gaps.",
+      "output_fields": [
+        "Platform",
+        "NA_Sales",
+        "EU_Sales",
+        "JP_Sales",
+        "Other_Sales"
+      ],
+      "chart_encodings": {
+        "x": "Platform",
+        "y": "Sales Region (NA_Sales, EU_Sales, JP_Sales, Other_Sales)",
+        "color": "Aggregated sales, mapped to heatmap cell color",
+        "size": "null",
+        "other_aesthetics": "colormap ('viridis'); colorbar for quantitative scale; sorted platforms by total sales"
+      }
+    },
+    "transformations": [
+      "Filter df to only include rows where Genre equals the chosen genre (e.g., 'Sports')",
+      "Group by Platform and sum sales for each region for chosen genre",
+      "Optionally order platforms by total sales for clarity"
+    ],
+    "data_preparation_steps": [
+      "Set chosen_genre = 'Sports' (example; could be parameterized)",
+      "df_genre = df[df['Genre'] == chosen_genre]",
+      "Aggregate sums for NA_Sales, EU_Sales, JP_Sales, Other_Sales by Platform",
+      "Order platforms by descending sum of Global_Sales"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c2_sec\\122.csv\")\nchosen_genre = \"Sports\"\ndf_genre = df[df['Genre'] == chosen_genre]\nagg = df_genre.groupby('Platform')[['NA_Sales','EU_Sales','JP_Sales','Other_Sales','Global_Sales']].sum()\naggsales = agg[['NA_Sales','EU_Sales','JP_Sales','Other_Sales']].T\nplatform_order = agg['Global_Sales'].sort_values(ascending=False).index\ndatamat = aggsales[platform_order].values\nfig, ax = plt.subplots(figsize=(15, 5))\ncmap = mpl.colormaps['viridis']\nim = ax.imshow(datamat, cmap=cmap, aspect='auto')\nax.set_xticks(np.arange(len(platform_order)))\nax.set_xticklabels(platform_order, rotation=60)\nax.set_yticks(np.arange(4))\nax.set_yticklabels(['NA_Sales','EU_Sales','JP_Sales','Other_Sales'])\nax.set_title(\"Regional Sales Strengths for 'Sports' Genre Across Platforms\\n(Heatmap: platform-genre sales gaps by geography)\")\nax.set_xlabel(\"Platform\")\nax.set_ylabel(\"Sales Region\")\ncbar = fig.colorbar(im, ax=ax, orientation='vertical', label=\"Total Sales (Millions)\")\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

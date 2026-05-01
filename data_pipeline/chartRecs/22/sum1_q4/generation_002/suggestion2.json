@@ -1,0 +1,36 @@
+{
+  "table_name": "22",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 4,
+  "suggestion_id": 2,
+  "question": "Among different enginetypes, which are associated with higher average prices?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Distributional Comparison)",
+      "design_rationale": "A boxplot for each enginetype shows the full price distribution: median, interquartile range, and any outliers. This not only highlights which types have higher average prices but also which enginetypes are associated with broader or more concentrated price ranges, giving a deeper sense of variability and anomalies. The viewer can see if some types have consistently high prices, or if their averages are skewed by outliers. With up to 7 categories, this remains readable.",
+      "target_insight": "Provides a visual comparison of both central tendency and price spread for each enginetype, showing which types are associated with high, consistent, or variable price patterns.",
+      "output_fields": [
+        "enginetype",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "enginetype",
+        "y": "price (distribution)",
+        "color": "enginetype (distinct colors per category)",
+        "size": null,
+        "other_aesthetics": "Show outliers, colored boxes, rotated x-labels, grid"
+      }
+    },
+    "transformations": [
+      "Partition df by 'enginetype' for boxplot of 'price'"
+    ],
+    "data_preparation_steps": [
+      "Unique enginetypes = df['enginetype'].unique()",
+      "Build a list of price arrays for each enginetype"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\22.csv')\nenginetypes = df['enginetype'].unique()\nenginetypes_sorted = sorted(enginetypes)\ndata_by_type = [df[df['enginetype']==etype]['price'].values for etype in enginetypes_sorted]\ncmap = mpl.colormaps['tab10']\ncolors = [cmap(i) for i in range(len(enginetypes_sorted))]\nfig, ax = plt.subplots(figsize=(10,6))\nboxplots = ax.boxplot(data_by_type, patch_artist=True, labels=enginetypes_sorted, showfliers=True, notch=True)\nfor patch, color in zip(boxplots['boxes'], colors):\n    patch.set_facecolor(color)\nfor median in boxplots['medians']:\n    median.set_color('black')\nax.set_xlabel('enginetype', fontsize=14)\nax.set_ylabel('Price', fontsize=14)\nax.set_title('Price Distribution by Engine Type\\n(Median, Range & Outliers)', fontsize=16)\nplt.xticks(rotation=20, fontsize=13)\nplt.yticks(fontsize=13)\nax.grid(True, axis='y', linestyle='--', alpha=0.4)\n# Add legend for box colors\nfor i, etype in enumerate(enginetypes_sorted):\n    ax.plot([],[],color=colors[i],label=etype, linewidth=10)\nax.legend(title='enginetype', loc='upper right')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

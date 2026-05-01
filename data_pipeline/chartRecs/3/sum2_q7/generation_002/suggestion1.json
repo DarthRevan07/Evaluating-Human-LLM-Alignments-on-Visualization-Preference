@@ -1,0 +1,40 @@
+{
+  "table_name": "3",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 7,
+  "suggestion_id": 1,
+  "question": "Are there outliers where a country’s rank in rice production per person differs greatly from its rank in rice production?",
+  "suggestion": {
+    "suggestion_id": 1,
+    "analysis": {
+      "chart_type": "Scatter Plot with Outlier Annotation",
+      "design_rationale": "A scatter plot mapping each country’s rank in rice production versus rank in rice production per person allows for a paired view of these rankings. Points lying far from the diagonal represent countries where rankings differ greatly—possible outliers. Annotating the biggest differences reveals specific countries with unusual ranking discrepancies. The approach is ideal for paired, numeric rank fields and quickly surfaces outliers, leveraging visual distance from identity line.",
+      "target_insight": "The visualization highlights countries with significant rank differences, revealing outlier cases where national production and per capita production rankings diverge—potentially due to population size effects or national consumption/export patterns.",
+      "output_fields": [
+        "Country",
+        "Rank of Rice Production",
+        "Rank of Rice Production Per Person"
+      ],
+      "chart_encodings": {
+        "x": "Rank of Rice Production",
+        "y": "Rank of Rice Production Per Person",
+        "color": "Outlier countries highlighted in red, rest in blue",
+        "size": "null",
+        "other_aesthetics": "Identity line (y=x) in black dashed; Outlier annotations; Alpha=0.7"
+      }
+    },
+    "transformations": [
+      "Calculate absolute difference between Rank of Rice Production and Rank of Rice Production Per Person for every row",
+      "Define outliers as countries in the top 5% of absolute difference (using quantile threshold)",
+      "Create a boolean flag for outlier countries"
+    ],
+    "data_preparation_steps": [
+      "df['rank_diff'] = abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])",
+      "diff_thresh = df['rank_diff'].quantile(0.95)",
+      "df['outlier'] = df['rank_diff'] >= diff_thresh"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c_squared\\3.csv')\ndf['rank_diff'] = abs(df['Rank of Rice Production'] - df['Rank of Rice Production Per Person'])\ndiff_thresh = df['rank_diff'].quantile(0.95)\ndf['outlier'] = df['rank_diff'] >= diff_thresh\nfig, ax = plt.subplots(figsize=(8,8))\n# Plot non-outliers\nax.scatter(df.loc[~df['outlier'],'Rank of Rice Production'], df.loc[~df['outlier'],'Rank of Rice Production Per Person'], color='steelblue', alpha=0.7, label='Typical Countries')\n# Plot outliers\nax.scatter(df.loc[df['outlier'],'Rank of Rice Production'], df.loc[df['outlier'],'Rank of Rice Production Per Person'], color='red', alpha=0.8, label='Outlier Countries')\n# Identity line\nxlim = [1, max(int(df['Rank of Rice Production'].max()), int(df['Rank of Rice Production Per Person'].max()))]\nax.plot(xlim, xlim, linestyle='--', color='black', lw=1.3)\nax.set_xlim(xlim)\nax.set_ylim(xlim)\nax.set_xlabel('Rank of Rice Production')\nax.set_ylabel('Rank of Rice Production Per Person')\nax.set_title('Rank Comparison: Rice Production vs Per Person\\nOutliers Highlighted')\n# Annotate outlier countries\nfor _, row in df[df['outlier']].iterrows():\n    ax.text(row['Rank of Rice Production'], row['Rank of Rice Production Per Person'], row['Country'], fontsize=8, color='darkred', ha='left', va='bottom')\nax.legend(loc='best')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

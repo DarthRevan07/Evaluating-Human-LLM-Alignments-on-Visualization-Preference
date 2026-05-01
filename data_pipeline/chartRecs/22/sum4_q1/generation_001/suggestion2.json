@@ -1,0 +1,45 @@
+{
+  "table_name": "22",
+  "generation_id": 1,
+  "summary_idx": 4,
+  "question_idx": 1,
+  "suggestion_id": 2,
+  "question": "How do car prices vary between different CarName brands, and are certain brands consistently in higher or lower price ranges?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Horizontal bar chart (brand-level average price, color by price range)",
+      "design_rationale": "This bar chart aggregates by brand (derived from 'CarName') and displays the average (mean) price for each, allowing direct comparison of typical pricing across brands. Brands are sorted by average price, making it easy to see the hierarchy from lowest to highest. The color of each bar is mapped to its mean price using a perceptually uniform colormap to visually reinforce the price gradient across brands.",
+      "target_insight": "Immediate identification of premium and budget-oriented brands. Uncover the relative positioning of all major brands in terms of average price, with color intensifying the comparison.",
+      "output_fields": [
+        "CarName",
+        "price"
+      ],
+      "chart_encodings": {
+        "x": "mean price (horizontal axis)",
+        "y": "CarName (brand only, sorted by mean price)",
+        "color": "mean price mapped to bar color (continuous colormap)",
+        "size": null,
+        "other_aesthetics": "tight layout, price-encoded colorbar for reference"
+      }
+    },
+    "transformations": [
+      "Extract brand name from 'CarName' field (first word before space)",
+      "Group by brand name",
+      "Filter brands with at least 5 entries for robustness",
+      "Aggregate to compute mean price per brand",
+      "Sort brands by mean price ascending"
+    ],
+    "data_preparation_steps": [
+      "df['brand'] = df['CarName'].str.split(' ').str[0]",
+      "brand_counts = df['brand'].value_counts()",
+      "selected_brands = brand_counts[brand_counts >= 5].index",
+      "df_filtered = df[df['brand'].isin(selected_brands)]",
+      "brand_avg_price = df_filtered.groupby('brand')['price'].mean().sort_values()",
+      "brands_sorted = brand_avg_price.index.tolist()",
+      "prices_sorted = brand_avg_price.values"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv(\"csv_c_squared\\22.csv\")\ndf['brand'] = df['CarName'].str.split(' ').str[0]\nbrand_counts = df['brand'].value_counts()\nselected_brands = brand_counts[brand_counts >= 5].index\ndf_filtered = df[df['brand'].isin(selected_brands)]\nbrand_avg_price = df_filtered.groupby('brand')['price'].mean().sort_values()\nbrands_sorted = brand_avg_price.index.tolist()\nprices_sorted = brand_avg_price.values\ncmap = mpl.colormaps['viridis']\nnorm = mpl.colors.Normalize(vmin=prices_sorted.min(), vmax=prices_sorted.max())\ncolors = cmap(norm(prices_sorted))\nfig, ax = plt.subplots(figsize=(10, 7))\nbars = ax.barh(brands_sorted, prices_sorted, color=colors, edgecolor='black')\nax.set_xlabel('Average price')\nax.set_ylabel('CarName (brand)')\nax.set_title('Mean car price by brand\\nBrands sorted low to high; color intensity = price')\nsm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)\nsm.set_array([])\ncbar = fig.colorbar(sm, ax=ax, orientation='vertical', label='Average price')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

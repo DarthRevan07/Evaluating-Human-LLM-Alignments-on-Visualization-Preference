@@ -1,0 +1,43 @@
+{
+  "table_name": "20",
+  "generation_id": 2,
+  "summary_idx": 2,
+  "question_idx": 3,
+  "suggestion_id": 2,
+  "question": "Are there any artists whose biographical narratives suggest periods of intense productivity during specific years?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Annotated Scatterplot",
+      "design_rationale": "The scatterplot maps total paintings (numeric) against the duration of each artist's span ('years', parsed), with artist names and select biographical text as point annotations. This highlights outliers: artists with very high output in short timespans, suggesting bursts of productivity. Annotating with short bios provides narrative context.",
+      "target_insight": "Artists with the most paintings in shortest periods stand out, revealing intense productivity. Annotation directly links these periods to biographical stories.",
+      "output_fields": [
+        "name",
+        "paintings",
+        "years",
+        "bio"
+      ],
+      "chart_encodings": {
+        "x": "years (duration: end_year - start_year + 1)",
+        "y": "paintings",
+        "color": null,
+        "size": null,
+        "other_aesthetics": "Annotations for select outliers with snippets from bio"
+      }
+    },
+    "transformations": [
+      "Parse start and end year from df['years'] to compute productivity duration per artist",
+      "Plot each artist's 'paintings' count against their output years",
+      "Identify and annotate top 5 artists with highest paintings per year ratio"
+    ],
+    "data_preparation_steps": [
+      "Parse years: extract start and end as in Suggestion 1",
+      "Calculate productivity duration: output_years = end_year - start_year + 1",
+      "Calculate paintings per year ratio for each artist",
+      "Identify top 5 artists (highest ratio)",
+      "Prepare annotation text from df['name'] and snippet from df['bio']"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport matplotlib as mpl\ndf = pd.read_csv('csv_c2_sec\\20.csv')\nimport re\ndef parse_years(s):\n    match = re.search(r'(\\d{4})', s)\n    start_year = int(match.group(1)) if match else np.nan\n    end_match = re.search(r'(\\d{4})[^\\d]*(\\d{4})', s)\n    end_year = int(end_match.group(2)) if end_match else start_year\n    return start_year, end_year\ndf[['start_year', 'end_year']] = df['years'].apply(lambda s: pd.Series(parse_years(s)))\ndf['output_years'] = df['end_year'] - df['start_year'] + 1\ndf['paintings_per_year'] = df['paintings']/df['output_years']\nfig, ax = plt.subplots(figsize=(12, 8))\nax.scatter(df['output_years'], df['paintings'], s=60, edgecolor='k')\nplt.xlabel('Productivity Duration (Years)')\nplt.ylabel('Total Paintings')\nplt.title('Artists with Intense Productivity: Output vs. Duration\\nAnnotated with biographical context')\ntop_idx = df['paintings_per_year'].nlargest(5).index\nfor idx in top_idx:\n    x = df.loc[idx, 'output_years']\n    y = df.loc[idx, 'paintings']\n    name = df.loc[idx, 'name']\n    bio_snip = df.loc[idx, 'bio'].split(',')[0]\n    ann_text = name + '\\n' + bio_snip\n    ax.annotate(ann_text, (x,y), textcoords='offset points', xytext=(10,10), arrowprops=dict(arrowstyle='->', color='grey'), fontsize=10, bbox=dict(boxstyle='round', facecolor='white', alpha=0.7))\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}

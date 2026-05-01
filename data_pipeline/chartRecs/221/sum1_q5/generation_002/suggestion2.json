@@ -1,0 +1,42 @@
+{
+  "table_name": "221",
+  "generation_id": 2,
+  "summary_idx": 1,
+  "question_idx": 5,
+  "suggestion_id": 2,
+  "question": "Are there any notable patterns in transportation cost associated with specific destinations?",
+  "suggestion": {
+    "suggestion_id": 2,
+    "analysis": {
+      "chart_type": "Boxplot (Distribution of Transportation Cost per Destination)",
+      "design_rationale": "A boxplot compares the spread and outliers of transportation costs for each destination, showcasing both central tendency and variability. It answers whether some destinations have consistently high costs or substantial variation, which cannot be seen in a bar chart of means. This deep dive gives richer information for pattern detection: are costs skewed, bimodal, etc.? Destinations with both high median and large spread can be quickly identified.",
+      "target_insight": "Reveals the distributional patterns (median, IQR, outliers) of transportation cost for popular destinations, highlighting destinations with high variability or multiple outliers, indicating potential unpredictability or pricing issues.",
+      "output_fields": [
+        "Destination",
+        "Transportation cost"
+      ],
+      "chart_encodings": {
+        "x": "Destination",
+        "y": "Transportation cost",
+        "color": "null",
+        "size": "null",
+        "other_aesthetics": "boxplot for each destination; destination names rotated; excludes destinations <3 trips for robustness"
+      }
+    },
+    "transformations": [
+      "Remove rows where 'Destination' or 'Transportation cost' is null",
+      "Convert 'Transportation cost' (string, may contain currency symbols/words) to numeric (float) values",
+      "Group by 'Destination' and filter to destinations with at least 3 trips",
+      "Extract max 10 most-frequent destinations for visualization clarity"
+    ],
+    "data_preparation_steps": [
+      "Drop nulls in df['Destination'] and df['Transportation cost']",
+      "Clean and convert df['Transportation cost'] to float (strip currency etc.)",
+      "Count trips per destination, select destinations with >=3 trips",
+      "Select 10 most-common destinations for plotting",
+      "For boxplot, collect all transportation cost values per selected destination"
+    ],
+    "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\nimport re\n\ndf = pd.read_csv('csv_c_squared\\221.csv')\ndf_clean = df.dropna(subset=['Destination', 'Transportation cost'])\ncost_pattern = re.compile(r'([\\d,.]+)')\ndef parse_cost(s):\n    m = cost_pattern.search(str(s))\n    return float(m.group(1).replace(',', '')) if m else np.nan\ndf_clean['Transportation cost'] = df_clean['Transportation cost'].apply(parse_cost)\ndf_clean = df_clean.dropna(subset=['Transportation cost'])\ndest_counts = df_clean['Destination'].value_counts()\nmajor_dests = dest_counts[dest_counts >= 3].index[:10]\ndata_to_plot = [df_clean[df_clean['Destination']==dest]['Transportation cost'].values for dest in major_dests]\nfig, ax = plt.subplots(figsize=(10,6))\nbp = ax.boxplot(data_to_plot, patch_artist=True, boxprops=dict(facecolor='lightgreen', alpha=0.7))\nax.set_xticklabels(major_dests, rotation=45, ha='right')\nax.set_ylabel('Transportation cost (USD)')\nax.set_xlabel('Destination')\nplt.title('Distribution of Transportation Cost for Top 10 Frequent Destinations')\nplt.tight_layout()\nplt.show()"
+  },
+  "schema_based": true
+}
