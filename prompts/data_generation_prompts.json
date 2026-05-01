@@ -1,0 +1,69 @@
+[
+  {
+    "prompt_id": "DGP-001",
+    "stage": "visualization_pair_generation",
+    "description": "Prompt to generate a pair of visualizations differing in chart type",
+    "design_dimension": "chart_type",
+    "system_prompt": "You are an expert in data visualization design. Your task is to describe two alternative visualizations of the same underlying dataset. The two visualizations should differ in their chart type but represent the same data faithfully. Provide a concise description of each visualization, including: the chart type, the data being displayed, the visual encoding used, and the intended insight the visualization communicates.",
+    "user_prompt_template": "Dataset context: {dataset_description}\n\nDesign dimension: Chart type\nVisualization A chart type: {chart_type_A}\nVisualization B chart type: {chart_type_B}\n\nDescribe both visualizations in detail, including how each encodes the data and what insight a viewer would gain from each.",
+    "example_inputs": {
+      "dataset_description": "Monthly sales figures for five product categories over a 12-month period.",
+      "chart_type_A": "grouped bar chart",
+      "chart_type_B": "line chart"
+    }
+  },
+  {
+    "prompt_id": "DGP-002",
+    "stage": "visualization_pair_generation",
+    "description": "Prompt to generate a pair of visualizations differing in color encoding",
+    "design_dimension": "color_encoding",
+    "system_prompt": "You are an expert in data visualization design. Your task is to describe two alternative visualizations of the same underlying dataset. The two visualizations should differ only in their color encoding scheme. Provide a concise description of each visualization, including: the chart type, the color palette used, the data being displayed, and any perceptual or accessibility considerations.",
+    "user_prompt_template": "Dataset context: {dataset_description}\n\nChart type (same for both): {chart_type}\nVisualization A color scheme: {color_scheme_A}\nVisualization B color scheme: {color_scheme_B}\n\nDescribe both visualizations, focusing on how the color encoding affects readability, aesthetics, and data interpretation.",
+    "example_inputs": {
+      "dataset_description": "Geographic distribution of population density across US counties.",
+      "chart_type": "choropleth map",
+      "color_scheme_A": "sequential single-hue (blue gradient)",
+      "color_scheme_B": "diverging (red-white-blue)"
+    }
+  },
+  {
+    "prompt_id": "DGP-003",
+    "stage": "visualization_pair_generation",
+    "description": "Prompt to generate a pair of visualizations differing in data-ink ratio",
+    "design_dimension": "data_ink_ratio",
+    "system_prompt": "You are an expert in data visualization design. Your task is to describe two alternative visualizations of the same underlying dataset. The two visualizations should differ in their data-ink ratio: one should follow a minimalist design (high data-ink ratio, following Tufte's principles) while the other uses a more decorative or chart-junk-heavy design (low data-ink ratio). Provide a concise description of each.",
+    "user_prompt_template": "Dataset context: {dataset_description}\n\nChart type (same for both): {chart_type}\nVisualization A style: minimalist (high data-ink ratio, grid lines removed, no background fill)\nVisualization B style: decorated (low data-ink ratio, decorative background, heavy grid lines, 3D effects)\n\nDescribe both visualizations, noting specific design choices that affect the data-ink ratio.",
+    "example_inputs": {
+      "dataset_description": "Quarterly revenue comparison across four business units for the fiscal year 2023.",
+      "chart_type": "bar chart"
+    }
+  },
+  {
+    "prompt_id": "DGP-004",
+    "stage": "visualization_pair_generation",
+    "description": "Prompt to generate a pair of visualizations differing in axis scale",
+    "design_dimension": "axis_scale",
+    "system_prompt": "You are an expert in data visualization design. Your task is to describe two alternative visualizations of the same underlying dataset. The two visualizations should differ only in their axis scale. Describe how the choice of scale affects the perception of the data.",
+    "user_prompt_template": "Dataset context: {dataset_description}\n\nChart type (same for both): {chart_type}\nVisualization A axis scale: {scale_A}\nVisualization B axis scale: {scale_B}\n\nDescribe both visualizations, explaining how the scale choice impacts the viewer's interpretation of trends or comparisons.",
+    "example_inputs": {
+      "dataset_description": "Global COVID-19 case counts over a 90-day window during the first wave.",
+      "chart_type": "line chart",
+      "scale_A": "linear y-axis starting at zero",
+      "scale_B": "logarithmic y-axis"
+    }
+  },
+  {
+    "prompt_id": "DGP-005",
+    "stage": "visualization_pair_generation",
+    "description": "Prompt to generate a pair of visualizations differing in annotation density",
+    "design_dimension": "annotation_density",
+    "system_prompt": "You are an expert in data visualization design. Your task is to describe two alternative visualizations of the same underlying dataset. The two visualizations should differ in the density and style of annotations (data labels, callouts, trend lines, etc.).",
+    "user_prompt_template": "Dataset context: {dataset_description}\n\nChart type (same for both): {chart_type}\nVisualization A annotation style: {annotation_A}\nVisualization B annotation style: {annotation_B}\n\nDescribe both visualizations, noting how annotation choices affect clarity and cognitive load.",
+    "example_inputs": {
+      "dataset_description": "Customer satisfaction scores across five service touchpoints before and after a product redesign.",
+      "chart_type": "radar chart",
+      "annotation_A": "no labels, only tooltips on hover",
+      "annotation_B": "explicit data labels on every data point, percentage change callouts, and a trend arrow"
+    }
+  }
+]

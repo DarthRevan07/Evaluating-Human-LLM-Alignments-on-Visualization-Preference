@@ -1,0 +1,42 @@
+[
+  {
+    "prompt_id": "EP-001",
+    "stage": "llm_preference_evaluation",
+    "description": "Zero-shot preference judgment prompt — no design criteria specified",
+    "condition": "zero_shot",
+    "system_prompt": "You are an impartial judge evaluating data visualizations. You will be shown two descriptions of visualizations (Visualization A and Visualization B) that represent the same underlying data. Your task is to decide which visualization you prefer and explain your reasoning.",
+    "user_prompt_template": "Below are descriptions of two visualizations representing the same dataset.\n\n**Visualization A:**\n{visualization_A_description}\n\n**Visualization B:**\n{visualization_B_description}\n\nWhich visualization do you prefer, and why? Please respond with:\n1. Your preference: A or B\n2. Your rationale (2-4 sentences)\n3. Confidence level: Low / Medium / High"
+  },
+  {
+    "prompt_id": "EP-002",
+    "stage": "llm_preference_evaluation",
+    "description": "Criteria-guided preference judgment prompt — effectiveness criteria provided",
+    "condition": "criteria_guided",
+    "system_prompt": "You are an expert in data visualization design and evaluation. You will be shown two descriptions of visualizations (Visualization A and Visualization B) that represent the same underlying data. Evaluate each visualization against established visualization effectiveness principles and indicate your preference.",
+    "user_prompt_template": "Below are descriptions of two visualizations representing the same dataset.\n\n**Visualization A:**\n{visualization_A_description}\n\n**Visualization B:**\n{visualization_B_description}\n\nEvaluate each visualization on the following criteria:\n- **Clarity**: How easy is it to understand the main message?\n- **Accuracy**: How faithfully does the visual encoding represent the data?\n- **Efficiency**: How quickly can a viewer extract the intended insight?\n- **Aesthetics**: How visually appealing is the design?\n\nBased on these criteria, which visualization do you prefer? Please respond with:\n1. Brief scoring for each criterion (A or B wins, or tie)\n2. Your overall preference: A or B\n3. Your rationale (3-5 sentences)"
+  },
+  {
+    "prompt_id": "EP-003",
+    "stage": "llm_preference_evaluation",
+    "description": "Audience-aware preference judgment prompt — target audience context provided",
+    "condition": "audience_aware",
+    "system_prompt": "You are a data visualization consultant advising clients on visualization design choices. You will be shown two descriptions of visualizations (Visualization A and Visualization B) that represent the same underlying data. Consider the intended audience and use case when making your preference judgment.",
+    "user_prompt_template": "Below are descriptions of two visualizations representing the same dataset.\n\n**Intended audience:** {audience_description}\n**Use case / context:** {use_case_description}\n\n**Visualization A:**\n{visualization_A_description}\n\n**Visualization B:**\n{visualization_B_description}\n\nGiven the intended audience and use case, which visualization would you recommend, and why? Please respond with:\n1. Your recommendation: A or B\n2. Your rationale (3-5 sentences), specifically referencing how the audience and use case informed your choice\n3. Any caveats or conditions under which the other visualization might be preferred"
+  },
+  {
+    "prompt_id": "EP-004",
+    "stage": "llm_preference_evaluation",
+    "description": "Comparative ranking prompt — multiple pairs ranked simultaneously",
+    "condition": "batch_ranking",
+    "system_prompt": "You are an expert in data visualization design. You will be shown multiple pairs of visualizations. For each pair, indicate which visualization (A or B) you prefer and provide a brief justification.",
+    "user_prompt_template": "For each of the following visualization pairs, indicate your preference (A or B) and a brief rationale.\n\n{pairs_block}\n\nRespond in JSON format:\n[\n  {{\"pair_id\": \"<id>\", \"preference\": \"A\" or \"B\", \"rationale\": \"<brief explanation>\"}},\n  ...\n]"
+  },
+  {
+    "prompt_id": "EP-005",
+    "stage": "llm_preference_evaluation",
+    "description": "Forced-choice prompt with no neutral option — used for alignment analysis",
+    "condition": "forced_choice",
+    "system_prompt": "You are evaluating data visualizations. You will be shown two visualization descriptions and must choose one. You cannot choose 'neither' or 'both'. Always select exactly one option.",
+    "user_prompt_template": "You must choose exactly one of the following two visualizations. Do not say you prefer neither or both.\n\n**Visualization A:**\n{visualization_A_description}\n\n**Visualization B:**\n{visualization_B_description}\n\nRespond with a single letter: A or B."
+  }
+]
