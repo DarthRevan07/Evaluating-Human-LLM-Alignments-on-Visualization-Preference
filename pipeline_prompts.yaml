@@ -1,0 +1,474 @@
+# ============================================================================
+#  C² Pipeline – Complete Prompt Catalog
+#  Supplementary Material
+# ============================================================================
+#
+#  This file contains every LLM prompt used across the four-stage pipeline,
+#  from schema extraction through visualization recommendation. Template
+#  variables are shown in curly braces (e.g., {schema_context}).
+#
+#  Stages:
+#    0. Schema Extraction  – Semantic field inference
+#    1. Narrative Summary   – Chain-of-Thought summary generation
+#    2. Question Generation – Analytical question synthesis
+#    3. Visualization Recommendation – Chart suggestion with matplotlib code
+#    4. Alternative Visualization – Multimodal alternative chart suggestion
+# ============================================================================
+
+pipeline_prompts:
+
+  # ──────────────────────────────────────────────
+  #  STAGE 0 — Schema Extraction
+  #  File: stages/schema_extract.py
+  # ──────────────────────────────────────────────
+  stage_0_schema_extraction:
+    description: >
+      Invoked once per field when --enable-semantic-inference is set.
+      Infers the real-world semantic meaning of a single table column from
+      its metadata (name, dtype, sample values, statistics).
+
+    field_info_template: |
+      Dataset Name: {dataset_name}
+      Field Name: {field_name}
+      Data Type: {field_schema.data_type}
+      Inferred Type: {field_schema.inferred_ts_type}
+      Unique Values: {field_schema.unique_values}
+      Sample Values: {sample_values}
+      Min Value: {field_schema.min_value}          # included if numeric
+      Max Value: {field_schema.max_value}          # included if numeric
+      Null Values: {field_schema.null_count}       # included if > 0
+
+    messages:
+      - role: user
+        content: |
+          You are a data analyst expert. Given the following field information from a dataset, provide a concise semantic summary of what this field likely represents. Focus on the real-world meaning and context.
+
+          {field_info}
+
+          Provide a brief, clear description (1-2 sentences) of what this field represents in the real world. Consider:
+          - What type of information or measurement it contains
+          - The business or domain context it might belong to
+          - Any patterns or characteristics suggested by the sample values
+
+          Respond with only a single-line semantic description, no additional formatting or explanation.
+
+  # ──────────────────────────────────────────────
+  #  STAGE 1 — Narrative Summary Generation
+  #  File: stages/stage1_mod.py
+  # ──────────────────────────────────────────────
+  stage_1_narrative_summary:
+    description: >
+      Generates diverse narrative summaries for a table's analytical
+      potential using Chain-of-Thought reasoning. Each summary targets a
+      different audience and curator intention to maximize analytical
+      coverage.
+
+    template_variables:
+      - schema_context: "Full schema text including field names, types, statistics, and semantic summaries"
+      - summaries_per_generation: "Number of distinct summaries to produce (default: 4)"
+
+    messages:
+      - role: system
+        content: >
+          You are a data analyst skilled at discovering insights from data
+          schemas and communicating them clearly. You MUST return valid JSON
+          without any escaped quotes inside string values. Focus on
+          analytical potential rather than specific data values.
+
+      - role: user
+        content: |
+          You have been provided with comprehensive schema information for a data table:
+
+          {schema_context}
+
+          This schema contains detailed structural information about the table including field types, statistics, and metadata. Your task is to use Chain of Thought reasoning to systematically explore
+          insightful narratives that can be explored by exploring visualizations on this data and determine which field combinations would be most valuable
+          for different audiences and purposes based on this schema information.
+
+          **CHAIN OF THOUGHT REASONING PROCESS:**
+          Follow this systematic approach to determine field combinations:
+
+          **STEP 1: Target Audience Analysis**: Based on the field types and structure shown in the schema, who are the potential target audience groups for this specific combination of fields?
+          Do not make assumptions about their prior knowledge or interests. Always assume the audience is unfamiliar with the data and context.
+          Mention specific audience types that would find analysis of this field combination relevant. Avoid generic terms like "everyone" or "data enthusiasts".
+             Examples of different stakeholder groups:
+             - Business executives and decision makers
+             - Data analysts and researchers
+             - Domain experts (healthcare, finance, education, etc.)
+
+          **STEP 2: Curator Intention Mapping**: Based on the schema structure and field relationships, what might the curator of this data try to highlight from the given data?
+          What is he encouraging the audience to think about while viewing the data?
+          You can refer to the field types, statistics, and relationships present in the schema in your analysis.
+          Map the curator's intentions to specific actions you want the audience to take, such as:
+          - **Accept**: What conclusions or facts should they accept as true based on the data structure?
+          - **Agree**: What viewpoints or positions should they align with based on field relationships?
+          - **Establish**: What new understanding or knowledge should be established from the schema patterns?
+
+          **STEP 3: Narrative Summary Synthesis** Based on your complete Chain of Thought analysis from Steps 1-2, synthesize a descriptive narrative summary for the given data table that:
+          1. Integrates insights from your target audience analysis
+          2. Reflects the curator's strategic intentions in terms of audience actions (Accept, Explore, Agree, Infer etc.)
+          3. Connects the data insights to actionable outcomes for the audience (e.g. trend identification, correlation analysis, outlier detection, distribution understanding etc.)
+          4. Focuses on analytical, high-level potential rather than specific data values.
+
+          **YOUR COMPLETE ANALYSIS APPROACH:**
+          1. Start with systematic stakeholder and intention analysis. (Steps 1-2)
+          2. Synthesize findings into a compelling narrative summary that encourages subsequent visualization analysis of the data. (Step 3)
+          3. Ensure each combination serves a clear strategic purpose throughout
+          4. Provide comprehensive Chain of Thought reasoning as specified
+
+          **CRITICAL JSON FORMAT REQUIREMENTS:**
+          - Return ONLY valid JSON, no additional text
+          - Use proper JSON syntax with double quotes for all strings
+          - Avoid special characters that break JSON parsing
+          - Do not include markdown code blocks
+          - Ensure proper closing of all braces and brackets
+          - Keep string values concise to avoid truncation
+
+          **FORMATTING NOTES:**
+          - Focus on analytical potential of field combinations rather than specific values. Avoid mentioning explicit data value instances.
+          - Generate exactly {summaries_per_generation} diverse summaries. Each summary should be unique and explore different analytical angles.
+          - Avoid using special symbols that invalidate JSON format
+          - Ensure all JSON keys and string values are properly quoted
+          - Each summary should offer a unique analytical perspective based on schema structure
+
+          Return your response in JSON format:
+          {
+              "summaries": [
+                  {
+                      "idx": 1,
+                      "chain_of_thought": {
+                          "target_audience": "<specific stakeholder group identified through systematic analysis of schema structure>",
+                          "curator_intention": "<what the curator wants this audience to do, based on systematic intention mapping from field relationships>",
+                          "common_ground": "<shared strategic interests between curator and audience that motivated this field combination choice based on schema>"
+                      },
+                      "narrative_summary": "<synthesized summary that integrates CoT analysis to explain the strategic value and actionable insights for the identified audience based on schema structure>"
+                  },
+                  ...
+              ]
+          }
+
+  # ──────────────────────────────────────────────
+  #  STAGE 2 — Analytical Question Generation
+  #  File: stages/stage2_mod.py
+  # ──────────────────────────────────────────────
+  stage_2_question_generation:
+    description: >
+      Generates analytical questions from a narrative summary and schema.
+      Questions are designed to encourage viewers to actively explore data
+      through visualizations, covering diverse analytical dimensions
+      (comparison, trend, distribution, anomaly, causal, etc.).
+
+    template_variables:
+      - narrative_summary: "One narrative summary produced by Stage 1"
+      - schema_context: "Full schema text for the table"
+      - column_combination: "Subset of columns targeted by the summary"
+      - num_questions: "Number of questions to generate (default: 10)"
+      - summary_idx: "Index of the source summary"
+      - column_combination_json: "JSON-formatted column list"
+
+    messages:
+      - role: user
+        content: |
+          You are a data visualization expert creating analytical questions for users viewing a dataset. Your task is to generate questions that encourage viewers to actively explore and think critically about specific aspects of the data based on the table schema and analytical narrative provided.
+
+          **NARRATIVE SUMMARY:**
+          {narrative_summary}
+
+          **TABLE SCHEMA AND STRUCTURE:**
+          {schema_context}
+
+          **TARGET COLUMNS FOR ANALYSIS:**
+          {column_combination}
+
+          Your task is to generate insightful questions based on the narrative summary and schema information above. The narrative describes analytical insights and relationships, while the schema provides structural information about data types, field characteristics, and table dimensions.
+
+          The questions must be such that the audience is encouraged to ask these questions when viewing visualizations of the data.
+
+          Generate {num_questions} diverse questions that:
+          1. Build directly on the themes and insights described in the narrative summary.
+          2. FOCUS on insights that the narrative highlights, not just generic questions about the columns. (i.e. focus on the analytical/exploratory/comparative relationships described in the summary that the target audience would be curious about when seeing the data - each question should be something that a viewer would naturally ask when seeing the insights from the summary, not just a generic question about the columns)
+          3. Leverage the structural information from the schema (data types, field relationships, etc.)
+          4. Encourage exploration of the data patterns and relationships mentioned in the summary
+          5. **Focus on exploring 2, or at most 3 variables per question** - avoid complex multi-dimensional analysis
+          6. Keep questions simple and straightforward - avoid overcomplication
+          7. Consider the data types and characteristics shown in the schema when formulating questions
+          8. Trigger broad aspects of analytical thinking, such as:
+             - Comparison: e.g., "How does X compare to Y?"
+             - Trend Analysis: e.g., "What trends can be observed in X across different categories?"
+             - Relationship Exploration: e.g., "What is the relationship between X and Y?"
+             - Distribution Analysis: e.g., "How is X distributed across different segments?"
+             - Anomaly Detection: e.g., "Are there any outliers or anomalies in X?"
+             - Causal Analysis: e.g., "What factors might be causing the observed trends in X?"
+             - Retrieval/Lookup: e.g., "What are the top contributors to X?"
+             - Locate/Find: e.g., "Where is item X on the chart?"
+          9. Are clear and actionable for data analysis based on the available field types
+          10. Do not include specific chart types or visualization instructions
+          11. Avoid overly specific questions, focusing instead on general analytical inquiry
+          12. Consider field statistics and characteristics from the schema (e.g., unique values, data ranges)
+
+          Return your response in JSON format:
+
+          {
+              "table_name": "<display name from dataset_name or table_name>",
+              "summary_idx": {summary_idx},
+              "column_combination": {column_combination_json},
+              "questions": [
+                  "<question 1>",
+                  "<question 2>",
+                  "...",
+                  "<question {num_questions}>"
+              ]
+          }
+
+          IMPORTANT GUIDELINES:
+          - Base all questions on the insights and themes from the NARRATIVE SUMMARY
+          - Use the SCHEMA information to understand data types, field characteristics, and relationships
+          - Focus on the analytical/exploratory/comparative relationships described in the summary
+          - **CRITICAL: Each question should focus on exploring at most 2-3 variables simultaneously**
+          - **Keep questions simple and avoid overcomplication - prefer straightforward analytical inquiries**
+          - **Consider the data types from schema when asking questions** (e.g., numeric fields for trends, categorical for comparisons)
+          - **Examples of good simple questions based on schema:**
+            - "How does [numeric field] vary by [categorical field]?"
+            - "What is the relationship between [field A] and [field B]?"
+            - "How do [metric] trends differ between [category] over [time field]?"
+          - **Examples of overly complex questions to AVOID:**
+            - "How do sales, profit margins, customer satisfaction, and market share interact across different regions, time periods, and product categories?"
+          - Make questions that help viewers explore the data meaningfully with focused scope
+          - Return ONLY valid JSON without escaped quotes or newline characters
+
+  # ──────────────────────────────────────────────
+  #  STAGE 3 — Visualization Recommendation
+  #  File: stages/stage3_mod.py
+  # ──────────────────────────────────────────────
+  stage_3_visualization_recommendation:
+    description: >
+      Generates creative chart suggestions with complete matplotlib code,
+      given an analytical question and a table schema. Each suggestion
+      includes chart type, design rationale, visual encodings, data
+      transformations, and executable Python code.
+
+    template_variables:
+      - num_suggestions: "Number of chart suggestions per question (default: 2)"
+      - question: "One analytical question from Stage 2"
+      - schema_context: "Full schema text for the table"
+      - display_name: "Human-readable table name"
+      - file_path: "Relative path to the CSV file for pd.read_csv()"
+
+    messages:
+      - role: system
+        content: >
+          You are a data visualization expert. You MUST return valid JSON
+          without escaped quotes or newlines inside string values. Replace
+          all escaped quotes with single quotes. Format matplotlib code as
+          single-line executable strings. IMPORTANT: Use your
+          chart_encodings and transformations as Chain of Thought - let them
+          guide every line of your matplotlib code. Apply transformations
+          first, then map encodings directly to matplotlib parameters. Use
+          EXACT field names from the schema.
+
+      - role: user
+        content: |
+          You are an expert data visualization designer with full creative autonomy. You have been provided with a data table schema and an analytical question. Your goal is to create {num_suggestions} distinct, insightful visualizations that answer the question in meaningful ways based on the table structure and field information.
+
+          **QUESTION:** {question}
+
+          **TABLE SCHEMA AND STRUCTURE:**
+          {schema_context}
+
+          **TABLE NAME:** {display_name}
+
+          **YOUR CREATIVE BRIEF:**
+          You have complete freedom to:
+          - Choose any chart type and corresponding visual encodings that serves the data story and allow ease of viewing for the user.
+          - Suggest visualizations and data transformations (aggregation, filtering etc.) while also considering the size of the schema's underlying table (provided as 'Rows' and 'Columns' in the schema) so that the chart visualizations are effective in communicating insights from the entire data table.
+          - Apply any data transformations that reveal actionable/interesting insights about the data in alignment with the analytical question.
+          - Focus on different aspects or perspectives of the question across different suggestions.
+          - Explore creative visual approaches that engage the audience (e.g. decide on appropriate visual encoding, color schemes, layouts, and styling, spatial arrangement of visual elements etc.)
+          - Include both conventional and unconventional chart types as appropriate, ensuring the chart types suit the data characteristics (such as data-types of variables etc.) and the analytical question.
+          - Use the field names, data types, and characteristics from the schema to inform your design decisions.
+
+          **CRITICAL FIELD NAME USAGE:**
+          - The DataFrame columns are named exactly as shown in the "Field:" entries in the schema above
+          - Use the EXACT field names as they appear after "Field:" (e.g., "Location", "Number of Households (in 1000)", "Percentage of households with pets")
+          - Do NOT use camelCase versions - use the original field names with spaces, parentheses, and special characters as shown
+          - Example: Use df['Location'] not df['location'], use df['Number of Households (in 1000)'] not df['numberOfHouseholdsIn1000']
+
+          **DESIGN PRINCIPLES:**
+          - Ensure each visualization focuses on answering the provided question while ensuring all elements of a good visual display are upheld.
+          - The chosen chart type for display suggestion must be supported by appropriate visual encodings and data transformations to effectively communicate the intended insight within the chosen chart type.
+          - Each display suggestion should be unique in its approach, exploring various strategies, chart types (both conventional, like bar, line etc. and unconventional like boxplots, heatmaps etc.) data transformations and design choices.
+          - Consider different levels of detail to explore data (deep-dive vs overview), different groupings, time periods, and both aggregate and detailed views of the data.
+          - Consider the data types (numeric, categorical, datetime, etc.) when choosing appropriate chart types and transformations.
+
+          Your task is to generate {num_suggestions} creative chart suggestions, each with:
+          1. Your design rationale and approach in terms of answering the analytical question via various chart types and visual encodings.
+          2. Step-by-step data transformations to support your intended purpose behind the visualization.
+          3. Complete, correct, executable matplotlib code with relevant imports and formatting using exact field names from the schema.
+          4. Try using a mix of conventional (bar, line, scatter etc.) and unconventional (boxplots, heatmaps, spider webplots, etc.) chart types across different suggestions to provide a variety of perspectives on the data. (be creative)
+
+          Return your response in JSON format:
+
+          {
+              "question": "{question}",
+              "table_name": "{display_name}",
+              "chart_suggestions": [
+                  {
+                      "suggestion_id": 1,
+                      "analysis": {
+                          "chart_type": "<your chosen chart type>",
+                          "design_rationale": "<why you chose this approach and what makes it effective based on schema>",
+                          "target_insight": "<the key insight this visualization reveals>",
+                          "output_fields": ["<field1>", "<field2>", "..."],
+                          "chart_encodings": {
+                              "x": "<x-axis mapping using EXACT field names from schema>",
+                              "y": "<y-axis mapping using EXACT field names from schema>",
+                              "color": "<color encoding strategy or null>",
+                              "size": "<size encoding strategy or null>",
+                              "other_aesthetics": "<any other visual elements: shape, alpha, facets, etc.>"
+                          }
+                      },
+                      "transformations": [
+                          "<transformation 1: specific data manipulation step using EXACT field names>",
+                          "<transformation 2: if needed>",
+                          "..."
+                      ],
+                      "data_preparation_steps": [
+                          "<step 1: concrete data preparation action using EXACT field names>",
+                          "<step 2: if applicable>",
+                          "..."
+                      ],
+                      "matplotlib_code": "<complete executable matplotlib code using EXACT field names>"
+                  }
+              ]
+          }
+
+          **MATPLOTLIB CODE REQUIREMENTS - CRITICAL FOR SUCCESS:**
+
+          Stateless Script Contract:
+          - The code must run correctly when executed as a single script in a fresh Python session.
+          - Do not rely on variables created "earlier" in a notebook or another cell.
+          - Define every helper variable (e.g., cmap, norm, sm, ax, df_plot) before any line that uses it
+
+          1. **FORMATTING RULES:**
+             - Code must be formatted with proper newlines (\n)
+             - NEVER put multiple statements on one line with semicolons
+             - Proper indentation for loops, conditionals, etc.
+
+          2. **ESSENTIAL IMPORTS:** Always include all imports at the start:
+          import matplotlib.pyplot as plt
+          import pandas as pd
+          import numpy as np
+
+          3. **DATAFRAME:** Load the data from the specified file path using pandas.read_csv() and assign it to variable 'df'. The EXACT file path to use is: {file_path}. Always include the data loading line at the beginning of your code after imports. Use this exact syntax: df = pd.read_csv("{file_path}")
+
+          4. **SYNTAX RULES:**
+             - NEVER use assignment (=) inside function calls
+             - Match ALL parentheses, brackets, and quotes perfectly
+             - Use double quotes for strings: "example"
+             - While defining colorbars etc., ensure to provide necessary arguments like cax, ax, or mappable as needed. Explicitly map each visual element to corresponding data value (like correct axes association for colorbars etc.)
+             - Use import matplotlib as mpl; cmap = mpl.colormaps["viridis"] and for discrete steps: mpl.colormaps["viridis"].resampled(k) for colormaps.
+             - STRING FORMATTING: Use proper string concatenation or escaping for multi-line text. For f-strings with line breaks, use \n or concatenate strings with +. NEVER put unescaped newlines inside f-strings or quotes
+
+          CRITICAL INSTRUCTION: When creating multi-line text labels in matplotlib (ax.text, plt.title, etc.):
+          1. NEVER put actual line breaks inside f-strings or string literals
+          2. ALWAYS use \\n for line breaks in matplotlib text (Use escaped newline sequences: \\n)
+          3. For complex multi-line labels, use string concatenation: Split complex text into separate strings and join with + operator and \\n sequences
+          4. Test string syntax before matplotlib calls: Ensure all quotes are properly closed, no unmatched parentheses or brackets, no bare newlines inside string literals
+          5. SPECIFIC ERROR TO AVOID: DO NOT put actual line breaks inside f-string or string quotes
+          6. CORRECT APPROACH: Use string concatenation for complex multi-part labels
+
+          Remember: you have full creative license to design compelling data stories using the schema information to inform your field usage and transformations
+
+  # ──────────────────────────────────────────────
+  #  STAGE 4 — Alternative Visualization (Multimodal)
+  #  File: stages/visual_artefact_draft.py
+  # ──────────────────────────────────────────────
+  stage_4_alternative_visualization:
+    description: >
+      Given an existing rendered chart (as a base64-encoded image), its
+      metadata, and a data sample, suggests alternative visualization
+      approaches that could reveal different insights. This is a multimodal
+      prompt — the rendered chart image is attached alongside the text.
+
+    template_variables:
+      - question: "Original analytical question"
+      - csv_sample: "First rows of the CSV data as text"
+      - existing_chart_type: "Chart type of the existing visualization"
+      - recommendation: "Design rationale of the existing chart"
+      - chart_encodings: "Encoding mapping of the existing chart"
+      - key_message: "Target insight of the existing chart"
+
+    messages:
+      - role: user
+        content_type: multimodal  # text + image_url (base64 PNG of existing chart)
+        text: |
+          You are an expert data visualization consultant. You have been given a data analysis question, a sample of the dataset, and information about an EXISTING visualization that was already created for this question.
+
+          Your task is to suggest ALTERNATIVE visualization approaches that could provide different insights or perspectives on the same question.
+
+          ## QUESTION:
+          {question}
+
+          ## DATA SAMPLE:
+          {csv_sample}
+
+          ## EXISTING VISUALIZATION INFO:
+          - Chart Type: {existing_chart_type}
+          - Current Approach: {recommendation}
+          - Current Encodings: {chart_encodings}
+          - Key Message: {key_message}
+
+          ## YOUR TASK:
+          Suggest an ALTERNATIVE visualization approaches that:
+          1. Answer the same question but from different angles
+          2. Use different chart types than the existing one
+          3. Might reveal different insights or patterns
+          4. Consider different data encodings (x, y, color, size, facet, etc.)
+
+          For each alternative suggestion, provide:
+          1. **Chart Type**: What type of visualization (histogram, boxplot, heatmap, line plot, bar chart, etc.)
+          2. **Rationale**: Why this alternative approach would be valuable
+          3. **Different Perspective**: What new insights this might reveal compared to the existing chart
+          4. **Data Encodings**: Specific mappings (x, y, color, size, etc.)
+          5. **Data Transformations**: Any preprocessing needed
+          6. **Matplotlib Code**: Complete, executable Python code using matplotlib
+
+          ## RESPONSE FORMAT:
+          Return your response as a valid JSON object with this structure:
+
+          {
+            "alternatives": [
+              {
+                "chart_type": "histogram",
+                "rationale": "Why this alternative is valuable...",
+                "different_perspective": "What new insights this reveals...",
+                "target_audience_considerations": "Who would benefit from this view...",
+                "key_message": "Main takeaway from this visualization...",
+                "output_fields": ["field1", "field2", "field3"],
+                "chart_encodings": {
+                  "x": "field_name",
+                  "y": "field_name or count/frequency",
+                  "color": "field_name or empty",
+                  "size": "field_name or empty",
+                  "opacity": "field_name or empty",
+                  "facet": "field_name or empty"
+                },
+                "transformations": [
+                  "transformation step 1",
+                  "transformation step 2"
+                ],
+                "data_preparation_steps": [
+                  "preparation step 1",
+                  "preparation step 2"
+                ],
+                "matplotlib_code": "import matplotlib.pyplot as plt\nimport pandas as pd\nimport numpy as np\n# Complete executable code here..."
+              }
+            ]
+          }
+
+          ## IMPORTANT CONSTRAINTS:
+          - The alternative visualization may or may not be the same type as the given visualization. You can explore different design or layout choices creatively.
+          - Include complete, executable matplotlib code that works with a DataFrame named 'df'
+          - Ensure the matplotlib code includes proper data preprocessing and handles missing values
+          - Make sure plt.show() is included at the end of each matplotlib code block
+        image: "{base64_encoded_png_of_existing_chart}"
